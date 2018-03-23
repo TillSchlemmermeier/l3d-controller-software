@@ -1,30 +1,34 @@
 # modules
 import numpy as np
-from cube_utils import *
-from random import uniform, randint
+# from cube_utils import *
 from scipy.signal import sawtooth
+
 
 class g_growing_sphere():
     '''
+    Generator: growing_sphere
+
     a growing hollow sphere in the middle of the cube
-    maxsize
-    growspeed
-    oscillate y/n
+
+    Parameters:
+    - maxsize
+    - growspeed
+    - oscillate y/n
     '''
 
     def __init__(self):
-        self.maxsize   = 10
-        self.growspeed =  1
-        self.oscillate =  0
+        self.maxsize = 10
+        self.growspeed = 1
+        self.oscillate = 0
 
-    def control(maxsize, growspeed, oscillate):
-        self.maxsize   = speed
+    def control(self, maxsize, growspeed, oscillate):
+        self.maxsize = maxsize
         self.growspeed = growspeed
         self.oscillate = oscillate
 
     def generate(self, step):
 
-        world = np.zeros([3,10,10,10])
+        world = np.zeros([3, 10, 10, 10])
 
         # oscillates between 0 and 1
         if self.oscillate < 0.5:
@@ -35,11 +39,12 @@ class g_growing_sphere():
         # scales to maxsize
         size = self.maxsize * osci
         # creates hollow sphere with parameters
-        world[0,:,:,:] = hsphere(size)
-        world[1:,:,:,:] = world[0,:,:,:]
-        world[2:,:,:,:] = world[0,:,:,:]
+        world[0, :, :, :] = hsphere(size)
+        world[1:, :, :, :] = world[0, :, :, :]
+        world[2:, :, :, :] = world[0, :, :, :]
 
         return world
+
 
 def hsphere(radius):
 
