@@ -10,20 +10,29 @@ class g_cube():
 
     Parameters:
     - size
+    - sides y/n : just the edges or also the sides of the cube?
     '''
 
     def __init__(self):
         self.size = 2
+        self.sides = False
 
-    def control(self, size, blub0, blub1):
+    def control(self, size, sides, blub1):
         self.size = round(size*4)
+        if sides > 0.5:
+            self.sides = True
+        else:
+            self.sides = False
 
     def generate(self, step):
         # create world
         world = np.zeros([3, 10, 10, 10])
         # create smaller world
         tempworld = np.zeros([10, 10, 10])
-        tempworld[:, :, :] = 0.0  # -1 for just the cornering lines, needs to be fixed
+
+        if not self.sides:
+            tempworld[:, :, :] = -1.0
+
         size = self.size
 
         # write cube
