@@ -27,4 +27,5 @@ class g_random():
 
         for i in range(self.number):
             world[color, randint(0, 9), randint(0, 9), randint(0, 9)] = 1.0
+
         return world
