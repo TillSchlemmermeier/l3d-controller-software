@@ -1,6 +1,7 @@
 # load modules
 import numpy as np
 from cube_utils import world2vox2
+
 # load generator modules
 from g_cube import g_cube
 from g_growing_sphere import g_growing_sphere
@@ -32,18 +33,23 @@ class CubeWorld:
 
         self.CHA = []
         self.CHB = []
+
+        # this is temporary, we need a routine to update the elements
+        # in the list to change the generator/effect
         self.CHA.append(g_cube())
         self.CHB.append(g_cube())
 
     def get_cubedata(self):
-        # get vox format from internal stored world
+        # get vox format from the internal stored world
 
         # get each color
         list1 = world2vox2(self.world_TOT[0, :, :, :])
         list2 = world2vox2(self.world_TOT[1, :, :, :])
         list3 = world2vox2(self.world_TOT[2, :, :, :])
 
-        # put colors together
+        # put colors together in the correct order
+        # this might be a speed-bottleneck? we should check
+        # and do it in a faster way, numpy or else
         liste = []
         for i in range(1000):
             liste.append(list1[i])
@@ -92,18 +98,23 @@ class CubeWorld:
         # to assigned generators and filters
 
         # Channel A
-        self.world_CHA = self.CHA[0].generate(step)
-        # Generators
-        # Effects
+        # loop over each element in CHA and perform thier 'generate'
+        # routine. now, the first element is always the generator around
+        # the second can be an effect, but in principle this supports an
+        # unlimited number of generators and effects on one channel.
+        # This also determines, that the input of each generate function
+        # must always be defined as <somegenerator.generate>(self, step, world)
+        for i in self.CHA:
+            self.world_CHA = i.generate(step, self.world_CHA)
 
         # Channel B
-        # Generators
-        # Effects
+        for i in self.CHB:
+            self.world_CHB = i.generate(step, self.world_CHB)
 
         # Sum Channels
-        self.world_TOT = self.world_CHA + self.world_CHB
-        # np.round(np.clip(world, 0, 1), 3)
-        # self.world_TOT = np.clip(round(self.world_TOT,3),0,1)
-        # or self.world_TOT += self.world_CHA + self.world_CHB?
+        self.world_TOT = np.clip(amount_a * self.world_CHA + \
+                                 amount_b * self.world_CHB + \
+                                 fade * self.world_TOT, 0, 1)
 
         # Global Effects
+        # the global fade is already included at the "sum channels"
