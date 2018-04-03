@@ -1,23 +1,22 @@
 import numpy as np
-from random import randint, seed, random
-from scipy.special import jv
+#from random import randint, seed, random
+#from scipy.special import jv
 
 def world_init(dim):
     # Initialisiere welt entsprechend dim
     # a litte bit useless, but may be important for later stuff
     return np.zeros([dim, dim, dim])
 
+'''
 def world2coord(x, y, z):
-    '''
-    Takes the world matrix (10*10*10) and
-    converts the index to the coordinate matrix (100*3)
-    '''
+    #Takes the world matrix (10*10*10) and
+    #converts the index to the coordinate matrix (100*3)
     return x + y * 10 + z * 100
+'''
 
+'''
 def world2vox(world):
-    '''
-    Takes a world matrix and converts for direct streaming to the cube
-    '''
+    #Takes a world matrix and converts for direct streaming to the cube
     newlist = np.zeros([len(world.flatten()),2])
     index = 0
 
@@ -43,8 +42,9 @@ def world2vox(world):
     sorted_newlist =  np.array(sorted(newlist,key=lambda x: x[0]))
 
     return sorted_newlist
+'''
 
-def world2vox2(world):
+def world2vox(world):
     '''
     Takes a world matrix and converts for direct streaming to the cube
     '''
@@ -78,7 +78,7 @@ def world2vox2(world):
 
 # ----------------------------------------------------
 # for wave packet
-
+'''
 def propagate_step(world, dt=1.0):
 
     ntime = 20         # number of bessel functions
@@ -114,15 +114,14 @@ def propagate_step(world, dt=1.0):
     newworld = list2world(np.abs(psiT))
 
     return np.round(np.clip(newworld, 0, 1), 2)
-
+'''
 
 # ----------------------------------------------------
 
-
+'''
 def world2list(world):
-    '''
-    Takes a world matrix and converts it to list
-    '''
+    # Takes a world matrix and converts it to list
+
     newlist = np.zeros([len(world.flatten()), 2])
     index = 0
 
@@ -147,8 +146,9 @@ def world2list(world):
     sorted_newlist = np.array(sorted(newlist, key=lambda x: x[0]))
 
     return sorted_newlist[:, 1]
+'''
 
-
+'''
 def list2world(liste):
     # creates list from world file
     world = world_init(10)
@@ -158,8 +158,9 @@ def list2world(liste):
         if liste[i] > 0:
             world[position[0], position[1], position[2]] = liste[i]
     return world
+'''
 
-
+'''
 def get_position(i):
     # calculates xyz from position in list
     if i >= 100:
@@ -189,3 +190,4 @@ def get_position(i):
             z = int(position[0])
 
     return x, y, z
+'''

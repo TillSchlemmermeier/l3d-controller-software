@@ -1,6 +1,6 @@
 # load modules
 import numpy as np
-from cube_utils import world2vox2
+from cube_utils import world2vox
 
 # load generator modules
 from g_cube import g_cube
@@ -43,9 +43,9 @@ class CubeWorld:
         # get vox format from the internal stored world
 
         # get each color
-        list1 = world2vox2(self.world_TOT[0, :, :, :])
-        list2 = world2vox2(self.world_TOT[1, :, :, :])
-        list3 = world2vox2(self.world_TOT[2, :, :, :])
+        list1 = world2vox(self.world_TOT[0, :, :, :])
+        list2 = world2vox(self.world_TOT[1, :, :, :])
+        list3 = world2vox(self.world_TOT[2, :, :, :])
 
         # put colors together in the correct order
         # this might be a speed-bottleneck? we should check
