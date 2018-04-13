@@ -2,12 +2,15 @@
 
 ## Introduction
 
+![Flowchart](/flowchart.png)
+
 ## Generators
 
 Seven "Generators" are included at the moment. Generators return a new world when called. Each generator can be controlled with up to three knobs/parameters. *Cursive* written generators are untested.
 
 - *g_cube*
 - *g_growing_sphere*
+- *g_orbiter*
 - *g_random*
 - *g_randomlines*
 - *g_shooting_star*
@@ -17,3 +20,6 @@ Seven "Generators" are included at the moment. Generators return a new world whe
 ## Effects
 
 - *fade2blue*
+- *rotate* (planned)
+- *move* (planned)
+- *oscillate* (planned, change brightness periodically)
