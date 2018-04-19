@@ -34,3 +34,11 @@ Example for call, the generator is stored in the list self.CHA:
 - *rotate* (planned)
 - *move* (planned)
 - *oscillate* (planned, change brightness periodically)
+
+## Mapping of Midi Keys
+
+16 	20	24	28	46	50	54	58		
+17	21	25	29	47	51	55	59
+18	22	26	30	48	52	56	60
+
+19	23	27	31	49	53	57	61	62
