@@ -21,7 +21,7 @@ class g_orbiter():
         self.rho = 0.1
 
     def control(self, dist, theta, rho):
-        self.distance = dist
+        self.distance = dist*8
         self.theta = theta
         self.rho = rho
 
@@ -30,8 +30,8 @@ class g_orbiter():
         world = np.zeros([3, 10, 10, 10])
 
         # generate current position
-        temp_d = 3 + np.sin(self.distance*step)
-        temp_theta = sawtooth(self.theta*step)
+        temp_d = self.distance
+        temp_theta = sawtooth(self.theta*step)*np.pi
         temp_rho = np.sin(self.rho*step)
 
         [sx, sy, sz] = polar2z(temp_d, temp_theta, temp_rho)

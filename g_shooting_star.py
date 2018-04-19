@@ -13,9 +13,11 @@ class g_shooting_star():
 
     def __init__(self):
         self.refresh = 16
+        self.speed = 1.0
 
-    def control(self, refresh, blub0, blub1):
+    def control(self, refresh, speed, blub1):
         self.refresh = round(refresh*20)
+        self.speed = speed
 
     def generate(self, step, dumpworld):
 
@@ -24,8 +26,8 @@ class g_shooting_star():
         refresh = 16
 
         # every <refresh> frames: generate new vector
-        if step % refresh == 0 or s0 == None:
-            s0, v = gen_line(1)
+        if step % refresh == 0:
+            s0, v = gen_line(0.8)
 
         # return current position of shooting star
         try:
@@ -46,8 +48,12 @@ def gen_line(speed):
     # generate two points
     p1 = polar2z(15, uniform(-2, 2), uniform(-2, 2))
     p2 = [uniform(-3, 3), uniform(-3, 3), uniform(-3, 3)]
+    v = []
     # calculate vector
-    v = p2 - p1
+    v.append(p2[0] - p1[0])
+    v.append(p2[1] - p1[1])
+    v.append(p2[2] - p1[2])
+
     v = speed * v/(np.sqrt(v[0]**2 + v[1]**2 + v[2]**2))
     return p1, v
 
