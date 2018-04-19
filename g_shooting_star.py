@@ -17,7 +17,7 @@ class g_shootings_star():
     def control(self, refresh, blub0, blub1):
         self.refresh = round(refresh*20)
 
-    def generate(self, step):
+    def generate(self, step, dumpworld):
 
         world = np.zeros([3, 10, 10, 10])
 

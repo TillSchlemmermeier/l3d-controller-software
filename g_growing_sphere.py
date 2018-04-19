@@ -26,7 +26,7 @@ class g_growing_sphere():
         self.growspeed = growspeed
         self.oscillate = oscillate
 
-    def generate(self, step):
+    def generate(self, step, dumpworld):
 
         world = np.zeros([3, 10, 10, 10])
 

@@ -25,7 +25,7 @@ class g_orbiter():
         self.theta = theta
         self.rho = rho
 
-    def generate(self, step):
+    def generate(self, step, dumpworld):
         # generate empty world
         world = np.zeros([3, 10, 10, 10])
 

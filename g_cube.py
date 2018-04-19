@@ -24,7 +24,7 @@ class g_cube():
         else:
             self.sides = False
 
-    def generate(self, step):
+    def generate(self, step, dumpworld):
         # create world
         world = np.zeros([3, 10, 10, 10])
         # create smaller world

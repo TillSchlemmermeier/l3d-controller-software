@@ -11,7 +11,7 @@ class randomlines():
     def control(self, blub0, blub1, blub2):
         self.blub0 = blub0
 
-    def generate(self, step):
+    def generate(self, step, dumpworld):
 
         world = np.zeros([3, 10, 10, 10])
 

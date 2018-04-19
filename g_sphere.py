@@ -20,7 +20,7 @@ class g_sphere():
         self.size = round(size*10)
         # self.color = round(color*2)
 
-    def generate(self, step):
+    def generate(self, step, dumpworld):
 
         world = np.zeros([3, 10, 10, 10])
 
