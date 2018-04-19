@@ -38,27 +38,25 @@ class g_shootings_star():
 
         return world
 
-    def gen_line(speed):
-        # generate two points
-        p1 = polar2z(15, uniform(-2, 2), uniform(-2, 2))
-        p2 = [uniform(-3, 3), uniform(-3, 3), uniform(-3, 3)]
+def gen_line(speed):
+    # generate two points
+    p1 = polar2z(15, uniform(-2, 2), uniform(-2, 2))
+    p2 = [uniform(-3, 3), uniform(-3, 3), uniform(-3, 3)]
+    # calculate vector
+    v = p2 - p1
+    v = speed * v/(np.sqrt(v[0]**2 + v[1]**2 + v[2]**2))
+    return p1, v
 
-        # calculate vector
-        v = p2 - p1
-        v = speed * v/(np.sqrt(v[0]**2 + v[1]**2 + v[2]**2))
+def s(s0, v, t):
+    # cartesian coordinates of a point on the line
+    x = s0[0] + v[0]*t
+    y = s0[1] + v[1]*t
+    z = s0[2] + v[2]*t
+    return [x, y, z]
 
-        return p1, v
-
-    def s(s0, v, t):
-        # cartesian coordinates of a point on the line
-        x = s0[0] + v[0]*t
-        y = s0[1] + v[1]*t
-        z = s0[2] + v[2]*t
-        return [x, y, z]
-
-    def polar2z(r, theta, phi):
-        # polar coordinates to cartesian
-        x = r * np.sin(theta) * np.cos(phi)
-        y = r * np.sin(theta) * np.sin(phi)
-        z = r * np.cos(theta)
-        return [x, y, z]
+def polar2z(r, theta, phi):
+    # polar coordinates to cartesian
+    x = r * np.sin(theta) * np.cos(phi)
+    y = r * np.sin(theta) * np.sin(phi)
+    z = r * np.cos(theta)
+    return [x, y, z]

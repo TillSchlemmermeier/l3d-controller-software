@@ -27,14 +27,15 @@ class g_growing_sphere():
         self.oscillate = oscillate
 
     def generate(self, step, dumpworld):
+        # kleinste größe reparieren
 
         world = np.zeros([3, 10, 10, 10])
 
         # oscillates between 0 and 1
         if self.oscillate < 0.5:
-            osci = np.sin(step*self.growspeed)*0.5 + 2
+            osci = np.sin(step*self.growspeed)*0.5 + 1
         else:
-            osci = sawtooth(step*self.growspeed)*0.5 + 2
+            osci = sawtooth(step*self.growspeed)*0.5 + 1
 
         # scales to maxsize
         size = self.maxsize * osci
