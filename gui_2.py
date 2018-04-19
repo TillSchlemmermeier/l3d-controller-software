@@ -54,7 +54,7 @@ class App(Tk):
         # Header Information
         self.hSpeed = 1
         self.hBright = 200
-        self.hPa = 1
+        self.hPal = 1
         self.hPalMode = 0
         self.hRGBMode = 1
 
