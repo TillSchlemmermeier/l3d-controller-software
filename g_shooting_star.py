@@ -2,7 +2,7 @@ import numpy as np
 from random import uniform
 
 
-class g_shootings_star():
+class g_shooting_star():
     '''
     Generator: shooting star
 

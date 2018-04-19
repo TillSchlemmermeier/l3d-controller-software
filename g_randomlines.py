@@ -3,7 +3,7 @@ import numpy as np
 from random import randint
 
 
-class randomlines():
+class g_randomlines():
 
     def __init__(self):
         self.blub0 = 0
