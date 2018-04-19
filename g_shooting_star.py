@@ -24,11 +24,15 @@ class g_shooting_star():
         refresh = 16
 
         # every <refresh> frames: generate new vector
-        if step % refresh == 0:
+        if step % refresh == 0 or s0 == None:
             s0, v = gen_line(1)
 
         # return current position of shooting star
-        [sx, sy, sz] = s(s0, v, step % refresh)
+        try:
+            [sx, sy, sz] = s(s0, v, step % refresh)
+        except:
+            s0, v = gen_line(1)
+            [sx, sy, sz] = s(s0, v, step % refresh)
 
         # switch on leds depending on distance
         for x in range(10):
