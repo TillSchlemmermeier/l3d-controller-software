@@ -7,7 +7,7 @@ from g_cube import g_cube
 from g_growing_sphere import g_growing_sphere
 from g_random import g_random
 from g_sphere import g_sphere
-from g_randomlines import g_randomlines
+#from g_randomlines import g_randomlines
 # load effect modules
 
 
@@ -27,7 +27,7 @@ class CubeWorld:
         # self.framecounter = 0
 
         self.control_dict = {}
-
+        
         for i in range(150):
             self.control_dict = {i: 0.0}
 
@@ -61,6 +61,7 @@ class CubeWorld:
     def control(self, key, value):
         # updates the control values
         self.control_dict.update({key: value})
+        print(self.control_dict)
 
     def set_Genenerator(self, generator, name):
         fullFunction = "self.CH"+generator+"[0]="+name+"()"

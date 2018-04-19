@@ -1,6 +1,6 @@
 #! /usr/bin/python3.5
 
-from tkinter import *
+from Tkinter import *
 from cube_utils import *
 # from cube_animations import rain_gen, gen_dots, plain_gen
 # from cube_interactive import dots_on_sphere, random, sphere, speed_decorator, hsphere, planes, lines, cube, corner, circle, blur, moveandfade, seperate, blow, random_lines
@@ -126,7 +126,7 @@ class App(Tk):
         self.do_send_rgb = False
 
     def apply_manipulation(self, step):
-        # self.cubeWorld.control(MidiKey,MidiValue)
+        self.cubeWorld.control(MidiKey,MidiValue)
         self.cubeWorld.update(step)
 
     def send_data_rgb(self):
