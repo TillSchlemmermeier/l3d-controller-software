@@ -45,12 +45,12 @@ class App(Tk):
         self.cubeWorld = CubeWorld()
         self.world = np.zeros([3, 10, 10, 10])
         self.send_header = []
-        self.framecount = 0
+        self.framecount = 1
         self.send_array_rgb = []
         # self.send_list =[]
 
         self.generators = ["g_blank", " g_cube", "g_random", "g_growing_sphere","g_orbiter","g_randomlines","g_sphere","g_shooting_star","g_snake"]
-        self.effects = ["e_blank"]
+        self.effects = ["e_blank","e_fade2blue","e_rainbow","e_staticcolor"]
         # Header Information
         self.hSpeed = 1
         self.hBright = 200
@@ -66,15 +66,15 @@ class App(Tk):
             pass
 
         def optionmenuG2_selection(event):
-            self.cubeWorld.set_Genenerator("B", self.dropdownG2Current.get(),1)
+            self.cubeWorld.set_Genenerator("B", self.dropdownG2Current.get(),0)
             pass
 
         def optionmenuE1_selection(event):
-            self.cubeWorld.set_Genenerator("A", self.dropdownE1Current.get(),2)
+            self.cubeWorld.set_Genenerator("A", self.dropdownE1Current.get(),1)
             pass
 
         def optionmenuE2_selection(event):
-            self.cubeWorld.set_Genenerator("B", self.dropdownE2Current.get(),3)
+            self.cubeWorld.set_Genenerator("B", self.dropdownE2Current.get(),1)
             pass
 
         # GUI Elements

@@ -14,6 +14,9 @@ from g_shooting_star import g_shooting_star
 from g_snake import g_snake
 #load effect modules
 from e_blank import e_blank
+from e_fade2blue import e_fade2blue
+from e_rainbow import e_rainbow
+from e_staticcolor import e_staticcolor
 #from g_randomlines import g_randomlines
 # load effect modules
 
@@ -46,6 +49,9 @@ class CubeWorld:
         self.CHA = []
         self.CHB = []
 
+        self.speed_A = 1
+        self.speed_B = 1
+
         # this is temporary, we need a routine to update the elements
         # in the list to change the generator/effect
         self.CHA.append(g_blank())
@@ -55,12 +61,10 @@ class CubeWorld:
 
     def get_cubedata(self):
         # get vox format from the internal stored world
-
         # get each color
         list1 = world2vox(self.world_TOT[0, :, :, :])
         list2 = world2vox(self.world_TOT[1, :, :, :])
         list3 = world2vox(self.world_TOT[2, :, :, :])
-
         # put colors together in the correct order
         # this might be a speed-bottleneck? we should check
         # and do it in a faster way, numpy or else
@@ -119,19 +123,39 @@ class CubeWorld:
         # This also determines, that the input of each generate function
         # must always be defined as <somegenerator.generate>(self, step, world)
 
-        # Generator A
-        self.CHA[0].control(self.control_dict[16],self.control_dict[17],self.control_dict[18])
-        self.world_CHA = self.CHA[0].generate(step, self.world_CHA)
-        # Effect A
-        self.CHA[1].control(self.control_dict[20],self.control_dict[21],self.control_dict[22])
-        self.world_CHA = self.CHA[1].generate(step, self.world_CHA)
+        self.speed_A = int(round(self.control_dict[49]*20)+1)
+        self.speed_B = int(round(self.control_dict[53]*20)+1)
 
-        # Generator B
-        self.CHB[0].control(self.control_dict[16],self.control_dict[17],self.control_dict[18])
-        self.world_CHB = self.CHB[0].generate(step, self.world_CHB)
-        # Effect B
-        self.CHB[1].control(self.control_dict[20],self.control_dict[21],self.control_dict[22])
-        self.world_CHB = self.CHB[1].generate(step, self.world_CHB)
+        self.world_CHA[:, :, :, :] = 0.0
+        self.world_CHB[:, :, :, :] = 0.0
+
+        # Generator A
+        if step%self.speed_A == 0:
+            # Generator A
+            self.CHA[0].control(self.control_dict[16],self.control_dict[17],self.control_dict[18])
+            self.world_CHA = self.CHA[0].generate(step, self.world_CHA)
+            # Effect A
+            self.CHA[1].control(self.control_dict[20],self.control_dict[21],self.control_dict[22])
+            self.world_CHA = self.CHA[1].generate(step, self.world_CHA)
+
+
+        #Brightness A
+        self.amount_a = self.control_dict[57]
+
+
+        if step%self.speed_B == 0:
+            # Generator B
+            self.CHB[0].control(self.control_dict[24],self.control_dict[25],self.control_dict[26])
+            self.world_CHB = self.CHB[0].generate(step, self.world_CHB)
+            # Effect B
+            self.CHB[1].control(self.control_dict[28],self.control_dict[29],self.control_dict[30])
+            self.world_CHB = self.CHB[1].generate(step, self.world_CHB)
+
+        #Brightness B
+        self.amount_b = self.control_dict[61]
+
+        #Global fade
+        self.fade = self.control_dict[62]
 
         # Sum Channels
         self.world_TOT = np.clip(self.amount_a * self.world_CHA + \

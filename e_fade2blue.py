@@ -20,7 +20,7 @@ class e_fade2blue():
         self.amount = amount
 
     def generate(self, step, world):
-        world[2, :, :, :] += self.amount*world[:2, :, :, :]
+        world[2, :, :, :] += self.amount*world[0, :, :, :] + self.amount*world[1, :, :, :]
         world[:2, :, :, :] -= world[:2, :, :, :]*self.amount
 
         return np.clip(world, 0, 1)
