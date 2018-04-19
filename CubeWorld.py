@@ -23,13 +23,20 @@ class CubeWorld:
         self.world_CHB = np.zeros([3, 10, 10, 10])
         # world for master
         self.world_TOT = np.zeros([3, 10, 10, 10])
+        #channel volume
+        self.amount_a=1.0
+        self.amount_b=1.0
+        #fade
+        self.fade = 0.0
 
         # self.framecounter = 0
 
         self.control_dict = {}
-        
+
         for i in range(150):
-            self.control_dict = {i: 0.0}
+            self.control_dict.update( {i: 0.0} )
+
+        print(self.control_dict)
 
         self.CHA = []
         self.CHB = []
@@ -59,8 +66,8 @@ class CubeWorld:
         return liste
 
     def control(self, key, value):
-        # updates the control values
-        self.control_dict.update({key: value})
+        # updates the control values, shift range from 0-127 to 0.0-1.0
+        self.control_dict.update({key: value/127.0})
         print(self.control_dict)
 
     def set_Genenerator(self, generator, name):
@@ -105,17 +112,25 @@ class CubeWorld:
         # unlimited number of generators and effects on one channel.
         # This also determines, that the input of each generate function
         # must always be defined as <somegenerator.generate>(self, step, world)
-        for i in self.CHA:
-            self.world_CHA = i.generate(step, self.world_CHA)
 
-        # Channel B
-        for i in self.CHB:
-            self.world_CHB = i.generate(step, self.world_CHB)
+        # Generator A
+        self.CHA[0].control(self.control_dict[16],self.control_dict[17],self.control_dict[18])
+        self.world_CHA = self.CHA[0].generate(step, self.world_CHA)
+        # Effect A
+        self.CHA[1].control(self.control_dict[20],self.control_dict[21],self.control_dict[22])
+        self.world_CHA = self.CHA[1].generate(step, self.world_CHA)
+
+        # Generator B
+        self.CHB[0].control(self.control_dict[16],self.control_dict[17],self.control_dict[18])
+        elf.world_CHB = self.CHB[0].generate(step, self.world_CHB)
+        # Effect B
+        self.CHB[1].control(self.control_dict[20],self.control_dict[21],self.control_dict[22])
+        self.world_CHB = self.CHB[1].generate(step, self.world_CHB)
 
         # Sum Channels
-        self.world_TOT = np.clip(amount_a * self.world_CHA + \
-                                 amount_b * self.world_CHB + \
-                                 fade * self.world_TOT, 0, 1)
+        self.world_TOT = np.clip(self.amount_a * self.world_CHA + \
+                                 self.amount_b * self.world_CHB + \
+                                 self.fade * self.world_TOT, 0, 1)
 
         # Global Effects
         # the global fade is already included at the "sum channels"
