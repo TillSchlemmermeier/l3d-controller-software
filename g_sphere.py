@@ -18,16 +18,19 @@ class g_sphere():
 
     def control(self, color, size, blub0):
         self.size = round(size*10)
-        # self.color = round(color*2)
 
     def generate(self, step, dumpworld):
 
         world = np.zeros([3, 10, 10, 10])
 
+        posx = randint(0,9)
+        posy = randint(0,9)
+        posz = randint(0,9)
+
         for x in range(10):
             for y in range(10):
                 for z in range(10):
-                    dist = np.sqrt((x-randint(0, 9))**2+(y-randint(0, 9))**2+(z-randint(0, 9))**2)
+                    dist = np.sqrt((x-posx)**2+(y-posy)**2+(z-posz)**2)
                     if dist <= self.size:
                         world[:, x, y, z] = 1.0
 

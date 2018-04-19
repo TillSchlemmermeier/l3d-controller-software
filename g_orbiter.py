@@ -44,9 +44,9 @@ class g_orbiter():
 
         return world
 
-    def polar2z(r, theta, phi):
-        # polar coordinates to cartesian
-        x = r * np.sin(theta) * np.cos(phi)
-        y = r * np.sin(theta) * np.sin(phi)
-        z = r * np.cos(theta)
-        return [x, y, z]
+def polar2z(r, theta, phi):
+    # polar coordinates to cartesian
+    x = r * np.sin(theta) * np.cos(phi)
+    y = r * np.sin(theta) * np.sin(phi)
+    z = r * np.cos(theta)
+    return [x, y, z]

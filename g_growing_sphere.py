@@ -22,7 +22,7 @@ class g_growing_sphere():
         self.oscillate = 0
 
     def control(self, maxsize, growspeed, oscillate):
-        self.maxsize = maxsize
+        self.maxsize = maxsize*10
         self.growspeed = growspeed
         self.oscillate = oscillate
 
