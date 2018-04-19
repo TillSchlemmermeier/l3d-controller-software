@@ -19,7 +19,7 @@ class g_random():
     def control(self, number, blub0, blub1):
         self.number = (number*10)+1  # +1 makes sure that minimum number is >0
 
-    def generate(self, step):
+    def generate(self, step, dumpworld):
         # create the world
         world = np.zeros([3, 10, 10, 10])
         # choose random color

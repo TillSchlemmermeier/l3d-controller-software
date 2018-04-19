@@ -27,7 +27,7 @@ class g_snake():
     def control(self, number, turnprop, blub1):
         self.turnprop = turnprop
 
-    def generate(self, step):
+    def generate(self, step, dumpworld):
 
         # choose direction
         if uniform(0, 1) > self.turnprop:
