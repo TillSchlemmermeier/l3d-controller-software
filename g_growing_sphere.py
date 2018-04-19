@@ -27,8 +27,6 @@ class g_growing_sphere():
         self.oscillate = oscillate
 
     def generate(self, step, dumpworld):
-        # kleinste größe reparieren
-
         world = np.zeros([3, 10, 10, 10])
 
         # oscillates between 0 and 1
