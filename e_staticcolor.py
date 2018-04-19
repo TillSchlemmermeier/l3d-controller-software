@@ -1,8 +1,7 @@
 # modules
 import numpy as np
 
-
-class e_rainbow():
+class e_staticcolor():
     '''
     Effect: static color
 
