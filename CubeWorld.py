@@ -7,6 +7,9 @@ from g_cube import g_cube
 from g_growing_sphere import g_growing_sphere
 from g_random import g_random
 from g_sphere import g_sphere
+from g_blank import g_blank
+#load effect modules
+from e_blank import e_blank
 #from g_randomlines import g_randomlines
 # load effect modules
 
@@ -36,15 +39,15 @@ class CubeWorld:
         for i in range(150):
             self.control_dict.update( {i: 0.0} )
 
-        print(self.control_dict)
-
         self.CHA = []
         self.CHB = []
 
         # this is temporary, we need a routine to update the elements
         # in the list to change the generator/effect
-        self.CHA.append(g_cube())
-        self.CHB.append(g_cube())
+        self.CHA.append(g_blank())
+        self.CHA.append(e_blank())
+        self.CHB.append(g_blank())
+        self.CHB.append(e_blank())
 
     def get_cubedata(self):
         # get vox format from the internal stored world
@@ -68,10 +71,9 @@ class CubeWorld:
     def control(self, key, value):
         # updates the control values, shift range from 0-127 to 0.0-1.0
         self.control_dict.update({key: value/127.0})
-        print(self.control_dict)
 
-    def set_Genenerator(self, generator, name):
-        fullFunction = "self.CH"+generator+"[0]="+name+"()"
+    def set_Genenerator(self, generator, name, key):
+        fullFunction = "self.CH"+generator+"["+str(key)+"]="+name+"()"
         exec(fullFunction)
 
     def test_screen(self, clear=True):
@@ -122,7 +124,7 @@ class CubeWorld:
 
         # Generator B
         self.CHB[0].control(self.control_dict[16],self.control_dict[17],self.control_dict[18])
-        elf.world_CHB = self.CHB[0].generate(step, self.world_CHB)
+        self.world_CHB = self.CHB[0].generate(step, self.world_CHB)
         # Effect B
         self.CHB[1].control(self.control_dict[20],self.control_dict[21],self.control_dict[22])
         self.world_CHB = self.CHB[1].generate(step, self.world_CHB)

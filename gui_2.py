@@ -49,8 +49,8 @@ class App(Tk):
         self.send_array_rgb = []
         # self.send_list =[]
 
-        self.generators = ["NONE", " g_cube", "g_random", "g_growing_sphere"]
-        self.effects = ["NONE", "blur"]
+        self.generators = ["g_blank", " g_cube", "g_random", "g_growing_sphere"]
+        self.effects = ["e_blank"]
         # Header Information
         self.hSpeed = 1
         self.hBright = 200
@@ -62,19 +62,19 @@ class App(Tk):
 
         # GUI Callabcks
         def optionmenuG1_selection(event):
-            self.cubeWorld.set_Genenerator("A", self.dropdownG1Current.get())
+            self.cubeWorld.set_Genenerator("A", self.dropdownG1Current.get(),0)
             pass
 
         def optionmenuG2_selection(event):
-            self.cubeWorld.set_Genenerator("B", self.dropdownG2Current.get())
+            self.cubeWorld.set_Genenerator("B", self.dropdownG2Current.get(),1)
             pass
 
         def optionmenuE1_selection(event):
-            # EFFEKT
+            self.cubeWorld.set_Genenerator("A", self.dropdownE1Current.get(),2)
             pass
 
         def optionmenuE2_selection(event):
-            # EffEKT
+            self.cubeWorld.set_Genenerator("B", self.dropdownE2Current.get(),3)
             pass
 
         # GUI Elements
