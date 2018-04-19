@@ -8,6 +8,10 @@ from g_growing_sphere import g_growing_sphere
 from g_random import g_random
 from g_sphere import g_sphere
 from g_blank import g_blank
+from g_orbiter import g_orbiter
+from g_randomlines import g_randomlines
+from g_shooting_star import g_shooting_star
+from g_snake import g_snake
 #load effect modules
 from e_blank import e_blank
 #from g_randomlines import g_randomlines

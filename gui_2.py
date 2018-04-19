@@ -49,7 +49,7 @@ class App(Tk):
         self.send_array_rgb = []
         # self.send_list =[]
 
-        self.generators = ["g_blank", " g_cube", "g_random", "g_growing_sphere"]
+        self.generators = ["g_blank", " g_cube", "g_random", "g_growing_sphere","g_orbiter","g_randomlines","g_sphere","g_shooting_star","g_snake"]
         self.effects = ["e_blank"]
         # Header Information
         self.hSpeed = 1
