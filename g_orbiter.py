@@ -40,7 +40,7 @@ class g_orbiter():
         for x in range(10):
             for y in range(10):
                 for z in range(10):
-                    world[:, x, y, z] = 1.0/((np.sqrt((sx-x+5)**2 + (sy-y+5)**2 + (sz-z+5)**2)))**4
+                    world[:, x, y, z] = 1.0/((np.sqrt((sx-x+4.5)**2 + (sy-y+4.5)**2 + (sz-z+4.5)**2)))**4
 
         return world
 

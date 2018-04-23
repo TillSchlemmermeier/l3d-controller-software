@@ -19,9 +19,6 @@ class e_rainbow():
         self.c2 = {'r':0.0, 'g':0.0, 'b':1.0}
         self.balance = 0.5
 
-        self.red = 1.0
-        self.green = 1.0
-        self.blue = 0.0
 
 
     def control(self, c1, c2, balance):
@@ -33,10 +30,45 @@ class e_rainbow():
 
 
 
+        if(balance<=0):
+            balance=0.0001
+        else:
+            balance = balance/127.0
 
-        world[0, :, :, :] = world[0, :, :, :]*self.red
-        world[1, :, :, :] = world[1, :, :, :]*self.green
-        world[2, :, :, :] = world[2, :, :, :]*self.blue
+        pixels_on = 1
+        pixel_count = 0
+        new_world_r = world_init(10)
+        new_world_g = world_init(10)
+        new_world_b = world_init(10)
+
+        rgbResult1 = color_translate(rgb1)
+        rgbResult2 = color_translate(rgb2)
+
+        for x in range(10):
+            for y in range(10):
+                for z in range(10):
+                    if(world[:, x,y,z]!=0):
+                        pixels_on+=1
+
+        for x in range(10):
+            for y in range(10):
+                for z in range(10):
+                    if(world[:, x,y,z]!=0):
+                        if (pixel_count <= (pixels_on * balance)):
+                            new_world_r[x,y,z]= world[x,y,z]*((1-(1/(1+np.exp(1)**(5*((pixel_count/(balance * pixels_on))-1)))))*rgbResult1['r']+(1/(1+np.exp(1)**(5*((pixel_count/(balance * pixels_on))-1))))*rgbResult2['r'])
+                            new_world_g[x,y,z]= world[x,y,z]*((1-(1/(1+np.exp(1)**(5*((pixel_count/(balance * pixels_on))-1)))))*rgbResult1['g']+(1/(1+np.exp(1)**(5*((pixel_count/(balance * pixels_on))-1))))*rgbResult2['g'])
+                            new_world_b[x,y,z]= world[x,y,z]*((1-(1/(1+np.exp(1)**(5*((pixel_count/(balance * pixels_on))-1)))))*rgbResult1['b']+(1/(1+np.exp(1)**(5*((pixel_count/(balance * pixels_on))-1))))*rgbResult2['b'])
+                            pixel_count+=1
+                        elif (pixel_count > (pixels_on * balance)):
+                            new_world_r[x,y,z]= world[x,y,z]*((1-(1/(1+np.exp(1)**(5*((pixel_count-(balance * pixels_on))/(pixels_on-(balance * pixels_on)))))))*rgbResult1['r']+(1/(1+np.exp(1)**(5*((pixel_count-(balance * pixels_on))/(pixels_on-(balance * pixels_on))))))*rgbResult2['r'])
+                            new_world_g[x,y,z]= world[x,y,z]*((1-(1/(1+np.exp(1)**(5*((pixel_count-(balance * pixels_on))/(pixels_on-(balance * pixels_on)))))))*rgbResult1['g']+(1/(1+np.exp(1)**(5*((pixel_count-(balance * pixels_on))/(pixels_on-(balance * pixels_on))))))*rgbResult2['g'])
+                            new_world_b[x,y,z]= world[x,y,z]*((1-(1/(1+np.exp(1)**(5*((pixel_count-(balance * pixels_on))/(pixels_on-(balance * pixels_on)))))))*rgbResult1['b']+(1/(1+np.exp(1)**(5*((pixel_count-(balance * pixels_on))/(pixels_on-(balance * pixels_on))))))*rgbResult2['b'])
+                            pixel_count+=1
+
+
+        world[0,:,:,:] = new_world_r
+        world[1,:,:,:] = new_world_g
+        world[2,:,:,:] = new_world_b
 
         return np.clip(world, 0, 1)
 

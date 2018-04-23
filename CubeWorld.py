@@ -12,6 +12,8 @@ from g_orbiter import g_orbiter
 from g_randomlines import g_randomlines
 from g_shooting_star import g_shooting_star
 from g_snake import g_snake
+from g_planes import g_planes
+from g_planes_falling import g_planes_falling
 #load effect modules
 from e_blank import e_blank
 from e_fade2blue import e_fade2blue
