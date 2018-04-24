@@ -9,13 +9,13 @@
 Seven "Generators" are included at the moment. Generators return a new world when called. Each generator can be controlled with up to three knobs/parameters. *Cursive* written generators are untested.
 The generators are called at each step by thier "generate" routine, which gets the current step and the world as input. The last is usually not used by the generators, but has to be passed to be consistent.
 
-- *g_cube*
-- *g_growing_sphere*
-- *g_orbiter*
-- *g_random*
-- *g_randomlines*
+- g_cube
+- g_growing_sphere
+- g_orbiter
+- g_random
+- g_randomlines
 - *g_shooting_star*
-- *g_sphere*
+- g_sphere
 - *g_snake*
 
 Example in an effect class:
@@ -30,7 +30,10 @@ Example for call, the generator is stored in the list self.CHA:
 
 ## Effects
 
-- *fade2blue*
+- e_fade2blue
+- e_rainbow
+- e_staticcolor
+- *e_gradient*
 - *rotate* (planned)
 - *move* (planned)
 - *oscillate* (planned, change brightness periodically)
