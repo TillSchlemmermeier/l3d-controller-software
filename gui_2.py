@@ -1,4 +1,4 @@
-#! /usr/bin/python3.5
+#! /usr/bin/python2
 
 from Tkinter import *
 from cube_utils import *
@@ -49,7 +49,7 @@ class App(Tk):
         self.send_array_rgb = []
         # self.send_list =[]
 
-        self.generators = ["g_blank", " g_cube", "g_random", "g_growing_sphere","g_orbiter","g_randomlines","g_sphere", "g_snake","g_planes", "g_planes_falling"]
+        self.generators = ["g_blank", " g_cube", "g_random", "g_growing_sphere","g_orbiter","g_randomlines","g_sphere", "g_snake","g_planes", "g_planes_falling", "g_shooting_star"]
         self.effects = ["e_blank","e_fade2blue","e_rainbow","e_staticcolor"]
         # Header Information
         self.hSpeed = 1
@@ -88,10 +88,10 @@ class App(Tk):
         self.labelG1.grid(row=1, column=0)
 
         self.labelG2 = Label(frame, text="Generator 2")
-        self.labelG2.grid(row=1, column=1)
+        self.labelG2.grid(row=1, column=2)
 
         self.labelE1 = Label(frame, text="Effekt 1")
-        self.labelE1.grid(row=1, column=2)
+        self.labelE1.grid(row=1, column=1)
 
         self.labelE2 = Label(frame, text="Effekt 2")
         self.labelE2.grid(row=1, column=3)

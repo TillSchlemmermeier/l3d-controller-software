@@ -8,12 +8,11 @@ class g_shooting_star():
 
     a shooting star from somewhere through the cube
 
-
     '''
 
     def __init__(self):
-        self.refresh = 16
-        self.speed = 1.0
+        self.refresh = 16   # number of frames after creating a new shooting star
+        self.speed = 1.0    # moving speed
 
     def control(self, refresh, speed, blub1):
         self.refresh = round(refresh*20)
@@ -23,11 +22,9 @@ class g_shooting_star():
 
         world = np.zeros([3, 10, 10, 10])
 
-        refresh = 16
-
         # every <refresh> frames: generate new vector
-        if step % refresh == 0:
-            s0, v = gen_line(0.8)
+        if step % self.refresh == 0:
+            s0, v = gen_line(self.speed)
 
         # return current position of shooting star
         try:
@@ -40,21 +37,26 @@ class g_shooting_star():
         for x in range(10):
             for y in range(10):
                 for z in range(10):
-                    world[:, x, y, z] = 1.0/((np.sqrt((sx-x)**2 + (sy-y)**2 + (sz-z)**2)))**4
+                    world[:, x, y, z] = 1.0/((np.sqrt((sx-x)**2 + \
+                                                      (sy-y)**2 + \
+                                                      (sz-z)**2)))**4
 
         return world
 
 def gen_line(speed):
-    # generate two points
+    # generate outside point
+    # adjust angles for falling down shooting stars!
     p1 = polar2z(15, uniform(-2, 2), uniform(-2, 2))
+
+    # generate a point somewhere in the middle
     p2 = [uniform(-3, 3), uniform(-3, 3), uniform(-3, 3)]
+
     v = []
     # calculate vector
-    v.append(p2[0] - p1[0])
-    v.append(p2[1] - p1[1])
-    v.append(p2[2] - p1[2])
+    v.append(speed*(p2[0] - p1[0]))
+    v.append(speed*(p2[1] - p1[1]))
+    v.append(speed*(p2[2] - p1[2]))
 
-    v = speed * v/(np.sqrt(v[0]**2 + v[1]**2 + v[2]**2))
     return p1, v
 
 def s(s0, v, t):
