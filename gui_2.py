@@ -151,6 +151,23 @@ class App(Tk):
 
     def apply_manipulation(self, step):
         self.cubeWorld.control(MidiKey,MidiValue)
+        paramValues = self.cubeWorld.getParamsAndValues()
+        self.G1param1.text = paramValues[0][0]+':'+str(paramValues[0][1])
+        self.G1param2.text = paramValues[0][2]+':'+str(paramValues[0][3])
+        self.G1param3.text = paramValues[0][4]+':'+str(paramValues[0][5])
+
+        self.G2param1.text = paramValues[1][0]+':'+str(paramValues[1][1])
+        self.G2param2.text = paramValues[1][2]+':'+str(paramValues[1][3])
+        self.G2param3.text = paramValues[1][4]+':'+str(paramValues[1][5])
+
+        self.E1param1.text = paramValues[2][0]+':'+str(paramValues[2][1])
+        self.E1param2.text = paramValues[2][2]+':'+str(paramValues[2][3])
+        self.E1param3.text = paramValues[2][4]+':'+str(paramValues[2][5])
+
+        self.E2param1.text = paramValues[3][0]+':'+str(paramValues[3][1])
+        self.E2param2.text = paramValues[3][2]+':'+str(paramValues[3][3])
+        self.E2param3.text = paramValues[3][4]+':'+str(paramValues[3][5])
+
         self.cubeWorld.update(step)
 
     def send_data_rgb(self):
