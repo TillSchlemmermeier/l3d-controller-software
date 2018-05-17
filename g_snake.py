@@ -27,6 +27,9 @@ class g_snake():
     def control(self, number, turnprop, blub1):
         self.turnprop = turnprop
 
+    def label(self):
+        return ['turnprop',self.turnprop,'empty', 'empty','empty','empty']
+
     def generate(self, step, dumpworld):
 
         # choose direction

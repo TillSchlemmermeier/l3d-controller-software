@@ -18,6 +18,9 @@ class g_shooting_star():
         self.refresh = round(refresh*20)
         self.speed = speed
 
+    def label(self):
+        return ['refresh',self.refresh,'speed', self.speed,'empty','empty']
+
     def generate(self, step, dumpworld):
 
         world = np.zeros([3, 10, 10, 10])

@@ -12,6 +12,9 @@ class e_outer_shadow():
     def control(self, radius, blub0, blub1):
 	self.radius = radius*10
 
+    def label(self):
+        return ['radius',self.radius,'empty', 'empty','empty','empty']
+
     def generate(self, step, world):
 
         posx = 4.5

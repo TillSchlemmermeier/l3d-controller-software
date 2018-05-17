@@ -19,6 +19,8 @@ class g_planes_falling():
         self.speed = int(speed*9)
         self.dir = int(round(dir*3))
 
+    def label(self):
+        return ['speed',self.speed,'direction', self.dir,'empty','empty']
 
     def generate(self, step, dumpworld):
         world = np.zeros([3, 10, 10, 10])

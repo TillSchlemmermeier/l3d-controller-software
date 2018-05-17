@@ -19,7 +19,8 @@ class g_planes():
         self.speed = int(speed*9)
         self.dir = int(round(dir*3))
 
-
+    def label(self):
+        return ['speed',self.speed,'direction', self.dir,'empty','empty']
     def generate(self, step, dumpworld):
         world = np.zeros([3, 10, 10, 10])
         position = int( round((np.sin(0.1*step*self.speed)+1)*4.5))

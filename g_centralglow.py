@@ -29,6 +29,9 @@ class g_centralglow():
         self.speed = speed
         self.waiting = int(waiting*50)
 
+    def label(self):
+        return ['speed',self.speed,'waiting', self.waiting,'empty','empty']
+
 
     def generate(self, step, dumpworld):
         # create world

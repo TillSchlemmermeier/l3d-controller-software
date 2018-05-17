@@ -19,6 +19,9 @@ class g_sphere():
     def control(self, color, size, blub0):
         self.size = round(size*10)
 
+    def label(self):
+        return ['size',self.size,'empty', 'empty','empty','empty']
+
     def generate(self, step, dumpworld):
 
         world = np.zeros([3, 10, 10, 10])
