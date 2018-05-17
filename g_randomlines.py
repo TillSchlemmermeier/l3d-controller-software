@@ -12,7 +12,7 @@ class g_randomlines():
         self.blub0 = blub0
 
     def label(self):
-        return ['empty','empty','empty', 'empty','empty','empty']s
+        return ['empty','empty','empty', 'empty','empty','empty']
 
     def generate(self, step, dumpworld):
 
