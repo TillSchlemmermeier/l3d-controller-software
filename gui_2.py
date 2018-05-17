@@ -1,4 +1,4 @@
-#! /usr/bin/python2
+#! /usr/bin/python3.5
 
 from Tkinter import *
 from cube_utils import *
@@ -49,7 +49,7 @@ class App(Tk):
         self.send_array_rgb = []
         # self.send_list =[]
 
-        self.generators = ["g_blank", " g_cube", "g_random", "g_growing_sphere","g_orbiter","g_randomlines","g_sphere", "g_snake","g_planes", "g_planes_falling", "g_shooting_star"]
+        self.generators = ["g_blank", " g_cube", "g_random", "g_growing_sphere","g_orbiter","g_randomlines","g_sphere", "g_snake","g_planes", "g_planes_falling"]
         self.effects = ["e_blank","e_fade2blue","e_rainbow","e_staticcolor"]
         # Header Information
         self.hSpeed = 1
@@ -88,10 +88,10 @@ class App(Tk):
         self.labelG1.grid(row=1, column=0)
 
         self.labelG2 = Label(frame, text="Generator 2")
-        self.labelG2.grid(row=1, column=2)
+        self.labelG2.grid(row=1, column=1)
 
         self.labelE1 = Label(frame, text="Effekt 1")
-        self.labelE1.grid(row=1, column=1)
+        self.labelE1.grid(row=1, column=2)
 
         self.labelE2 = Label(frame, text="Effekt 2")
         self.labelE2.grid(row=1, column=3)
@@ -100,21 +100,45 @@ class App(Tk):
         self.dropdownG1Current.set(self.generators[0])
         self.dropdownG1 = OptionMenu(frame, self.dropdownG1Current, *self.generators, command = optionmenuG1_selection)
         self.dropdownG1.grid(row=2, column=0)
+        self.G1param1 = Label(frame, text="Param 1")
+        self.G1param1.grid(row=3, column=0)
+        self.G1param2 = Label(frame, text="Param 2")
+        self.G1param2.grid(row=4, column=0)
+        self.G1param3 = Label(frame, text="Param 3")
+        self.G1param3.grid(row=5, column=0)
 
         self.dropdownG2Current = StringVar()
         self.dropdownG2Current.set(self.generators[0])
         self.dropdownG2 = OptionMenu(frame, self.dropdownG2Current, *self.generators,command = optionmenuG2_selection)
         self.dropdownG2.grid(row=2, column=1)
+        self.G2param1 = Label(frame, text="Param 1")
+        self.G2param1.grid(row=3, column=1)
+        self.G2param2 = Label(frame, text="Param 2")
+        self.G2param2.grid(row=4, column=1)
+        self.G2param3 = Label(frame, text="Param 3")
+        self.G2param3.grid(row=5, column=1)
 
         self.dropdownE1Current = StringVar()
         self.dropdownE1Current.set(self.effects[0])
         self.dropdownE1 = OptionMenu(frame, self.dropdownE1Current, *self.effects,command = optionmenuE1_selection)
         self.dropdownE1.grid(row=2, column=2)
+        self.E1param1 = Label(frame, text="Param 1")
+        self.E1param1.grid(row=3, column=2)
+        self.E1param2 = Label(frame, text="Param 2")
+        self.E1param2.grid(row=4, column=2)
+        self.E1param3 = Label(frame, text="Param 3")
+        self.E1param3.grid(row=5, column=2)
 
         self.dropdownE2Current = StringVar()
         self.dropdownE2Current.set(self.effects[0])
         self.dropdownE2 = OptionMenu(frame, self.dropdownE2Current, *self.effects, command = optionmenuE2_selection)
         self.dropdownE2.grid(row=2, column=3)
+        self.E2param1 = Label(frame, text="Param 1")
+        self.E2param1.grid(row=3, column=3)
+        self.E2param2 = Label(frame, text="Param 2")
+        self.E2param2.grid(row=4, column=3)
+        self.E2param3 = Label(frame, text="Param 3")
+        self.E2param3.grid(row=5, column=3)
 
 
 # L3D-Functions
