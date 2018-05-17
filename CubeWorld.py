@@ -84,8 +84,8 @@ class CubeWorld:
     def control(self, key, value):
         # updates the control values, shift range from 0-127 to 0.0-1.0
         self.control_dict.update({key: value/127.0})
-    def getParamsAndValues(self)
-        return [self.CHA[0].label,self.CHA[1].label],[self.CHB[0].label,self.CHB[1].label]
+    def getParamsAndValues(self):
+        return [self.CHA[0].label(),self.CHA[1].label(),self.CHB[0].label(),self.CHB[1].label()]
 
     def set_Genenerator(self, generator, name, key):
         fullFunction = "self.CH"+generator+"["+str(key)+"]="+name+"()"
