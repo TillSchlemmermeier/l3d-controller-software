@@ -22,10 +22,8 @@ class g_random():
     def generate(self, step, dumpworld):
         # create the world
         world = np.zeros([3, 10, 10, 10])
-        # choose random color
-        color = randint(0, 2)
-
+        
         for i in range(self.number):
-            world[color, randint(0, 9), randint(0, 9), randint(0, 9)] = 1.0
+            world[:, randint(0, 9), randint(0, 9), randint(0, 9)] = 1.0
 
         return world

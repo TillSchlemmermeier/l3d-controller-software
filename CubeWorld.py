@@ -13,11 +13,14 @@ from g_randomlines import g_randomlines
 from g_shooting_star import g_shooting_star
 from g_snake import g_snake
 from g_planes import g_planes
+from g_corner import g_corner
+from g_corner_grow import g_corner_grow
 from g_planes_falling import g_planes_falling
 #load effect modules
 from e_blank import e_blank
 from e_fade2blue import e_fade2blue
 from e_rainbow import e_rainbow
+from e_outer_shadow import e_outer_shadow
 from e_staticcolor import e_staticcolor
 #from g_randomlines import g_randomlines
 # load effect modules
