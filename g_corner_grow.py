@@ -17,6 +17,9 @@ class g_corner_grow():
     def control(self, waiting, dump0, dump1):
         self.waiting = int(waiting*50)
 
+    def label(self):
+        return ['waiting time', round(self.waiting,2),'empty','empty','empty','empty']
+
     def generate(self, step, dumpworld):
         # create world
         world = np.zeros([3, 10, 10, 10])

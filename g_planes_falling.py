@@ -20,7 +20,7 @@ class g_planes_falling():
         self.dir = int(round(dir*3))
 
     def label(self):
-        return ['speed',self.speed,'direction', self.dir,'empty','empty']
+        return ['speed',round(self.speed,2),'direction', round(self.dir,2),'empty','empty']
 
     def generate(self, step, dumpworld):
         world = np.zeros([3, 10, 10, 10])

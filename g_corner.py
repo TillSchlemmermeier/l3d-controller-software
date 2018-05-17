@@ -12,6 +12,9 @@ class g_corner():
     def control(self, blub0, blub1, blub2):
         self.blub = 0
 
+    def label(self):
+        return ['empty','empty','empty','empty','empty','empty']
+
     def generate(self, step, dumpworld):
         # create world
         world = np.zeros([3, 10, 10, 10])

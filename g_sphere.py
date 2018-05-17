@@ -20,7 +20,7 @@ class g_sphere():
         self.size = round(size*10)
 
     def label(self):
-        return ['size',self.size,'empty', 'empty','empty','empty']
+        return ['size',round(self.size,2),'empty', 'empty','empty','empty']
 
     def generate(self, step, dumpworld):
 

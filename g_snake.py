@@ -28,7 +28,7 @@ class g_snake():
         self.turnprop = turnprop
 
     def label(self):
-        return ['turnprop',self.turnprop,'empty', 'empty','empty','empty']
+        return ['turnprop',round(self.turnprop,2),'empty', 'empty','empty','empty']
 
     def generate(self, step, dumpworld):
 

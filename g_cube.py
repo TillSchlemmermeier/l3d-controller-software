@@ -24,6 +24,9 @@ class g_cube():
         else:
             self.sides = False
 
+    def label(self):
+        return ['size',round(self.size, 2),'side on', self.sides,'empty','empty']
+
     def generate(self, step, dumpworld):
         # create world
         world = np.zeros([3, 10, 10, 10])
