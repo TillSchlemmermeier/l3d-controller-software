@@ -23,6 +23,8 @@ MidiKey = 0
 MidiValue = 0
 
 
+# sound2light stuff ende
+
 class App(Tk):
     def __init__(self):
         Tk.__init__(self)
@@ -50,7 +52,7 @@ class App(Tk):
         # self.send_list =[]
 
         self.generators = ["g_blank", " g_cube", "g_random", "g_growing_sphere","g_orbiter","g_randomlines","g_sphere", "g_snake","g_planes", "g_planes_falling"]
-        self.effects = ["e_blank","e_fade2blue","e_rainbow","e_staticcolor"]
+        self.effects = ["e_blank","e_fade2blue","e_rainbow","e_staticcolor", "e_violetblue", "e_redyellow"]
         # Header Information
         self.hSpeed = 1
         self.hBright = 200

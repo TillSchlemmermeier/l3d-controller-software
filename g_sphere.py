@@ -16,7 +16,7 @@ class g_sphere():
         self.size = 2
         self.color = 0
 
-    def control(self, color, size, blub0):
+    def control(self, size, blub0, blub1):
         self.size = round(size*10)
 
     def label(self):

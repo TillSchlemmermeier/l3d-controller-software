@@ -26,7 +26,7 @@ class g_orbiter():
         self.rho = rho
 
     def label(self):
-        return ['distance',self.distance,'theta', self.theta,'rho',self.rho]  
+        return ['distance',round(self.distance,2),'theta', round(self.theta,2),'rho',round(self.rho,2)]  
 
     def generate(self, step, dumpworld):
         # generate empty world

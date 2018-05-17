@@ -22,6 +22,9 @@ from e_fade2blue import e_fade2blue
 from e_rainbow import e_rainbow
 from e_outer_shadow import e_outer_shadow
 from e_staticcolor import e_staticcolor
+from e_violetblue import e_violetblue
+from e_redyellow import e_redyellow
+#from e_newgradient import e_newgradient
 #from g_randomlines import g_randomlines
 # load effect modules
 
