@@ -19,6 +19,9 @@ class e_fade2blue():
     def control(self, amount, blub0, blub1):
         self.amount = amount
 
+    def label(self):
+        return ['amount',self.amount,'empty', 'empty','empty','empty']  
+
     def generate(self, step, world):
         world[2, :, :, :] += self.amount*world[0, :, :, :] + self.amount*world[1, :, :, :]
         world[:2, :, :, :] -= world[:2, :, :, :]*self.amount

@@ -19,10 +19,13 @@ class g_random():
     def control(self, number, blub0, blub1):
         self.number = int((number*10)+1)  # +1 makes sure that minimum number is > 0
 
+    def label(self):
+        return ['number',self.number,'empty', 'empty','empty','empty']
+
     def generate(self, step, dumpworld):
         # create the world
         world = np.zeros([3, 10, 10, 10])
-        
+
         for i in range(self.number):
             world[:, randint(0, 9), randint(0, 9), randint(0, 9)] = 1.0
 

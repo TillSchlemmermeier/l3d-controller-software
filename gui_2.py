@@ -1,4 +1,4 @@
-#! /usr/bin/python2
+#! /usr/bin/python3.5
 
 from Tkinter import *
 from cube_utils import *
@@ -49,7 +49,7 @@ class App(Tk):
         self.send_array_rgb = []
         # self.send_list =[]
 
-        self.generators = ["g_blank", " g_cube", "g_random", "g_growing_sphere","g_orbiter","g_randomlines","g_sphere", "g_snake","g_planes", "g_planes_falling", "g_shooting_star"]
+        self.generators = ["g_blank", " g_cube", "g_random", "g_growing_sphere","g_orbiter","g_randomlines","g_sphere", "g_snake","g_planes", "g_planes_falling"]
         self.effects = ["e_blank","e_fade2blue","e_rainbow","e_staticcolor"]
         # Header Information
         self.hSpeed = 1
@@ -100,21 +100,45 @@ class App(Tk):
         self.dropdownG1Current.set(self.generators[0])
         self.dropdownG1 = OptionMenu(frame, self.dropdownG1Current, *self.generators, command = optionmenuG1_selection)
         self.dropdownG1.grid(row=2, column=0)
+        self.G1param1 = Label(frame, text="Param 1")
+        self.G1param1.grid(row=3, column=0)
+        self.G1param2 = Label(frame, text="Param 2")
+        self.G1param2.grid(row=4, column=0)
+        self.G1param3 = Label(frame, text="Param 3")
+        self.G1param3.grid(row=5, column=0)
 
         self.dropdownG2Current = StringVar()
         self.dropdownG2Current.set(self.generators[0])
         self.dropdownG2 = OptionMenu(frame, self.dropdownG2Current, *self.generators,command = optionmenuG2_selection)
-        self.dropdownG2.grid(row=2, column=1)
+        self.dropdownG2.grid(row=2, column=2)
+        self.G2param1 = Label(frame, text="Param 1")
+        self.G2param1.grid(row=3, column=1)
+        self.G2param2 = Label(frame, text="Param 2")
+        self.G2param2.grid(row=4, column=1)
+        self.G2param3 = Label(frame, text="Param 3")
+        self.G2param3.grid(row=5, column=1)
 
         self.dropdownE1Current = StringVar()
         self.dropdownE1Current.set(self.effects[0])
         self.dropdownE1 = OptionMenu(frame, self.dropdownE1Current, *self.effects,command = optionmenuE1_selection)
-        self.dropdownE1.grid(row=2, column=2)
+        self.dropdownE1.grid(row=2, column=1)
+        self.E1param1 = Label(frame, text="Param 1")
+        self.E1param1.grid(row=3, column=2)
+        self.E1param2 = Label(frame, text="Param 2")
+        self.E1param2.grid(row=4, column=2)
+        self.E1param3 = Label(frame, text="Param 3")
+        self.E1param3.grid(row=5, column=2)
 
         self.dropdownE2Current = StringVar()
         self.dropdownE2Current.set(self.effects[0])
         self.dropdownE2 = OptionMenu(frame, self.dropdownE2Current, *self.effects, command = optionmenuE2_selection)
         self.dropdownE2.grid(row=2, column=3)
+        self.E2param1 = Label(frame, text="Param 1")
+        self.E2param1.grid(row=3, column=3)
+        self.E2param2 = Label(frame, text="Param 2")
+        self.E2param2.grid(row=4, column=3)
+        self.E2param3 = Label(frame, text="Param 3")
+        self.E2param3.grid(row=5, column=3)
 
 
 # L3D-Functions
@@ -127,6 +151,23 @@ class App(Tk):
 
     def apply_manipulation(self, step):
         self.cubeWorld.control(MidiKey,MidiValue)
+        paramValues = self.cubeWorld.getParamsAndValues()
+        self.G1param1.text = paramValues[0][0]+':'+str(paramValues[0][1])
+        self.G1param2.text = paramValues[0][2]+':'+str(paramValues[0][3])
+        self.G1param3.text = paramValues[0][4]+':'+str(paramValues[0][5])
+
+        self.G2param1.text = paramValues[1][0]+':'+str(paramValues[1][1])
+        self.G2param2.text = paramValues[1][2]+':'+str(paramValues[1][3])
+        self.G2param3.text = paramValues[1][4]+':'+str(paramValues[1][5])
+
+        self.E1param1.text = paramValues[2][0]+':'+str(paramValues[2][1])
+        self.E1param2.text = paramValues[2][2]+':'+str(paramValues[2][3])
+        self.E1param3.text = paramValues[2][4]+':'+str(paramValues[2][5])
+
+        self.E2param1.text = paramValues[3][0]+':'+str(paramValues[3][1])
+        self.E2param2.text = paramValues[3][2]+':'+str(paramValues[3][3])
+        self.E2param3.text = paramValues[3][4]+':'+str(paramValues[3][5])
+
         self.cubeWorld.update(step)
 
     def send_data_rgb(self):

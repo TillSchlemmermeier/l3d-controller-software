@@ -22,6 +22,9 @@ class e_rainbow():
     def control(self, speed, blub0, blub1):
         self.speed = speed
 
+    def label(self):
+        return ['speed',self.speed,'empty', 'empty','empty','empty']
+
     def generate(self, step, world):
 
         if(self.red>0.99 and self.blue<0.99 and self.green<0.01):

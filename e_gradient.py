@@ -26,6 +26,9 @@ class e_rainbow():
         self.c2 = color_translate(c2)
         self.balance = balance
 
+    def label(self):
+        return ['c1',self.c1,'c2', self.c2,'balance',self.balance]  
+
     def generate(self, step, world):
 
 

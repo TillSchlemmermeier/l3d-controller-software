@@ -22,6 +22,10 @@ class e_staticcolor():
         self.red = red
         self.green = green
         self.blue = blue
+
+    def label(self):
+        return ['RED',self.red,'GREEN', self.green,'BLUE',self.blue]
+
     def generate(self, step, world):
 
         world[0, :, :, :] = world[0, :, :, :]*self.red
