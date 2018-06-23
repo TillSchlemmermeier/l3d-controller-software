@@ -25,7 +25,7 @@ class g_cube():
             self.sides = False
 
     def label(self):
-        return ['empty','empty','empty','empty','empty','empty']
+        return ['size',round(self.size, 2),'side on', self.sides,'empty','empty']
 
 
     def generate(self, step, dumpworld):

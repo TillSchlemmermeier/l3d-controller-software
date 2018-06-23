@@ -16,6 +16,7 @@ from g_planes import g_planes
 from g_corner import g_corner
 from g_corner_grow import g_corner_grow
 from g_planes_falling import g_planes_falling
+from g_orbiter2 import g_orbiter2
 #load effect modules
 from e_blank import e_blank
 from e_fade2blue import e_fade2blue

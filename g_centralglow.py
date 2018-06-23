@@ -29,8 +29,9 @@ class g_centralglow():
         self.speed = speed
         self.waiting = int(waiting*50)
 
+
     def label(self):
-        return ['speed',self.speed,'waiting', self.waiting,'empty','empty']
+        return ['grow speed',round(self.speed,2),'waiting time', round(self.waiting, 2),'empty','empty']
 
 
     def generate(self, step, dumpworld):
