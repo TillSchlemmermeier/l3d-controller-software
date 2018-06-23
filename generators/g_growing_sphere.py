@@ -1,8 +1,9 @@
 # modules
 import numpy as np
-# from cube_utils import *
 from scipy.signal import sawtooth
+from g_growing_sphere_f import gen_hsphere
 
+# fortran routine is in g_growing_sphere_f.f90
 
 class g_growing_sphere():
     '''
@@ -22,7 +23,7 @@ class g_growing_sphere():
         self.oscillate = 0
 
     def label(self):
-        return ['maxsize',round(self.maxsize,2),'growspeed',round(self.growspeed,2),'oscillate?',round(self.oscillate,2)]        
+        return ['maxsize',round(self.maxsize,2),'growspeed',round(self.growspeed,2),'oscillate?',round(self.oscillate,2)]
 
     def control(self, maxsize, growspeed, oscillate):
         self.maxsize = maxsize*10
@@ -41,21 +42,8 @@ class g_growing_sphere():
         # scales to maxsize
         size = self.maxsize * osci
         # creates hollow sphere with parameters
-        world[0, :, :, :] = hsphere(size)
+        world[0, :, :, :] = gen_hsphere(size, 4.5,4.5,4.5)
         world[1:, :, :, :] = world[0, :, :, :]
         world[2:, :, :, :] = world[0, :, :, :]
 
-        return world
-
-
-def hsphere(radius):
-
-    world = np.zeros([10, 10, 10])
-
-    for x in range(10):
-        for y in range(10):
-            for z in range(10):
-                dist = np.sqrt((x-4.5)**2+(y-4.5)**2+(z-4.5)**2)
-                world[x, y, z] = 1.0/(radius-dist+0.0001)**7
-
-    return np.round(np.clip(world, 0, 1), 3)
+        return np.round(np.clip(world, 0, 1), 3)
