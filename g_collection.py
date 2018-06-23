@@ -13,7 +13,7 @@ from g_corner_grow import *
 from g_growing_sphere import *
 from g_planes import *
 from g_shooting_star import *
-
+from fortran_test_sphere import *
 
 class generators():
         
@@ -55,3 +55,6 @@ class generators():
 
     def g_corner_grow(self, *args):
         return g_corner_grow(args)
+
+    def fortran_test_sphere(self, *args):
+        return fortran_test_sphere(args)

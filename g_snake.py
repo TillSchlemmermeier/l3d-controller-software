@@ -22,9 +22,11 @@ class g_snake():
         self.direction = 1
 
         self.world = np.zeros([3, 10, 10, 10])
-        self.world[:, randint(0, 9), randint(0, 9), randint(0, 9)] = 1.0
+#        self.world[:, randint(0, 9), randint(0, 9), randint(0, 9)] = 1.0
+        self.world[:, 4, 4, 4] = 1.0
 
-    def control(self, number, turnprop, blub1):
+
+    def control(self, turnprop, blub0, blub1):
         self.turnprop = turnprop
 
     def label(self):
@@ -32,14 +34,19 @@ class g_snake():
 
     def generate(self, step, dumpworld):
 
+        world = np.zeros([3,10,10,10])
+
         # choose direction
+
         if uniform(0, 1) > self.turnprop:
+
             oldaxis = self.axis
             while oldaxis == self.axis:
                 self.axis = randint(1, 3)
 
             self.direction = choice([-1, 1])
 
-        self.world = np.roll(self.world, self.direction, self.axis)
+        world = np.roll(self.world, self.direction, self.axis)
+        self.world = world
 
-        return self.world
+        return np.clip(world, 0, 1)

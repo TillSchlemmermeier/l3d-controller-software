@@ -23,6 +23,8 @@ MidiKey = 0
 MidiValue = 0
 
 
+# sound2light stuff ende
+
 class App(Tk):
     def __init__(self):
         Tk.__init__(self)
@@ -49,8 +51,10 @@ class App(Tk):
         self.send_array_rgb = []
         # self.send_list =[]
 
-        self.generators = ["g_blank", " g_cube", "g_random", "g_growing_sphere","g_orbiter","g_randomlines","g_sphere", "g_snake","g_planes", "g_planes_falling"]
-        self.effects = ["e_blank","e_fade2blue","e_rainbow","e_staticcolor"]
+        self.generators = ["g_blank", " g_cube", "g_random", "g_growing_sphere","g_orbiter","g_randomlines",
+                           "g_sphere", "g_snake","g_planes", "g_planes_falling", "g_corner", "g_corner_grow",
+                            "g_shooting_star", "g_orbiter2"]
+        self.effects = ["e_blank","e_fade2blue","e_rainbow","e_staticcolor", "e_violetblue", "e_redyellow"]
         # Header Information
         self.hSpeed = 1
         self.hBright = 200
@@ -147,9 +151,9 @@ class App(Tk):
         self.dropdownE2.grid(row=2, column=3)
         self.E2param1 = Label(frame, textvariable=self.E2param1String)
         self.E2param1.grid(row=3, column=3)
-        self.E2param2 = Label(frame, textvariable=self.E1param2String)
+        self.E2param2 = Label(frame, textvariable=self.E2param2String)
         self.E2param2.grid(row=4, column=3)
-        self.E2param3 = Label(frame, textvariable=self.E1param3String)
+        self.E2param3 = Label(frame, textvariable=self.E2param3String)
         self.E2param3.grid(row=5, column=3)
 
 
@@ -247,5 +251,5 @@ if __name__ == "__main__":
     # midi ready
 
     root = App()
-    root.title("PyControll")
+    root.title("l3d-controll - - - Build : 1337.420")
     root.mainloop()

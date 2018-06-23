@@ -19,7 +19,6 @@ from matplotlib.pyplot import *
 # Stuff which i don't fully understand starts here
 RATE = 44100
 BUFFER = 882
-
 p = pyaudio.PyAudio()
 
 stream = p.open(
@@ -51,7 +50,7 @@ def update_line(i):
 # Stuff which i don't fully understand ends here
 
 data = []       # spectra
-nsample = 100   # how many samples to take for demonstration
+nsample = 400   # how many samples to take for demonstration
 for i in range(nsample):
     data.append(update_line(i))
 
