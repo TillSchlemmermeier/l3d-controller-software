@@ -25,5 +25,7 @@ class g_sphere():
         posz = randint(0,9)
 
         world[0,:,:,:] = gen_sphere(self.size, posx, posy, posz)
+        world[1,:,:,:] = world[0,:,:,:]
+        world[2,:,:,:] = world[0,:,:,:]
 
         return np.clip(world, 0, 1)
