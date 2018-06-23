@@ -23,7 +23,7 @@ class e_rainbow():
         self.speed = speed
 
     def label(self):
-        return ['speed',self.speed,'empty', 'empty','empty','empty']
+        return ['speed',round(self.speed),'empty', 'empty','empty','empty']
 
     def generate(self, step, world):
 

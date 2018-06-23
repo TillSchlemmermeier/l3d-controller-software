@@ -38,7 +38,7 @@ class g_centralglow():
         # create world
         world = np.zeros([3, 10, 10, 10])
 
-        if self.brightness > 1.0
+        if self.brightness > 1.0:
             self.waitingcounter = self.waiting
             self.speedcounter = 0.0
 
@@ -50,6 +50,6 @@ class g_centralglow():
             self.brightness += self.speed
 
         else:
-            self.waitingcounter -= 1:
+            self.waitingcounter -= 1
 
         return np.clip(world, 0, 1)

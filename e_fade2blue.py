@@ -20,7 +20,7 @@ class e_fade2blue():
         self.amount = amount
 
     def label(self):
-        return ['amount',self.amount,'empty', 'empty','empty','empty']  
+        return ['amount',round(self.amount,2),'empty', 'empty','empty','empty']  
 
     def generate(self, step, world):
         world[2, :, :, :] += self.amount*world[0, :, :, :] + self.amount*world[1, :, :, :]

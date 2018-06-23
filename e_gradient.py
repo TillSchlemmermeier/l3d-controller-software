@@ -19,15 +19,13 @@ class e_rainbow():
         self.c2 = {'r':0.0, 'g':0.0, 'b':1.0}
         self.balance = 0.5
 
-
-
     def control(self, c1, c2, balance):
         self.c1 = color_translate(c1)
         self.c2 = color_translate(c2)
         self.balance = balance
 
     def label(self):
-        return ['c1',self.c1,'c2', self.c2,'balance',self.balance]  
+        return ['c1',self.c1,'c2', self.c2,'balance',round(self.balance,2)]  
 
     def generate(self, step, world):
 
