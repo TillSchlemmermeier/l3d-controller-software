@@ -31,13 +31,22 @@ class App(Tk):
         frame = Frame(self)
         frame.pack()
 
-        # CONECTION
+        #Arduino CONECTION
         try:
             self.con =  serial.Serial('/dev/ttyACM0', 230400)
             print(self.con)
         except IOError:
             self.con = serial.Serial('/dev/ttyACM1', 230400)
             print(self.con)
+
+        #DMX CONECTION
+        try:
+            self.dmx =  serial.Serial('/dev/ttyUSB0', 57600)
+            print(self.dmx)
+        except IOError:
+            self.dmx = serial.Serial('/dev/ttyUSB11', 57600)
+            print(self.dmx)
+
 
         # VARS
         self.do_send = False
@@ -236,6 +245,7 @@ class App(Tk):
         paramValues = self.cubeWorld.getParamsAndValues()
         genValues = self.cubeWorld.getBrightnessAndShutterspeed()
         #self.switchMidiButtonLights(MidiKey)
+        print(self.dmx.read(605))
 
 
         self.G1param1String.set(paramValues[0][0]+':'+str(paramValues[0][1]))
