@@ -20,30 +20,32 @@ class g_growing_corner():
     def __init__(self):
         self.maxsize = 10
         self.growspeed = 1
-        self.oscillate = 0
+        self.steps = 0
 
     def label(self):
-        return ['maxsize',round(self.maxsize,2),'growspeed',round(self.growspeed,2),'oscillate?',round(self.oscillate,2)]
+        return ['maxsize',round(self.maxsize,2),'growspeed',round(self.growspeed,2),'Steps',round(self.steps,2)]
 
-    def control(self, maxsize, growspeed, oscillate):
+    def control(self, maxsize, growspeed, steps):
         self.maxsize = maxsize*10
         self.growspeed = growspeed
-        self.oscillate = oscillate
+        self.steps = steps
 
-    def generate(self, step, dumpworld):
-        world = np.zeros([3, 10, 10, 10])
+    xpos = 9*randint(0,1)
+    ypos = 9*randint(0,1)
+    zpos = 9*randint(0,1)
 
-        # oscillates between 0 and 1
-        if self.oscillate < 0.5:
+    for x in range (0,steps)
+        def generate(self, step, dumpworld):
+            world = np.zeros([3, 10, 10, 10])
+
+            # oscillates between 0 and 1
             osci = np.sin(step*self.growspeed)*0.5 + 1
-        else:
-            osci = sawtooth(step*self.growspeed)*0.5 + 1
 
-        # scales to maxsize
-        size = self.maxsize * osci
-        # creates hollow sphere with parameters
-        world[0, :, :, :] = gen_hsphere(size, 4.5,4.5,4.5)
-        world[1:, :, :, :] = world[0, :, :, :]
-        world[2:, :, :, :] = world[0, :, :, :]
+            # scales to maxsize
+            size = self.maxsize * osci
+            # creates hollow sphere with parameters
+            world[0, :, :, :] = gen_hsphere(size,xpos,ypos,zpos)
+            world[1:, :, :, :] = world[0, :, :, :]
+            world[2:, :, :, :] = world[0, :, :, :]
 
-        return np.round(np.clip(world, 0, 1), 3)
+            return np.round(np.clip(world, 0, 1), 3)
