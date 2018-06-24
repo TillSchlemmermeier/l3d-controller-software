@@ -3,32 +3,32 @@ import numpy as np
 from cube_utils import world2vox
 
 # load generator modules
-from g_cube import g_cube
-from g_growing_sphere import g_growing_sphere
-from g_random import g_random
-from g_sphere import g_sphere
-from g_blank import g_blank
-from g_orbiter import g_orbiter
-from g_randomlines import g_randomlines
-from g_shooting_star import g_shooting_star
-from g_snake import g_snake
-from g_planes import g_planes
-from g_corner import g_corner
-from g_corner_grow import g_corner_grow
-from g_planes_falling import g_planes_falling
-from g_orbiter2 import g_orbiter2
-#load effect modules
-from e_blank import e_blank
-from e_fade2blue import e_fade2blue
-from e_rainbow import e_rainbow
-from e_outer_shadow import e_outer_shadow
-from e_staticcolor import e_staticcolor
-from e_violetblue import e_violetblue
-from e_redyellow import e_redyellow
-#from e_newgradient import e_newgradient
-#from g_randomlines import g_randomlines
-# load effect modules
 
+from generators.g_cube import g_cube
+from generators.g_growing_sphere import g_growing_sphere
+from generators.g_random import g_random
+from generators.g_sphere import g_sphere
+from generators.g_blank import g_blank
+from generators.g_orbiter import g_orbiter
+from generators.g_randomlines import g_randomlines
+from generators.g_shooting_star import g_shooting_star
+from generators.g_snake import g_snake
+from generators.g_planes import g_planes
+from generators.g_corner import g_corner
+from generators.g_corner_grow import g_corner_grow
+from generators.g_planes_falling import g_planes_falling
+from generators.g_orbiter2 import g_orbiter2
+#load effect modules
+from effects.e_blank import e_blank
+from effects.e_fade2blue import e_fade2blue
+from effects.e_rainbow import e_rainbow
+from effects.e_outer_shadow import e_outer_shadow
+from effects.e_staticcolor import e_staticcolor
+from effects.e_violetblue import e_violetblue
+from effects.e_redyellow import e_redyellow
+#from effects import e_newgradient
+#from effects import g_randomlines
+# load effect modules
 
 class CubeWorld:
 
@@ -40,11 +40,14 @@ class CubeWorld:
         self.world_CHA = np.zeros([3, 10, 10, 10])
         # world for channel B
         self.world_CHB = np.zeros([3, 10, 10, 10])
+        # world for channel C
+        self.world_CHC = np.zeros([3, 10, 10, 10])
         # world for master
         self.world_TOT = np.zeros([3, 10, 10, 10])
         #channel volume
         self.amount_a=1.0
         self.amount_b=1.0
+        self.amount_c=1.0
         #fade
         self.fade = 0.0
 
@@ -57,9 +60,11 @@ class CubeWorld:
 
         self.CHA = []
         self.CHB = []
+        self.CHC = []
 
         self.speed_A = 1
         self.speed_B = 1
+        self.speed_C = 1
 
         # this is temporary, we need a routine to update the elements
         # in the list to change the generator/effect
@@ -67,6 +72,8 @@ class CubeWorld:
         self.CHA.append(e_blank())
         self.CHB.append(g_blank())
         self.CHB.append(e_blank())
+        self.CHC.append(g_blank())
+        self.CHC.append(e_blank())
 
     def get_cubedata(self):
         # get vox format from the internal stored world
@@ -88,8 +95,12 @@ class CubeWorld:
     def control(self, key, value):
         # updates the control values, shift range from 0-127 to 0.0-1.0
         self.control_dict.update({key: value/127.0})
+
     def getParamsAndValues(self):
-        return [self.CHA[0].label(),self.CHA[1].label(),self.CHB[0].label(),self.CHB[1].label()]
+        #print('trying to get labels')
+        #print(self.CHA[0].label(1))
+        return [self.CHA[0].label(),self.CHA[1].label(),self.CHB[0].label(),self.CHB[1].label(),self.CHC[0].label(),self.CHC[1].label()]
+    #    return [CHA[0].label(),CHA[1].label(),CHB[0].label(),CHB[1].label(),CHC[0].label(),CHC[1].label()]
 
     def set_Genenerator(self, generator, name, key):
         fullFunction = "self.CH"+generator+"["+str(key)+"]="+name+"()"
@@ -134,11 +145,13 @@ class CubeWorld:
         # This also determines, that the input of each generate function
         # must always be defined as <somegenerator.generate>(self, step, world)
 
-        self.speed_A = int(round(self.control_dict[49]*20)+1)
-        self.speed_B = int(round(self.control_dict[53]*20)+1)
+        self.speed_A = int(round(self.control_dict[19]*20)+1)
+        self.speed_B = int(round(self.control_dict[23]*20)+1)
+        self.speed_C = int(round(self.control_dict[27]*20)+1)
 
         self.world_CHA[:, :, :, :] = 0.0
         self.world_CHB[:, :, :, :] = 0.0
+        self.world_CHC[:, :, :, :] = 0.0
 
         # Generator A
         if step%self.speed_A == 0:
@@ -151,9 +164,9 @@ class CubeWorld:
 
 
         #Brightness A
-        self.amount_a = self.control_dict[57]
+        self.amount_a = self.control_dict[31]
 
-
+        # Generator B
         if step%self.speed_B == 0:
             # Generator B
             self.CHB[0].control(self.control_dict[24],self.control_dict[25],self.control_dict[26])
@@ -163,7 +176,19 @@ class CubeWorld:
             self.world_CHB = self.CHB[1].generate(step, self.world_CHB)
 
         #Brightness B
-        self.amount_b = self.control_dict[61]
+        self.amount_b = self.control_dict[49]
+
+        # Generator C
+        if step%self.speed_C == 0:
+            # Generator C
+            self.CHC[0].control(self.control_dict[46],self.control_dict[47],self.control_dict[48])
+            self.world_CHC = self.CHC[0].generate(step, self.world_CHC)
+            # Effect C
+            self.CHC[1].control(self.control_dict[50],self.control_dict[51],self.control_dict[52])
+            self.world_CHC = self.CHC[1].generate(step, self.world_CHC)
+
+        #Brightness C
+        self.amount_c = self.control_dict[53]
 
         #Global fade
         self.fade = self.control_dict[62]
@@ -171,6 +196,7 @@ class CubeWorld:
         # Sum Channels
         self.world_TOT = np.clip(self.amount_a * self.world_CHA + \
                                  self.amount_b * self.world_CHB + \
+                                 self.amount_c * self.world_CHC + \
                                  self.fade * self.world_TOT, 0, 1)
 
         # Global Effects

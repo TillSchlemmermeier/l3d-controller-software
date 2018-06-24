@@ -1,6 +1,6 @@
 #! /usr/bin/python3.5
 
-from Tkinter import *
+from tkinter import *
 from cube_utils import *
 # from cube_animations import rain_gen, gen_dots, plain_gen
 # from cube_interactive import dots_on_sphere, random, sphere, speed_decorator, hsphere, planes, lines, cube, corner, circle, blur, moveandfade, seperate, blow, random_lines
@@ -33,7 +33,7 @@ class App(Tk):
 
         # CONECTION
         try:
-            self.con = serial.Serial('/dev/ttyACM0', 230400)
+            self.con =  serial.Serial('/dev/ttyACM0', 230400)
             print(self.con)
         except IOError:
             self.con = serial.Serial('/dev/ttyACM1', 230400)
@@ -73,12 +73,20 @@ class App(Tk):
             self.cubeWorld.set_Genenerator("B", self.dropdownG2Current.get(),0)
             pass
 
+        def optionmenuG3_selection(event):
+            self.cubeWorld.set_Genenerator("C", self.dropdownG3Current.get(),0)
+            pass
+
         def optionmenuE1_selection(event):
             self.cubeWorld.set_Genenerator("A", self.dropdownE1Current.get(),1)
             pass
 
         def optionmenuE2_selection(event):
             self.cubeWorld.set_Genenerator("B", self.dropdownE2Current.get(),1)
+            pass
+
+        def optionmenuE3_selection(event):
+            self.cubeWorld.set_Genenerator("C", self.dropdownE3Current.get(),1)
             pass
 
         # GUI Elements
@@ -94,11 +102,17 @@ class App(Tk):
         self.labelG2 = Label(frame, text="Generator 2")
         self.labelG2.grid(row=1, column=2)
 
+        self.labelG2 = Label(frame, text="Generator 3")
+        self.labelG2.grid(row=1, column=4)
+
         self.labelE1 = Label(frame, text="Effekt 1")
         self.labelE1.grid(row=1, column=1)
 
         self.labelE2 = Label(frame, text="Effekt 2")
         self.labelE2.grid(row=1, column=3)
+
+        self.labelE2 = Label(frame, text="Effekt 3")
+        self.labelE2.grid(row=1, column=5)
 
         self.dropdownG1Current = StringVar()
         self.G1param1String = StringVar()
@@ -122,11 +136,25 @@ class App(Tk):
         self.dropdownG2 = OptionMenu(frame, self.dropdownG2Current, *self.generators,command = optionmenuG2_selection)
         self.dropdownG2.grid(row=2, column=2)
         self.G2param1 = Label(frame, textvariable=self.G2param1String)
-        self.G2param1.grid(row=3, column=1)
+        self.G2param1.grid(row=3, column=2)
         self.G2param2 = Label(frame, textvariable=self.G2param2String)
-        self.G2param2.grid(row=4, column=1)
+        self.G2param2.grid(row=4, column=2)
         self.G2param3 = Label(frame, textvariable=self.G2param3String)
-        self.G2param3.grid(row=5, column=1)
+        self.G2param3.grid(row=5, column=2)
+
+        self.dropdownG3Current = StringVar()
+        self.G3param1String = StringVar()
+        self.G3param2String = StringVar()
+        self.G3param3String = StringVar()
+        self.dropdownG3Current.set(self.generators[0])
+        self.dropdownG3 = OptionMenu(frame, self.dropdownG3Current, *self.generators,command = optionmenuG3_selection)
+        self.dropdownG3.grid(row=2, column=4)
+        self.G3param1 = Label(frame, textvariable=self.G3param1String)
+        self.G3param1.grid(row=3, column=4)
+        self.G3param2 = Label(frame, textvariable=self.G3param2String)
+        self.G3param2.grid(row=4, column=4)
+        self.G3param3 = Label(frame, textvariable=self.G3param3String)
+        self.G3param3.grid(row=5, column=4)
 
         self.dropdownE1Current = StringVar()
         self.E1param1String = StringVar()
@@ -136,11 +164,11 @@ class App(Tk):
         self.dropdownE1 = OptionMenu(frame, self.dropdownE1Current, *self.effects,command = optionmenuE1_selection)
         self.dropdownE1.grid(row=2, column=1)
         self.E1param1 = Label(frame, textvariable=self.E1param1String)
-        self.E1param1.grid(row=3, column=2)
+        self.E1param1.grid(row=3, column=1)
         self.E1param2 = Label(frame, textvariable=self.E1param2String)
-        self.E1param2.grid(row=4, column=2)
+        self.E1param2.grid(row=4, column=1)
         self.E1param3 = Label(frame, textvariable=self.E1param3String)
-        self.E1param3.grid(row=5, column=2)
+        self.E1param3.grid(row=5, column=1)
 
         self.dropdownE2Current = StringVar()
         self.E2param1String = StringVar()
@@ -155,6 +183,20 @@ class App(Tk):
         self.E2param2.grid(row=4, column=3)
         self.E2param3 = Label(frame, textvariable=self.E2param3String)
         self.E2param3.grid(row=5, column=3)
+
+        self.dropdownE3Current = StringVar()
+        self.E3param1String = StringVar()
+        self.E3param2String = StringVar()
+        self.E3param3String = StringVar()
+        self.dropdownE3Current.set(self.effects[0])
+        self.dropdownE3 = OptionMenu(frame, self.dropdownE3Current, *self.effects, command = optionmenuE3_selection)
+        self.dropdownE3.grid(row=2, column=5)
+        self.E3param1 = Label(frame, textvariable=self.E3param1String)
+        self.E3param1.grid(row=3, column=5)
+        self.E3param2 = Label(frame, textvariable=self.E3param2String)
+        self.E3param2.grid(row=4, column=5)
+        self.E3param3 = Label(frame, textvariable=self.E3param3String)
+        self.E3param3.grid(row=5, column=5)
 
 
 # L3D-Functions
@@ -173,17 +215,26 @@ class App(Tk):
         self.G1param2String.set(paramValues[0][2]+':'+str(paramValues[0][3]))
         self.G1param3String.set(paramValues[0][4]+':'+str(paramValues[0][5]))
 
-        self.G2param1String.set(paramValues[1][0]+':'+str(paramValues[1][1]))
-        self.G2param2String.set(paramValues[1][2]+':'+str(paramValues[1][3]))
-        self.G2param3String.set(paramValues[1][4]+':'+str(paramValues[1][5]))
+        self.G2param1String.set(paramValues[2][0]+':'+str(paramValues[2][1]))
+        self.G2param2String.set(paramValues[2][2]+':'+str(paramValues[2][3]))
+        self.G2param3String.set(paramValues[2][4]+':'+str(paramValues[2][5]))
 
-        self.E1param1String.set(paramValues[2][0]+':'+str(paramValues[2][1]))
-        self.E1param2String.set(paramValues[2][2]+':'+str(paramValues[2][3]))
-        self.E1param3String.set(paramValues[2][4]+':'+str(paramValues[2][5]))
+        self.G3param1String.set(paramValues[4][0]+':'+str(paramValues[4][1]))
+        self.G3param2String.set(paramValues[4][2]+':'+str(paramValues[4][3]))
+        self.G3param3String.set(paramValues[4][4]+':'+str(paramValues[4][5]))
+
+        self.E1param1String.set(paramValues[1][0]+':'+str(paramValues[1][1]))
+        self.E1param2String.set(paramValues[1][2]+':'+str(paramValues[1][3]))
+        self.E1param3String.set(paramValues[1][4]+':'+str(paramValues[1][5]))
 
         self.E2param1String.set(paramValues[3][0]+':'+str(paramValues[3][1]))
         self.E2param2String.set(paramValues[3][2]+':'+str(paramValues[3][3]))
         self.E2param3String.set(paramValues[3][4]+':'+str(paramValues[3][5]))
+
+        self.E3param1String.set(paramValues[5][0]+':'+str(paramValues[5][1]))
+        self.E3param2String.set(paramValues[5][2]+':'+str(paramValues[5][3]))
+        self.E3param3String.set(paramValues[5][4]+':'+str(paramValues[5][5]))
+
 
         self.cubeWorld.update(step)
 
@@ -212,7 +263,6 @@ class App(Tk):
             # send the fuckin package
             self.con.write(blub)
             self.after(self.sendSpeed, self.send_data_rgb)
-
 # -----------------------------------------
 # midi routines
 

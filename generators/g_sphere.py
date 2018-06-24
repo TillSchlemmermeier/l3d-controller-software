@@ -1,7 +1,6 @@
 # modules
 import numpy as np
 from random import randint
-from joblib import Parallel, delayed
 import multiprocessing
 
 class g_sphere():
@@ -13,7 +12,7 @@ class g_sphere():
     Parameters:
     - size
     '''
-    
+
     def __init__(self):
         self.size = 2
         self.color = 0
@@ -40,5 +39,5 @@ class g_sphere():
                     dist = np.sqrt((x-posx)**2+(y-posy)**2+(z-posz)**2)
                     if dist <= self.size:
                         world[:, x, y, z] = 1.0
-	
+
         return np.clip(world, 0, 1)

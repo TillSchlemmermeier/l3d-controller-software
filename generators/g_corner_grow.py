@@ -31,17 +31,16 @@ class g_corner_grow():
 
         elif self.waitingcounter == 0:
         # switch on corners
+            world[:,4-self.size,4-self.size,4-self.size] = 1.0
+            world[:,4-self.size,4-self.size,5+self.size] = 1.0
+            world[:,4-self.size,5+self.size,4-self.size] = 1.0
+            world[:,5+self.size,4-self.size,4-self.size] = 1.0
+            world[:,4-self.size,5+self.size,5+self.size] = 1.0
+            world[:,5+self.size,4-self.size,5+self.size] = 1.0
+            world[:,5+self.size,5+self.size,4-self.size] = 1.0
+            world[:,5+self.size,5+self.size,5+self.size] = 1.0
 
-		world[:,4-self.size,4-self.size,4-self.size] = 1.0
-		world[:,4-self.size,4-self.size,5+self.size] = 1.0
-		world[:,4-self.size,5+self.size,4-self.size] = 1.0
-		world[:,5+self.size,4-self.size,4-self.size] = 1.0
-		world[:,4-self.size,5+self.size,5+self.size] = 1.0
-		world[:,5+self.size,4-self.size,5+self.size] = 1.0
-		world[:,5+self.size,5+self.size,4-self.size] = 1.0
-		world[:,5+self.size,5+self.size,5+self.size] = 1.0
-
-        	self.size += 1
+            self.size += 1
 
         else:
             # stay in waiting state

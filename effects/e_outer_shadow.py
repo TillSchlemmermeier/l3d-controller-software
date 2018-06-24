@@ -10,7 +10,7 @@ class e_outer_shadow():
         self.radius = 9.0
 
     def control(self, radius, blub0, blub1):
-	self.radius = radius*10
+        self.radius = radius*10
 
     def label(self):
         return ['radius',self.radius,'empty', 'empty','empty','empty']
