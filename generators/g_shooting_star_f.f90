@@ -4,7 +4,7 @@ subroutine gen_shooting_star(world, xpos, ypos, zpos)
   implicit none
 
 ! Now comes the variables declaration
-! compile with f2py -c -m g_shooting_star_f g_shooting_star_f.f90
+! compile with f2py3 -c -m g_shooting_star_f g_shooting_star_f.f90
   real*8 :: xpos, ypos, zpos, tempvalue
   real*8, dimension(10,10,10) :: world
   integer :: x,y,z

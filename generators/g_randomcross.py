@@ -23,8 +23,22 @@ class g_randomcross():
         zpos = randint(0,9)
         number = [0,1,2]
 
+        xmin = xpos-self.length
+        if xmin<0: xmin=0
+        xmax = xpos+self.length
+        if xmax>9: xmax=9
+        ymin = ypos-self.length
+        if ymin<0: ymin=0
+        ymax = ypos+self.length
+        if ymax>9: ymax=9
+        zmin = zpos-self.length
+        if zmin<0: zmin=0
+        zmax = zpos+self.length
+        if zmax>9: zmax=9
+
         for x in range(0, self.number+1):
                 direction = choice(number)
+
                 number.remove(direction)
 
                 '''
@@ -35,24 +49,11 @@ class g_randomcross():
                 elif direction == 2:
                     world[:,xpos,ypos,:] = 1
                 '''
-                xmin = xpos-self.length
-                if xmin<0: xmin=0
-                xmax = xpos+self.length
-                if xmax>9: xmax=9
-                ymin = ypos+self.length
-                if ymin<0: ymin=0
-                ymax = ypos+self.length
-                if ymax>9: xmax=9
-                zmin = zpos+self.length
-                if zmin<0: zmin=0
-                zmax = zpos+self.length
-                if zmax>9: zmax=9
-
                 if direction == 0:
-                    world[:,xmin:xmax,ypos,zpos] = 1
+                    world[:,xmin:xmax+1,ypos,zpos] = 1
                 elif direction == 1:
-                    world[:,xpos,ymin:ymax,zpos] = 1
+                    world[:,xpos,ymin:ymax+1,zpos] = 1
                 elif direction == 2:
-                    world[:,xpos,ypos,zmin:zmax] = 1
+                    world[:,xpos,ypos,zmin:zmax+1] = 1
 
         return np.clip(world, 0, 1)
