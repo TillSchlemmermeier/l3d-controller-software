@@ -20,6 +20,8 @@ from generators.g_planes_falling import g_planes_falling
 from generators.g_orbiter2 import g_orbiter2
 from generators.g_wavepattern import g_wavepattern
 from generators.g_randomcross import g_randomcross
+from generators.g_growing_corner import g_growing_corner
+from generators.g_rain import g_rain
 #load effect modules
 from effects.e_blank import e_blank
 from effects.e_fade2blue import e_fade2blue
