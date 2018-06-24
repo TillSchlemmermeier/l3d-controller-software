@@ -55,19 +55,21 @@ def world2vox(world):
     for x in range(10):
         for y in range(10):
             for z in range(10):
-                if(y%2==0):
-                    if x%2==0:
-                        newlist[index,0] = ((x*10)+z+(y*100));
-                    else:
-                        newlist[index,0] = ((x*10)+9-z+(y*100));
-                else:
 
-                    if x%2==0:
-                        newlist[index,0] = ((90-(x*10))+9-z+(y*100));
+                if(z % 2 == 0):
+                    if y % 2 == 0:
+                        newlist[index, 0] = (z*100) + (y*10) + x
                     else:
-                        newlist[index,0] = ((90-(x*10))+z+(y*100));
+                        newlist[index, 0] = (z*100) + (y*10) + 9-x
+                else:
+                    if y % 2 == 0:
+                        newlist[index, 0] = (z*100) + (90-y*10) + 9-x
+                    else:
+                        newlist[index, 0] = (z*100) + (90-y*10) + x
+
                 newlist[index,1] = int(world[x,y,z]*255)
                 index += 1
+
 
     # Sort list
     sorted_newlist =  np.array(sorted(newlist,key=lambda x: x[0]))

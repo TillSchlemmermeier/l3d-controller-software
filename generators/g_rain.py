@@ -1,8 +1,8 @@
 # modules
 import numpy as np
+from random import randint
 
-
-class g_cube():
+class g_rain():
     '''
     Generator: cube
 
@@ -23,7 +23,7 @@ class g_cube():
         self.fade = fade
 
     def label(self):
-        return ['Numbers', numbers,
+        return ['Numbers', self.numbers,
                 'fade', self.fade,
                 'empty', 'empty']
 
@@ -32,15 +32,15 @@ class g_cube():
         world = np.zeros([3, 10, 10, 10])
 
         # move last world 1 step down
-        self.lastworld = np.roll(self.lastworld, axis = 0)
-        self.lastworld[0, :, :, :] = 0.0
+        self.lastworld = np.roll(self.lastworld, axis = 0, shift=1)
+        self.lastworld[ 0, :, :] = 0.0
 
         # turn on random leds in upper level
         for i in range(self.numbers):
             world[0,0,randint(0, 9),randint(0, 9)] = 1.0
 
         # add last frame
-        world[0,:,:,:] += self.lastworld*self.fade
+        world[0,:,:,:] += self.lastworld *self.fade
         self.lastworld[:,:,:] = world[0,:,:,:]
 
         # copy to other colors

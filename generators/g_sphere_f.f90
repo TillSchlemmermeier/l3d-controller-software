@@ -4,7 +4,7 @@ subroutine gen_sphere(world, s_size, xpos, ypos, zpos)
   implicit none
 
 ! Now comes the variables declaration
-! compile with f2py -c -m g_sphere_f g_sphere_f.f90
+! compile with f2py3 -c -m g_sphere_f g_sphere_f.f90
   real*8 :: s_size, xpos, ypos, zpos, tempvalue
   real*8, dimension(10,10,10) :: world
   integer :: x,y,z
