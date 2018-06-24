@@ -18,6 +18,7 @@ from generators.g_corner import g_corner
 from generators.g_corner_grow import g_corner_grow
 from generators.g_planes_falling import g_planes_falling
 from generators.g_orbiter2 import g_orbiter2
+from generators.g_randomcross import g_randomcross
 #load effect modules
 from effects.e_blank import e_blank
 from effects.e_fade2blue import e_fade2blue
@@ -102,6 +103,9 @@ class CubeWorld:
         #print(self.CHA[0].label(1))
         return [self.CHA[0].label(),self.CHA[1].label(),self.CHB[0].label(),self.CHB[1].label(),self.CHC[0].label(),self.CHC[1].label()]
     #    return [CHA[0].label(),CHA[1].label(),CHB[0].label(),CHB[1].label(),CHC[0].label(),CHC[1].label()]
+
+    def getBrightnessAndShutterspeed(self):
+        return['Brightness', self.amount_a,'Brightness', self.amount_b,'Brightness', self.amount_c,"Shutter", self.speed_A,"Shutter", self.speed_B,"Shutter", self.speed_C]
 
     def set_Genenerator(self, generator, name, key):
         fullFunction = "self.CH"+generator+"["+str(key)+"]="+name+"()"
