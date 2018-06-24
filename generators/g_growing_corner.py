@@ -29,40 +29,38 @@ class g_growing_corner():
         self.zpos = 0
 
     def label(self):
-        return ['maxsize',round(self.maxsize,2),'growspeed',round(self.growspeed,2),'Steps',round(self.steps,2)]
+        return ['maxsize',round(self.maxsize,2),'growspeed',round(self.growspeed,2),'empty','empty']
 
     def control(self, maxsize, growspeed, steps):
-        self.maxsize = maxsize*10
-        self.growspeed = growspeed
-        self.steps = steps*20
+        self.maxsize = maxsize*18
+        self.growspeed = growspeed*30+ 0.0001
+        self.steps = int(self.maxsize/self.growspeed)
 
     def generate(self, step, dumpworld):
 
         world = np.zeros([3, 10, 10, 10])
 
         # check for new calculation
-        if self.counter > self.steps:
+        if self.counter > self.growspeed:
             self.xpos = 9*randint(0,1)
             self.ypos = 9*randint(0,1)
             self.zpos = 9*randint(0,1)
 
             self.counter = 0
 
-        # calculate radius
-        # oscillates between 0 and 1
-        osci = np.sin(self.counter*self.growspeed)*0.5 + 1
-
-        # scales to maxsize
-        size = self.maxsize * osci
-
         x = self.xpos
         y = self.ypos
         z = self.zpos
 
+        size = (-np.cos(self.counter*3.14/self.growspeed)+1)*0.5*self.maxsize
+
+        #size = self.maxsize*(-np.cos(self.counter*3.14/self.growspeed)+1)*0.5
+        #size = self.maxsize*(np.sin(np.pi*0.5*self.counter/self.growspeed - 0.5*np.pi)+1)
+
         # creates hollow sphere with parameters
         world[0, :, :, :] = gen_hsphere(size,x,y,z)
-        world[1:, :, :, :] = world[0, :, :, :]
-        world[2:, :, :, :] = world[0, :, :, :]
+        world[1, :, :, :] = world[0, :, :, :]
+        world[2, :, :, :] = world[0, :, :, :]
 
         self.counter += 1
 
