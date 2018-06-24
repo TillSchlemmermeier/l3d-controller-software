@@ -2,7 +2,7 @@
 import numpy as np
 
 
-class g_wavepatter():
+class g_wavepattern():
     '''
     Generator: wavepattern
     '''
@@ -28,6 +28,8 @@ class g_wavepatter():
             for y in range(10):
                 for z in range(10):
                     world[:,x,y,z] = np.sin(self.speed * step)*\
-                                    (np.sin(0.1*self.freq(x*y*z)))
+                                     (np.sin(self.freq*x*10)+\
+                                     np.sin(self.freq*y*10)+\
+                                     np.sin(self.freq*z*10))
 
         return np.clip(world, 0, 1)

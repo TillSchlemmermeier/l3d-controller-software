@@ -18,6 +18,7 @@ from generators.g_corner import g_corner
 from generators.g_corner_grow import g_corner_grow
 from generators.g_planes_falling import g_planes_falling
 from generators.g_orbiter2 import g_orbiter2
+from generators.g_wavepattern import g_wavepattern
 from generators.g_randomcross import g_randomcross
 #load effect modules
 from effects.e_blank import e_blank

@@ -13,7 +13,7 @@ import sys, os, glob  # , time
 import numpy as np
 import struct
 import inspect
-from rtmidi.midiutil import open_midiinput
+from rtmidi.midiutil import open_midiinput,open_midioutput
 # from copy import deepcopy
 from CubeWorld import CubeWorld
 # from time import sleep
@@ -53,7 +53,7 @@ class App(Tk):
 
         self.generators = ["g_blank", " g_cube", "g_random", "g_growing_sphere","g_orbiter","g_randomlines",
                            "g_sphere", "g_snake","g_planes", "g_planes_falling", "g_corner", "g_corner_grow",
-                            "g_shooting_star", "g_orbiter2", "g_randomcross"]
+                            "g_shooting_star", "g_orbiter2", "g_randomcross", "g_wavepattern"]
         self.effects = ["e_blank","e_fade2blue","e_rainbow","e_staticcolor", "e_violetblue", "e_redyellow"]
         # Header Information
         self.hSpeed = 1
@@ -63,6 +63,8 @@ class App(Tk):
         self.hRGBMode = 1
 
         self.send_array_rgb = bytearray(3009)
+
+        self.MidiButtonListBool = {1:False,4:False,7:False,10:False,13:False,16:False,19:False,22:False,3:False,6:False,9:False,12:False,15:False,18:False,21:False,24:False}
 
         # GUI Callabcks
         def optionmenuG1_selection(event):
@@ -219,7 +221,6 @@ class App(Tk):
         self.G3Shutter = Label(frame, textvariable=self.G3ShutterValue)
         self.G3Shutter.grid(row=7, column=4)
 
-
 # L3D-Functions
     def startsending(self):
         self.do_send_rgb = True
@@ -232,6 +233,8 @@ class App(Tk):
         self.cubeWorld.control(MidiKey,MidiValue)
         paramValues = self.cubeWorld.getParamsAndValues()
         genValues = self.cubeWorld.getBrightnessAndShutterspeed()
+        #self.switchMidiButtonLights(MidiKey)
+
 
         self.G1param1String.set(paramValues[0][0]+':'+str(paramValues[0][1]))
         self.G1param2String.set(paramValues[0][2]+':'+str(paramValues[0][3]))
@@ -265,7 +268,6 @@ class App(Tk):
         self.G2ShutterValue.set(genValues[8]+':'+str(genValues[9]))
         self.G3ShutterValue.set(genValues[10]+':'+str(genValues[11]))
 
-
         self.cubeWorld.update(step)
 
     def send_data_rgb(self):
@@ -293,6 +295,25 @@ class App(Tk):
             # send the fuckin package
             self.con.write(blub)
             self.after(self.sendSpeed, self.send_data_rgb)
+
+    '''
+    def switchMidiButtonLights(self,Key):
+        print(Key)
+        if Key in [1,4,7,10,13,16,19,22,3,6,9,12,15,18,21,24]:
+            # veräender zustand vom gedrückten knopf
+            #self.MidiButtonListBool[key] is not self.MidiButtonListBool[key]
+
+            print('blub')
+
+        if(Key in [1,4,7,10,13,16,19,22,3,6,9,12,15,18,21,24]):
+            if (self.MidiButtonListBool[Key]):
+                midiout.send_message([0x90,int(Key),0x00])
+                self.MidiButtonListBool[Key]=False
+            else:
+                midiout.send_message([0x90,int(Key),0x7E])
+                self.MidiButtonListBool[Key]=True
+    '''
+
 # -----------------------------------------
 # midi routines
 
@@ -316,20 +337,18 @@ class MidiInputHandler(object):
 # -----------------------------------------
 
 if __name__ == "__main__":
+    print("\n =L3D-C0ntr0l=\n")
 
-    # Initialize MIDI INPUT
+    print("Initialize MIDI CONTROL")
     port = 1
-    # try:
-    midiin, port_name = open_midiinput(port)
-    # except (EOFError, KeyboardInterrupt):
-    #    sys.exit()
+    midiin, portname_in = open_midiinput(port)
+    #midiout, portname_out = open_midioutput(port)
+    midiin.set_callback(MidiInputHandler(portname_in))
 
-    print("Attaching MIDI input callback handler.")
-    midiin.set_callback(MidiInputHandler(port_name))
 
     print("Starting main.")
     # midi ready
 
     root = App()
-    root.title("l3d-controll - - - Build : 1337.420")
+    root.title("=L3D-C0ntr0l= - - - Build : 1337.420")
     root.mainloop()
