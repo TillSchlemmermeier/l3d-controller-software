@@ -10,8 +10,8 @@ class g_randomcross():
         self.length = 10
 
     def control(self, number, length):
-        self.number = number
-        self.length = length
+        self.number = int(number*3)
+        self.length = int(length*10)
 
     def label(self):
         return ['empty','empty','empty', 'empty','empty','empty']
