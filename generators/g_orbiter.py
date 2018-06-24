@@ -1,6 +1,6 @@
 import numpy as np
 from scipy.signal import sawtooth
-
+from generators.g_shooting_star_f import gen_shooting_star
 
 class g_orbiter():
     '''
@@ -26,7 +26,7 @@ class g_orbiter():
         self.rho = rho
 
     def label(self):
-        return ['distance',round(self.distance,2),'theta', round(self.theta,2),'rho',round(self.rho,2)]  
+        return ['distance',round(self.distance,2),'theta', round(self.theta,2),'rho',round(self.rho,2)]
 
     def generate(self, step, dumpworld):
         # generate empty world
@@ -40,10 +40,11 @@ class g_orbiter():
         [sx, sy, sz] = polar2z(temp_d, temp_theta, temp_rho)
 
         # switch on leds depending on distance
-        for x in range(10):
-            for y in range(10):
-                for z in range(10):
-                    world[:, x, y, z] = 1.0/((np.sqrt((sx-x+4.5)**2 + (sy-y+4.5)**2 + (sz-z+4.5)**2)))**4
+        #for x in range(10):
+        #    for y in range(10):
+        #        for z in range(10):
+        #            world[:, x, y, z] = 1.0/((np.sqrt((sx-x+4.5)**2 + (sy-y+4.5)**2 + (sz-z+4.5)**2)))**4
+        world[0,:,:,:] = gen_shooting_star(sx+4.5,sy+4.5,sz+4.5)
 
         return world
 
