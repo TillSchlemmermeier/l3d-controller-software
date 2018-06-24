@@ -1,13 +1,12 @@
 import numpy as np
 from random import uniform
-
+from g_shooting_star_f import gen_shooting_star
 
 class g_shooting_star():
     '''
     Generator: shooting star
 
     a shooting star from somewhere through the cube
-
     '''
 
     def __init__(self):
@@ -40,14 +39,19 @@ class g_shooting_star():
         '''
         #print(sx,sy,sz)
         # switch on leds depending on distance
+        world[0,:,:,:] = gen_shooting_star(world,,sx,sy,sz)
+        world[1,:,:,:] = world[0,:,:,:]
+        world[2,:,:,:] = world[0,:,:,:]
+        '''
         for x in range(10):
             for y in range(10):
                 for z in range(10):
                     world[:, x, y, z] = 1.0/((np.sqrt((sx-x)**2 + \
                                                       (sy-y)**2 + \
                                                       (sz-z)**2)))**8
+        '''
 
-        return world
+        return np.clip(world, 0, 1)
 
 def gen_line(speed):
     # generate outside point

@@ -1,23 +1,21 @@
 # modules
 import numpy as np
 from random import randint
-import multiprocessing
+from g_sphere_f import gen_sphere
 
-class g_sphere():
-    '''
-    Generator: sphere
 
-    sphere at a random position
+# fortran routine is in g_sphere_f.f90
 
     Parameters:
     - size
-    '''
+
+class g_sphere():
 
     def __init__(self):
         self.size = 2
         self.color = 0
 
-    def control(self, size, blub0, blub1):
+    def control(self, color, size, blub0):
         self.size = round(size*10)
 
     def label(self):
@@ -31,13 +29,8 @@ class g_sphere():
         posy = randint(0,9)
         posz = randint(0,9)
 
-# map function instead of loop
-# numba for performance boost
-        for x in range(10):
-            for y in range(10):
-                for z in range(10):
-                    dist = np.sqrt((x-posx)**2+(y-posy)**2+(z-posz)**2)
-                    if dist <= self.size:
-                        world[:, x, y, z] = 1.0
+        world[0,:,:,:] = gen_sphere(self.size, posx, posy, posz)
+        world[1,:,:,:] = world[0,:,:,:]
+        world[2,:,:,:] = world[0,:,:,:]
 
         return np.clip(world, 0, 1)
