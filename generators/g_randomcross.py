@@ -1,16 +1,16 @@
 # modules
 import numpy as np
-from random import randint
+from random import randint, choice
 
 
 class g_randomcross():
 
     def __init__(self):
-        self.number = 3
+        self.number = 2
         self.length = 10
 
-    def control(self, number, length):
-        self.number = int(number*3)
+    def control(self, number, length,BLUB):
+        self.number = int(number*2)
         self.length = int(length*10)
 
     def label(self):
@@ -25,14 +25,14 @@ class g_randomcross():
         number = [0,1,2]
 
         for x in range(0, self.number):
-                direction = (random.choice(number))
+                direction = (choice(number))
                 number.remove(direction)
 
                 if direction == 0:
-                    world[xpos-self.length:xpos-self.length,ypos,zpos] = 1
+                    world[:, xpos-self.length:xpos-self.length,ypos,zpos] = 1
                 elif direction == 1:
-                    world[xpos,ypos-self.length:ypos-self.length,zpos)] = 1
+                    world[:, xpos,ypos-self.length:ypos-self.length,zpos] = 1
                 elif direction == 2:
-                    world[xpos,ypos,zpos-self.length:zpos-self.length] = 1
+                    world[:, xpos,ypos,zpos-self.length:zpos-self.length] = 1
 
         return np.clip(world, 0, 1)
