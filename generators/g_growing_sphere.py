@@ -1,7 +1,7 @@
 # modules
 import numpy as np
 from scipy.signal import sawtooth
-from g_growing_sphere_f import gen_hsphere
+from generators.g_genhsphere import gen_hsphere
 
 # fortran routine is in g_growing_sphere_f.f90
 

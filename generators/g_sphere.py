@@ -1,13 +1,9 @@
 # modules
 import numpy as np
 from random import randint
-from g_sphere_f import gen_sphere
-
+from generators.g_sphere_f import gen_sphere
 
 # fortran routine is in g_sphere_f.f90
-
-    Parameters:
-    - size
 
 class g_sphere():
 
