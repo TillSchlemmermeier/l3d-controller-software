@@ -47,7 +47,6 @@ class App(Tk):
         #    self.dmx = serial.Serial('/dev/ttyUSB11', 57600)
         #    print(self.dmx)
 
-
         # VARS
         self.do_send = False
         self.do_send_rgb = False
@@ -63,7 +62,7 @@ class App(Tk):
         self.generators = ["g_blank", "g_cube", "g_random", "g_growing_sphere","g_orbiter","g_randomlines",
                            "g_sphere", "g_snake","g_planes", "g_planes_falling", "g_corner", "g_corner_grow",
                            "g_shooting_star", "g_orbiter2", "g_randomcross", "g_wavepattern", "g_growing_corner",
-                           "g_rain"]
+                           "g_rain", "g_voxreader"]
         self.effects = ["e_blank","e_fade2blue","e_rainbow","e_staticcolor", "e_violetblue", "e_redyellow",
                         "e_tremolo"]
 
