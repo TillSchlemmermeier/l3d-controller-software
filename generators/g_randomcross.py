@@ -27,7 +27,7 @@ class g_randomcross():
                 direction = choice(number)
                 number.remove(direction)
 
-                '''
+                
                 if direction == 0:
                     world[:,:,ypos,zpos] = 1
                 elif direction == 1:

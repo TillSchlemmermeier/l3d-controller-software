@@ -28,6 +28,7 @@ from effects.e_outer_shadow import e_outer_shadow
 from effects.e_staticcolor import e_staticcolor
 from effects.e_violetblue import e_violetblue
 from effects.e_redyellow import e_redyellow
+from effects.e_tremolo import e_tremolo
 #from effects import e_newgradient
 #from effects import g_randomlines
 # load effect modules
