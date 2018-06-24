@@ -40,12 +40,12 @@ class App(Tk):
             print(self.con)
 
         #DMX CONECTION
-        try:
-            self.dmx =  serial.Serial('/dev/ttyUSB0', 57600)
-            print(self.dmx)
-        except IOError:
-            self.dmx = serial.Serial('/dev/ttyUSB11', 57600)
-            print(self.dmx)
+        #try:
+        #    self.dmx =  serial.Serial('/dev/ttyUSB0', 57600)
+        #    print(self.dmx)
+        #except IOError:
+        #    self.dmx = serial.Serial('/dev/ttyUSB11', 57600)
+        #    print(self.dmx)
 
 
         # VARS
@@ -62,10 +62,11 @@ class App(Tk):
 
         self.generators = ["g_blank", "g_cube", "g_random", "g_growing_sphere","g_orbiter","g_randomlines",
                            "g_sphere", "g_snake","g_planes", "g_planes_falling", "g_corner", "g_corner_grow",
-                            "g_shooting_star", "g_orbiter2", "g_randomcross", "g_wavepattern", "g_growing_corner",
-                            "g_rain"]
+                           "g_shooting_star", "g_orbiter2", "g_randomcross", "g_wavepattern", "g_growing_corner",
+                           "g_rain"]
         self.effects = ["e_blank","e_fade2blue","e_rainbow","e_staticcolor", "e_violetblue", "e_redyellow",
                         "e_tremolo"]
+
         # Header Information
         self.hSpeed = 1
         self.hBright = 200
@@ -245,7 +246,7 @@ class App(Tk):
         paramValues = self.cubeWorld.getParamsAndValues()
         genValues = self.cubeWorld.getBrightnessAndShutterspeed()
         #self.switchMidiButtonLights(MidiKey)
-        print(self.dmx.read(605))
+        #print(self.dmx.read(605))
 
 
         self.G1param1String.set(paramValues[0][0]+':'+str(paramValues[0][1]))

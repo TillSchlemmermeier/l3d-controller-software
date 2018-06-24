@@ -19,7 +19,7 @@ subroutine gen_hsphere(world, s_size, xpos, ypos, zpos)
     do y=1, 10
       do z=1, 10
         tempvalue = sqrt((x-xpos-1)**2+(y-ypos-1)**2+(z-zpos-1)**2)
-        world(x,y,z) = 1/(s_size-tempvalue+0.0001)**7
+        world(x,y,z) = 1/abs((s_size-tempvalue+0.0001))**7
       end do
     end do
   end do
