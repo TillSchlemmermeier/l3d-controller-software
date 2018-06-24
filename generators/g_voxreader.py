@@ -1,4 +1,4 @@
-def gen_world_from_file(filename):
+def gen_world_from_file('voxFiles\obliqueplaneXYZ\'):
     # generates a world matrix from a file
     temp = np.genfromtxt(filename,delimiter=',')
     # remove "a" at the end
