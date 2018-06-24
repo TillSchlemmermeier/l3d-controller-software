@@ -44,7 +44,7 @@ class g_randomcross():
                 ymin = ypos+self.length
                 if ymin<0: ymin=0
                 ymax = ypos+self.length
-                if ymax>9: <max=9
+                if ymax>9: xmax=9
                 zmin = zpos+self.length
                 if zmin<0: zmin=0
                 zmax = zpos+self.length
