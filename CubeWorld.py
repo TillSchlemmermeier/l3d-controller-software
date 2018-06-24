@@ -50,6 +50,7 @@ class CubeWorld:
         self.amount_c=1.0
         #fade
         self.fade = 0.0
+        self.brightness = 1.0
 
         # self.framecounter = 0
 
@@ -162,10 +163,6 @@ class CubeWorld:
             self.CHA[1].control(self.control_dict[20],self.control_dict[21],self.control_dict[22])
             self.world_CHA = self.CHA[1].generate(step, self.world_CHA)
 
-
-        #Brightness A
-        self.amount_a = self.control_dict[31]
-
         # Generator B
         if step%self.speed_B == 0:
             # Generator B
@@ -174,9 +171,6 @@ class CubeWorld:
             # Effect B
             self.CHB[1].control(self.control_dict[28],self.control_dict[29],self.control_dict[30])
             self.world_CHB = self.CHB[1].generate(step, self.world_CHB)
-
-        #Brightness B
-        self.amount_b = self.control_dict[49]
 
         # Generator C
         if step%self.speed_C == 0:
@@ -187,17 +181,24 @@ class CubeWorld:
             self.CHC[1].control(self.control_dict[50],self.control_dict[51],self.control_dict[52])
             self.world_CHC = self.CHC[1].generate(step, self.world_CHC)
 
-        #Brightness C
+        # Brightness
+        self.amount_a = self.control_dict[31]
+        self.amount_b = self.control_dict[49]
         self.amount_c = self.control_dict[53]
 
-        #Global fade
+        # Global Brightness
+        self.brightness = self.control_dict[58]
+
+        # Global fade
         self.fade = self.control_dict[62]
 
         # Sum Channels
-        self.world_TOT = np.clip(self.amount_a * self.world_CHA + \
-                                 self.amount_b * self.world_CHB + \
-                                 self.amount_c * self.world_CHC + \
-                                 self.fade * self.world_TOT, 0, 1)
+        self.world_TOT = self.amount_a * self.world_CHA + \
+                         self.amount_b * self.world_CHB + \
+                         self.amount_c * self.world_CHC + \
+                         self.fade * self.world_TOT
+
+        self.world_TOT = np.clip(self.brightness * self.world_TOT,0,1)
 
         # Global Effects
         # the global fade is already included at the "sum channels"
