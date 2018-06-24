@@ -13,7 +13,7 @@ class g_randomcross():
         self.length = int(length*10)
 
     def label(self):
-        return ['empty','empty','empty', 'empty','empty','empty']
+        return ['Number of lines',self.number,'Length', self.length,'empty','empty']
 
     def generate(self, step, dumpworld):
 
@@ -27,15 +27,13 @@ class g_randomcross():
                 direction = choice(number)
                 number.remove(direction)
 
-                
+                '''
                 if direction == 0:
                     world[:,:,ypos,zpos] = 1
                 elif direction == 1:
                     world[:,xpos,:,zpos] = 1
                 elif direction == 2:
                     world[:,xpos,ypos,:] = 1
-
-
                 '''
                 xmin = xpos-self.length
                 if xmin<0: xmin=0
@@ -56,6 +54,5 @@ class g_randomcross():
                     world[:,xpos,ymin:ymax,zpos] = 1
                 elif direction == 2:
                     world[:,xpos,ypos,zmin:zmax] = 1
-                '''
 
         return np.clip(world, 0, 1)
