@@ -1,13 +1,13 @@
 import numpy as np
 import os
 
-class g_voxreader(path):
+class g_voxreader():
     def __init__(self):
         # create list of all filenames
         self.voxdata = []
 
         filelist = []
-        for file in os.listdir(./voxFiles/ObliqueplaneXYZ/):
+        for file in os.listdir('./voxFiles/obliqueplaneXYZ/'):
             #self.voxdata.append(self.gen_world_from_file("./voxFiles/obliqueplaneXYZ/"+file))
             filelist.append(file)
 
@@ -25,7 +25,7 @@ class g_voxreader(path):
             filelist.append(str(i)+'.vox')
 
         for file in filelist:
-            self.voxdata.append(self.gen_world_from_file(./voxFiles/ObliqueplaneXYZ/+file))
+            self.voxdata.append(self.gen_world_from_file('./voxFiles/obliqueplaneXYZ/'+file))
 
         self.counter = 0
         self.max = len(self.voxdata)
