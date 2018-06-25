@@ -10,6 +10,29 @@ class g_circles():
     def __init__(self):
         self.number = 1
 
+        # size 5
+        self.size5 = np.zeros([10,10])
+
+        # straight
+        self.size5[0,3:7] = 1.0
+        self.size5[9,3:7] = 1.0
+        self.size5[3:7,0] = 1.0
+        self.size5[3:7,9] = 1.0
+
+        # diag
+        self.size5[1,2] = 1.0
+        self.size5[2,1] = 1.0
+
+        self.size5[1,7] = 1.0
+        self.size5[2,8] = 1.0
+
+        self.size5[7,1] = 1.0
+        self.size5[8,2] = 1.0
+
+        self.size5[7,8] = 1.0
+        self.size5[8,7] = 1.0
+
+
         # size 4
         self.size4 = np.zeros([10,10])
 
@@ -48,23 +71,24 @@ class g_circles():
         self.number = int(number*10)
 
     def label(self):
-        return ['empty','empty','empty', 'empty','empty','empty']
+        return ['number of cirlces',self.number,'empty', 'empty','empty','empty']
 
     def generate(self, step, dumpworld):
         # create world
         world = np.zeros([3, 10, 10, 10])
 
         for i in range(self.number):
-            for j in range(3):
-                if j == 0:
-                    world[0, randint(0,9), :, :] = self.size2[:,:]
+            j = randint(0,2)
 
-                elif j == 1:
-                    world[0, randint(0,9), :, :] = self.size3[:,:]
+            if j == 0:
+                world[0, randint(0,9), :, :] = self.size2[:,:]
 
-                elif j == 2:
-                    world[0, randint(0,9), :, :] = self.size4[:,:]
+            elif j == 1:
+                world[0, randint(0,9), :, :] = self.size3[:,:]
+
+            elif j == 2:
+                world[0, randint(0,9), :, :] = self.size4[:,:]
 
         world[1,:,:,:] = world[0, :, : , :]
-        world[2,:,:,:] = world[0, :, : , :]    
+        world[2,:,:,:] = world[0, :, : , :]
         return np.clip(world, 0, 1)

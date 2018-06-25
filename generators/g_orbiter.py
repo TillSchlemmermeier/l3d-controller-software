@@ -40,11 +40,9 @@ class g_orbiter():
         [sx, sy, sz] = polar2z(temp_d, temp_theta, temp_rho)
 
         # switch on leds depending on distance
-        #for x in range(10):
-        #    for y in range(10):
-        #        for z in range(10):
-        #            world[:, x, y, z] = 1.0/((np.sqrt((sx-x+4.5)**2 + (sy-y+4.5)**2 + (sz-z+4.5)**2)))**4
-        world[0,:,:,:] = gen_shooting_star(sx+4.5,sy+4.5,sz+4.5)
+        world[0,:,:,:] = gen_shooting_star(sx+5.5,sy+5.5,sz+5.5)
+        world[1,:,:,:] = world[0,:,:,:]
+        world[2,:,:,:] = world[0,:,:,:]
 
         return world
 

@@ -58,7 +58,6 @@ class g_voxreader():
 
     def gen_world_from_file(self, filename):
         # generates a world matrix from a file
-        print(filename)
         temp = np.genfromtxt(filename,delimiter=',')
         # remove "a" at the end
         data = temp[:-1]

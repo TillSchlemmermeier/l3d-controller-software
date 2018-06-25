@@ -17,8 +17,8 @@ subroutine gen_shooting_star(world, xpos, ypos, zpos)
   do x=1, 10
     do y=1, 10
       do z=1, 10
-        tempvalue = sqrt((x-xpos)**2+(y-ypos)**2+(z-zpos)**2)
-        world(x,y,z) = 1/(tempvalue+0.0001)**8
+        tempvalue = sqrt((x-xpos-1)**2+(y-ypos-1)**2+(z-zpos-1)**2)
+        world(x,y,z) = 1/(tempvalue+0.0001)**4
       end do
     end do
   end do

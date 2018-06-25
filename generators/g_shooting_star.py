@@ -39,7 +39,7 @@ class g_shooting_star():
         '''
         #print(sx,sy,sz)
         # switch on leds depending on distance
-        world[0,:,:,:] = gen_shooting_star(world,sx,sy,sz)
+        world[0,:,:,:] = gen_shooting_star(sx,sy,sz)
         world[1,:,:,:] = world[0,:,:,:]
         world[2,:,:,:] = world[0,:,:,:]
         '''
