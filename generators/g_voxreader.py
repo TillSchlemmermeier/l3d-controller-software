@@ -12,12 +12,13 @@ class g_voxreader():
 
         self.counter = 0
         self.max = len(self.voxdata)
+        self.wait = 50
 
-    def control(self, blub0, blub1, blub2):
-        pass
+    def control(self, wait, blub1, blub2):
+        self.wait = wait*1000
 
     def label(self):
-        return ['empty','empty','empty','empty','empty', 'empty']
+        return ['wait',round(self.wait,2),'empty','empty','empty','empty', 'empty']
 
     def generate(self, step, dumpworld):
         # create empty world
@@ -32,7 +33,7 @@ class g_voxreader():
 
         # increase counter
         self.counter += 1
-
+        time.sleep(.self.wait)
         # return world
         return np.clip(world,0,1)
 
