@@ -69,6 +69,7 @@ class g_TorusRotation():
         return world
 
     def get_position(self, i):
+        
         # calculates xyz from position in .vox string
 
         # add zeros for small numbers
