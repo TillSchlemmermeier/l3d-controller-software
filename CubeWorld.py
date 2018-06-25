@@ -33,8 +33,8 @@ from effects.e_staticcolor import e_staticcolor
 from effects.e_violetblue import e_violetblue
 from effects.e_redyellow import e_redyellow
 from effects.e_tremolo import e_tremolo
-#from effects import e_newgradient
-#from effects import g_randomlines
+from effects.e_newgradient import e_newgradient
+from effects.e_gradient import e_gradient
 # load effect modules
 
 class CubeWorld:
