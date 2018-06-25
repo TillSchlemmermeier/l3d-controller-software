@@ -1,6 +1,6 @@
 # modules
 import numpy as np
-from random import randint
+from random import randint, choice
 
 class g_circles():
     '''
@@ -8,10 +8,7 @@ class g_circles():
     '''
 
     def __init__(self):
-        self.size = 2
-        self.sides = False
-
-        self.frames = []
+        self.number = 1
 
         # size 4
         self.size4 = np.zeros([10,10])
@@ -46,8 +43,9 @@ class g_circles():
         self.size2[4:6,3] = 1.0
         self.size2[4:6,6] = 1.0
 
-    def control(self, blub0, blub2, blub1):
-        pass
+
+    def control(self, number, blub2, blub1):
+        self.number = int(number*10)
 
     def label(self):
         return ['empty','empty','empty', 'empty','empty','empty']
@@ -55,7 +53,18 @@ class g_circles():
     def generate(self, step, dumpworld):
         # create world
         world = np.zeros([3, 10, 10, 10])
-        world[:, randint(0,9), :, :] = self.size2
-        world[:, randint(0,9), :, :] = self.size3
-        world[:, randint(0,9), :, :] = self.size4
+
+        for i in range(self.number):
+            for j in range(3):
+                if j == 0:
+                    world[0, randint(0,9), :, :] = self.size2[:,:]
+
+                elif j == 1:
+                    world[0, randint(0,9), :, :] = self.size3[:,:]
+
+                elif j == 2:
+                    world[0, randint(0,9), :, :] = self.size4[:,:]
+
+        world[1,:,:,:] = world[0, :, : , :]
+        world[2,:,:,:] = world[0, :, : , :]    
         return np.clip(world, 0, 1)
