@@ -1,7 +1,7 @@
 import numpy as np
 import os
 
-class g_TorusRotation():
+class g_torusrotation():
     def __init__(self):
         # create list of all filenames
         self.voxdata = []
