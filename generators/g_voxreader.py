@@ -5,17 +5,34 @@ class g_voxreader():
     def __init__(self):
         # create list of all filenames
         self.voxdata = []
+
+        filelist = []
         for file in os.listdir("./voxFiles/obliqueplaneXYZ/"):
-            print(file)
+            #self.voxdata.append(self.gen_world_from_file("./voxFiles/obliqueplaneXYZ/"+file))
+            filelist.append(file)
+
+        # strip the .vox part to sort it
+        filelist_shorted = []
+        for i in filelist:
+            filelist_shorted.append(int(i[:-4]))
+
+        # sort the list
+        filelist_shorted.sort()
+
+        # add the .vox again
+        filelist = []
+        for i in filelist_shorted:
+            filelist.append(str(i)+'.vox')
+
+        for file in filelist:
             self.voxdata.append(self.gen_world_from_file("./voxFiles/obliqueplaneXYZ/"+file))
-            #self.files.append(file)
 
         self.counter = 0
         self.max = len(self.voxdata)
         self.wait = 5
 
     def control(self, wait, blub1, blub2):
-        self.wait = int(wait*10)
+        self.wait = int(wait*10)+1
 
     def label(self):
         return ['wait',round(self.wait,2),'empty','empty','empty','empty', 'empty']
@@ -30,10 +47,12 @@ class g_voxreader():
 
         # copy world from storate to world
         world[0,:,:,:] = self.voxdata[self.counter]
+        world[1,:,:,:] = world[0,:,:,:]
+        world[2,:,:,:] = world[0,:,:,:]
 
         # increase counter
-        if self.counter % self.wait == 0
-        self.counter += 1
+        if step % self.wait == 0:
+            self.counter += 1
         # return world
         return np.clip(world,0,1)
 
