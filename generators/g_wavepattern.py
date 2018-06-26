@@ -12,8 +12,8 @@ class g_wavepattern():
         self.speed = 1.0
 
     def control(self, freq, speed, blub1):
-        self.freq = freq*0.25+0.5
-        self.speed = speed
+        self.freq = freq*0.15+0.5
+        self.speed = speed*0.5
 
     def label(self):
         return ['Frequency', round(self.freq, 2),

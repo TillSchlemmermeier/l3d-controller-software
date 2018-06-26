@@ -7,20 +7,18 @@ class g_wave():
 
     def __init__(self):
         self.sigma = 1
-        self.amplitude = 30
         self.speed = 1
         self.counter = 0
         self.direction = 0
         self.position = 1
         self.maxsize = 30
 
-    def control(self, sigma, amplitude, speed):
+    def control(self, sigma, speed, blub1):
         self.sigma = sigma*1.4+0.2
-        self.amplitude = amplitude*50
-        self.speed = speed
+        self.speed = speed*2
 
     def label(self):
-        return ['sigma',round(self.sigma,2),'amplitude',round(self.amplitude,2), 'speed',round(self.speed,2),'empty','empty']
+        return ['sigma',round(self.sigma,2),'speed',round(self.speed,2),'empty','empty','empty']
 
     def generate(self, step, dumpworld):
 
@@ -88,5 +86,5 @@ class g_wave():
 
         world[1,:,:,:]=world[0,:,:,:]
         world[2,:,:,:]=world[0,:,:,:]
-        self.counter += 1
+        self.counter += 1*self.speed
         return np.clip(world, 0, 1)
