@@ -58,7 +58,7 @@ class App(Tk):
         self.framecount = 1
         self.send_array_rgb = []
         # self.send_list =[]
-        self.artnet_switch = False
+        self.artnet_switch = IntVar()
 
         self.generators = ["g_blank", "g_cube", "g_random", "g_growing_sphere","g_orbiter","g_randomlines",
                            "g_sphere", "g_snake","g_planes", "g_planes_falling", "g_corner", "g_corner_grow",
@@ -122,7 +122,7 @@ class App(Tk):
         self.Shutter = Label(frame, textvariable=self.ShutterValue)
         self.Shutter.grid(row=0, column=1)
 
-        self.artnetCheckbox = Checkbutton(frame, text="Artnet Control", variable=self.artnet_switch, onvalue=True, offvalue=False)
+        self.artnetCheckbox = Checkbutton(frame, text="Artnet Control", variable=self.artnet_switch, command=self.checkbox_callback, onvalue=True, offvalue=False)
         self.artnetCheckbox.grid(row=0,column=2)
 
         self.labelG1 = Label(frame, text="|Generator 1 -> ",font=("Helvetica", "18"))
@@ -261,7 +261,6 @@ class App(Tk):
         paramValues = self.cubeWorld.getParamsAndValues()
         genValues = self.cubeWorld.getBrightnessAndShutterspeed()
         masterValues = self.cubeWorld.getMasterParams()
-        self.cubeWorld.setArtnetControl(self.artnet_switch)
         #self.switchMidiButtonLights(MidiKey)
         #print(self.dmx.read(605))
 
@@ -319,7 +318,7 @@ class App(Tk):
             send_list.append(int(self.hRGBMode))  # RGB Mode ON
 
             # this sleep is stupid, we need another solution!
-            time.sleep(0.01)
+            time.sleep(0.02)
             send_list.extend(self.cubeWorld.get_cubedata())
             blub = bytearray(send_list)
 
@@ -327,6 +326,10 @@ class App(Tk):
             # send the fuckin package
             self.con.write(blub)
             self.after(self.sendSpeed, self.send_data_rgb)
+
+    def checkbox_callback(self):
+        self.cubeWorld.setArtnetControl(bool(self.artnet_switch.get()))
+
 
     '''
     def switchMidiButtonLights(self,Key):

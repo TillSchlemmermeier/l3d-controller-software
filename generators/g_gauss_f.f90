@@ -14,7 +14,10 @@ subroutine gen_gauss(world, gauss)
   do x=1, 10
     do y=1, 10
       do z=1, 10
-        world(x,y,z) = exp(-abs(gauss(y,z))*5)
+        write(*,*) gauss(y,z), exp(-gauss(y,z))
+        world(x,y,z) = exp(-(float(x)-gauss(y,z)))
+        write(*,*) gauss(y,z), exp(-gauss(y,z)), exp(-gauss(y,z)), world(x,y,z)
+        !write(*,*) gauss(y,z), -gauss(y,z), exp(float(0)), exp(-gauss(y,z))
       end do
     end do
   end do

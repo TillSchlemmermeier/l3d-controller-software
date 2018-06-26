@@ -104,7 +104,7 @@ class CubeWorld:
         print('\nInitialize Artnet stream...\n')
         self.artnet = socket.socket(socket.AF_INET, socket.SOCK_RAW, socket.IPPROTO_UDP)
         self.artnet.setsockopt(socket.SOL_SOCKET,socket.SO_RCVBUF, 1)
-        #self.artnet.settimeout(1)socket
+        #self.artnet.settimeout(1)
         self.artnet_universe = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
 
 
@@ -150,6 +150,7 @@ class CubeWorld:
 
     def setArtnetControl(self,bool):
         self.switch_artnet=bool
+        print('ARTnet Control: '+str(self.switch_artnet))
 
     def set_Genenerator(self, generator, name, key):
         fullFunction = "self.CH"+generator+"["+str(key)+"]="+name+"()"
@@ -194,7 +195,7 @@ class CubeWorld:
         # This also determines, that the input of each generate function
         # must always be defined as <somegenerator.generate>(self, step, world)
 
-        if self.artnet == True:
+        if self.switch_artnet == True:
             self.speed_A = int(round(self.artnet_universe[4]*30)+1)
             self.speed_B = int(round(self.artnet_universe[9]*30)+1)
             self.speed_C = int(round(self.artnet_universe[14]*30)+1)
