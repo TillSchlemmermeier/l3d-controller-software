@@ -103,8 +103,8 @@ class CubeWorld:
 
         print('\nInitialize Artnet stream...\n')
         self.artnet = socket.socket(socket.AF_INET, socket.SOCK_RAW, socket.IPPROTO_UDP)
-        self.artnet.setsockopt(socket.SOL_SOCKET,socket.SO_RCVBUF, 1)
-        #self.artnet.settimeout(1)
+        #self.artnet.setsockopt(socket.SOL_SOCKET,socket.SO_RCVBUF, 1)
+        self.artnet.settimeout(0.006) # 0.01 works
         self.artnet_universe = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
 
 
@@ -130,11 +130,13 @@ class CubeWorld:
         self.control_dict.update({key: value/127.0})
 
         if self.switch_artnet:
-            data = self.artnet.recvfrom(560)
-            if sys.getsizeof(data[0]) >= 512:
-                for i in range(46,46+17):
-                    self.artnet_universe[i-46] = data[0][i]/255.0
-
+            try:
+                data = self.artnet.recvfrom(560)
+                if sys.getsizeof(data[0]) >= 512:
+                    for i in range(46,46+17):
+                        self.artnet_universe[i-46] = data[0][i]/255.0
+            except:
+                pass
 
     def getParamsAndValues(self):
         #print('trying to get labels')
