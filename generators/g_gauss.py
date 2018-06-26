@@ -7,7 +7,7 @@ from scipy.stats import multivariate_normal
 class g_gauss():
 
     def __init__(self):
-        sigma = 0
+        self.sigma = 0
 
     def control(self, sigma, blub, blub0):
         self.sigma = round(sigma*1.2)
@@ -24,18 +24,18 @@ class g_gauss():
         # Need an (N, 2) array of (x, y) pairs.
         xy = np.column_stack([x.flat, y.flat])
 
-        mu = np.array([5.0, 5.0])
+        mu = np.array([4.5, 4.5])
 
         sigma = np.array([1.2, 1.2])
         covariance = np.diag(sigma**2)
 
 
-        for x in range (0,9)
-            for y in range (0,9)
-                for z in range (0,9)
+        for x in range (10)
+            for y in range (10)
+                for z in range (10)
                     gauss = multivariate_normal.pdf(xy, mean=mu, cov=covariance)*100+5
                     # Reshape back to a (10, 10) grid.
                     gauss = gauss.reshape(x.shape)
-                    world[:,x,y,z] = 1.0/(z-gauss) ** 8
+                    world[:,x,y,z] = 1.0/(z-gauss)**8
 
         return np.clip(world, 0, 1)
