@@ -30,6 +30,7 @@ from generators.g_growingface import g_growingface
 from generators.g_orbiter3 import g_orbiter3
 from generators.g_gauss import g_gauss
 from generators.g_wave import g_wave
+from generators.g_drop import g_drop
 
 # vox cube_generators
 from generators.g_obliqueplane import g_obliqueplane
@@ -269,7 +270,7 @@ class CubeWorld:
                             self.amount_c * self.world_CHC + \
                             self.fade * self.world_TOT
 
-            self.world_TOT = np.clip(self.artnet_universe[16] * self.world_TOT,0,1)
+            self.world_TOT = np.clip(self.artnet_universe[16] * self.world_TOT,0,0.999)
 
 
         else :
@@ -290,4 +291,4 @@ class CubeWorld:
                             self.amount_c * self.world_CHC + \
                             self.fade * self.world_TOT
 
-            self.world_TOT = np.clip(self.brightness * self.world_TOT,0,1)
+            self.world_TOT = np.clip(self.brightness * self.world_TOT,0,0.999)
