@@ -58,6 +58,7 @@ class App(Tk):
         self.framecount = 1
         self.send_array_rgb = []
         # self.send_list =[]
+        self.artnet_switch = False
 
         self.generators = ["g_blank", "g_cube", "g_random", "g_growing_sphere","g_orbiter","g_randomlines",
                            "g_sphere", "g_snake","g_planes", "g_planes_falling", "g_corner", "g_corner_grow",
@@ -66,6 +67,10 @@ class App(Tk):
                            "g_torusrotation","g_growingface","g_pyramid", "g_orbiter3","g_gauss"]
         self.effects = ["e_blank","e_fade2blue","e_rainbow","e_staticcolor", "e_violetblue", "e_redyellow",
                         "e_tremolo", "e_gradient", "e_prod_saturation", "e_prod_hue", "e_bright_osci"]
+
+        self.generators.sort()
+        self.effects.sort()
+
 
         # Header Information
         self.hSpeed = 1
@@ -116,6 +121,9 @@ class App(Tk):
         self.Brightnes.grid(row=0, column=0)
         self.Shutter = Label(frame, textvariable=self.ShutterValue)
         self.Shutter.grid(row=0, column=1)
+
+        self.artnetCheckbox = Checkbutton(frame, text="Artnet Control", variable=self.artnet_switch, onvalue=True, offvalue=False)
+        self.artnetCheckbox.grid(row=0,column=2)
 
         self.labelG1 = Label(frame, text="|Generator 1 -> ",font=("Helvetica", "18"))
         self.labelG1.grid(row=1, column=0)
@@ -253,6 +261,7 @@ class App(Tk):
         paramValues = self.cubeWorld.getParamsAndValues()
         genValues = self.cubeWorld.getBrightnessAndShutterspeed()
         masterValues = self.cubeWorld.getMasterParams()
+        self.cubeWorld.setArtnetControl(self.artnet_switch)
         #self.switchMidiButtonLights(MidiKey)
         #print(self.dmx.read(605))
 

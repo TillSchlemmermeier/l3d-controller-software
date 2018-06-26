@@ -146,7 +146,10 @@ class CubeWorld:
         return['Brightness', self.amount_a,'Brightness', self.amount_b,'Brightness', self.amount_c,"Shutter", self.speed_A,"Shutter", self.speed_B,"Shutter", self.speed_C]
 
     def getMasterParams(self):
-        return['Master-Brightness',self.brightness, 'Master-Fade', self.fade]    
+        return['Master-Brightness',self.brightness, 'Master-Fade', self.fade]
+
+    def setArtnetControl(self,bool):
+        self.switch_artnet=bool
 
     def set_Genenerator(self, generator, name, key):
         fullFunction = "self.CH"+generator+"["+str(key)+"]="+name+"()"
