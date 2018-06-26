@@ -20,7 +20,7 @@ class e_rainbow():
         self.blue = 0.0
 
     def control(self, speed, blub0, blub1):
-        self.speed = speed
+        self.speed = speed*0.35
 
     def label(self):
         return ['speed',round(self.speed,2),'empty', 'empty','empty','empty']

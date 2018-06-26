@@ -85,6 +85,9 @@ class CubeWorld:
         for i in range(150):
             self.control_dict.update( {i: 0.0} )
 
+        self.control_dict.update({58:1})
+        self.control_dict.update({62:0})
+
         self.CHA = []
         self.CHB = []
         self.CHC = []
