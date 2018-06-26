@@ -1,14 +1,15 @@
 # modules
 import numpy as np
 from scipy.signal import sawtooth
-from random import randint
+from random import randint, choice
 from generators.g_genhsphere import gen_hsphere
+
 
 # fortran routine is in g_growing_sphere_f.f90
 
-class g_growing_corner():
+class g_growingface():
     '''
-    Generator: growing_corner
+    Generator: growing_face
 
     a growing hollow sphere from a corner of the cube
 
@@ -42,9 +43,13 @@ class g_growing_corner():
 
         # check for new calculation
         if self.counter > self.growspeed:
-            self.xpos = 9*randint(0,1)
-            self.ypos = 9*randint(0,1)
-            self.zpos = 9*randint(0,1)
+
+            #self.xpos = 4.5*randint(0,2)
+            #self.ypos = 4.5*randint(0,2)
+            #self.zpos = 4.5*randint(0,2)
+            list = ([0,5.5,5.5],[9,5.5,5.5],[5.5,0,5.5],[5.5,9,5.5],[5.5,5.5,0],[5.5,5.5,9])
+            [self.xpos, self.ypos, self.zpos] = choice(list)
+
 
             self.counter = 0
 

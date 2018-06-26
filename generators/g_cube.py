@@ -14,15 +14,15 @@ class g_cube():
     '''
 
     def __init__(self):
-        self.size = 2
+        self.size = 4
         self.sides = False
 
     def control(self, size, sides, blub1):
         self.size = round(size*4)
-        if sides > 0.5:
-            self.sides = True
-        else:
+        if sides > 0:
             self.sides = False
+        else:
+            self.sides = True
 
     def label(self):
         return ['size',round(self.size, 2),'side on', self.sides,'empty','empty']

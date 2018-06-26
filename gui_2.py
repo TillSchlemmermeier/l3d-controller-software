@@ -62,7 +62,7 @@ class App(Tk):
         self.generators = ["g_blank", "g_cube", "g_random", "g_growing_sphere","g_orbiter","g_randomlines",
                            "g_sphere", "g_snake","g_planes", "g_planes_falling", "g_corner", "g_corner_grow",
                            "g_shooting_star", "g_orbiter2", "g_randomcross", "g_wavepattern", "g_growing_corner",
-                           "g_rain", "g_circles", "g_falling", "g_obliqueplane", "g_obliqueplaneXYZ", "g_smiley", "g_torusrotation"]
+                           "g_rain", "g_circles", "g_falling", "g_obliqueplane", "g_obliqueplaneXYZ", "g_smiley", "g_torusrotation","g_growingface"]
         self.effects = ["e_blank","e_fade2blue","e_rainbow","e_staticcolor", "e_violetblue", "e_redyellow",
                         "e_tremolo", "e_gradient", "e_prod_saturation", "e_prod_hue"]
 
@@ -356,7 +356,6 @@ if __name__ == "__main__":
     midiin, portname_in = open_midiinput(port)
     #midiout, portname_out = open_midioutput(port)
     midiin.set_callback(MidiInputHandler(portname_in))
-
 
     print("Starting main.")
     # midi ready

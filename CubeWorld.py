@@ -1,6 +1,8 @@
 # load modules
 import numpy as np
+import socket
 from cube_utils import world2vox
+import sys
 
 # load generator modules
 
@@ -22,8 +24,17 @@ from generators.g_wavepattern import g_wavepattern
 from generators.g_randomcross import g_randomcross
 from generators.g_growing_corner import g_growing_corner
 from generators.g_rain import g_rain
-from generators.g_voxreader import g_voxreader
+#from generators.g_voxreader import g_voxreader
 from generators.g_circles import g_circles
+from generators.g_growingface import g_growingface
+
+# vox cube_generators
+from generators.g_obliqueplane import g_obliqueplane
+from generators.g_obliqueplaneXYZ import g_obliqueplaneXYZ
+from generators.g_falling import g_falling
+from generators.g_smiley import g_smiley
+from generators.g_torusrotation import g_torusrotation
+
 #load effect modules
 from effects.e_blank import e_blank
 from effects.e_fade2blue import e_fade2blue
@@ -62,7 +73,8 @@ class CubeWorld:
         self.fade = 0.0
         self.brightness = 1.0
 
-        # self.framecounter = 0
+        # artnet switch
+        self.switch_artnet = False
 
         self.control_dict = {}
 
@@ -86,6 +98,13 @@ class CubeWorld:
         self.CHC.append(g_blank())
         self.CHC.append(e_blank())
 
+        print('\nInitialize Artnet stream...\n')
+        self.artnet = socket.socket(socket.AF_INET, socket.SOCK_RAW, socket.IPPROTO_UDP)
+        self.artnet.setsockopt(socket.SOL_SOCKET,socket.SO_RCVBUF, 1)
+        #self.artnet.settimeout(1)socket
+        self.artnet_universe = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
+
+
     def get_cubedata(self):
         # get vox format from the internal stored world
         # get each color
@@ -106,6 +125,13 @@ class CubeWorld:
     def control(self, key, value):
         # updates the control values, shift range from 0-127 to 0.0-1.0
         self.control_dict.update({key: value/127.0})
+
+        if self.switch_artnet:
+            data = self.artnet.recvfrom(560)
+            if sys.getsizeof(data[0]) >= 512:
+                for i in range(46,46+17):
+                    self.artnet_universe[i-46] = data[0][i]/255.0
+
 
     def getParamsAndValues(self):
         #print('trying to get labels')
@@ -159,9 +185,14 @@ class CubeWorld:
         # This also determines, that the input of each generate function
         # must always be defined as <somegenerator.generate>(self, step, world)
 
-        self.speed_A = int(round(self.control_dict[19]*20)+1)
-        self.speed_B = int(round(self.control_dict[23]*20)+1)
-        self.speed_C = int(round(self.control_dict[27]*20)+1)
+        if self.artnet == True:
+            self.speed_A = int(round(self.artnet_universe[4]*20)+1)
+            self.speed_B = int(round(self.artnet_universe[9]*20)+1)
+            self.speed_C = int(round(self.artnet_universe[14]*20)+1)
+        else:
+            self.speed_A = int(round(self.control_dict[19]*20)+1)
+            self.speed_B = int(round(self.control_dict[23]*20)+1)
+            self.speed_C = int(round(self.control_dict[27]*20)+1)
 
         self.world_CHA[:, :, :, :] = 0.0
         self.world_CHB[:, :, :, :] = 0.0
@@ -194,24 +225,53 @@ class CubeWorld:
             self.CHC[1].control(self.control_dict[50],self.control_dict[51],self.control_dict[52])
             self.world_CHC = self.CHC[1].generate(step, self.world_CHC)
 
-        # Brightness
-        self.amount_a = self.control_dict[31]
-        self.amount_b = self.control_dict[49]
-        self.amount_c = self.control_dict[53]
+        if self.switch_artnet:
+            # overwrite colors
+            self.world_CHA[0,:,:,:] *= self.artnet_universe[0]
+            self.world_CHA[1,:,:,:] *= self.artnet_universe[1]
+            self.world_CHA[2,:,:,:] *= self.artnet_universe[2]
 
-        # Global Brightness
-        self.brightness = self.control_dict[58]
+            self.world_CHB[0,:,:,:] *= self.artnet_universe[5]
+            self.world_CHB[1,:,:,:] *= self.artnet_universe[6]
+            self.world_CHB[2,:,:,:] *= self.artnet_universe[7]
 
-        # Global fade
-        self.fade = self.control_dict[62]
+            self.world_CHC[0,:,:,:] *= self.artnet_universe[10]
+            self.world_CHC[1,:,:,:] *= self.artnet_universe[11]
+            self.world_CHC[2,:,:,:] *= self.artnet_universe[12]
 
-        # Sum Channels
-        self.world_TOT = self.amount_a * self.world_CHA + \
-                         self.amount_b * self.world_CHB + \
-                         self.amount_c * self.world_CHC + \
-                         self.fade * self.world_TOT
+            # brightness
+            self.amount_a = self.artnet_universe[3]
+            self.amount_b = self.artnet_universe[8]
+            self.amount_c = self.artnet_universe[13]
 
-        self.world_TOT = np.clip(self.brightness * self.world_TOT,0,1)
+            # Global fade
+            self.fade = self.artnet_universe[15]
 
-        # Global Effects
-        # the global fade is already included at the "sum channels"
+            # Sum Channels
+            self.world_TOT = self.amount_a * self.world_CHA + \
+                            self.amount_b * self.world_CHB + \
+                            self.amount_c * self.world_CHC + \
+                            self.fade * self.world_TOT
+
+            self.world_TOT = np.clip(self.artnet_universe[16] * self.world_TOT,0,1)
+
+
+        else :
+            # Brightness
+            self.amount_a = self.control_dict[31]
+            self.amount_b = self.control_dict[49]
+            self.amount_c = self.control_dict[53]
+
+            # Global Brightness
+            self.brightness = self.control_dict[58]
+
+            # Global fade
+            self.fade = self.control_dict[62]
+
+            # Sum Channels
+            self.world_TOT = self.amount_a * self.world_CHA + \
+                            self.amount_b * self.world_CHB + \
+                            self.amount_c * self.world_CHC + \
+                            self.fade * self.world_TOT
+
+            self.world_TOT = np.clip(self.brightness * self.world_TOT,0,1)
