@@ -17,7 +17,7 @@ class g_random():
         self.number = 1
 
     def control(self, number, blub0, blub1):
-        self.number = int((number*10)+1)  # +1 makes sure that minimum number is > 0
+        self.number = int((number*20)+1)  # +1 makes sure that minimum number is > 0
 
     def label(self):
         return ['number',self.number,'empty', 'empty','empty','empty']
