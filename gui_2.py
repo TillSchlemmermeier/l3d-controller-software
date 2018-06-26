@@ -58,14 +58,19 @@ class App(Tk):
         self.framecount = 1
         self.send_array_rgb = []
         # self.send_list =[]
+        self.artnet_switch = IntVar()
 
         self.generators = ["g_blank", "g_cube", "g_random", "g_growing_sphere","g_orbiter","g_randomlines",
                            "g_sphere", "g_snake","g_planes", "g_planes_falling", "g_corner", "g_corner_grow",
                            "g_shooting_star", "g_orbiter2", "g_randomcross", "g_wavepattern", "g_growing_corner",
                            "g_rain", "g_circles", "g_falling", "g_obliqueplane", "g_obliqueplaneXYZ", "g_smiley",
-                           "g_torusrotation","g_growingface","g_pyramid", "g_orbiter3","g_gauss"]
+                           "g_torusrotation","g_growingface","g_pyramid", "g_orbiter3","g_gauss","g_wave"]
         self.effects = ["e_blank","e_fade2blue","e_rainbow","e_staticcolor", "e_violetblue", "e_redyellow",
                         "e_tremolo", "e_gradient", "e_prod_saturation", "e_prod_hue", "e_bright_osci"]
+
+        self.generators.sort()
+        self.effects.sort()
+
 
         # Header Information
         self.hSpeed = 1
@@ -116,6 +121,9 @@ class App(Tk):
         self.Brightnes.grid(row=0, column=0)
         self.Shutter = Label(frame, textvariable=self.ShutterValue)
         self.Shutter.grid(row=0, column=1)
+
+        self.artnetCheckbox = Checkbutton(frame, text="Artnet Control", variable=self.artnet_switch, command=self.checkbox_callback, onvalue=True, offvalue=False)
+        self.artnetCheckbox.grid(row=0,column=2)
 
         self.labelG1 = Label(frame, text="|Generator 1 -> ",font=("Helvetica", "18"))
         self.labelG1.grid(row=1, column=0)
@@ -310,7 +318,7 @@ class App(Tk):
             send_list.append(int(self.hRGBMode))  # RGB Mode ON
 
             # this sleep is stupid, we need another solution!
-            time.sleep(0.01)
+            time.sleep(0.02)
             send_list.extend(self.cubeWorld.get_cubedata())
             blub = bytearray(send_list)
 
@@ -318,6 +326,10 @@ class App(Tk):
             # send the fuckin package
             self.con.write(blub)
             self.after(self.sendSpeed, self.send_data_rgb)
+
+    def checkbox_callback(self):
+        self.cubeWorld.setArtnetControl(bool(self.artnet_switch.get()))
+
 
     '''
     def switchMidiButtonLights(self,Key):

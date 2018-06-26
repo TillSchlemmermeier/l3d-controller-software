@@ -1,6 +1,7 @@
 # modules
 import numpy as np
 from scipy.stats import multivariate_normal
+from generators.gen_gauss import gen_gauss
 
 # fortran routine is in g_sphere_f.f90
 
@@ -36,12 +37,17 @@ class g_gauss():
         gauss = np.sin(step*self.speed)*multivariate_normal.pdf(yz, mean=mu, cov=covariance)*self.amplitude*self.sigma**2+5
         gauss = gauss.reshape(10,10)
 
+        #print(gauss)
+        world[0,:,:,:] = gen_gauss(gauss)
 
-        for y in range (10):
-            for z in range (10):
-                for x in range (10):
-                    world[:,x,y,z] = np.exp(-abs(x-gauss[y,z])*5)
+        #print(world[0,:,0,0])
 
-        print
+        world[1,:,:,:] = world[0,:,:,:]
+        world[2,:,:,:] = world[0,:,:,:]
+
+#        for y in range (10):
+#            for z in range (10):
+#                for x in range (10):
+#                    world[:,x,y,z] = np.exp(-abs(x-gauss[y,z])*5)
 
         return np.clip(world, 0, 1)
