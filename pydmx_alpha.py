@@ -1,7 +1,7 @@
 from ola.ClientWrapper import ClientWrapper
 
 def NewData(data):
-  print data
+  print (data)
 
 universe = 1
 

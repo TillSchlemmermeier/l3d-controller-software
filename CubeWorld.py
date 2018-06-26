@@ -144,6 +144,9 @@ class CubeWorld:
     def getBrightnessAndShutterspeed(self):
         return['Brightness', self.amount_a,'Brightness', self.amount_b,'Brightness', self.amount_c,"Shutter", self.speed_A,"Shutter", self.speed_B,"Shutter", self.speed_C]
 
+    def getMasterParams(self):
+        return['Master-Brightness',self.brightness, 'Master-Fade', self.fade]    
+
     def set_Genenerator(self, generator, name, key):
         fullFunction = "self.CH"+generator+"["+str(key)+"]="+name+"()"
         exec(fullFunction)

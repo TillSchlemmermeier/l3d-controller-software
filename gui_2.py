@@ -110,6 +110,13 @@ class App(Tk):
         self.stopButton = Button(frame, text="Stop", command=self.stopsending)
         self.stopButton.grid(row=0, column=5)
 
+        self.BrightnesValue = StringVar()
+        self.ShutterValue = StringVar()
+        self.Brightnes = Label(frame, textvariable=self.BrightnesValue)
+        self.Brightnes.grid(row=0, column=0)
+        self.Shutter = Label(frame, textvariable=self.ShutterValue)
+        self.Shutter.grid(row=0, column=1)
+
         self.labelG1 = Label(frame, text="|Generator 1 -> ",font=("Helvetica", "18"))
         self.labelG1.grid(row=1, column=0)
 
@@ -245,9 +252,12 @@ class App(Tk):
         self.cubeWorld.control(MidiKey,MidiValue)
         paramValues = self.cubeWorld.getParamsAndValues()
         genValues = self.cubeWorld.getBrightnessAndShutterspeed()
+        masterValues = self.cubeWorld.getMasterParams()
         #self.switchMidiButtonLights(MidiKey)
         #print(self.dmx.read(605))
 
+        self.BrightnesValue.set(masterValues[0]+":"+str(round(masterValues[1],2)))
+        self.ShutterValue.set(masterValues[2]+":"+str(round(masterValues[3],2)))
 
         self.G1param1String.set(paramValues[0][0]+':'+str(paramValues[0][1]))
         self.G1param2String.set(paramValues[0][2]+':'+str(paramValues[0][3]))
