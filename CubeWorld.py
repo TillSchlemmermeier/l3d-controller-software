@@ -24,7 +24,7 @@ from generators.g_wavepattern import g_wavepattern
 from generators.g_randomcross import g_randomcross
 from generators.g_growing_corner import g_growing_corner
 from generators.g_rain import g_rain
-#from generators.g_voxreader import g_voxreader
+from generators.g_pyramid import g_pyramid
 from generators.g_circles import g_circles
 from generators.g_growingface import g_growingface
 
@@ -186,13 +186,13 @@ class CubeWorld:
         # must always be defined as <somegenerator.generate>(self, step, world)
 
         if self.artnet == True:
-            self.speed_A = int(round(self.artnet_universe[4]*20)+1)
-            self.speed_B = int(round(self.artnet_universe[9]*20)+1)
-            self.speed_C = int(round(self.artnet_universe[14]*20)+1)
+            self.speed_A = int(round(self.artnet_universe[4]*30)+1)
+            self.speed_B = int(round(self.artnet_universe[9]*30)+1)
+            self.speed_C = int(round(self.artnet_universe[14]*30)+1)
         else:
-            self.speed_A = int(round(self.control_dict[19]*20)+1)
-            self.speed_B = int(round(self.control_dict[23]*20)+1)
-            self.speed_C = int(round(self.control_dict[27]*20)+1)
+            self.speed_A = int(round(self.control_dict[19]*30)+1)
+            self.speed_B = int(round(self.control_dict[23]*30)+1)
+            self.speed_C = int(round(self.control_dict[27]*30)+1)
 
         self.world_CHA[:, :, :, :] = 0.0
         self.world_CHB[:, :, :, :] = 0.0
