@@ -2,7 +2,7 @@ import numpy as np
 from scipy.signal import sawtooth
 from generators.g_shooting_star_f import gen_shooting_star
 
-class g_orbiter2():
+class g_orbiter3():
     '''
     Generator: orbiter
 
@@ -43,12 +43,12 @@ class g_orbiter2():
         world[0,:,:,:] = gen_shooting_star(sx+5.5,sy+5.5,sz+5.5)
         world[1,:,:,:] = world[0,:,:,:]
         world[2,:,:,:] = world[0,:,:,:]
-        
+
         return world
 
 def polar2z(r, theta, phi):
     # polar coordinates to cartesian
     y = r * np.sin(theta) * np.cos(phi)
-    x = r * np.sin(theta) * np.sin(phi)
-    z = r * np.cos(theta)
+    z = r * np.sin(theta) * np.sin(phi)
+    x = r * np.cos(theta)
     return [x, y, z]

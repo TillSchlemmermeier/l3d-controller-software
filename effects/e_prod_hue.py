@@ -17,7 +17,7 @@ class e_prod_hue():
         self.distance = c2
 
     def label(self):
-        return ['central color',self.c1,'diversity', self.distance,'empty','empty']
+        return ['central color',sound(self.c1,2),'diversity', round(self.distance,2,),'empty','empty']
 
     def generate(self, step, world):
 

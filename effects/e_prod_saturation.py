@@ -10,14 +10,14 @@ class e_prod_saturation():
     def __init__(self):
 
         self.c1 = 0.0
-        self.balance = 1.0
+        self.distance = 0.0
 
     def control(self, c1, c2, balance):
         self.c1 = c1
         self.distance = c2
 
     def label(self):
-        return ['c1',self.c1,'empty', 'empty','empty','empty']
+        return ['c1',round(self.c1,2),'distance', round(self.distance,2),'empty','empty']
 
     def generate(self, step, world):
 

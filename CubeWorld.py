@@ -27,6 +27,7 @@ from generators.g_rain import g_rain
 from generators.g_pyramid import g_pyramid
 from generators.g_circles import g_circles
 from generators.g_growingface import g_growingface
+from generators.g_orbiter3 import g_orbiter3
 
 # vox cube_generators
 from generators.g_obliqueplane import g_obliqueplane
