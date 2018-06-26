@@ -318,7 +318,7 @@ class App(Tk):
             send_list.append(int(self.hRGBMode))  # RGB Mode ON
 
             # this sleep is stupid, we need another solution!
-            time.sleep(0.02)
+            time.sleep(0.015)
             send_list.extend(self.cubeWorld.get_cubedata())
             blub = bytearray(send_list)
 

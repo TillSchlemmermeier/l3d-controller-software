@@ -8,11 +8,11 @@ class g_wavepattern():
     '''
 
     def __init__(self):
-        self.freq = 1.0
+        self.freq = 0.5
         self.speed = 1.0
 
     def control(self, freq, speed, blub1):
-        self.freq = freq
+        self.freq = freq*0.25+0.5
         self.speed = speed
 
     def label(self):
