@@ -26,6 +26,6 @@ class g_randomcubeedge():
         # create world
         world = np.zeros([3, 10, 10, 10])
 
-        
+
 
         return np.clip(world, 0, 1)

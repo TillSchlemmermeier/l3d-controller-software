@@ -65,7 +65,7 @@ class g_obliqueplaneXYZ():
         for i in range(0,len(data)):
             position = (self.get_position(i))
             if data[i] > 0 :
-                world[position[0],position[1],position[2]] = data[i]/255.0
+                world[int(position[0]),int(position[1]),int(position[2])] = data[i]/255.0
         return world
 
     def get_position(self, i):
