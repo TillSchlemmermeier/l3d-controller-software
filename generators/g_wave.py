@@ -15,7 +15,7 @@ class g_wave():
 
     def control(self, sigma, speed, blub1):
         self.sigma = sigma*1.4+0.2
-        self.speed = speed*2
+        self.speed = speed*2.5+0.4
 
     def label(self):
         return ['sigma',round(self.sigma,2),'speed',round(self.speed,2),'empty','empty','empty']
