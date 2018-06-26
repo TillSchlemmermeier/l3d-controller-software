@@ -29,6 +29,7 @@ from generators.g_circles import g_circles
 from generators.g_growingface import g_growingface
 from generators.g_orbiter3 import g_orbiter3
 from generators.g_gauss import g_gauss
+from generators.g_wave import g_wave
 
 # vox cube_generators
 from generators.g_obliqueplane import g_obliqueplane

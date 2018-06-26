@@ -64,7 +64,7 @@ class App(Tk):
                            "g_sphere", "g_snake","g_planes", "g_planes_falling", "g_corner", "g_corner_grow",
                            "g_shooting_star", "g_orbiter2", "g_randomcross", "g_wavepattern", "g_growing_corner",
                            "g_rain", "g_circles", "g_falling", "g_obliqueplane", "g_obliqueplaneXYZ", "g_smiley",
-                           "g_torusrotation","g_growingface","g_pyramid", "g_orbiter3","g_gauss"]
+                           "g_torusrotation","g_growingface","g_pyramid", "g_orbiter3","g_gauss","g_wave"]
         self.effects = ["e_blank","e_fade2blue","e_rainbow","e_staticcolor", "e_violetblue", "e_redyellow",
                         "e_tremolo", "e_gradient", "e_prod_saturation", "e_prod_hue", "e_bright_osci"]
 
