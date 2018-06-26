@@ -48,6 +48,7 @@ from effects.e_newgradient import e_newgradient
 from effects.e_gradient import e_gradient
 from effects.e_prod_saturation import e_prod_saturation
 from effects.e_prod_hue import e_prod_hue
+from effects.e_bright_osci import e_bright_osci
 
 # load effect modules
 

@@ -65,7 +65,7 @@ class App(Tk):
                            "g_rain", "g_circles", "g_falling", "g_obliqueplane", "g_obliqueplaneXYZ", "g_smiley",
                            "g_torusrotation","g_growingface","g_pyramid"]
         self.effects = ["e_blank","e_fade2blue","e_rainbow","e_staticcolor", "e_violetblue", "e_redyellow",
-                        "e_tremolo", "e_gradient", "e_prod_saturation", "e_prod_hue"]
+                        "e_tremolo", "e_gradient", "e_prod_saturation", "e_prod_hue", "e_bright_osci"]
 
         # Header Information
         self.hSpeed = 1
