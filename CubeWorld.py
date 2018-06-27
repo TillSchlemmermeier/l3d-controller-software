@@ -25,6 +25,7 @@ from generators.g_randomcross import g_randomcross
 from generators.g_growing_corner import g_growing_corner
 from generators.g_rain import g_rain
 from generators.g_pyramid import g_pyramid
+from generators.g_pyramid_upsidedown import g_pyramid_upsidedown
 from generators.g_circles import g_circles
 from generators.g_growingface import g_growingface
 from generators.g_orbiter3 import g_orbiter3
