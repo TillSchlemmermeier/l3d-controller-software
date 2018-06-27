@@ -58,7 +58,8 @@ class App(Tk):
         self.framecount = 1
         self.send_array_rgb = []
         # self.send_list =[]
-        self.artnet_switch = IntVar()
+        self.artnet_switch = IntVar()   # callback variable for artnet switch
+        self.artnet_color_switch = IntVar()   # callback variable for artnet switch
 
         self.generators = ["g_blank", "g_cube", "g_random", "g_growing_sphere","g_orbiter","g_randomlines",
                            "g_sphere", "g_snake","g_planes", "g_planes_falling", "g_corner", "g_corner_grow",
@@ -71,7 +72,6 @@ class App(Tk):
 
         self.generators.sort()
         self.effects.sort()
-
 
         # Header Information
         self.hSpeed = 1
@@ -123,8 +123,20 @@ class App(Tk):
         self.Shutter = Label(frame, textvariable=self.ShutterValue)
         self.Shutter.grid(row=0, column=1)
 
-        self.artnetCheckbox = Checkbutton(frame, text="Artnet Control", variable=self.artnet_switch, command=self.checkbox_callback, onvalue=True, offvalue=False)
+        self.artnetCheckbox = Checkbutton(frame, text="Artnet Control",
+                                          variable=self.artnet_switch,
+                                          command=self.checkbox_callback,
+                                          onvalue=True,
+                                          offvalue=False)
         self.artnetCheckbox.grid(row=0,column=2)
+
+        self.artnetcolorCheckbox = Checkbutton(frame, text="Artnet Color Control",
+                                          variable=self.artnet_color_switch,
+                                          command=self.checkbox_color_callback,
+                                          onvalue=True,
+                                          offvalue=False)
+
+        self.artnetcolorCheckbox.grid(row=0,column=3)
 
         self.labelG1 = Label(frame, text="|Generator 1 -> ",font=("Helvetica", "18"))
         self.labelG1.grid(row=1, column=0)
@@ -331,6 +343,8 @@ class App(Tk):
     def checkbox_callback(self):
         self.cubeWorld.setArtnetControl(bool(self.artnet_switch.get()))
 
+    def checkbox_color_callback(self):
+        self.cubeWorld.setArtnetColorControl(bool(self.artnet_color_switch.get()))
 
     '''
     def switchMidiButtonLights(self,Key):

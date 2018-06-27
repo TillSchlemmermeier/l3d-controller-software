@@ -81,6 +81,7 @@ class CubeWorld:
 
         # artnet switch
         self.switch_artnet = False
+        self.switch_artnet_color = False
 
         self.control_dict = {}
 
@@ -135,7 +136,7 @@ class CubeWorld:
         # updates the control values, shift range from 0-127 to 0.0-1.0
         self.control_dict.update({key: value/127.0})
 
-        if self.switch_artnet:
+        if self.switch_artnet or self.switch_artnet_color:
             try:
                 data = self.artnet.recvfrom(560)
                 if sys.getsizeof(data[0]) >= 512:
@@ -159,6 +160,10 @@ class CubeWorld:
     def setArtnetControl(self,bool):
         self.switch_artnet=bool
         print('ARTnet Control: '+str(self.switch_artnet))
+
+    def setArtnetColorControl(self,bool):
+        self.switch_artnet_color=bool
+        print('ARTnet Color Control: '+str(self.switch_artnet_color))
 
     def set_Genenerator(self, generator, name, key):
         fullFunction = "self.CH"+generator+"["+str(key)+"]="+name+"()"
@@ -243,7 +248,7 @@ class CubeWorld:
             self.CHC[1].control(self.control_dict[50],self.control_dict[51],self.control_dict[52])
             self.world_CHC = self.CHC[1].generate(step, self.world_CHC)
 
-        if self.switch_artnet:
+        if self.switch_artnet or self.switch_artnet_color:
             # overwrite colors
             self.world_CHA[0,:,:,:] *= self.artnet_universe[0]
             self.world_CHA[1,:,:,:] *= self.artnet_universe[1]
@@ -257,6 +262,8 @@ class CubeWorld:
             self.world_CHC[1,:,:,:] *= self.artnet_universe[11]
             self.world_CHC[2,:,:,:] *= self.artnet_universe[12]
 
+
+        if self.switch_artnet:
             # brightness
             self.amount_a = self.artnet_universe[3]
             self.amount_b = self.artnet_universe[8]
