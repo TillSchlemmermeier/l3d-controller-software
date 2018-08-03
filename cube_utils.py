@@ -1,6 +1,7 @@
 import numpy as np
 #from random import randint, seed, random
 #from scipy.special import jv
+from world2vox import world2vox_f
 
 def world_init(dim):
     # Initialisiere welt entsprechend dim
@@ -44,9 +45,17 @@ def world2vox(world):
     return sorted_newlist
 '''
 
+
 def world2vox(world):
     '''
     Takes a world matrix and converts for direct streaming to the cube
+    '''
+
+    # the following part is replaced by a fortran subroutine
+    # compile with 'f2py3 -c -m world2vox_f world2vox.f90'
+
+    # in principle the whole function could be replaced, but I
+    # skipped the 'sort' part
     '''
     newlist = np.zeros([len(world.flatten()),2],dtype=int)
     index = 0
@@ -69,12 +78,12 @@ def world2vox(world):
 
                 newlist[index,1] = int(world[x,y,z]*255)
                 index += 1
-
-
+    '''
+    newlist = world2vox_f(world)
     # Sort list
-    sorted_newlist =  np.array(sorted(newlist,key=lambda x: x[0]))
+    sorted_newlist = np.array(sorted(newlist, key=lambda x: x[0]))
 
-    return sorted_newlist[:,1]
+    return sorted_newlist[:, 1]
 
 # unused
 
