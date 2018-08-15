@@ -1,7 +1,7 @@
 import numpy as np
 #from random import randint, seed, random
 #from scipy.special import jv
-from world2vox import world2vox_f
+from world2vox_fortran import world2vox_f
 
 def world_init(dim):
     # Initialisiere welt entsprechend dim
@@ -80,7 +80,6 @@ def world2vox(world):
                 index += 1
     '''
     newlist = world2vox_f(world)
-    # Sort list
     sorted_newlist = np.array(sorted(newlist, key=lambda x: x[0]))
 
     return sorted_newlist[:, 1]

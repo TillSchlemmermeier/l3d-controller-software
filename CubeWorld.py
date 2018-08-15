@@ -122,8 +122,10 @@ class CubeWorld:
         self.CHC.append(g_blank())
         self.CHC.append(e_blank())
 
+
         print('\nInitialize Artnet stream...\n')
         self.artnet = socket.socket(socket.AF_INET, socket.SOCK_RAW, socket.IPPROTO_UDP)
+
         #self.artnet.setsockopt(socket.SOL_SOCKET,socket.SO_RCVBUF, 1)
         self.artnet.settimeout(0.006) # 0.01 works
         self.artnet_universe = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
