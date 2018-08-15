@@ -89,6 +89,9 @@ class g_circles():
             elif j == 2:
                 world[0, randint(0,9), :, :] = self.size4[:,:]
 
+            elif j == 3:
+                world[0, randint(0,9), :, :] = self.size5[:,:]
+
         world[1,:,:,:] = world[0, :, : , :]
         world[2,:,:,:] = world[0, :, : , :]
         return np.clip(world, 0, 1)

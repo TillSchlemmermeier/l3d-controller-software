@@ -16,7 +16,7 @@ class g_pyramid():
         self.speed = speed
 
     def label(self):
-        return ['empty','empty','empty','empty','empty','empty',]
+        return ['size',round(self.size,2),'speed',round(self.speed,2),'empty','empty','empty','empty',]
 
     def generate(self, step, dumpworld):
         # create world
