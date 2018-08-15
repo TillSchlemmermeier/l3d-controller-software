@@ -32,6 +32,8 @@ from generators.g_orbiter3 import g_orbiter3
 from generators.g_gauss import g_gauss
 from generators.g_wave import g_wave
 from generators.g_drop import g_drop
+from generators.g_columns import g_columns
+from generators.g_cube_edges import g_cube_edges
 
 # vox cube_generators
 from generators.g_obliqueplane import g_obliqueplane
@@ -54,6 +56,7 @@ from effects.e_gradient import e_gradient
 from effects.e_prod_saturation import e_prod_saturation
 from effects.e_prod_hue import e_prod_hue
 from effects.e_bright_osci import e_bright_osci
+from effects.e_blur import e_blur
 
 # load effect modules
 

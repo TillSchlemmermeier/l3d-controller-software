@@ -61,15 +61,18 @@ class App(Tk):
         self.artnet_switch = IntVar()   # callback variable for artnet switch
         self.artnet_color_switch = IntVar()   # callback variable for artnet switch
 
+	# load generators and effects
         self.generators = ["g_blank", "g_cube", "g_random", "g_growing_sphere","g_orbiter","g_randomlines",
                            "g_sphere", "g_snake","g_planes", "g_planes_falling", "g_corner", "g_corner_grow",
                            "g_shooting_star", "g_orbiter2", "g_randomcross", "g_wavepattern", "g_growing_corner",
                            "g_rain", "g_circles", "g_falling", "g_obliqueplane", "g_obliqueplaneXYZ", "g_smiley",
                            "g_torusrotation","g_growingface","g_pyramid", "g_orbiter3","g_gauss","g_wave",
-                           "g_drop", "g_pyramid_upsidedown"]
+                           "g_drop", "g_pyramid_upsidedown", 'g_columns', 'g_cube_edges']
         self.effects = ["e_blank","e_fade2blue","e_rainbow","e_staticcolor", "e_violetblue", "e_redyellow",
-                        "e_tremolo", "e_gradient", "e_prod_saturation", "e_prod_hue", "e_bright_osci"]
+                        "e_tremolo", "e_gradient", "e_prod_saturation", "e_prod_hue",
+                        "e_bright_osci", 'e_blur']
 
+	# sort generators and effects
         self.generators.sort()
         self.effects.sort()
 
