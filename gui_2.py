@@ -1,6 +1,7 @@
 #! /usr/bin/python3.5
 
 from tkinter import *
+
 from cube_utils import *
 # from cube_animations import rain_gen, gen_dots, plain_gen
 # from cube_interactive import dots_on_sphere, random, sphere, speed_decorator, hsphere, planes, lines, cube, corner, circle, blur, moveandfade, seperate, blow, random_lines
@@ -84,7 +85,38 @@ class App(Tk):
 
         self.MidiButtonListBool = {1:False,4:False,7:False,10:False,13:False,16:False,19:False,22:False,3:False,6:False,9:False,12:False,15:False,18:False,21:False,24:False}
 
-        # GUI Callabcks
+        #self.funkyImage = Text(frame)
+        #img = BitmapImage( file='l3dBanner.bmp')
+        ###self.funkyImage.image_create(END, image = img)
+        #self.funkyImage.grid(row=10, column=3)
+
+        self.font='Arial'
+
+        self.pic0 = PhotoImage(file='banner/l3dbanner-0.png')
+        self.imgLabel0 = Label(frame,image=self.pic0)
+        self.imgLabel0.grid(row=10,column=0)
+
+        self.pic1 = PhotoImage(file='banner/l3dbanner-1.png')
+        self.imgLabel1 = Label(frame,image=self.pic1)
+        self.imgLabel1.grid(row=10,column=1)
+
+        self.pic2 = PhotoImage(file='banner/l3dbanner-2.png')
+        self.imgLabel2 = Label(frame,image=self.pic2)
+        self.imgLabel2.grid(row=10,column=2)
+
+        self.pic3 = PhotoImage(file='banner/l3dbanner-3.png')
+        self.imgLabel3 = Label(frame,image=self.pic3)
+        self.imgLabel3.grid(row=10,column=3)
+
+        self.pic4 = PhotoImage(file='banner/l3dbanner-4.png')
+        self.imgLabel4 = Label(frame,image=self.pic4)
+        self.imgLabel4.grid(row=10,column=4)
+
+        self.pic5 = PhotoImage(file='banner/l3dbanner-5.png')
+        self.imgLabel5 = Label(frame,image=self.pic5)
+        self.imgLabel5.grid(row=10,column=5)
+        #
+        ## GUI Callabcks
         def optionmenuG1_selection(event):
             self.cubeWorld.set_Genenerator("A", self.dropdownG1Current.get(),0)
             pass
@@ -138,22 +170,22 @@ class App(Tk):
 
         self.artnetcolorCheckbox.grid(row=0,column=3)
 
-        self.labelG1 = Label(frame, text="|Generator 1 -> ",font=("Helvetica", "18"))
+        self.labelG1 = Label(frame, text="| Generator 1 -> ",font=(self.font, "18"))
         self.labelG1.grid(row=1, column=0)
 
-        self.labelG2 = Label(frame, text="|Generator 2 -> ",font=("Helvetica", "18"))
+        self.labelG2 = Label(frame, text="| Generator 2 -> ",font=(self.font, "18"))
         self.labelG2.grid(row=1, column=2)
 
-        self.labelG2 = Label(frame, text="|Generator 3 -> ",font=("Helvetica", "18"))
+        self.labelG2 = Label(frame, text="| Generator 3 -> ",font=(self.font, "18"))
         self.labelG2.grid(row=1, column=4)
 
-        self.labelE1 = Label(frame, text="Effekt 1 ",font=("Helvetica", "18"))
+        self.labelE1 = Label(frame, text="Effekt 1 |",font=(self.font, "18"))
         self.labelE1.grid(row=1, column=1)
 
-        self.labelE2 = Label(frame, text="Effekt 2 ",font=("Helvetica", "18"))
+        self.labelE2 = Label(frame, text="Effekt 2 |",font=(self.font, "18"))
         self.labelE2.grid(row=1, column=3)
 
-        self.labelE2 = Label(frame, text="Effekt 3 |",font=("Helvetica", "18"))
+        self.labelE2 = Label(frame, text="Effekt 3 |",font=(self.font, "18"))
         self.labelE2.grid(row=1, column=5)
 
         self.dropdownG1Current = StringVar()
@@ -163,11 +195,11 @@ class App(Tk):
         self.dropdownG1Current.set(self.generators[0])
         self.dropdownG1 = OptionMenu(frame, self.dropdownG1Current, *self.generators, command = optionmenuG1_selection)
         self.dropdownG1.grid(row=2, column=0,sticky="ew")
-        self.G1param1 = Label(frame, textvariable=self.G1param1String)
+        self.G1param1 = Label(frame, textvariable=self.G1param1String ,font=(self.font, "12"))
         self.G1param1.grid(row=3, column=0)
-        self.G1param2 = Label(frame, textvariable=self.G1param2String)
+        self.G1param2 = Label(frame, textvariable=self.G1param2String ,font=(self.font, "12"))
         self.G1param2.grid(row=4, column=0)
-        self.G1param3 = Label(frame, textvariable=self.G1param3String)
+        self.G1param3 = Label(frame, textvariable=self.G1param3String ,font=(self.font, "12"))
         self.G1param3.grid(row=5, column=0)
 
         self.dropdownG2Current = StringVar()
@@ -177,11 +209,11 @@ class App(Tk):
         self.dropdownG2Current.set(self.generators[0])
         self.dropdownG2 = OptionMenu(frame, self.dropdownG2Current, *self.generators,command = optionmenuG2_selection)
         self.dropdownG2.grid(row=2, column=2,sticky="ew")
-        self.G2param1 = Label(frame, textvariable=self.G2param1String)
+        self.G2param1 = Label(frame, textvariable=self.G2param1String ,font=(self.font, "12"))
         self.G2param1.grid(row=3, column=2)
-        self.G2param2 = Label(frame, textvariable=self.G2param2String)
+        self.G2param2 = Label(frame, textvariable=self.G2param2String ,font=(self.font, "12"))
         self.G2param2.grid(row=4, column=2)
-        self.G2param3 = Label(frame, textvariable=self.G2param3String)
+        self.G2param3 = Label(frame, textvariable=self.G2param3String,font=(self.font, "12"))
         self.G2param3.grid(row=5, column=2)
 
         self.dropdownG3Current = StringVar()
@@ -191,11 +223,11 @@ class App(Tk):
         self.dropdownG3Current.set(self.generators[0])
         self.dropdownG3 = OptionMenu(frame, self.dropdownG3Current, *self.generators,command = optionmenuG3_selection)
         self.dropdownG3.grid(row=2, column=4,sticky="ew")
-        self.G3param1 = Label(frame, textvariable=self.G3param1String)
+        self.G3param1 = Label(frame, textvariable=self.G3param1String,font=(self.font, "12"))
         self.G3param1.grid(row=3, column=4)
-        self.G3param2 = Label(frame, textvariable=self.G3param2String)
+        self.G3param2 = Label(frame, textvariable=self.G3param2String,font=(self.font, "12"))
         self.G3param2.grid(row=4, column=4)
-        self.G3param3 = Label(frame, textvariable=self.G3param3String)
+        self.G3param3 = Label(frame, textvariable=self.G3param3String,font=(self.font, "12"))
         self.G3param3.grid(row=5, column=4)
 
         self.dropdownE1Current = StringVar()
@@ -205,11 +237,11 @@ class App(Tk):
         self.dropdownE1Current.set(self.effects[0])
         self.dropdownE1 = OptionMenu(frame, self.dropdownE1Current, *self.effects,command = optionmenuE1_selection)
         self.dropdownE1.grid(row=2, column=1,sticky="ew")
-        self.E1param1 = Label(frame, textvariable=self.E1param1String)
+        self.E1param1 = Label(frame, textvariable=self.E1param1String,font=(self.font, "12"))
         self.E1param1.grid(row=3, column=1)
-        self.E1param2 = Label(frame, textvariable=self.E1param2String)
+        self.E1param2 = Label(frame, textvariable=self.E1param2String,font=(self.font, "12"))
         self.E1param2.grid(row=4, column=1)
-        self.E1param3 = Label(frame, textvariable=self.E1param3String)
+        self.E1param3 = Label(frame, textvariable=self.E1param3String,font=(self.font, "12"))
         self.E1param3.grid(row=5, column=1)
 
         self.dropdownE2Current = StringVar()
@@ -219,11 +251,11 @@ class App(Tk):
         self.dropdownE2Current.set(self.effects[0])
         self.dropdownE2 = OptionMenu(frame, self.dropdownE2Current, *self.effects, command = optionmenuE2_selection)
         self.dropdownE2.grid(row=2, column=3,sticky="ew")
-        self.E2param1 = Label(frame, textvariable=self.E2param1String)
+        self.E2param1 = Label(frame, textvariable=self.E2param1String,font=(self.font, "12"))
         self.E2param1.grid(row=3, column=3)
-        self.E2param2 = Label(frame, textvariable=self.E2param2String)
+        self.E2param2 = Label(frame, textvariable=self.E2param2String,font=(self.font, "12"))
         self.E2param2.grid(row=4, column=3)
-        self.E2param3 = Label(frame, textvariable=self.E2param3String)
+        self.E2param3 = Label(frame, textvariable=self.E2param3String,font=(self.font, "12"))
         self.E2param3.grid(row=5, column=3)
 
         self.dropdownE3Current = StringVar()
@@ -233,33 +265,43 @@ class App(Tk):
         self.dropdownE3Current.set(self.effects[0])
         self.dropdownE3 = OptionMenu(frame, self.dropdownE3Current, *self.effects, command = optionmenuE3_selection)
         self.dropdownE3.grid(row=2, column=5,sticky="ew")
-        self.E3param1 = Label(frame, textvariable=self.E3param1String)
+        self.E3param1 = Label(frame, textvariable=self.E3param1String,font=(self.font, "12"))
         self.E3param1.grid(row=3, column=5)
-        self.E3param2 = Label(frame, textvariable=self.E3param2String)
+        self.E3param2 = Label(frame, textvariable=self.E3param2String,font=(self.font, "12"))
         self.E3param2.grid(row=4, column=5)
-        self.E3param3 = Label(frame, textvariable=self.E3param3String)
+        self.E3param3 = Label(frame, textvariable=self.E3param3String,font=(self.font, "12"))
         self.E3param3.grid(row=5, column=5)
 
         self.G1BrightnesValue = StringVar()
         self.G1ShutterValue = StringVar()
-        self.G1Brightnes = Label(frame, textvariable=self.G1BrightnesValue)
+        self.G1FadeValue = StringVar()
+        self.G1Brightnes = Label(frame, textvariable=self.G1BrightnesValue,font=(self.font, "12"))
         self.G1Brightnes.grid(row=6, column=0)
-        self.G1Shutter = Label(frame, textvariable=self.G1ShutterValue)
+        self.G1Shutter = Label(frame, textvariable=self.G1ShutterValue,font=(self.font, "12"))
         self.G1Shutter.grid(row=7, column=0)
+        self.G1SFade = Label(frame, textvariable=self.G1FadeValue,font=(self.font, "12"))
+        self.G1SFade.grid(row=8, column=0)
+
 
         self.G2BrightnesValue = StringVar()
         self.G2ShutterValue = StringVar()
-        self.G2Brightnes = Label(frame, textvariable=self.G2BrightnesValue)
+        self.G2FadeValue = StringVar()
+        self.G2Brightnes = Label(frame, textvariable=self.G2BrightnesValue,font=(self.font, "12"))
         self.G2Brightnes.grid(row=6, column=2)
-        self.G2Shutter = Label(frame, textvariable=self.G2ShutterValue)
+        self.G2Shutter = Label(frame, textvariable=self.G2ShutterValue,font=(self.font, "12"))
         self.G2Shutter.grid(row=7, column=2)
+        self.G2SFade = Label(frame, textvariable=self.G2FadeValue,font=(self.font, "12"))
+        self.G2SFade.grid(row=8, column=2)
 
         self.G3BrightnesValue = StringVar()
         self.G3ShutterValue = StringVar()
-        self.G3Brightnes = Label(frame, textvariable=self.G3BrightnesValue)
+        self.G3FadeValue = StringVar()
+        self.G3Brightnes = Label(frame, textvariable=self.G3BrightnesValue,font=(self.font, "12"))
         self.G3Brightnes.grid(row=6, column=4)
-        self.G3Shutter = Label(frame, textvariable=self.G3ShutterValue)
+        self.G3Shutter = Label(frame, textvariable=self.G3ShutterValue,font=(self.font, "12"))
         self.G3Shutter.grid(row=7, column=4)
+        self.G2SFade = Label(frame, textvariable=self.G3FadeValue,font=(self.font, "12"))
+        self.G2SFade.grid(row=8, column=4)
 
 # L3D-Functions
     def startsending(self):
@@ -283,14 +325,17 @@ class App(Tk):
         self.G1param1String.set(paramValues[0][0]+':'+str(paramValues[0][1]))
         self.G1param2String.set(paramValues[0][2]+':'+str(paramValues[0][3]))
         self.G1param3String.set(paramValues[0][4]+':'+str(paramValues[0][5]))
+        self.G1FadeValue.set(genValues[12]+":"+str(round(genValues[13],2)))
 
         self.G2param1String.set(paramValues[2][0]+':'+str(paramValues[2][1]))
         self.G2param2String.set(paramValues[2][2]+':'+str(paramValues[2][3]))
         self.G2param3String.set(paramValues[2][4]+':'+str(paramValues[2][5]))
+        self.G2FadeValue.set(genValues[14]+":"+str(round(genValues[15],2)))
 
         self.G3param1String.set(paramValues[4][0]+':'+str(paramValues[4][1]))
         self.G3param2String.set(paramValues[4][2]+':'+str(paramValues[4][3]))
         self.G3param3String.set(paramValues[4][4]+':'+str(paramValues[4][5]))
+        self.G3FadeValue.set(genValues[16]+":"+str(round(genValues[17],2)))
 
         self.E1param1String.set(paramValues[1][0]+':'+str(paramValues[1][1]))
         self.E1param2String.set(paramValues[1][2]+':'+str(paramValues[1][3]))

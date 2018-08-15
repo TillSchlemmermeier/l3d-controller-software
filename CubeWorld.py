@@ -69,6 +69,13 @@ class CubeWorld:
         self.world_CHB = np.zeros([3, 10, 10, 10])
         # world for channel C
         self.world_CHC = np.zeros([3, 10, 10, 10])
+        #fade world for channel A
+        self.world_CHA_fade = np.zeros([3, 10, 10, 10])
+        #fade world for channel B
+        self.world_CHB_fade = np.zeros([3, 10, 10, 10])
+        #fade world for channel C
+        self.world_CHC_fade = np.zeros([3, 10, 10, 10])
+
         # world for master
         self.world_TOT = np.zeros([3, 10, 10, 10])
         #channel volume
@@ -99,6 +106,10 @@ class CubeWorld:
         self.speed_B = 1
         self.speed_C = 1
 
+        self.fade_A = 1.0;
+        self.fade_B = 1.0;
+        self.fade_C = 1.0;
+
         # this is temporary, we need a routine to update the elements
         # in the list to change the generator/effect
         self.CHA.append(g_blank())
@@ -113,6 +124,7 @@ class CubeWorld:
         #self.artnet.setsockopt(socket.SOL_SOCKET,socket.SO_RCVBUF, 1)
         self.artnet.settimeout(0.006) # 0.01 works
         self.artnet_universe = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
+
 
 
     def get_cubedata(self):
@@ -145,14 +157,12 @@ class CubeWorld:
             except:
                 pass
 
+
     def getParamsAndValues(self):
-        #print('trying to get labels')
-        #print(self.CHA[0].label(1))
         return [self.CHA[0].label(),self.CHA[1].label(),self.CHB[0].label(),self.CHB[1].label(),self.CHC[0].label(),self.CHC[1].label()]
-    #    return [CHA[0].label(),CHA[1].label(),CHB[0].label(),CHB[1].label(),CHC[0].label(),CHC[1].label()]
 
     def getBrightnessAndShutterspeed(self):
-        return['Brightness', self.amount_a,'Brightness', self.amount_b,'Brightness', self.amount_c,"Shutter", self.speed_A,"Shutter", self.speed_B,"Shutter", self.speed_C]
+        return['Brightness', self.amount_a,'Brightness', self.amount_b,'Brightness', self.amount_c,"Shutter", self.speed_A,"Shutter", self.speed_B,"Shutter", self.speed_C, 'Fade', self.fade_A,'Fade', self.fade_B,'Fade', self.fade_C]
 
     def getMasterParams(self):
         return['Master-Brightness',self.brightness, 'Master-Fade', self.fade]
@@ -217,6 +227,11 @@ class CubeWorld:
             self.speed_B = int(round(self.control_dict[23]*30)+1)
             self.speed_C = int(round(self.control_dict[27]*30)+1)
 
+
+        self.world_CHA_fade[:] = self.world_CHA
+        self.world_CHB_fade[:] = self.world_CHB
+        self.world_CHC_fade[:] = self.world_CHC
+
         self.world_CHA[:, :, :, :] = 0.0
         self.world_CHB[:, :, :, :] = 0.0
         self.world_CHC[:, :, :, :] = 0.0
@@ -268,6 +283,15 @@ class CubeWorld:
             self.amount_a = self.artnet_universe[3]
             self.amount_b = self.artnet_universe[8]
             self.amount_c = self.artnet_universe[13]
+            # Channel-Fade
+            self.fade_A = self.control_dict[57]
+            self.fade_B = self.control_dict[61]
+            self.fade_C = self.control_dict[62]
+
+            self.world_CHA = self.world_CHA + (self.world_CHA_fade * self.fade_A)
+            self.world_CHB = self.world_CHB + (self.world_CHB_fade * self.fade_B)
+            self.world_CHC = self.world_CHC + (self.world_CHC_fade * self.fade_C)
+
 
             # Global fade
             self.fade = self.artnet_universe[15]
@@ -282,21 +306,33 @@ class CubeWorld:
 
 
         else :
-            # Brightness
+            # Channel-Brightness
             self.amount_a = self.control_dict[31]
             self.amount_b = self.control_dict[49]
             self.amount_c = self.control_dict[53]
+
+            # Channel-Fade
+            self.fade_A = self.control_dict[57]
+            self.fade_B = self.control_dict[61]
+            self.fade_C = self.control_dict[62]
 
             # Global Brightness
             self.brightness = self.control_dict[58]
 
             # Global fade
-            self.fade = self.control_dict[62]
+            self.fade = self.control_dict[59]
+
+            self.world_CHA = self.world_CHA + (self.world_CHA_fade * self.fade_A)
+            self.world_CHB = self.world_CHB + (self.world_CHB_fade * self.fade_B)
+            self.world_CHC = self.world_CHC + (self.world_CHC_fade * self.fade_C)
+
 
             # Sum Channels
-            self.world_TOT = self.amount_a * self.world_CHA + \
-                            self.amount_b * self.world_CHB + \
-                            self.amount_c * self.world_CHC + \
-                            self.fade * self.world_TOT
+            self.world_TOT = self.amount_a * self.world_CHA +  \
+                             self.amount_b * self.world_CHB +  \
+                             self.amount_c * self.world_CHC +  \
+                             self.fade * self.world_TOT
+
+
 
             self.world_TOT = np.clip(self.brightness * self.world_TOT,0,0.999)
