@@ -62,14 +62,23 @@ class g_cube_edges():
         row = np.exp(-np.abs(row - self.counter))
 
         # copy middle of the vector to world
-        world[0, self.edge[0], self.edge[1], self.edge[2]] = row[5:15]
+        if self.direction == 1:
+            world[0, self.edge[0], self.edge[1], self.edge[2]] = row[5:15]
+        else:
+            world[0, self.edge[0], self.edge[1], self.edge[2]] = row[5:15][::-1]
 
         if self.number == 2:
-            world[0, self.edge[1], self.edge[2], self.edge[0]] = row[5:15]
-
+            if self.direction == 1:
+                world[0, self.edge[1], self.edge[2], self.edge[0]] = row[5:15]
+            else:
+                world[0, self.edge[1], self.edge[2], self.edge[0]] = row[5:15][::-1]
+                
         if self.number == 3:
-            world[0, self.edge[2], self.edge[0], self.edge[1]] = row[5:15]
-
+            if self.direction == 1:
+                world[0, self.edge[2], self.edge[0], self.edge[1]] = row[5:15]
+            else:
+                world[0, self.edge[2], self.edge[0], self.edge[1]] = row[5:15][::-1]
+                
         # increase counter
         self.counter += self.speed
 
