@@ -19,14 +19,13 @@ class e_blur():
 
 
     def generate(self, step, world):
+        world[0,:,:,:] = blur(world[0,:,:,:], self.amount)
+        world[1,:,:,:] = blur(world[1,:,:,:], self.amount)
+        world[2,:,:,:] = blur(world[2,:,:,:], self.amount)
 
-	world[0,:,:,:] = blur(world[0,:,:,:], self.amount) 
-	world[1,:,:,:] = blur(world[1,:,:,:], self.amount)
-	world[2,:,:,:] = blur(world[2,:,:,:], self.amount)
-		
         return np.clip(world, 0, 1)
-        
-        
+
+
 def blur(world, amount = 0.1):
     '''
     Effect: Blur
