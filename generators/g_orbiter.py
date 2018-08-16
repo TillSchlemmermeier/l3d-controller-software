@@ -1,6 +1,7 @@
 import numpy as np
 from scipy.signal import sawtooth
-from generators.g_shooting_star_f import gen_shooting_star
+from generators.g_orbiter_big_f import gen_orbiter_big
+
 
 class g_orbiter():
     '''
@@ -40,7 +41,7 @@ class g_orbiter():
         [sx, sy, sz] = polar2z(temp_d, temp_theta, temp_rho)
 
         # switch on leds depending on distance
-        world[0,:,:,:] = gen_shooting_star(sx+5.5,sy+5.5,sz+5.5)
+        world[0,:,:,:] = gen_orbiter_big(sx+5.5,sy+5.5,sz+5.5)
         world[1,:,:,:] = world[0,:,:,:]
         world[2,:,:,:] = world[0,:,:,:]
 
