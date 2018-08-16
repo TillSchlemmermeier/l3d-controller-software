@@ -92,6 +92,10 @@ class g_circles():
             elif j == 3:
                 world[0, randint(0,9), :, :] = self.size5[:,:]
 
+
+	# rotate if necessary
+	world[0, :, :, :] = np.rot90(world[0, :, :, :], k = 1)
+
         world[1,:,:,:] = world[0, :, : , :]
         world[2,:,:,:] = world[0, :, : , :]
         return np.clip(world, 0, 1)
