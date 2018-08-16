@@ -117,9 +117,12 @@ class CubeWorld:
         # in the list to change the generator/effect
         self.CHA.append(g_blank())
         self.CHA.append(e_blank())
+        self.CHA.append(e_blank())
         self.CHB.append(g_blank())
         self.CHB.append(e_blank())
+        self.CHB.append(e_blank())
         self.CHC.append(g_blank())
+        self.CHC.append(e_blank())
         self.CHC.append(e_blank())
 
 
@@ -164,7 +167,7 @@ class CubeWorld:
 
 
     def getParamsAndValues(self):
-        return [self.CHA[0].label(),self.CHA[1].label(),self.CHB[0].label(),self.CHB[1].label(),self.CHC[0].label(),self.CHC[1].label()]
+        return [self.CHA[0].label(),self.CHA[1].label(),self.CHA[2].label(),self.CHB[0].label(),self.CHB[1].label(),self.CHB[2].label(),self.CHC[0].label(),self.CHC[1].label(),self.CHC[2].label()]
 
     def getBrightnessAndShutterspeed(self):
         return['Brightness', self.amount_a,'Brightness', self.amount_b,'Brightness', self.amount_c,"Shutter", self.speed_A,"Shutter", self.speed_B,"Shutter", self.speed_C, 'Fade', self.fade_A,'Fade', self.fade_B,'Fade', self.fade_C]
@@ -246,27 +249,37 @@ class CubeWorld:
             # Generator A
             self.CHA[0].control(self.control_dict[16],self.control_dict[17],self.control_dict[18])
             self.world_CHA = self.CHA[0].generate(step, self.world_CHA)
-            # Effect A
+            # Effect A 1
             self.CHA[1].control(self.control_dict[20],self.control_dict[21],self.control_dict[22])
             self.world_CHA = self.CHA[1].generate(step, self.world_CHA)
+            # Effect A 2
+            self.CHA[2].control(self.control_dict[85],self.control_dict[86],self.control_dict[87])
+            self.world_CHA = self.CHA[2].generate(step, self.world_CHA)
+
 
         # Generator B
         if step%self.speed_B == 0:
             # Generator B
             self.CHB[0].control(self.control_dict[24],self.control_dict[25],self.control_dict[26])
             self.world_CHB = self.CHB[0].generate(step, self.world_CHB)
-            # Effect B
+            # Effect B 1
             self.CHB[1].control(self.control_dict[28],self.control_dict[29],self.control_dict[30])
             self.world_CHB = self.CHB[1].generate(step, self.world_CHB)
+            # Effect B 2
+            self.CHB[2].control(self.control_dict[88],self.control_dict[89],self.control_dict[90])
+            self.world_CHB = self.CHB[2].generate(step, self.world_CHB)
 
         # Generator C
         if step%self.speed_C == 0:
             # Generator C
             self.CHC[0].control(self.control_dict[46],self.control_dict[47],self.control_dict[48])
             self.world_CHC = self.CHC[0].generate(step, self.world_CHC)
-            # Effect C
+            # Effect C 1
             self.CHC[1].control(self.control_dict[50],self.control_dict[51],self.control_dict[52])
             self.world_CHC = self.CHC[1].generate(step, self.world_CHC)
+            # Effect C 2
+            self.CHC[2].control(self.control_dict[91],self.control_dict[92],self.control_dict[13])
+            self.world_CHC = self.CHC[2].generate(step, self.world_CHC)
 
         if self.switch_artnet or self.switch_artnet_color:
             # overwrite colors

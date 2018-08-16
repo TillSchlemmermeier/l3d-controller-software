@@ -80,7 +80,7 @@ class App(Tk):
         # Header Information
         self.hSpeed = 1
         self.hBright = 200
-        self.hPal = 1
+        self.hPal = 116
         self.hPalMode = 0
         self.hRGBMode = 1
 
@@ -94,7 +94,7 @@ class App(Tk):
         #self.funkyImage.grid(row=10, column=3)
 
         self.font='Arial'
-
+        '''
         self.pic0 = PhotoImage(file='banner/l3dbanner-0.png')
         self.imgLabel0 = Label(frame,image=self.pic0)
         self.imgLabel0.grid(row=10,column=0)
@@ -118,6 +118,7 @@ class App(Tk):
         self.pic5 = PhotoImage(file='banner/l3dbanner-5.png')
         self.imgLabel5 = Label(frame,image=self.pic5)
         self.imgLabel5.grid(row=10,column=5)
+        '''
         #
         ## GUI Callabcks
         def optionmenuG1_selection(event):
@@ -132,16 +133,28 @@ class App(Tk):
             self.cubeWorld.set_Genenerator("C", self.dropdownG3Current.get(),0)
             pass
 
-        def optionmenuE1_selection(event):
-            self.cubeWorld.set_Genenerator("A", self.dropdownE1Current.get(),1)
+        def optionmenuE11_selection(event):
+            self.cubeWorld.set_Genenerator("A", self.dropdownE11Current.get(),1)
             pass
 
-        def optionmenuE2_selection(event):
-            self.cubeWorld.set_Genenerator("B", self.dropdownE2Current.get(),1)
+        def optionmenuE12_selection(event):
+            self.cubeWorld.set_Genenerator("B", self.dropdownE12Current.get(),1)
             pass
 
-        def optionmenuE3_selection(event):
-            self.cubeWorld.set_Genenerator("C", self.dropdownE3Current.get(),1)
+        def optionmenuE13_selection(event):
+            self.cubeWorld.set_Genenerator("C", self.dropdownE13Current.get(),1)
+            pass
+
+        def optionmenuE21_selection(event):
+            self.cubeWorld.set_Genenerator("A", self.dropdownE21Current.get(),2)
+            pass
+
+        def optionmenuE22_selection(event):
+            self.cubeWorld.set_Genenerator("B", self.dropdownE22Current.get(),2)
+            pass
+
+        def optionmenuE23_selection(event):
+            self.cubeWorld.set_Genenerator("C", self.dropdownE23Current.get(),2)
             pass
 
         # GUI Elements
@@ -173,23 +186,36 @@ class App(Tk):
 
         self.artnetcolorCheckbox.grid(row=0,column=3)
 
-        self.labelG1 = Label(frame, text="| Generator 1 -> ",font=(self.font, "18"))
+        self.labelG1 = Label(frame, text="Generator A",font=(self.font, "12"))
         self.labelG1.grid(row=1, column=0)
 
-        self.labelG2 = Label(frame, text="| Generator 2 -> ",font=(self.font, "18"))
-        self.labelG2.grid(row=1, column=2)
+        self.labelG2 = Label(frame, text="Generator B",font=(self.font, "12"))
+        self.labelG2.grid(row=1, column=3)
 
-        self.labelG2 = Label(frame, text="| Generator 3 -> ",font=(self.font, "18"))
-        self.labelG2.grid(row=1, column=4)
+        self.labelG3 = Label(frame, text="Generator C",font=(self.font, "12"))
+        self.labelG3.grid(row=1, column=6)
 
-        self.labelE1 = Label(frame, text="Effekt 1 |",font=(self.font, "18"))
-        self.labelE1.grid(row=1, column=1)
+        self.labelE11 = Label(frame, text="Effekt A 1",font=(self.font, "12"))
+        self.labelE11.grid(row=1, column=1)
 
-        self.labelE2 = Label(frame, text="Effekt 2 |",font=(self.font, "18"))
-        self.labelE2.grid(row=1, column=3)
+        self.labelE12 = Label(frame, text="Effekt B 1",font=(self.font, "12"))
+        self.labelE12.grid(row=1, column=4)
 
-        self.labelE2 = Label(frame, text="Effekt 3 |",font=(self.font, "18"))
-        self.labelE2.grid(row=1, column=5)
+        self.labelE13 = Label(frame, text="Effekt C 1",font=(self.font, "12"))
+        self.labelE13.grid(row=1, column=7)
+
+        self.labelE21 = Label(frame, text="Effekt A 2",font=(self.font, "12"))
+        self.labelE21.grid(row=1, column=2)
+
+        self.labelE22 = Label(frame, text="Effekt B 2",font=(self.font, "12"))
+        self.labelE22.grid(row=1, column=5)
+
+        self.labelE23 = Label(frame, text="Effekt C 2",font=(self.font, "12"))
+        self.labelE23.grid(row=1, column=8)
+
+
+
+
 
         self.dropdownG1Current = StringVar()
         self.G1param1String = StringVar()
@@ -211,13 +237,13 @@ class App(Tk):
         self.G2param3String = StringVar()
         self.dropdownG2Current.set(self.generators[0])
         self.dropdownG2 = OptionMenu(frame, self.dropdownG2Current, *self.generators,command = optionmenuG2_selection)
-        self.dropdownG2.grid(row=2, column=2,sticky="ew")
+        self.dropdownG2.grid(row=2, column=3,sticky="ew")
         self.G2param1 = Label(frame, textvariable=self.G2param1String ,font=(self.font, "12"))
-        self.G2param1.grid(row=3, column=2)
+        self.G2param1.grid(row=3, column=3)
         self.G2param2 = Label(frame, textvariable=self.G2param2String ,font=(self.font, "12"))
-        self.G2param2.grid(row=4, column=2)
+        self.G2param2.grid(row=4, column=3)
         self.G2param3 = Label(frame, textvariable=self.G2param3String,font=(self.font, "12"))
-        self.G2param3.grid(row=5, column=2)
+        self.G2param3.grid(row=5, column=3)
 
         self.dropdownG3Current = StringVar()
         self.G3param1String = StringVar()
@@ -225,55 +251,97 @@ class App(Tk):
         self.G3param3String = StringVar()
         self.dropdownG3Current.set(self.generators[0])
         self.dropdownG3 = OptionMenu(frame, self.dropdownG3Current, *self.generators,command = optionmenuG3_selection)
-        self.dropdownG3.grid(row=2, column=4,sticky="ew")
+        self.dropdownG3.grid(row=2, column=6,sticky="ew")
         self.G3param1 = Label(frame, textvariable=self.G3param1String,font=(self.font, "12"))
-        self.G3param1.grid(row=3, column=4)
+        self.G3param1.grid(row=3, column=6)
         self.G3param2 = Label(frame, textvariable=self.G3param2String,font=(self.font, "12"))
-        self.G3param2.grid(row=4, column=4)
+        self.G3param2.grid(row=4, column=6)
         self.G3param3 = Label(frame, textvariable=self.G3param3String,font=(self.font, "12"))
-        self.G3param3.grid(row=5, column=4)
+        self.G3param3.grid(row=5, column=6)
 
-        self.dropdownE1Current = StringVar()
-        self.E1param1String = StringVar()
-        self.E1param2String = StringVar()
-        self.E1param3String = StringVar()
-        self.dropdownE1Current.set(self.effects[0])
-        self.dropdownE1 = OptionMenu(frame, self.dropdownE1Current, *self.effects,command = optionmenuE1_selection)
-        self.dropdownE1.grid(row=2, column=1,sticky="ew")
-        self.E1param1 = Label(frame, textvariable=self.E1param1String,font=(self.font, "12"))
-        self.E1param1.grid(row=3, column=1)
-        self.E1param2 = Label(frame, textvariable=self.E1param2String,font=(self.font, "12"))
-        self.E1param2.grid(row=4, column=1)
-        self.E1param3 = Label(frame, textvariable=self.E1param3String,font=(self.font, "12"))
-        self.E1param3.grid(row=5, column=1)
+        self.dropdownE11Current = StringVar()
+        self.E11param1String = StringVar()
+        self.E11param2String = StringVar()
+        self.E11param3String = StringVar()
+        self.dropdownE11Current.set(self.effects[0])
+        self.dropdownE11 = OptionMenu(frame, self.dropdownE11Current, *self.effects,command = optionmenuE11_selection)
+        self.dropdownE11.grid(row=2, column=1,sticky="ew")
+        self.E11param1 = Label(frame, textvariable=self.E11param1String,font=(self.font, "12"))
+        self.E11param1.grid(row=3, column=1)
+        self.E11param2 = Label(frame, textvariable=self.E11param2String,font=(self.font, "12"))
+        self.E11param2.grid(row=4, column=1)
+        self.E11param3 = Label(frame, textvariable=self.E11param3String,font=(self.font, "12"))
+        self.E11param3.grid(row=5, column=1)
 
-        self.dropdownE2Current = StringVar()
-        self.E2param1String = StringVar()
-        self.E2param2String = StringVar()
-        self.E2param3String = StringVar()
-        self.dropdownE2Current.set(self.effects[0])
-        self.dropdownE2 = OptionMenu(frame, self.dropdownE2Current, *self.effects, command = optionmenuE2_selection)
-        self.dropdownE2.grid(row=2, column=3,sticky="ew")
-        self.E2param1 = Label(frame, textvariable=self.E2param1String,font=(self.font, "12"))
-        self.E2param1.grid(row=3, column=3)
-        self.E2param2 = Label(frame, textvariable=self.E2param2String,font=(self.font, "12"))
-        self.E2param2.grid(row=4, column=3)
-        self.E2param3 = Label(frame, textvariable=self.E2param3String,font=(self.font, "12"))
-        self.E2param3.grid(row=5, column=3)
+        self.dropdownE12Current = StringVar()
+        self.E12param1String = StringVar()
+        self.E12param2String = StringVar()
+        self.E12param3String = StringVar()
+        self.dropdownE12Current.set(self.effects[0])
+        self.dropdownE12 = OptionMenu(frame, self.dropdownE12Current, *self.effects, command = optionmenuE12_selection)
+        self.dropdownE12.grid(row=2, column=4,sticky="ew")
+        self.E12param1 = Label(frame, textvariable=self.E12param1String,font=(self.font, "12"))
+        self.E12param1.grid(row=3, column=4)
+        self.E12param2 = Label(frame, textvariable=self.E12param2String,font=(self.font, "12"))
+        self.E12param2.grid(row=4, column=4)
+        self.E12param3 = Label(frame, textvariable=self.E12param3String,font=(self.font, "12"))
+        self.E12param3.grid(row=5, column=4)
 
-        self.dropdownE3Current = StringVar()
-        self.E3param1String = StringVar()
-        self.E3param2String = StringVar()
-        self.E3param3String = StringVar()
-        self.dropdownE3Current.set(self.effects[0])
-        self.dropdownE3 = OptionMenu(frame, self.dropdownE3Current, *self.effects, command = optionmenuE3_selection)
-        self.dropdownE3.grid(row=2, column=5,sticky="ew")
-        self.E3param1 = Label(frame, textvariable=self.E3param1String,font=(self.font, "12"))
-        self.E3param1.grid(row=3, column=5)
-        self.E3param2 = Label(frame, textvariable=self.E3param2String,font=(self.font, "12"))
-        self.E3param2.grid(row=4, column=5)
-        self.E3param3 = Label(frame, textvariable=self.E3param3String,font=(self.font, "12"))
-        self.E3param3.grid(row=5, column=5)
+        self.dropdownE13Current = StringVar()
+        self.E13param1String = StringVar()
+        self.E13param2String = StringVar()
+        self.E13param3String = StringVar()
+        self.dropdownE13Current.set(self.effects[0])
+        self.dropdownE13 = OptionMenu(frame, self.dropdownE13Current, *self.effects, command = optionmenuE13_selection)
+        self.dropdownE13.grid(row=2, column=7,sticky="ew")
+        self.E13param1 = Label(frame, textvariable=self.E13param1String,font=(self.font, "12"))
+        self.E13param1.grid(row=3, column=7)
+        self.E13param2 = Label(frame, textvariable=self.E13param2String,font=(self.font, "12"))
+        self.E13param2.grid(row=4, column=7)
+        self.E13param3 = Label(frame, textvariable=self.E13param3String,font=(self.font, "12"))
+        self.E13param3.grid(row=5, column=7)
+
+        self.dropdownE21Current = StringVar()
+        self.E21param1String = StringVar()
+        self.E21param2String = StringVar()
+        self.E21param3String = StringVar()
+        self.dropdownE21Current.set(self.effects[0])
+        self.dropdownE21 = OptionMenu(frame, self.dropdownE21Current, *self.effects,command = optionmenuE21_selection)
+        self.dropdownE21.grid(row=2, column=2,sticky="ew")
+        self.E21param1 = Label(frame, textvariable=self.E21param1String,font=(self.font, "12"))
+        self.E21param1.grid(row=3, column=2)
+        self.E21param2 = Label(frame, textvariable=self.E21param2String,font=(self.font, "12"))
+        self.E21param2.grid(row=4, column=2)
+        self.E21param3 = Label(frame, textvariable=self.E21param3String,font=(self.font, "12"))
+        self.E21param3.grid(row=5, column=2)
+
+        self.dropdownE22Current = StringVar()
+        self.E22param1String = StringVar()
+        self.E22param2String = StringVar()
+        self.E22param3String = StringVar()
+        self.dropdownE22Current.set(self.effects[0])
+        self.dropdownE22 = OptionMenu(frame, self.dropdownE22Current, *self.effects, command = optionmenuE22_selection)
+        self.dropdownE22.grid(row=2, column=5,sticky="ew")
+        self.E22param1 = Label(frame, textvariable=self.E22param1String,font=(self.font, "12"))
+        self.E22param1.grid(row=3, column=5)
+        self.E22param2 = Label(frame, textvariable=self.E22param2String,font=(self.font, "12"))
+        self.E22param2.grid(row=4, column=5)
+        self.E22param3 = Label(frame, textvariable=self.E22param3String,font=(self.font, "12"))
+        self.E22param3.grid(row=5, column=5)
+
+        self.dropdownE23Current = StringVar()
+        self.E23param1String = StringVar()
+        self.E23param2String = StringVar()
+        self.E23param3String = StringVar()
+        self.dropdownE23Current.set(self.effects[0])
+        self.dropdownE23 = OptionMenu(frame, self.dropdownE23Current, *self.effects, command = optionmenuE23_selection)
+        self.dropdownE23.grid(row=2, column=8,sticky="ew")
+        self.E23param1 = Label(frame, textvariable=self.E23param1String,font=(self.font, "12"))
+        self.E23param1.grid(row=3, column=8)
+        self.E23param2 = Label(frame, textvariable=self.E23param2String,font=(self.font, "12"))
+        self.E23param2.grid(row=4, column=8)
+        self.E23param3 = Label(frame, textvariable=self.E23param3String,font=(self.font, "12"))
+        self.E23param3.grid(row=5, column=8)
 
         self.G1BrightnesValue = StringVar()
         self.G1ShutterValue = StringVar()
@@ -330,27 +398,39 @@ class App(Tk):
         self.G1param3String.set(paramValues[0][4]+':'+str(paramValues[0][5]))
         self.G1FadeValue.set(genValues[12]+":"+str(round(genValues[13],2)))
 
-        self.G2param1String.set(paramValues[2][0]+':'+str(paramValues[2][1]))
-        self.G2param2String.set(paramValues[2][2]+':'+str(paramValues[2][3]))
-        self.G2param3String.set(paramValues[2][4]+':'+str(paramValues[2][5]))
+        self.G2param1String.set(paramValues[3][0]+':'+str(paramValues[3][1]))
+        self.G2param2String.set(paramValues[3][2]+':'+str(paramValues[3][3]))
+        self.G2param3String.set(paramValues[3][4]+':'+str(paramValues[3][5]))
         self.G2FadeValue.set(genValues[14]+":"+str(round(genValues[15],2)))
 
-        self.G3param1String.set(paramValues[4][0]+':'+str(paramValues[4][1]))
-        self.G3param2String.set(paramValues[4][2]+':'+str(paramValues[4][3]))
-        self.G3param3String.set(paramValues[4][4]+':'+str(paramValues[4][5]))
+        self.G3param1String.set(paramValues[6][0]+':'+str(paramValues[6][1]))
+        self.G3param2String.set(paramValues[6][2]+':'+str(paramValues[6][3]))
+        self.G3param3String.set(paramValues[6][4]+':'+str(paramValues[6][5]))
         self.G3FadeValue.set(genValues[16]+":"+str(round(genValues[17],2)))
 
-        self.E1param1String.set(paramValues[1][0]+':'+str(paramValues[1][1]))
-        self.E1param2String.set(paramValues[1][2]+':'+str(paramValues[1][3]))
-        self.E1param3String.set(paramValues[1][4]+':'+str(paramValues[1][5]))
+        self.E11param1String.set(paramValues[1][0]+':'+str(paramValues[1][1]))
+        self.E11param2String.set(paramValues[1][2]+':'+str(paramValues[1][3]))
+        self.E11param3String.set(paramValues[1][4]+':'+str(paramValues[1][5]))
 
-        self.E2param1String.set(paramValues[3][0]+':'+str(paramValues[3][1]))
-        self.E2param2String.set(paramValues[3][2]+':'+str(paramValues[3][3]))
-        self.E2param3String.set(paramValues[3][4]+':'+str(paramValues[3][5]))
+        self.E12param1String.set(paramValues[4][0]+':'+str(paramValues[4][1]))
+        self.E12param2String.set(paramValues[4][2]+':'+str(paramValues[4][3]))
+        self.E12param3String.set(paramValues[4][4]+':'+str(paramValues[4][5]))
 
-        self.E3param1String.set(paramValues[5][0]+':'+str(paramValues[5][1]))
-        self.E3param2String.set(paramValues[5][2]+':'+str(paramValues[5][3]))
-        self.E3param3String.set(paramValues[5][4]+':'+str(paramValues[5][5]))
+        self.E13param1String.set(paramValues[7][0]+':'+str(paramValues[7][1]))
+        self.E13param2String.set(paramValues[7][2]+':'+str(paramValues[7][3]))
+        self.E13param3String.set(paramValues[7][4]+':'+str(paramValues[7][5]))
+
+        self.E21param1String.set(paramValues[2][0]+':'+str(paramValues[2][1]))
+        self.E21param2String.set(paramValues[2][2]+':'+str(paramValues[2][3]))
+        self.E21param3String.set(paramValues[2][4]+':'+str(paramValues[2][5]))
+
+        self.E22param1String.set(paramValues[5][0]+':'+str(paramValues[5][1]))
+        self.E22param2String.set(paramValues[5][2]+':'+str(paramValues[5][3]))
+        self.E22param3String.set(paramValues[5][4]+':'+str(paramValues[5][5]))
+
+        self.E23param1String.set(paramValues[8][0]+':'+str(paramValues[8][1]))
+        self.E23param2String.set(paramValues[8][2]+':'+str(paramValues[8][3]))
+        self.E23param3String.set(paramValues[8][4]+':'+str(paramValues[8][5]))
 
         self.G1BrightnesValue.set(genValues[0]+':'+str(round(genValues[1],2)))
         self.G2BrightnesValue.set(genValues[2]+':'+str(round(genValues[3],2)))
@@ -394,23 +474,22 @@ class App(Tk):
     def checkbox_color_callback(self):
         self.cubeWorld.setArtnetColorControl(bool(self.artnet_color_switch.get()))
 
-    '''
-    def switchMidiButtonLights(self,Key):
-        print(Key)
-        if Key in [1,4,7,10,13,16,19,22,3,6,9,12,15,18,21,24]:
-            # veräender zustand vom gedrückten knopf
-            #self.MidiButtonListBool[key] is not self.MidiButtonListBool[key]
-
-            print('blub')
-
-        if(Key in [1,4,7,10,13,16,19,22,3,6,9,12,15,18,21,24]):
-            if (self.MidiButtonListBool[Key]):
-                midiout.send_message([0x90,int(Key),0x00])
-                self.MidiButtonListBool[Key]=False
-            else:
-                midiout.send_message([0x90,int(Key),0x7E])
-                self.MidiButtonListBool[Key]=True
-    '''
+    # def switchMidiButtonLights(self,Key):
+    #     print(Key)
+    #     if Key in [1,4,7,10,13,16,19,22,3,6,9,12,15,18,21,24]:
+    #
+    #         #self.MidiButtonListBool[key] is not self.MidiButtonListBool[key]
+    #
+    #         print('blub')
+    #
+    #     if(Key in [1,4,7,10,13,16,19,22,3,6,9,12,15,18,21,24]):
+    #         if (self.MidiButtonListBool[Key]):
+    #             midiout.send_message([0x90,int(Key),0x00])
+    #             self.MidiButtonListBool[Key]=False
+    #         else:
+    #             midiout.send_message([0x90,int(Key),0x7E])
+    #             self.MidiButtonListBool[Key]=True
+    #
 
 # -----------------------------------------
 # midi routines
@@ -438,10 +517,13 @@ if __name__ == "__main__":
     print("\n =L3D-C0ntr0l=\n")
 
     print("Initialize MIDI CONTROL")
-    port = 1
-    midiin, portname_in = open_midiinput(port)
+    port_a = 1
+    port_b = 2
+    midiin_a, portname_in_a = open_midiinput(port_a)
+    midiin_b, portname_in_b = open_midiinput(port_b)
     #midiout, portname_out = open_midioutput(port)
-    midiin.set_callback(MidiInputHandler(portname_in))
+    midiin_a.set_callback(MidiInputHandler(portname_in_a))
+    midiin_b.set_callback(MidiInputHandler(portname_in_b))
 
     print("Starting main.")
     # midi ready
