@@ -56,8 +56,12 @@ from effects.e_gradient import e_gradient
 from effects.e_prod_saturation import e_prod_saturation
 from effects.e_prod_hue import e_prod_hue
 from effects.e_bright_osci import e_bright_osci
-from effects.e_blur import e_blur
+#from effects.e_blur import e_blur
 
+# load automat
+from generators.a_testbot import a_testbot
+from generators.a_orbbot import a_orbbot
+from generators.a_lines import a_lines
 # load effect modules
 
 class CubeWorld:
@@ -125,14 +129,12 @@ class CubeWorld:
         self.CHC.append(e_blank())
         self.CHC.append(e_blank())
 
-
         print('\nInitialize Artnet stream...\n')
         self.artnet = socket.socket(socket.AF_INET, socket.SOCK_RAW, socket.IPPROTO_UDP)
 
         #self.artnet.setsockopt(socket.SOL_SOCKET,socket.SO_RCVBUF, 1)
         self.artnet.settimeout(0.006) # 0.01 works
         self.artnet_universe = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
-
 
 
     def get_cubedata(self):
@@ -245,6 +247,8 @@ class CubeWorld:
         self.world_CHC[:, :, :, :] = 0.0
 
         # Generator A
+
+
         if step%self.speed_A == 0:
             # Generator A
             self.CHA[0].control(self.control_dict[16],self.control_dict[17],self.control_dict[18])
@@ -255,7 +259,6 @@ class CubeWorld:
             # Effect A 2
             self.CHA[2].control(self.control_dict[85],self.control_dict[86],self.control_dict[87])
             self.world_CHA = self.CHA[2].generate(step, self.world_CHA)
-
 
         # Generator B
         if step%self.speed_B == 0:

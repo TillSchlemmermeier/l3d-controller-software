@@ -1,6 +1,6 @@
 # modules
 import numpy as np
-from random import choice
+from random import choice, seed
 
 
 class g_cube_edges():
@@ -33,6 +33,7 @@ class g_cube_edges():
 
         self.edge = choice(self.edge_list)
         self.direction = choice([-1, 1])
+        seed()
 
 
     def control(self, speed, number, blub1):
@@ -55,7 +56,7 @@ class g_cube_edges():
             self.counter = 0
             # select new edge and direction
             self.edge = choice(self.edge_list)
-            self.direction = choice([-1, 1])
+            self.direction = 1 #choice([-1, 1])
 
         # generate vector with values
         row = np.linspace(0, 19, 20)
@@ -67,18 +68,18 @@ class g_cube_edges():
         else:
             world[0, self.edge[0], self.edge[1], self.edge[2]] = row[5:15][::-1]
 
-        if self.number == 2:
+        if self.number > 1:
+            if self.direction == 1:
+                world[0, self.edge[1], self.edge[0], self.edge[2]] = row[5:15]
+            else:
+                world[0, self.edge[1], self.edge[0], self.edge[2]] = row[5:15][::-1]
+
+        if self.number > 2:
             if self.direction == 1:
                 world[0, self.edge[1], self.edge[2], self.edge[0]] = row[5:15]
             else:
                 world[0, self.edge[1], self.edge[2], self.edge[0]] = row[5:15][::-1]
-                
-        if self.number == 3:
-            if self.direction == 1:
-                world[0, self.edge[2], self.edge[0], self.edge[1]] = row[5:15]
-            else:
-                world[0, self.edge[2], self.edge[0], self.edge[1]] = row[5:15][::-1]
-                
+
         # increase counter
         self.counter += self.speed
 

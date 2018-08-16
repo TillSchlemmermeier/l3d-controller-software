@@ -94,7 +94,7 @@ class g_circles():
 
 
 	# rotate if necessary
-	world[0, :, :, :] = np.rot90(world[0, :, :, :], k = 1)
+	# world[0, :, :, :] = np.rot90(world[0, :, :, :], k = 1)
 
         world[1,:,:,:] = world[0, :, : , :]
         world[2,:,:,:] = world[0, :, : , :]
