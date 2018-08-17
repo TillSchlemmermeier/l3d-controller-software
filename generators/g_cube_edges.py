@@ -32,9 +32,9 @@ class g_cube_edges():
          \|    \|
           C - - D
         '''
-        
+
         self.edge_list = [[0, 0, slice(0, 10)], #  0
-                          [0, 9, slice(0, 10)], #  1 
+                          [0, 9, slice(0, 10)], #  1
                           [9, 0, slice(0, 10)], #  2
                           [9, 9, slice(0, 10)], #  3
                           [0, slice(0, 10), 0], #  4
@@ -66,35 +66,35 @@ class g_cube_edges():
     def generate(self, step, dumpworld):
         # create world
         world = np.zeros([3, 10, 10, 10])
-        
+
         if self.counter > 19:
             self.counter = 0
             self.corner = choice(self.corner_list)
-        
+
         row = np.linspace(0, 19, 20)
         row = np.exp(-np.abs(row - self.counter))
-        
+
         if self.number == 1:
             edge1 = self.edge_list[int(self.corner[0])]
-    	    if self.corner[0] > 0:
-    	        world[0, edge[0], edge[1], edge[2]] = row[5:15]
-    	    else:
-    	        world[0, edge[0], edge[1], edge[2]] = row[5:15][::-1]
-    	        
-    	if self.number > 1:
+            if self.corner[0] > 0:
+    	        world[0, edge1[0], edge1[1], edge1[2]] = row[5:15]
+            else:
+    	        world[0, edge1[0], edge1[1], edge1[2]] = row[5:15][::-1]
+
+        if self.number > 1:
             edge2 = self.edge_list[int(self.corner[1])]
-    	    if self.corner[1] > 0:
-    	        world[0, edge[0], edge[1], edge[2]] = row[5:15]
-    	    else:
-    	        world[0, edge[0], edge[1], edge[2]] = row[5:15][::-1]
-    	    
-    	if self.number > 2:
-            edge2 = self.edge_list[int(self.corner[2])]
-    	    if self.corner[2] > 0:
-    	        world[0, edge[0], edge[1], edge[2]] = row[5:15]
-    	    else:
-    	        world[0, edge[0], edge[1], edge[2]] = row[5:15][::-1]  
-    	          
+            if self.corner[1] > 0:
+                world[0, edge2[0], edge2[1], edge2[2]] = row[5:15]
+            else:
+                world[0, edge2[0], edge2[1], edge2[2]] = row[5:15][::-1]
+
+        if self.number > 2:
+            edge3 = self.edge_list[int(self.corner[2])]
+            if self.corner[2] > 0:
+                world[0, edge3[0], edge3[1], edge3[2]] = row[5:15]
+            else:
+                world[0, edge3[0], edge3[1], edge3[2]] = row[5:15][::-1]
+
         # increase counter
         self.counter += self.speed
 

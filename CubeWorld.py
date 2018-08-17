@@ -56,12 +56,14 @@ from effects.e_gradient import e_gradient
 from effects.e_prod_saturation import e_prod_saturation
 from effects.e_prod_hue import e_prod_hue
 from effects.e_bright_osci import e_bright_osci
+from effects.e_cut_cube import e_cut_cube
 #from effects.e_blur import e_blur
 
 # load automat
 from generators.a_testbot import a_testbot
 from generators.a_orbbot import a_orbbot
 from generators.a_lines import a_lines
+from generators.a_pulsating import a_pulsating
 # load effect modules
 
 class CubeWorld:
