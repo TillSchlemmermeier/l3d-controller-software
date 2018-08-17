@@ -12,7 +12,7 @@ class g_wavepattern():
         self.speed = 1.0
 
     def control(self, freq, speed, blub1):
-        self.freq = freq*0.15+0.5
+        self.freq = int(freq*10)
         self.speed = speed*0.5
 
     def label(self):
@@ -27,9 +27,9 @@ class g_wavepattern():
         for x in range(10):
             for y in range(10):
                 for z in range(10):
-                    world[:,x,y,z] = np.sin(self.speed * step)*\
-                                     (np.sin(self.freq*x*10)+\
-                                     np.sin(self.freq*y*10)+\
-                                     np.sin(self.freq*z*10))
+                    world[:, x, y, z] = np.sin(step*self.speed)*(
+                                        np.sin(np.pi*self.freq*x/10)**6+\
+                                        np.sin(np.pi*self.freq*y/10)**6+\
+                                        np.sin(np.pi*self.freq*z/10)**6)
 
         return np.clip(world, 0, 1)
