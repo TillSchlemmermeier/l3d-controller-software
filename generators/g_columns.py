@@ -67,7 +67,7 @@ def blur(world, amount = 0.1):
 
     # create gaussian window
     dim = 5
-    a = gaussian(dim, amount+0.001, sym=True)
+    a = gaussian(dim, amount+0.001, sym=True)**4
     gauss = np.zeros([dim, dim, dim])
     center = 3
 

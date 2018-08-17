@@ -74,7 +74,6 @@ class g_cube_edges():
         row = np.linspace(0, 19, 20)
         row = np.exp(-np.abs(row - self.counter))
         
-        
         if self.number == 1:
             edge1 = self.edge_list[int(self.corner[0])]
     	    if self.corner[0] > 0:
@@ -94,38 +93,8 @@ class g_cube_edges():
     	    if self.corner[2] > 0:
     	        world[0, edge[0], edge[1], edge[2]] = row[5:15]
     	    else:
-    	        world[0, edge[0], edge[1], edge[2]] = row[5:15][::-1]    
-        '''
-
-        # check for new spawn
-        if self.counter > 19:
-            self.counter = 0
-            # select new edge and direction
-            self.edge = choice(self.edge_list)
-            self.direction = 1 #choice([-1, 1])
-
-        # generate vector with values
-        row = np.linspace(0, 19, 20)
-        row = np.exp(-np.abs(row - self.counter))
-
-        # copy middle of the vector to world
-        if self.direction == 1:
-            world[0, self.edge[0], self.edge[1], self.edge[2]] = row[5:15]
-        else:
-            world[0, self.edge[0], self.edge[1], self.edge[2]] = row[5:15][::-1]
-
-        if self.number > 1:
-            if self.direction == 1:
-                world[0, self.edge[1], self.edge[0], self.edge[2]] = row[5:15]
-            else:
-                world[0, self.edge[1], self.edge[0], self.edge[2]] = row[5:15][::-1]
-
-        if self.number > 2:
-            if self.direction == 1:
-                world[0, self.edge[1], self.edge[2], self.edge[0]] = row[5:15]
-            else:
-                world[0, self.edge[1], self.edge[2], self.edge[0]] = row[5:15][::-1]
-	'''
+    	        world[0, edge[0], edge[1], edge[2]] = row[5:15][::-1]  
+    	          
         # increase counter
         self.counter += self.speed
 
