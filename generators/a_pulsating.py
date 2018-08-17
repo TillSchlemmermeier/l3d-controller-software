@@ -13,7 +13,9 @@ class a_pulsating():
     def __init__(self):
         self.counter = 0
         self.period = 200
-
+	self.start_strobo = 10
+	self.strobo_counter = 20
+	
         # initialize generator
         self.generator = g_cube()
         self.generator.control(1,0.11,1)
@@ -47,6 +49,15 @@ class a_pulsating():
         world[0,:,:,:] *= color[0]
         world[1,:,:,:] *= color[1]
         world[2,:,:,:] *= color[2]
+        
+        if self.counter > self.start_strobo*self.peroid and self.counter < self.start_strobo*self.peroid+self.strobo_counter:
+            size = 0.0
+            if self.counter % 2 == 1:
+                world[0, :, : ,:] = gen_hsphere(size*8, 5.5, 5.5, 5.5)
+            
+            size += 1/self.strobo_counter
+            
+        self.counter += 1
         
         return np.clip(world, 0, 1)
 
