@@ -42,7 +42,7 @@ class g_columns():
         self.safe_world[0,:,:] = 0
 
         # create new spot in the upper most layer and blur it
-        world[0, 0, self.y, self.z] = np.sin(step*self.osc_speed)*0.5 + 0.5
+        world[0, 0, self.y, self.z] = np.sin(step*self.osc_speed)**6
         world[0, :, :, :] = blur(world[0, :,:,:], self.blur*np.sin(step*self.osc_speed)*0.5 + 0.5)
 
         # copy old world into new world

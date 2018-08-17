@@ -1,59 +1,70 @@
 # modules
 import numpy as np
-from generators.g_pyramid import g_pyramid
-from generators.g_pyramid_upsidedown import g_pyramid_upsidedown
+from random import choice
 from generators.g_cube import g_cube
 from generators.g_blank import g_blank
 
 class a_lines():
     '''
-    Generator: Testbot
+    Automat: lines
+    
+    fades in random edges, and at some
+    point do some strobo with the cube
     '''
 
     def __init__(self):
         self.counter = 0
-        self.generator = g_pyramid_upsidedown()
-        self.generator.control(0,0.1,0)
-        self.stopcounter = 200
 
-    def control(self, numbers, fade, blub1):
-        pass
+	# counter for changes
+        self.start_strobo = 4
+        self.count_strobo = 20
+        self.count_fade = 100
+        
+        # initialize generator
+        self.generator = g_cube()
+        self.generator.control(1,1,0)
+                
+        self.edge_list = [[0, 0, slice(0, 10)],
+                          [0, 9, slice(0, 10)],
+                          [9, 0, slice(0, 10)],
+                          [9, 9, slice(0, 10)],
+                          [0, slice(0, 10), 0],
+                          [0, slice(0, 10), 9],
+                          [9, slice(0, 10), 0],
+                          [9, slice(0, 10), 9],
+                          [slice(0, 10), 0, 0],
+                          [slice(0, 10), 0, 9],
+                          [slice(0, 10), 9, 0],
+                          [slice(0, 10), 9, 9],
+                          ]
+	self.edge = choice(self.edge_list)
+
+    def control(self, count_fade, fade, blub1):
+        self.count_fade = int(count_fade * 200)+50)
 
     def label(self):
-        return ['empty', 'empty',
+        return ['count fade', self.count_fade,
                 'empty', 'empty',
                 'empty', 'empty']
 
     def generate(self, step, dumpworld):
         # create world
         world = np.zeros([3, 10, 10, 10])
+	
+	# select new edge after self.count_fade
+	if self.counter % self.count_fade == 0:
+	    self.edge = choice(self.edge_list)	
+	
+	# calculate brightness and turn on edge
+        brightness = np.sin(self.counter/self.count_fade*np.pi))**6
+        world[:, self.edge[0], self.edge[1], self.edge[2]] = brightness
 
-        if self.counter == 0:
-            self.generator = g_pyramid_upsidedown()
-            self.generator.control(0.0,0.1,0)
-
-        if self.counter == self.stopcounter:
-            self.generator = g_pyramid()
-            self.generator.control(0.0,0.1,0)
-
-        if self.counter == 2*self.stopcounter:
-            self.generator = g_cube()
-            self.generator.control(1,1,0)
-
-        if self.counter == 2*self.stopcounter+1:
-            self.generator = g_blank()
-            self.generator.control(1,1,0)
-
-        if self.counter == 2*self.stopcounter+2:
-            self.generator = g_cube()
-            self.generator.control(1,1,0)
-
-        if self.counter == 2*self.stopcounter+3:
-            self.counter = -1
-
-        brightness = np.abs(np.sin(self.counter/self.stopcounter*np.pi))*0.7
-        world[:, :, :, :] = brightness * self.generator.generate(self.counter, 0)
+	# do strobo with cube 
+	if self.counter > self.start_strobo*self.count_fade and self.counter < self.stop.strobo+self.count_strobo*self.count_fade:
+	    if self.counter % 2 == 0:
+	        world[:, :, :, :] = self.generator(self.counter,0)
 
         self.counter += 1
 
         return np.clip(world, 0, 1)
+
