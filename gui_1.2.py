@@ -405,10 +405,10 @@ class App(Tk):
         self.transworld_B_old = deepcopy(rgbresult3['b'])
         #if MidiKey==61 :
         #    self.sendSpeed=MidiValue
-        if MidiKey==62 :
-            self.FadeValue = np.clip(MidiValue/128.0,0,1)
-        if MidiKey==60 :
-            self.DimValue = np.clip(MidiValue/128.0,0,1)
+        #if MidiKey==62 :
+        #    self.FadeValue = np.clip(MidiValue/128.0,0,1)
+        #if MidiKey==60 :
+        #    self.DimValue = np.clip(MidiValue/128.0,0,1)
         #if MidiKey==23 :
         #    self.hBright=MidiValue*2
         #if MidiKey==27 :
@@ -432,15 +432,15 @@ class App(Tk):
             count = 9
 
             for i in self.cubedata[:,1]:
-                if MidiKey == 27 and MidiValue == 127:
-                    self.send_array[count] = struct.pack('>B',int(0))
-                elif MidiKey == 26 and MidiValue == 127:
-                    if self.framecount % 2:
-                        self.send_array[count] = struct.pack('>B',int(0))
-                    else:
-                        self.send_array[count] = struct.pack('>B',int(i))
-                else:
-                    self.send_array[count] = struct.pack('>B',int(i))
+                # if MidiKey == 27 and MidiValue == 127:
+                #     self.send_array[count] = struct.pack('>B',int(0))
+                # elif MidiKey == 26 and MidiValue == 127:
+                #     if self.framecount % 2:
+                #         self.send_array[count] = struct.pack('>B',int(0))
+                #     else:
+                #         self.send_array[count] = struct.pack('>B',int(i))
+                # else:
+                self.send_array[count] = struct.pack('>B',int(i))
                 count=count+1
 
             self.framecount+=1
@@ -467,7 +467,7 @@ class App(Tk):
 
             for r,g,b in zip(self.cubedata_R[:,1],self.cubedata_G[:,1],self.cubedata_B[:,1]):
                 #print(r,g,b)
-                self.send_array_rgb[count] = struct.pack('>B',int(r))
+                self.send_array_rgb[count]   = struct.pack('>B',int(r))
                 self.send_array_rgb[count+1] = struct.pack('>B',int(g))
                 self.send_array_rgb[count+2] = struct.pack('>B',int(b))
                 count=count+3

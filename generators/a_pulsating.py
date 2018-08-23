@@ -21,13 +21,13 @@ class a_pulsating():
 
         self.color =  hsv_to_rgb(uniform(-0.5,0.5), 1.0, 1.0)
 
-    def control(self, count_fade, fade, blub1):
-        #self.count_fade = int(count_fade * 200)+50)
-        pass
+    def control(self, count_fade, start_strobo, blub1):
+        self.period = int(count_fade * 200)+50
+        self.start_strobo = int(start_strobo*10 +1)
 
     def label(self):
-        return ['empty', 'empty',
-                'empty', 'empty',
+        return ['frames per fade', self.period,
+                'cycles before strobo', self.start_strobo,
                 'empty', 'empty']
 
     def generate(self, step, dumpworld):

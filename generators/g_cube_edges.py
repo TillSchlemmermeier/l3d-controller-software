@@ -47,7 +47,7 @@ class g_cube_edges():
                           [slice(0, 10), 9, 9], # 11
                           ]
 
-        self.corner = choice(self.corner_list)
+        self.corner = self.corner_list[0] # choice(self.corner_list)
         self.direction = choice([-1, 1])
         seed()
 
@@ -74,23 +74,22 @@ class g_cube_edges():
         row = np.linspace(0, 19, 20)
         row = np.exp(-np.abs(row - self.counter))
 
-        if self.number == 1:
-            edge1 = self.edge_list[int(self.corner[0])]
-            if self.corner[0] > 0:
-    	        world[0, edge1[0], edge1[1], edge1[2]] = row[5:15]
-            else:
-    	        world[0, edge1[0], edge1[1], edge1[2]] = row[5:15][::-1]
+        edge1 = self.edge_list[int(abs(self.corner[0]))]
+        if self.corner[0] >= 0:
+            world[0, edge1[0], edge1[1], edge1[2]] = row[5:15]
+        else:
+            world[0, edge1[0], edge1[1], edge1[2]] = row[5:15][::-1]
 
         if self.number > 1:
-            edge2 = self.edge_list[int(self.corner[1])]
-            if self.corner[1] > 0:
+            edge2 = self.edge_list[int(abs(self.corner[1]))]
+            if self.corner[1] >= 0:
                 world[0, edge2[0], edge2[1], edge2[2]] = row[5:15]
             else:
                 world[0, edge2[0], edge2[1], edge2[2]] = row[5:15][::-1]
 
         if self.number > 2:
-            edge3 = self.edge_list[int(self.corner[2])]
-            if self.corner[2] > 0:
+            edge3 = self.edge_list[int(abs(self.corner[2]))]
+            if self.corner[2] >= 0:
                 world[0, edge3[0], edge3[1], edge3[2]] = row[5:15]
             else:
                 world[0, edge3[0], edge3[1], edge3[2]] = row[5:15][::-1]

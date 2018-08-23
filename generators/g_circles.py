@@ -81,16 +81,16 @@ class g_circles():
             j = randint(0,2)
 
             if j == 0:
-                world[0, randint(0,9), :, :] = self.size2[:,:]
+                world[0, :, randint(0,9), :] = self.size2[:,:]
 
             elif j == 1:
-                world[0, randint(0,9), :, :] = self.size3[:,:]
+                world[0, :, randint(0,9), :] = self.size3[:,:]
 
             elif j == 2:
-                world[0, randint(0,9), :, :] = self.size4[:,:]
+                world[0, :, randint(0,9), :] = self.size4[:,:]
 
             elif j == 3:
-                world[0, randint(0,9), :, :] = self.size5[:,:]
+                world[0, :, randint(0,9), :] = self.size5[:,:]
 
 
 	# rotate if necessary

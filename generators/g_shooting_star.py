@@ -32,9 +32,10 @@ class g_shooting_star():
         # return current position of shooting star
 
         # switch on leds depending on distance
-        world[0,:,:,:] = gen_shooting_star(sx,sy,sz)
+        world[0,:,:,:] = np.rot90(gen_shooting_star(sx,sy,sz), axes = [0,1], k=3)
         world[1,:,:,:] = world[0,:,:,:]
         world[2,:,:,:] = world[0,:,:,:]
+
 
         return np.clip(world, 0, 1)
 
@@ -42,10 +43,10 @@ def gen_line(speed):
     # generate outside point
     # adjust angles for falling down shooting stars!
     #p1 = polar2z(10, uniform(-2, 2), uniform(0, np.pi))
-    p1 = [-1, uniform(-1, 10),uniform(-1, 10)]
+    p2 = [10, uniform(-1, 10),uniform(-1, 10)]
 
     # generate a point somewhere in the middle
-    p2 = [9, uniform(1, 8),uniform(1, 8)]
+    p1 = [-1, uniform(4, 5),uniform(4, 5)]
 
     v = []
     # calculate vector

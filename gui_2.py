@@ -360,21 +360,21 @@ class App(Tk):
         self.G2ShutterValue = StringVar()
         self.G2FadeValue = StringVar()
         self.G2Brightnes = Label(frame, textvariable=self.G2BrightnesValue,font=(self.font, "12"))
-        self.G2Brightnes.grid(row=6, column=2)
+        self.G2Brightnes.grid(row=6, column=3)
         self.G2Shutter = Label(frame, textvariable=self.G2ShutterValue,font=(self.font, "12"))
-        self.G2Shutter.grid(row=7, column=2)
+        self.G2Shutter.grid(row=7, column=3)
         self.G2SFade = Label(frame, textvariable=self.G2FadeValue,font=(self.font, "12"))
-        self.G2SFade.grid(row=8, column=2)
+        self.G2SFade.grid(row=8, column=3)
 
         self.G3BrightnesValue = StringVar()
         self.G3ShutterValue = StringVar()
         self.G3FadeValue = StringVar()
         self.G3Brightnes = Label(frame, textvariable=self.G3BrightnesValue,font=(self.font, "12"))
-        self.G3Brightnes.grid(row=6, column=4)
+        self.G3Brightnes.grid(row=6, column=6)
         self.G3Shutter = Label(frame, textvariable=self.G3ShutterValue,font=(self.font, "12"))
-        self.G3Shutter.grid(row=7, column=4)
+        self.G3Shutter.grid(row=7, column=6)
         self.G2SFade = Label(frame, textvariable=self.G3FadeValue,font=(self.font, "12"))
-        self.G2SFade.grid(row=8, column=4)
+        self.G2SFade.grid(row=8, column=6)
 
 # L3D-Functions
     def startsending(self):
@@ -463,11 +463,11 @@ class App(Tk):
             # this sleep is stupid, we need another solution!
             time.sleep(0.015)
             send_list.extend(self.cubeWorld.get_cubedata())
-            blub = bytearray(send_list)
+            package = bytearray(send_list)
 
             self.framecount += 1
             # send the fuckin package
-            self.con.write(blub)
+            self.con.write(package)
             self.after(self.sendSpeed, self.send_data_rgb)
 
     def checkbox_callback(self):
