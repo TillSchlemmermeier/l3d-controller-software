@@ -69,11 +69,12 @@ class App(Tk):
                            "g_rain", "g_circles", "g_falling", "g_obliqueplane", "g_obliqueplaneXYZ", "g_smiley",
                            "g_torusrotation","g_growingface","g_pyramid", "g_orbiter3","g_gauss","g_wave",
                            "g_drop", "g_pyramid_upsidedown", 'g_cube_edges', 'a_orbbot',
-                           'a_lines', 'a_pulsating', 'g_silpion', 'g_silpion2', 'a_multi_cube_edges', 'g_silpion3']
+                           'a_lines', 'a_pulsating', 'g_silpion2', 'a_multi_cube_edges',
+                           'a_random_cubes']
 
         self.effects = ["e_blank","e_fade2blue","e_rainbow","e_staticcolor", "e_violetblue", "e_redyellow",
                         "e_tremolo", "e_gradient", "e_prod_saturation", "e_prod_hue",
-                        "e_bright_osci", 'e_cut_cube', 'e_rare_strobo', 'e_color_silpion']
+                        "e_bright_osci", 'e_cut_cube', 'e_rare_strobo', 'e_s2l']
 
 	# sort generators and effects
         self.generators.sort()

@@ -38,6 +38,7 @@ from generators.g_silpion import g_silpion
 from generators.g_silpion2 import g_silpion2
 from generators.a_multi_cube_edges import a_multi_cube_edges
 from generators.g_silpion3 import g_silpion3
+from generators.a_random_cubes import a_random_cubes
 
 # vox cube_generators
 from generators.g_obliqueplane import g_obliqueplane
@@ -64,6 +65,7 @@ from effects.e_cut_cube import e_cut_cube
 #from effects.e_blur import e_blur
 from effects.e_rare_strobo import e_rare_strobo
 from effects.e_color_silpion import e_color_silpion
+from effects.e_s2l import e_s2l
 
 # load automat
 from generators.a_testbot import a_testbot

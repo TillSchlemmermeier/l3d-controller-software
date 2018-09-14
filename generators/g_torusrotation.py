@@ -6,6 +6,7 @@ class g_torusrotation():
         # create list of all filenames
         self.voxdata = []
 
+        '''
         filelist = []
         for file in os.listdir('./voxFiles/TorusRotation/'):
             #self.voxdata.append(self.gen_world_from_file("./voxFiles/obliqueplaneXYZ/"+file))
@@ -26,6 +27,8 @@ class g_torusrotation():
 
         for file in filelist:
             self.voxdata.append(self.gen_world_from_file('./voxFiles/TorusRotation/'+file))
+        '''
+        self.voxdata = np.load('generators/torus.npy')
 
         self.counter = 0
         self.max = len(self.voxdata)
