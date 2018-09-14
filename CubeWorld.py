@@ -34,6 +34,10 @@ from generators.g_wave import g_wave
 from generators.g_drop import g_drop
 from generators.g_columns import g_columns
 from generators.g_cube_edges import g_cube_edges
+from generators.g_silpion import g_silpion
+from generators.g_silpion2 import g_silpion2
+from generators.a_multi_cube_edges import a_multi_cube_edges
+from generators.g_silpion3 import g_silpion3
 
 # vox cube_generators
 from generators.g_obliqueplane import g_obliqueplane
@@ -58,6 +62,8 @@ from effects.e_prod_hue import e_prod_hue
 from effects.e_bright_osci import e_bright_osci
 from effects.e_cut_cube import e_cut_cube
 #from effects.e_blur import e_blur
+from effects.e_rare_strobo import e_rare_strobo
+from effects.e_color_silpion import e_color_silpion
 
 # load automat
 from generators.a_testbot import a_testbot
@@ -283,7 +289,7 @@ class CubeWorld:
             self.CHC[1].control(self.control_dict[50],self.control_dict[51],self.control_dict[52])
             self.world_CHC = self.CHC[1].generate(step, self.world_CHC)
             # Effect C 2
-            self.CHC[2].control(self.control_dict[91],self.control_dict[92],self.control_dict[13])
+            self.CHC[2].control(self.control_dict[91],self.control_dict[92],self.control_dict[93])
             self.world_CHC = self.CHC[2].generate(step, self.world_CHC)
 
         if self.switch_artnet or self.switch_artnet_color:

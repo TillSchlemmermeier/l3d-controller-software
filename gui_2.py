@@ -65,15 +65,15 @@ class App(Tk):
 	# load generators and effects
         self.generators = ["g_blank", "g_cube", "g_random", "g_growing_sphere","g_orbiter","g_randomlines",
                            "g_sphere", "g_snake","g_planes", "g_planes_falling", "g_corner", "g_corner_grow",
-                           "g_shooting_star", "g_orbiter2", "g_randomcross", "g_wavepattern", "g_growing_corner",
+                           "g_shooting_star", "g_orbiter2", "g_randomcross",  "g_growing_corner",
                            "g_rain", "g_circles", "g_falling", "g_obliqueplane", "g_obliqueplaneXYZ", "g_smiley",
                            "g_torusrotation","g_growingface","g_pyramid", "g_orbiter3","g_gauss","g_wave",
-                           "g_drop", "g_pyramid_upsidedown", 'g_columns', 'g_cube_edges', 'a_testbot', 'a_orbbot',
-                           'a_lines', 'a_pulsating']
+                           "g_drop", "g_pyramid_upsidedown", 'g_cube_edges', 'a_orbbot',
+                           'a_lines', 'a_pulsating', 'g_silpion', 'g_silpion2', 'a_multi_cube_edges', 'g_silpion3']
 
         self.effects = ["e_blank","e_fade2blue","e_rainbow","e_staticcolor", "e_violetblue", "e_redyellow",
                         "e_tremolo", "e_gradient", "e_prod_saturation", "e_prod_hue",
-                        "e_bright_osci", 'e_cut_cube']
+                        "e_bright_osci", 'e_cut_cube', 'e_rare_strobo', 'e_color_silpion']
 
 	# sort generators and effects
         self.generators.sort()

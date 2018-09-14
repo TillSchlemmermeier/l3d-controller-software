@@ -16,6 +16,8 @@ class g_cube_edges():
         self.counter = 20
         self.speed = 1
         self.number = 1
+        # corner_list contains the indices for edges
+        # which belong to one corner
         self.corner_list = [[   0, 8, 4], # A
                             [-0.1, 5, 9], # B
                             [   6, 2,-8], # C
@@ -67,19 +69,23 @@ class g_cube_edges():
         # create world
         world = np.zeros([3, 10, 10, 10])
 
+        # choose new corner
         if self.counter > 19:
             self.counter = 0
             self.corner = choice(self.corner_list)
 
+        # create gaussian profile
         row = np.linspace(0, 19, 20)
         row = np.exp(-np.abs(row - self.counter))
 
+        # first edge
         edge1 = self.edge_list[int(abs(self.corner[0]))]
         if self.corner[0] >= 0:
             world[0, edge1[0], edge1[1], edge1[2]] = row[5:15]
         else:
             world[0, edge1[0], edge1[1], edge1[2]] = row[5:15][::-1]
 
+        # second edge
         if self.number > 1:
             edge2 = self.edge_list[int(abs(self.corner[1]))]
             if self.corner[1] >= 0:
