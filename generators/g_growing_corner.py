@@ -33,7 +33,7 @@ class g_growing_corner():
 
     def control(self, maxsize, growspeed, steps):
         self.maxsize = maxsize*18
-        self.growspeed = growspeed*50+ 0.0001
+        self.growspeed = growspeed*50+ 10.0001
         self.steps = int(self.maxsize/self.growspeed)
 
     def generate(self, step, dumpworld):

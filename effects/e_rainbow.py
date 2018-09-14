@@ -20,10 +20,10 @@ class e_rainbow():
         self.blue = 0.0
 
     def control(self, speed, blub0, blub1):
-        self.speed = speed*0.35
+        self.speed = speed*0.15
 
     def label(self):
-        return ['speed',round(self.speed,2),'empty', 'empty','empty','empty']
+        return ['speed',round(self.speed*10,2),'empty', 'empty','empty','empty']
 
     def generate(self, step, world):
 
