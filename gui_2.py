@@ -69,8 +69,8 @@ class App(Tk):
                            "g_rain", "g_circles", "g_falling", "g_obliqueplane", "g_obliqueplaneXYZ", "g_smiley",
                            "g_torusrotation","g_growingface","g_pyramid", "g_orbiter3","g_gauss","g_wave",
                            "g_drop", "g_pyramid_upsidedown", 'g_cube_edges', 'a_orbbot',
-                           'a_lines', 'a_pulsating', 'g_silpion2', 'a_multi_cube_edges',
-                           'a_random_cubes']
+                           'a_lines', 'a_pulsating', 'a_multi_cube_edges',
+                           'a_random_cubes', 'g_soundcube']
 
         self.effects = ["e_blank","e_fade2blue","e_rainbow","e_staticcolor", "e_violetblue", "e_redyellow",
                         "e_tremolo", "e_gradient", "e_prod_saturation", "e_prod_hue",

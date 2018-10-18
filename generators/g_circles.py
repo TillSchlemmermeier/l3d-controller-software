@@ -80,6 +80,7 @@ class g_circles():
         for i in range(self.number):
             j = randint(0,2)
 
+
             if j == 0:
                 world[0, :, randint(0,9), :] = self.size2[:,:]
 
@@ -93,8 +94,8 @@ class g_circles():
                 world[0, :, randint(0,9), :] = self.size5[:,:]
 
 
-	# rotate if necessary
-	# world[0, :, :, :] = np.rot90(world[0, :, :, :], k = 1)
+            # rotate if necessary
+        world[0, :, :, :] = np.rot90(world[0, :, :, :], k = 1)
 
         world[1,:,:,:] = world[0, :, : , :]
         world[2,:,:,:] = world[0, :, : , :]

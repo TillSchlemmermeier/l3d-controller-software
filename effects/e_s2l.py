@@ -10,8 +10,25 @@ class e_s2l():
         # sound2light stuff
         self.sample_rate = 44100
         self.buffer_size = 2**11
+        self.thres_factor = 0
+        self.channel = 1
+
+        print('1')
+
+        pa = pyaudio.PyAudio()
+        chosen_device_index = -1
+        for x in range(0,pa.get_device_count()):
+            info = pa.get_device_info_by_index(x)
+#            print(pa.get_device_info_by_index(x))
+            if info["name"] == "pulse":
+                chosen_device_index = info["index"]
+#                print("Chosen index: ", chosen_device_index)
+
+        print('1.5')
 
         p = pyaudio.PyAudio()
+
+        print('2')
 
         self.stream = p.open(
             format = pyaudio.paInt16,	# paFloat32 vs paInt16 ?
@@ -20,23 +37,30 @@ class e_s2l():
             input = True,
             output = False,
             frames_per_buffer = self.buffer_size
-        )
-        self.thres_list = [0.4, 0.4, 0.4, 0.4, 0.8]
+            )
+        print('3')
+        self.threshold = 0.5
 
 
-    def control(self, amount, blub1, blub2):
+    def control(self, amount, threshold, channel):
         self.amount = amount
+        self.threshold = threshold
+        self.channel = int(channel*4)
+
+#        self.thres_list = self.thres_list*self.thres_factor
+        # new_list = [x+1 for x in my_list]
+#        self.thres_list = [x+self.thres_factor for x in self.thres_list]
 
     def label(self):
         return ['amount',round(self.amount,2),
-                'empty','empty',
-                'empty','empty']
+                'threshold',round(self.threshold,2),
+                'channel',round(self.channel)]
 
     def generate(self, step, world):
         total_volume = self.update_line()
-        world[0, :, :, :] *= total_volume[0]*self.amount
-        world[1, :, :, :] *= total_volume[2]*self.amount
-        world[2, :, :, :] *= total_volume[3]*self.amount
+        world[0, :, :, :] *= total_volume[self.channel]*self.amount
+        world[1, :, :, :] *= total_volume[self.channel]*self.amount
+        world[2, :, :, :] *= total_volume[self.channel]*self.amount
         return np.clip(world, 0, 1)
 
     def get_fft(self, data):
@@ -47,7 +71,7 @@ class e_s2l():
         y = scipy.log(y) - 2                           # Subtract noise floor (empirically determined)
         return (freqs, y)
 
-    def threshold(self, dat, thres):
+    def control_threshold(self, dat, thres):
         if dat < thres:
             return 0.0
         else:
@@ -60,16 +84,17 @@ class e_s2l():
         freqs, y = self.get_fft(data)
 
         # Normalize
-        y = y / 5
+        y = y / 5.0
 
         # Average into chunks of N
         N = 100
+
         yy = [scipy.average(y[n:n+N]) for n in range(0, len(y), N)]
         yy = yy[:int(len(yy)/2)] # Discard half of the samples, as they are mirrored
 
         # now do some threshold detection
-        for i in range(4):
-            yy[i] = self.threshold(yy[i], self.thres_list[i])
+        for i in range(len(yy)):
+            yy[i] = self.control_threshold(yy[i], self.threshold)
 
-
+        #print(yy)
         return np.round(np.clip(yy,0,1),2)

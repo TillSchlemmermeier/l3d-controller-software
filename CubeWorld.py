@@ -39,6 +39,7 @@ from generators.g_silpion2 import g_silpion2
 from generators.a_multi_cube_edges import a_multi_cube_edges
 from generators.g_silpion3 import g_silpion3
 from generators.a_random_cubes import a_random_cubes
+from generators.g_soundcube import g_soundcube
 
 # vox cube_generators
 from generators.g_obliqueplane import g_obliqueplane

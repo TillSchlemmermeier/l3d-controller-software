@@ -19,9 +19,9 @@ class e_staticcolor():
         self.blue = 1.0
 
     def control(self, red, green, blue):
-        self.red = red
-        self.green = green
-        self.blue = blue
+        self.red = round(red,2)
+        self.green = round(green,2)
+        self.blue = round(blue,2)
 
     def label(self):
         return ['RED',self.red,'GREEN', self.green,'BLUE',self.blue]
