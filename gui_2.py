@@ -1,5 +1,6 @@
 #! /usr/bin/python3.5
 
+from tkinter.ttk import Combobox
 from tkinter import *
 
 from cube_utils import *
@@ -68,9 +69,9 @@ class App(Tk):
                            "g_shooting_star", "g_orbiter2", "g_randomcross",  "g_growing_corner",
                            "g_rain", "g_circles", "g_falling", "g_obliqueplane", "g_obliqueplaneXYZ", "g_smiley",
                            "g_torusrotation","g_growingface","g_pyramid", "g_orbiter3","g_gauss","g_wave",
-                           "g_drop", "g_pyramid_upsidedown", 'g_cube_edges', 'a_orbbot',
-                           'a_lines', 'a_pulsating', 'a_multi_cube_edges',
-                           'a_random_cubes', 'g_soundcube']
+                           "g_drop", "g_pyramid_upsidedown", 'g_cube_edges', 'a_orbbot', 'a_squares_cut',
+                           'a_lines', 'a_pulsating', 'a_multi_cube_edges', 'g_squares', 'g_rotate_plane',
+                           'a_random_cubes', 'g_soundcube', 'g_cut', 'g_bouncy']
 
         self.effects = ["e_blank","e_fade2blue","e_rainbow","e_staticcolor", "e_violetblue", "e_redyellow",
                         "e_tremolo", "e_gradient", "e_prod_saturation", "e_prod_hue",
@@ -125,15 +126,15 @@ class App(Tk):
         #
         ## GUI Callabcks
         def optionmenuG1_selection(event):
-            self.cubeWorld.set_Genenerator("A", self.dropdownG1Current.get(),0)
+            self.cubeWorld.set_Genenerator("A", self.dropdownG1.get(),0)
             pass
 
         def optionmenuG2_selection(event):
-            self.cubeWorld.set_Genenerator("B", self.dropdownG2Current.get(),0)
+            self.cubeWorld.set_Genenerator("B", self.dropdownG2.get(),0)
             pass
 
         def optionmenuG3_selection(event):
-            self.cubeWorld.set_Genenerator("C", self.dropdownG3Current.get(),0)
+            self.cubeWorld.set_Genenerator("C", self.dropdownG3.get(),0)
             pass
 
         def optionmenuE11_selection(event):
@@ -216,16 +217,15 @@ class App(Tk):
         self.labelE23 = Label(frame, text="Effekt C 2",font=(self.font, "12"))
         self.labelE23.grid(row=1, column=8)
 
-
-
-
-
         self.dropdownG1Current = StringVar()
         self.G1param1String = StringVar()
         self.G1param2String = StringVar()
         self.G1param3String = StringVar()
         self.dropdownG1Current.set(self.generators[0])
-        self.dropdownG1 = OptionMenu(frame, self.dropdownG1Current, *self.generators, command = optionmenuG1_selection)
+#        self.dropdownG1 = OptionMenu(frame, self.dropdownG1Current, *self.generators, command = optionmenuG1_selection)
+        self.dropdownG1 = Combobox(frame, values = self.generators)
+        self.dropdownG1.bind("<<ComboboxSelected>>", optionmenuG1_selection)
+        #, command = optionmenuG1_selection)
         self.dropdownG1.grid(row=2, column=0,sticky="ew")
         self.G1param1 = Label(frame, textvariable=self.G1param1String ,font=(self.font, "12"))
         self.G1param1.grid(row=3, column=0)
@@ -239,7 +239,9 @@ class App(Tk):
         self.G2param2String = StringVar()
         self.G2param3String = StringVar()
         self.dropdownG2Current.set(self.generators[0])
-        self.dropdownG2 = OptionMenu(frame, self.dropdownG2Current, *self.generators,command = optionmenuG2_selection)
+        #self.dropdownG2 = OptionMenu(frame, self.dropdownG2Current, *self.generators,command = optionmenuG2_selection)
+        self.dropdownG2 = Combobox(frame, values = self.generators)
+        self.dropdownG2.bind("<<ComboboxSelected>>", optionmenuG2_selection)
         self.dropdownG2.grid(row=2, column=3,sticky="ew")
         self.G2param1 = Label(frame, textvariable=self.G2param1String ,font=(self.font, "12"))
         self.G2param1.grid(row=3, column=3)
@@ -253,7 +255,9 @@ class App(Tk):
         self.G3param2String = StringVar()
         self.G3param3String = StringVar()
         self.dropdownG3Current.set(self.generators[0])
-        self.dropdownG3 = OptionMenu(frame, self.dropdownG3Current, *self.generators,command = optionmenuG3_selection)
+        #self.dropdownG3 = OptionMenu(frame, self.dropdownG3Current, *self.generators,command = optionmenuG3_selection)
+        self.dropdownG3 = Combobox(frame, values = self.generators)
+        self.dropdownG3.bind("<<ComboboxSelected>>", optionmenuG3_selection)
         self.dropdownG3.grid(row=2, column=6,sticky="ew")
         self.G3param1 = Label(frame, textvariable=self.G3param1String,font=(self.font, "12"))
         self.G3param1.grid(row=3, column=6)

@@ -34,12 +34,13 @@ from generators.g_wave import g_wave
 from generators.g_drop import g_drop
 from generators.g_columns import g_columns
 from generators.g_cube_edges import g_cube_edges
-from generators.g_silpion import g_silpion
-from generators.g_silpion2 import g_silpion2
 from generators.a_multi_cube_edges import a_multi_cube_edges
-from generators.g_silpion3 import g_silpion3
+from generators.g_rotate_plane import g_rotate_plane
 from generators.a_random_cubes import a_random_cubes
 from generators.g_soundcube import g_soundcube
+from generators.g_cut import g_cut
+from generators.g_bouncy import g_bouncy
+from generators.g_squares import g_squares
 
 # vox cube_generators
 from generators.g_obliqueplane import g_obliqueplane
@@ -63,6 +64,7 @@ from effects.e_prod_saturation import e_prod_saturation
 from effects.e_prod_hue import e_prod_hue
 from effects.e_bright_osci import e_bright_osci
 from effects.e_cut_cube import e_cut_cube
+
 #from effects.e_blur import e_blur
 from effects.e_rare_strobo import e_rare_strobo
 from effects.e_color_silpion import e_color_silpion
@@ -73,6 +75,8 @@ from generators.a_testbot import a_testbot
 from generators.a_orbbot import a_orbbot
 from generators.a_lines import a_lines
 from generators.a_pulsating import a_pulsating
+from generators.a_squares_cut import a_squares_cut
+
 # load effect modules
 
 class CubeWorld:
@@ -141,10 +145,10 @@ class CubeWorld:
         self.CHC.append(e_blank())
 
         print('\nInitialize Artnet stream...\n')
-        self.artnet = socket.socket(socket.AF_INET, socket.SOCK_RAW, socket.IPPROTO_UDP)
+    #    self.artnet = socket.socket(socket.AF_INET, socket.SOCK_RAW, socket.IPPROTO_UDP)
 
         #self.artnet.setsockopt(socket.SOL_SOCKET,socket.SO_RCVBUF, 1)
-        self.artnet.settimeout(0.006) # 0.01 works
+    #    self.artnet.settimeout(0.006) # 0.01 works
         self.artnet_universe = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
 
 
@@ -157,11 +161,13 @@ class CubeWorld:
         # put colors together in the correct order
         # this might be a speed-bottleneck? we should check
         # and do it in a faster way, numpy or else
-        liste = []
-        for i in range(1000):
-            liste.append(list1[i])
-            liste.append(list2[i])
-            liste.append(list3[i])
+        #liste = []
+        #for i in range(1000):
+        #    liste.append(list1[i])
+        #    liste.append(list2[i])
+        #    liste.append(list3[i])
+
+        liste = list(np.stack((list1, list2, list3)).flatten('F'))
 
         return liste
 
