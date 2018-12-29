@@ -14,19 +14,19 @@ class rendering_engine():
       readme
       
     '''
-    __init__(self):
+    def __init__(self):
         # open connections, if possible
         # otherwise write in textfile or so
         
         # initialise variables
-        self.framecounter = 
+        self.framecounter = 0
         
-    run(self):
+    def run(self):
         # check wether 'running' flag is set
-        if global.parameter[0] == 1:
+        if global_parameter[0] == 1:
             # increase framecounter
             self.framecounter += 1
-            # some test
+            # some test to emulate output to arduino
             print(self.framecounter)
             
             
