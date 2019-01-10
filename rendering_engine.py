@@ -1,8 +1,10 @@
 
 import numpy as np
-import logging, serial
+import logging
+import serial
 from world2vox_fortran import world2vox_f as world2vox
 from global_parameter_module import global_parameter
+from channel import class_channel
 
 class rendering_engine:
     '''
@@ -17,22 +19,22 @@ class rendering_engine:
       readme
 
     '''
-    def __init__(self, log = False):
+    def __init__(self, log=False):
 
         # initialise variables
         self.framecounter = 0
         self.logging = log
         self.debug = False
-        self.header =   [int(66),
-                         int(69),
-                         int(69),
-                         int(70),
-                         int(1),	# Speed
-                         int(200),	# Brightness
-                         int(116),	# hPal
-                         int(0),	# hPalMode
-                         int(1),	# hRGBMode
-                         ]
+        self.header = [int(66),
+                       int(69),
+                       int(69),
+                       int(70),
+                       int(1),      # Speed
+                       int(200),    # Brightness
+                       int(116),    # hPal
+                       int(0),      # hPalMode
+                       int(1),      # hRGBMode
+                       ]
 
         # take care of logging
         if self.logging:
@@ -53,7 +55,7 @@ class rendering_engine:
             self.arduino = serial.Serial('/dev/ttyACM0', 230400)
             logging.info('Connection to Arduino established')
             logging.info(self.arduino)
-        #except IOError:
+        # except IOError:
         #    self.arduino = serial.Serial('/dev/ttyACM1', 230400)
         #    logging.info('Connection to Arduino established')
         #    logging.info(self.arduino)
@@ -65,6 +67,13 @@ class rendering_engine:
         self.cubeworld = np.zeros([3, 10, 10, 10])
         self.channelworld = np.zeros([4, 3, 10, 10, 10])
 
+        # initialise channels
+        self.channels = []
+        self.channels.append(class_channel())
+        self.channels.append(class_channel())
+        self.channels.append(class_channel())
+        self.channels.append(class_channel())
+
         logging.warning('Initialisation complete')
 
     def run(self):
@@ -75,10 +84,9 @@ class rendering_engine:
             # increase framecounter
             self.framecounter += 1
             # some test to emulate output to arduino
-            print(self.framecounter)
+            print('Frame', self.framecounter)
         else:
-            print(self.framecounter)
-
+            print('Frame', self.framecounter)
 
     def send_frame(self):
         '''
@@ -92,7 +100,7 @@ class rendering_engine:
             # send package
             self.arduino.write(bytearray(package))
         else:
-            #logging.info(self.cubeworld)
+            # logging.info(self.cubeworld)
             logging.info('Frame '+str(self.framecounter))
 
     def test(self):
@@ -111,24 +119,29 @@ class rendering_engine:
 
         writes the result into self.cubeworld
         '''
-
         # perform calculation of frames
         # in order to pass the right midivalues/parameters
-        # to each channel, an index which is increased by 30
-        # is introduced
-        index = 40
+        index_settings = 20     # information about choice of generators, ...
+        index_parameters = 40   # parameter like brightness, generator settings, ...
+
         for i in range(4):
-            # generator
-            new_world = self.test()
-            # effect 1
-            # effect 2
-            # effect 3
+            channel = self.channels[i]
+            # check whether cannel is active, otherwise overrides channel world
+            # with zeros
+            if int(global_parameter[index_parameters]) == 1:
+                # pass channel settings
+                channel.set_settings(global_parameter[index_settings:index_settings+5])
+                # calculate frame
+                new_world = channel.render_frame(self.framecounter, global_parameter[index_parameters:index_parameters+30])
+            else:
+                new_world = np.zeros([3, 10, 10, 10])
 
             # apply fade
-            self.channelworld[i, :, :, :] = new_world + global_parameter[index+2]*\
-                                            1/255.0*self.channelworld[i, :, :, :]
+            self.channelworld[i, :, :, :] = new_world + global_parameter[index_parameters+2]*\
+                                            self.channelworld[i, :, :, :]
             # increase index
-            index += 30
+            index_settings += 5
+            index_parameters += 30
 
         # calculate brightness for channels
         # we have the problem, that we want the channels to add
@@ -145,15 +158,14 @@ class rendering_engine:
         channel_brightness = [i*1/255.0 for i in channel_brightness]
 
         # copy channels together
-        self.cubeworld = global_parameter[2]*1/255.0 * self.cubeworld +\
-                     channel_brightness[0] * self.channelworld[0,:,:,:] +\
-                     channel_brightness[1] * self.channelworld[1,:,:,:] +\
-                     channel_brightness[2] * self.channelworld[2,:,:,:] +\
-                     channel_brightness[3] * self.channelworld[3,:,:,:]
+        self.cubeworld = global_parameter[2] * self.cubeworld +\
+                         channel_brightness[0] * self.channelworld[0, :, :, :] +\
+                         channel_brightness[1] * self.channelworld[1, :, :, :] +\
+                         channel_brightness[2] * self.channelworld[2, :, :, :] +\
+                         channel_brightness[3] * self.channelworld[3, :, :, :]
 
         # adjust global brightness
-        self.cubeworld *= global_parameter[1]*1/255.0
-
+        self.cubeworld *= global_parameter[1]
 
     def get_cubedata(self):
         # get vox format from the internal stored world
@@ -162,6 +174,8 @@ class rendering_engine:
         list2 = world2vox(self.cubeworld[1, :, :, :])
         list3 = world2vox(self.cubeworld[2, :, :, :])
 
+        # stack this lists for each color, so that we have RGB ordering for
+        # each LED
         liste = list(np.stack((list1, list2, list3)).flatten('F'))
 
         return liste
