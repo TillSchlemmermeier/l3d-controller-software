@@ -1,6 +1,5 @@
 import numpy as np
 import logging
-# from speed_decorator import speed_decorator
 from collection import generators, effects
 
 
@@ -10,7 +9,8 @@ class class_channel():
     '''
     def __init__(self):
         '''
-        initialises a channel
+        initialises a channel by calling g_blank
+        and e_blank
         '''
         self.generator = generators[0]()
         self.effect_1 = effects[0]()
@@ -30,22 +30,10 @@ class class_channel():
     def render_frame(self, framecounter, parameters):
         '''
         renders frame
-        *args contains the all the parameters of a channel
         '''
-        # settings parameters
-        self.generator.control(parameters[5:10])
-        self.effect_1.control(parameters[10:15])
-        self.effect_2.control(parameters[15:20])
-        self.effect_3.control(parameters[20:25])
-
-        # calculate everything
-        if framecounter % int(parameters[3]*40+1) == 0:
-            world = self.generator.generate(framecounter)
-            world = self.effect_1.generate(framecounter, world)
-            world = self.effect_2.generate(framecounter, world)
-            world = self.effect_3.generate(framecounter, world)
-
-        else:
-            world = np.zeros([3, 10, 10, 10])
-
+        world = self.generator(parameters[5:10])
+        world = self.effect_1(world, parameters[10:15])
+        world = self.effect_2(world, parameters[15:20])
+        world = self.effect_3(world, parameters[20:25])
+        
         return world

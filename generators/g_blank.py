@@ -7,12 +7,7 @@ class g_blank():
     Generator: blank
     '''
     def __init__(self):
-        #print('g_blank is set!')
-        self.message = 'g_blank renders frame!'
+        pass
 
-    def control(self, args):
-        print('g_blank gets parameters!')
-
-    def generate(self, step):
-        print(self.message)
+    def __call__(self, args):
         return np.zeros([3, 10, 10, 10])

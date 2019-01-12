@@ -19,13 +19,14 @@ def Midi():
         print('Some midi input...')
         if i == 5:
             'Starting cube...'
-        if i > 5:
             # write some values into array to simulate midi input
             global_parameter[0] = 1     # staring cube
             global_parameter[1] = 200   # set brightness
             global_parameter[3] = 200   # set brightness limiter
             global_parameter[40] = 1    # activate channel 1
 
+        if i == 10:
+            global_parameter[20] = 1    # select g_random
 
         i += 1
         time.sleep(1)
