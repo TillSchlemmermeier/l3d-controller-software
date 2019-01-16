@@ -35,6 +35,9 @@ subroutine world2vox_f(list, world)
         end if
 
         list(index, 2) = int(world(x+1,y+1,z+1)*255)
+        if (world(x+1, y+1, z+1)>0) then
+            write(*,*) world(x+1, y+1, z+1)
+        end if
         index = index + 1
       end do
     end do

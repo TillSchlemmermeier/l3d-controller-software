@@ -96,8 +96,11 @@ class rendering_engine:
         if not self.debug:
             # assemble list
             package = self.header + self.get_cubedata()
+            print(package)
             # send package
+            #print(bytearray(package))
             self.arduino.write(bytearray(package))
+
         else:
             # logging.info(self.cubeworld)
             logging.info('Frame '+str(self.framecounter))
@@ -169,7 +172,12 @@ class rendering_engine:
     def get_cubedata(self):
         # get vox format from the internal stored world
         # get each color
+
+        #print(self.cubeworld)
+
         list1 = world2vox(self.cubeworld[0, :, :, :])
+        print('printing liste')
+        print(list1)
         list2 = world2vox(self.cubeworld[1, :, :, :])
         list3 = world2vox(self.cubeworld[2, :, :, :])
 
