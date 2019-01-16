@@ -9,16 +9,16 @@ from rendering_engine import rendering_engine
 from global_parameter_module import global_parameter
 
 
-def Midi():
+def midi():
     '''
     Midi Thread
     '''
     i = 0
-    'Waiting some time to start cube...'
+    print('Waiting some time to start cube...')
     while True:
         print('Some midi input...')
         if i == 5:
-            'Starting cube...'
+            print('Starting cube...')
             # write some values into array to simulate midi input
             global_parameter[0] = 1     # staring cube
             global_parameter[1] = 200   # set brightness
@@ -32,7 +32,7 @@ def Midi():
         time.sleep(1)
 
 
-def Main():
+def main():
     '''
     rendering thread
     '''
@@ -46,8 +46,8 @@ def Main():
         frame_renderer.run()
 
 # create threads
-midi_thread = threading.Thread(name='midi', target=Midi)
-main_thread = threading.Thread(name='main', target=Main)
+midi_thread = threading.Thread(name='midi', target=midi)
+main_thread = threading.Thread(name='main', target=main)
 
 # start threads
 midi_thread.start()

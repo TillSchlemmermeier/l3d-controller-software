@@ -33,8 +33,7 @@ class rendering_engine:
                        int(200),    # Brightness
                        int(116),    # hPal
                        int(0),      # hPalMode
-                       int(1),      # hRGBMode
-                       ]
+                       int(1)]      # hRGBMode
 
         # take care of logging
         if self.logging:
