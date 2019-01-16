@@ -67,7 +67,7 @@ from effects.e_cut_cube import e_cut_cube
 
 #from effects.e_blur import e_blur
 from effects.e_rare_strobo import e_rare_strobo
-from effects.e_color_silpion import e_color_silpion
+#from effects.e_color_silpion import e_color_silpion
 from effects.e_s2l import e_s2l
 
 # load automat
