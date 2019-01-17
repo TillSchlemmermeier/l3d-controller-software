@@ -72,11 +72,12 @@ class App(Tk):
                            "g_torusrotation","g_growingface","g_pyramid", "g_orbiter3","g_gauss","g_wave",
                            "g_drop", "g_pyramid_upsidedown", 'g_cube_edges', 'a_orbbot', 'a_squares_cut',
                            'a_lines', 'a_pulsating', 'a_multi_cube_edges', 'g_squares', 'g_rotate_plane',
-                           'a_random_cubes', 'g_soundcube', 'g_cut', 'g_bouncy']
+                           'a_random_cubes', 'g_soundcube', 'g_cut', 'g_bouncy', 'g_darksphere', 'g_sound_sphere',
+                           'g_trees']
 
         self.effects = ["e_blank","e_fade2blue","e_rainbow","e_staticcolor", "e_violetblue", "e_redyellow",
                         "e_tremolo", "e_gradient", "e_prod_saturation", "e_prod_hue",
-                        "e_bright_osci", 'e_cut_cube', 'e_rare_strobo', 'e_s2l']
+                        "e_bright_osci", 'e_cut_cube', 'e_rare_strobo', 'e_s2l', 'e_sound_color']
 
 	# sort generators and effects
         self.generators.sort()

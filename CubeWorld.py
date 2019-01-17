@@ -41,6 +41,9 @@ from generators.g_soundcube import g_soundcube
 from generators.g_cut import g_cut
 from generators.g_bouncy import g_bouncy
 from generators.g_squares import g_squares
+from generators.g_darksphere import g_darksphere
+from generators.g_sound_sphere import g_sound_sphere
+from generators.g_trees import g_trees
 
 # vox cube_generators
 from generators.g_obliqueplane import g_obliqueplane
@@ -64,6 +67,7 @@ from effects.e_prod_saturation import e_prod_saturation
 from effects.e_prod_hue import e_prod_hue
 from effects.e_bright_osci import e_bright_osci
 from effects.e_cut_cube import e_cut_cube
+from effects.e_sound_color import e_sound_color
 
 #from effects.e_blur import e_blur
 from effects.e_rare_strobo import e_rare_strobo
