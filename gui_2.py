@@ -20,6 +20,7 @@ from rtmidi.midiutil import open_midiinput,open_midioutput
 from CubeWorld import CubeWorld
 # from time import sleep
 import time as time
+import pyaudio
 
 MidiKey = 0
 MidiValue = 0
@@ -531,6 +532,23 @@ if __name__ == "__main__":
     #midiout, portname_out = open_midioutput(port)
     midiin_a.set_callback(MidiInputHandler(portname_in_a))
     midiin_b.set_callback(MidiInputHandler(portname_in_b))
+
+    # print('Testing audio...')
+    #
+    # RATE = 44100
+    # BUFFER = 882
+    #
+    # p = pyaudio.PyAudio()
+    #
+    # stream = p.open(
+    #     format = pyaudio.paFloat32,
+    #     channels = 1,
+    #     rate = RATE,
+    #     input = True,
+    #     output = False,
+    #     frames_per_buffer = BUFFER
+    # )
+
 
     print("Starting main.")
     # midi ready

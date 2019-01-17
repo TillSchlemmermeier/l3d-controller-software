@@ -1,7 +1,7 @@
 # modules
 import numpy as np
 # from cube_utils import *
-# from scipy.signal import sawtooth
+from scipy.signal import sawtooth
 
 
 class g_planes():
@@ -24,7 +24,7 @@ class g_planes():
 
     def generate(self, step, dumpworld):
         world = np.zeros([3, 10, 10, 10])
-        position = int( round((np.sin(0.1*step*self.speed)+1)*4.5))
+        position = int(round((sawtooth(0.1*step*self.speed,0.5)+1)*4.51))
 
         if self.dir == 0:
             world[:, position,:,:] = 1.0
