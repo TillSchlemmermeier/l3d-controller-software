@@ -19,13 +19,15 @@ class g_bouncy():
         self.switch = 1
         self.p = self.p1
 
+        self.direction = 0
         self.v = gen_line(self.p1, self.p2, self.speed)
 
     def control(self, speed, blub0, blub1):
         self.speed = int((speed*20)+5)
+        self.direction = int(round(blub0*2+0.5))
 
     def label(self):
-        return ['speed', round(self.speed,2),'empty','empty', 'empty', 'empty']
+        return ['speed', round(self.speed,2),'direction',self.direction, 'empty', 'empty']
 
     def generate(self, step, dumpworld):
         world = np.zeros([3, 10, 10, 10])
@@ -47,9 +49,14 @@ class g_bouncy():
 
         # switch on leds depending on distance
         world[0,:,:,:] = np.rot90(gen_shooting_star(sx,sy,sz), axes = [0,1], k=0)
+
+        if self.direction == 1:
+            world[0, :, :, :] = np.rot90(world[0, :, :, :], k = 1, axes = (0,1))
+        elif self.direction == 2:
+            world[0, :, :, :] = np.rot90(world[0, :, :, :], k = 1, axes = (0,2))
+
         world[1,:,:,:] = world[0,:,:,:]
         world[2,:,:,:] = world[0,:,:,:]
-
         return np.clip(world, 0, 1)
 
 def gen_line(p1, p2, speed):
