@@ -93,24 +93,24 @@ class rendering_engine:
         and send it through serial interface to the
         Arduino
         '''
+        package = self.header + self.get_cubedata()
         if not self.debug:
-            # assemble list
-            package = self.header + self.get_cubedata()
-            print(package)
-            # send package
             #print(bytearray(package))
             self.arduino.write(bytearray(package))
 
         else:
             # logging.info(self.cubeworld)
             logging.info('Frame '+str(self.framecounter))
+            logging.info(package)
 
     def test(self):
         '''
         test generator
         '''
         world = np.zeros([3, 10, 10, 10])
-        world[0, :, :, :] = 0.5
+        world[0, 0, 0, 0] = 0.5
+        world[0, 1, 0, 0] = 0.7
+        world[0, 0, 1, 0] = 1.0
 
         return world
 
@@ -168,6 +168,8 @@ class rendering_engine:
 
         # adjust global brightness
         self.cubeworld *= global_parameter[1]
+
+        self.cubeworld = self.test()
 
     def get_cubedata(self):
         # get vox format from the internal stored world
