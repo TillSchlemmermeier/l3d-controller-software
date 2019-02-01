@@ -5,6 +5,7 @@ import serial
 from world2vox_fortran import world2vox_f as world2vox
 from global_parameter_module import global_parameter
 from channel import class_channel
+from convert_dict import converting_dict
 
 class rendering_engine:
     '''
@@ -173,15 +174,10 @@ class rendering_engine:
 
     def get_cubedata(self):
         # get vox format from the internal stored world
-        # get each color
-
-        #print(self.cubeworld)
 
         list1 = world2vox(self.cubeworld[0, :, :, :])
-        print('printing liste')
-        print(list1)
-        list2 = world2vox(self.cubeworld[1, :, :, :])
-        list3 = world2vox(self.cubeworld[2, :, :, :])
+        list2 = world2vox(self.cubeworld[1, :, :, :])#.sort(axis=0)
+        list3 = world2vox(self.cubeworld[2, :, :, :])#.sort(axis=0)
 
         # stack this lists for each color, so that we have RGB ordering for
         # each LED
