@@ -5,7 +5,7 @@ import serial
 from world2vox_fortran import world2vox_f as world2vox
 from global_parameter_module import global_parameter
 from channel import class_channel
-from convert_dict import converting_dict
+#from convert_dict import converting_dict
 
 class rendering_engine:
     '''
