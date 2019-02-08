@@ -13,11 +13,14 @@ import time
 from random import randint
 import urllib.request
 from PyQt5 import QtWidgets, QtGui
+
+#import MidiDevice
+from MidiDevice import MidiDevice
 #from PyQt5.QtCore import QObject,QThread, pyqtSigna
 #from mainwindow import Ui_MainWindow
 MidiKey=0
 MidiValue=0
-MidiChannel=0
+MidiChannel=0   
 
 
 def midi():
@@ -25,6 +28,7 @@ def midi():
     Midi Thread
     '''
     i = 0
+    midifighter = MidiDevice(1,1)
     print('Waiting some time to start cube...')
     while True:
         print('Some midi input...')
@@ -40,6 +44,7 @@ def midi():
             global_parameter[20] = 1    # select g_random
 
         i += 1
+
         time.sleep(1)
 
 
