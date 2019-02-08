@@ -12,5 +12,5 @@ world2vox_fortran: world2vox.f90
 
 clean:
 	@echo 'Cleaning up...'
-	@rm *.so
-	@rm *.pyc
+	$(RM) *.so
+	$(RM) *.pyc
