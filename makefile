@@ -14,3 +14,7 @@ clean:
 	@echo 'Cleaning up...'
 	$(RM) *.so
 	$(RM) *.pyc
+	$(RM) generators/*.so
+	$(RM) generators/*.pyc
+	$(RM) effects/*.so
+	$(RM) effects/*.pyc	

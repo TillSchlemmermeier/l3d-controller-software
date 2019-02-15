@@ -8,7 +8,7 @@ from channel import class_channel
 #from convert_dict import converting_dict
 
 class rendering_engine:
-    '''
+    """
     L3D Cube 3.0
 
     class for the rendering engine
@@ -18,14 +18,22 @@ class rendering_engine:
     - numpy array with size of 255
     - entries ordered as described in
       readme
-
-    '''
+    """
     def __init__(self, log=False):
+        """
+        Initialises the rendering engine
+
+        Keywords:
+        log : enables logging on the debug label
+              if false, the rendering engine is logging,
+              but only errors/warnings
+        """
 
         # initialise variables
         self.framecounter = 0
         self.logging = log
-        self.debug = False
+        self.debug = False          # debugging mode, switches on if no
+                                    # arduino is found
         self.header = [int(66),
                        int(69),
                        int(69),
@@ -41,12 +49,10 @@ class rendering_engine:
             logging.basicConfig(filename='log_rendering_enginge.log',
                                 level=logging.DEBUG,
                                 format='%(asctime)s %(message)s')
-#                                datefmt='%m/%d/%Y %I:%M:%S %p')
         else:
             logging.basicConfig(filename='log_rendering_enginge.log',
                                 level=logging.WARNING,
                                 format="%(asctime)s %(message)s")
-#                                datefmt='%m/%d/%Y %I:%M:%S %p')
 
         logging.info('Variables initialised')
 
@@ -55,13 +61,14 @@ class rendering_engine:
             self.arduino = serial.Serial('/dev/ttyACM0', 230400)
             logging.info('Connection to Arduino established')
             logging.info(self.arduino)
-        # except IOError:
-        #    self.arduino = serial.Serial('/dev/ttyACM1', 230400)
-        #    logging.info('Connection to Arduino established')
-        #    logging.info(self.arduino)
-        except:
-            self.debug = True
-            logging.warning('No Connection to Arduino established, entering DEBUG mode')
+        except IOError:
+            try:
+                self.arduino = serial.Serial('/dev/ttyACM1', 230400)
+                logging.info('Connection to Arduino established')
+                logging.info(self.arduino)
+            except IOError:
+                self.debug = True
+                logging.warning('No Connection to Arduino established, entering DEBUG mode')
 
         # setup empty world
         self.cubeworld = np.zeros([3, 10, 10, 10])
@@ -69,65 +76,50 @@ class rendering_engine:
 
         # initialise channels
         self.channels = []
-        self.channels.append(class_channel())
-        self.channels.append(class_channel())
-        self.channels.append(class_channel())
-        self.channels.append(class_channel())
+        self.channels.append(class_channel(1))
+        self.channels.append(class_channel(2))
+        self.channels.append(class_channel(3))
+        self.channels.append(class_channel(4))
 
         logging.warning('Initialisation complete')
 
     def run(self):
+        """generates a frame and sends the package when cube is turned on"""
         # check wether 'running' flag is set
         if global_parameter[0] == 1:
             self.generate_frame()
             self.send_frame()
-            # increase framecounter
             self.framecounter += 1
-            # some test to emulate output to arduino
-            print('Frame', self.framecounter)
         else:
-            print('Frame', self.framecounter)
+            pass
 
     def send_frame(self):
-        '''
+        """
         Function to convert world to voxel format,
         and send it through serial interface to the
         Arduino
-        '''
+        """
         package = self.header + self.get_cubedata()
         if not self.debug:
-            #print(bytearray(package))
             self.arduino.write(bytearray(package))
 
         else:
-            # logging.info(self.cubeworld)
             logging.info('Frame '+str(self.framecounter))
             logging.info(package)
 
-    def test(self):
-        '''
-        test generator
-        '''
-        world = np.zeros([3, 10, 10, 10])
-        world[0, 0, 0, 0] = 0.5
-        world[0, 1, 0, 0] = 0.7
-        world[0, 0, 1, 0] = 1.0
-
-        return world
-
     def generate_frame(self):
-        '''
+        """
         Calculates a new frame according to the
         entries in the global parameter variable
 
         writes the result into self.cubeworld
-        '''
+        """
         # perform calculation of frames
         # in order to pass the right midivalues/parameters
         index_settings = 20     # information about choice of generators, ...
         index_parameters = 40   # parameter like brightness, generator settings, ...
 
-        for i in range(4):
+        for i in range(4):      # loop through channels
             channel = self.channels[i]
             # check whether cannel is active, otherwise overrides channel world
             # with zeros
@@ -170,14 +162,11 @@ class rendering_engine:
         # adjust global brightness
         self.cubeworld *= global_parameter[1]
 
-        self.cubeworld = self.test()
-
     def get_cubedata(self):
-        # get vox format from the internal stored world
-
+        """get vox format from the internal stored world"""
         list1 = world2vox(self.cubeworld[0, :, :, :])
-        list2 = world2vox(self.cubeworld[1, :, :, :])#.sort(axis=0)
-        list3 = world2vox(self.cubeworld[2, :, :, :])#.sort(axis=0)
+        list2 = world2vox(self.cubeworld[1, :, :, :])
+        list3 = world2vox(self.cubeworld[2, :, :, :])
 
         # stack this lists for each color, so that we have RGB ordering for
         # each LED
