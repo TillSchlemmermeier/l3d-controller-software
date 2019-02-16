@@ -28,6 +28,7 @@ class MidiInputHandler(object):
         MidiValueIn = message[2]
         global input_dict
         input_dict.update({MidiKeyIn:MidiValueIn})
+        global_parameter[message[1]] = message[2]
 
 class MidiDevice:
     def __init__(self,in_port,out_port):
