@@ -12,7 +12,7 @@ import subprocess
 import time
 from random import randint
 import urllib.request
-from PyQt5 import QtWidgets, QtGui
+from PyQt5 import QtWidgets, QtGui, QtCore
 
 #import MidiDevice
 from MidiDevice import MidiDevice
@@ -20,7 +20,7 @@ from MidiDevice import MidiDevice
 #from mainwindow import Ui_MainWindow
 MidiKey=0
 MidiValue=0
-MidiChannel=0   
+MidiChannel=0
 
 
 def midi():
@@ -71,19 +71,30 @@ class MainWindow(QtWidgets.QMainWindow):
 
         self.list_widget = QtWidgets.QListWidget()
         self.button_StartR = QtWidgets.QPushButton("Start Renderer")
+        self.button_Open_MidiMon = QtWidgets.QPushButton("Open midi Monitor")
         self.button_StopR = QtWidgets.QPushButton("Stop Renderer")
         self.button_StartR.clicked.connect(self.start_Renderer)
         self.button_StopR.clicked.connect(self.stop_Renderer)
+        self.button_Open_MidiMon.clicked.connect(self.show_Midimon)
         layout = QtWidgets.QVBoxLayout()
         layout.addWidget(self.button_StartR)
         layout.addWidget(self.button_StopR)
         layout.addWidget(self.list_widget)
+        layout.addWidget(self.button_Open_MidiMon)
         self.widget = QtWidgets.QWidget(self)
         self.setCentralWidget(self.widget)
         self.widget.setLayout(layout)
 
         self.midi_thread = threading.Thread(name='midi', target=midi)
         self.rendering_thread = threading.Thread(name='render', target=rendering)
+
+        self.init_midimonitor_widget(4,4)
+        layout.addWidget(self.midimon_widget)
+
+        timer = QtCore.QTimer(self)
+        timer.timeout.connect(self.update_midimonitor)
+        timer.setInterval(30)
+        timer.start()
 
 
     def start_download(self,info):
@@ -94,6 +105,29 @@ class MainWindow(QtWidgets.QMainWindow):
     def stop_Renderer(self):
         self.midi_thread.stop()
         self.rendering_thread.stop()
+    def show_Midimon(self):
+        self.midimon_widget.show()
+
+    def init_midimonitor_widget(self,h,w):
+        self.midimon_widget = QtWidgets.QWidget(self)
+        grid = QtWidgets.QGridLayout(self)
+        self.midimon_widget.setLayout(grid)
+        self.midimon_titleStringArray =[[0 for x in range(w)] for y in range(h)]
+        self.midimon_valueStringArray=[[0 for x in range(w)] for y in range(h)]
+        for i in range(h):
+            for j in range(w):
+                self.midimon_titleStringArray[i][j] = QtWidgets.QLabel("Button : "+str(i)+" - "+str(j)+"\n")
+                self.midimon_valueStringArray[i][j] = QtWidgets.QLabel("Midi: Channel : 2 Value 233")
+                grid.addWidget(self.midimon_titleStringArray[i][j], i,j)
+                grid.addWidget(self.midimon_valueStringArray[i][j], i,j)
+
+    def update_midimonitor(self):
+        count=0
+        for i in range(4):
+            for j in range(4):
+                self.midimon_valueStringArray[i][j].setText("Midi: "+str(count)+" - "+str(global_parameter[count]))
+                count+=1
+
 
 def main():
     app = QtWidgets.QApplication(sys.argv)
