@@ -13,7 +13,7 @@ class e_rainbow:
         self.blue = 0.0
 
     def return_values(self):
-        return {'Cycle Speed': [self.speed, 10, '']}
+        pass#return {'Cycle Speed': [self.speed, 10, '']}
 
     def __call__(self, world, args):
         # parsing input

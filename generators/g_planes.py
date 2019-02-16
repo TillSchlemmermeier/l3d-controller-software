@@ -21,8 +21,7 @@ class g_planes():
                      5: 'z, one-way'}
 
     def return_values(self):
-        return {'Movement Speed': [self.speed, 10, ''],
-                'Direction':, [self.dir, 6, self.dict[self.dir]]}
+        pass # return {'Movement Speed': [self.speed, 10, ''],'Direction':, [self.dir, 6, self.dict[self.dir]]}
 
     def __call__(self, args):
         # parsing input

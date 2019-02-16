@@ -1,7 +1,9 @@
 
 from generators.g_blank import *
 from generators.g_random import *
+from generators.g_planes import *
 from effects.e_blank import *
+from effects.e_rainbow import *
 
 
 generators = []
