@@ -70,7 +70,7 @@ class MainWindow(QtWidgets.QMainWindow):
         global MidiKey
         global MidiValue
         global MidiChannel
-        '''
+
         self.list_widget = QtWidgets.QListWidget()
         self.button_StartR = QtWidgets.QPushButton("Start Renderer")
         self.button_Open_MidiMon = QtWidgets.QPushButton("Open midi Monitor")
@@ -86,21 +86,21 @@ class MainWindow(QtWidgets.QMainWindow):
         self.widget = QtWidgets.QWidget(self)
         self.setCentralWidget(self.widget)
         self.widget.setLayout(layout)
-        '''
+
         self.midi_thread = threading.Thread(name='midi', target=midi)
         self.rendering_thread = threading.Thread(name='render', target=rendering)
 
-        self.init_channelView_widget()
-        self.setCentralWidget(self.ChannelViewWidget)
+        #self.init_channelView_widget()
+        #self.setCentralWidget(self.ChannelViewWidget)
         #layout.addWidget(self.ChannelViewWidget)
 
-        #self.init_midimonitor_widget(4,4)
-        #layout.addWidget(self.midimon_widget)
+        self.init_midimonitor_widget(4,4)
+        layout.addWidget(self.midimon_widget)
 
-        #timer = QtCore.QTimer(self)
-        #timer.timeout.connect(self.update_midimonitor)
-        #timer.setInterval(30)
-        #timer.start()
+        timer = QtCore.QTimer(self)
+        timer.timeout.connect(self.update_midimonitor)
+        timer.setInterval(30)
+        timer.start()
 
 
 
@@ -150,9 +150,10 @@ class MainWindow(QtWidgets.QMainWindow):
             self.stringArray.append(QtWidgets.QLabel("Parameter 1 : 0"))
             self.stringArray.append(QtWidgets.QLabel("Parameter 2 : 127"))
             self.stringArray.append(QtWidgets.QLabel("Parameter 3 : 110"))
+            l=0
             for item in self.stringArray:
-                l=0
-                grid.addWidget(item,i,l)
+                grid.addWidget(item,l,i)
+                l+=1
 
     def update_midimonitor(self):
         count=0
