@@ -47,6 +47,7 @@ from generators.g_trees import g_trees
 from generators.g_rising_square import g_rising_square
 from generators.g_soundrandom import g_soundrandom
 from generators.g_inandout import g_inandout
+from generators.g_centralglow import g_centralglow
 
 # vox cube_generators
 from generators.g_obliqueplane import g_obliqueplane
