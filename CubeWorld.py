@@ -45,6 +45,8 @@ from generators.g_darksphere import g_darksphere
 from generators.g_sound_sphere import g_sound_sphere
 from generators.g_trees import g_trees
 from generators.g_rising_square import g_rising_square
+from generators.g_soundrandom import g_soundrandom
+from generators.g_inandout import g_inandout
 
 # vox cube_generators
 from generators.g_obliqueplane import g_obliqueplane
