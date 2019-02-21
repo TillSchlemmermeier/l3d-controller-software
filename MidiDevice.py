@@ -30,6 +30,33 @@ class MidiInputHandler(object):
         input_dict.update({MidiKeyIn:MidiValueIn})
         global_parameter[message[1]] = message[2]
 
+class GlobalParameterHandler:
+    def __init__(self):
+        self.globalCommandArray = np.zeros(255)
+        self.MidiKeyGloabalKeyDict = {
+        0:0,#Knob1 :
+        1:1,
+        2:2,
+        3:3,
+        4:4,
+        5:5,
+        6:6,
+        7:7,
+        8:8,
+        9:9,
+        10:10,
+        11:11,
+        12:12,
+        13:13,
+        14:14,
+        15:15
+        }
+
+
+    def setParameters(self,channel,key,value):
+        if(channel==1):
+
+
 class MidiDevice:
     def __init__(self,in_port,out_port):
         print("Initialize MIDI CONTROL")
