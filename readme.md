@@ -1,7 +1,28 @@
 
 # L3D Cube 3.0
 
-## Set of Parameters / Global Variable
+Readme for the L3D Cube software 3.0.
+
+## Content
+
+- Thread and Gui Structure
+- Global Variable
+- Testing of rendering engine
+
+## Thread and Gui Structure
+
+Here, a rough overview of the thread structure and the signal flow is presented. The main routine starts the QT Gui, which will start the corresponding processes for the MIDI devices, the rendering engine and all other threads.
+
+The rendering thread contains a loop, which will call the rendering engine each time. This will produce a frame everytime it is called based on the information stored in the global variable.
+
+The Midithread contains the MIDI classes for all devices. Thier callbacks will process any incomming MIDI messages and will pass them to the correct place.
+
+main() -> MainWindow() -> MainWindow.start_Renderer() -> midi Thread
+                                                      -> rendering Thread
+
+midi Thread -> MidiDevice() -> MidiInputHandler() -> GlobalParameterHandler()
+
+## Global Variable
 
 In the following, the global parameters are listed. Default values are given in brackets, if there are some. Since some channels are used for selecting settings like an generator or an effect, integer numbers from 0 to 255 are used (even though they are stored as floats) for those, an floats from zero to one for all passed parameters, like brightness or fade. In the following, all parameters, default values and type of number are listed.
 
