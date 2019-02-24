@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-import threading
+import threading    # do we need this or is QT taking care of everything?
 import time
 # import rendering class
 from rendering_engine import rendering_engine
@@ -7,70 +7,51 @@ from rendering_engine import rendering_engine
 from global_parameter_module import global_parameter
 
 import sys
-import tempfile
-import subprocess
-import time
-from random import randint
+import tempfile     # what is this?
+import subprocess   # obsolete?
 import urllib.request
 from PyQt5 import QtWidgets, QtGui, QtCore
 import numpy as np
 
 
-#import MidiDevice
 from MidiDevice import MidiDevice
 #from PyQt5.QtCore import QObject,QThread, pyqtSigna
 #from mainwindow import Ui_MainWindow
-MidiKey=0
-MidiValue=0
-MidiChannel=0
 
 
 def midi():
     '''
     Midi Thread
     '''
-    i = 0
-    midifighter = MidiDevice(1,1)
-    print('Waiting some time to start cube...')
-    while True:
-        print('Some midi input...')
-        if i == 5:
-            print('Starting cube...')
-            # write some values into array to simulate midi input
-            global_parameter[0] = 1     # staring cube
-            global_parameter[1] = 200   # set brightness
-            global_parameter[3] = 200   # set brightness limiter
-            global_parameter[40] = 1    # activate channel 1
-
-        if i == 10:
-            global_parameter[20] = 1    # select g_random
-
-        i += 1
-
-        time.sleep(1)
+    midifighter = MidiDevice(in_port = 1,out_port = 1)
 
 
-def rendering():
+def rendering(pause_time = 2, log = True):
     '''
-    rendering thread
+    Rendering Thread
     '''
+
+    if log == True:
+        # long sleeping time, so logfile is not flooded
+        pause_time = 2
 
     # start rendering engine
-    frame_renderer = rendering_engine(log=True)
+    frame_renderer = rendering_engine(log)
     while True:
-        # long sleeping time, so logfile is not flooded
-        time.sleep(2)
+        time.sleep(pause_time)
         # render frame
         frame_renderer.run()
+
 
 class MainWindow(QtWidgets.QMainWindow):
 
     def __init__(self, parent=None):
         super(MainWindow, self).__init__()
-        global MidiKey
-        global MidiValue
-        global MidiChannel
+        #global MidiKey
+        #global MidiValue
+        #global MidiChannel
 
+        # initialize layout
         self.list_widget = QtWidgets.QListWidget()
         self.button_StartR = QtWidgets.QPushButton("Start Renderer")
         self.button_Open_MidiMon = QtWidgets.QPushButton("Open midi Monitor")
@@ -87,6 +68,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.setCentralWidget(self.widget)
         self.widget.setLayout(layout)
 
+        # initialize threads
         self.midi_thread = threading.Thread(name='midi', target=midi)
         self.rendering_thread = threading.Thread(name='render', target=rendering)
 
@@ -97,21 +79,25 @@ class MainWindow(QtWidgets.QMainWindow):
         self.init_midimonitor_widget(4,4)
         layout.addWidget(self.midimon_widget)
 
+        # what do we need the timer for?
         timer = QtCore.QTimer(self)
         timer.timeout.connect(self.update_midimonitor)
         timer.setInterval(30)
         timer.start()
 
+#    def start_download(self,info):
+#        self.list_widget.addItem(info)
 
-
-    def start_download(self,info):
-        self.list_widget.addItem(info)
     def start_Renderer(self):
+        """Routine to start all threads
+        """
         self.midi_thread.start()
         self.rendering_thread.start()
+
     def stop_Renderer(self):
         self.midi_thread.stop()
         self.rendering_thread.stop()
+
     def show_Midimon(self):
         self.midimon_widget.show()
 
@@ -164,6 +150,8 @@ class MainWindow(QtWidgets.QMainWindow):
 
 
 def main():
+    """main routine
+    """
     app = QtWidgets.QApplication(sys.argv)
     window = MainWindow()
     window.resize(640, 480)

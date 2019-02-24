@@ -3,32 +3,22 @@ import time as time
 from rtmidi.midiutil import open_midiinput,open_midioutput
 from rtmidi.midiconstants import NOTE_ON, NOTE_OFF,CONTROL_CHANGE
 from global_parameter_module import global_parameter
-#Globals
-MidiKeyIn = 0
-MidiValueIn = 0
-MidiChannelIn = 0
-input_dict = {}
 
-class MidiInputHandler(object):
+class MidiInputHandler: #(object):
     def __init__(self, port):
-        self.port = port
-        self._wallclock = time.time()
+        """Initializes the input handler,
+        which gets the midi input via callback and
+        passes it to the global variable
+        """
+        self.port = port                # what is this for?
+        self._wallclock = time.time()   # we also don't need this
         self.mapping = GlobalParameterHandler()
 
     def __call__(self, event, data=None):
+        """Call gets midi message and calls the mapping routine"""
         message, deltatime = event
         self._wallclock += deltatime
-        # output = message
-        #print("[%s] @%0.6f %r" % (self.port, self._wallclock, message))
-        #print(message[1],message[2])
-        global MidiChannelIn
-        MidiChannelIn = message[0]
-        global MidiKeyIn
-        MidiKeyIn = message[1]
-        global MidiValueIn
-        MidiValueIn = message[2]
-        global input_dict
-        input_dict.update({MidiKeyIn:MidiValueIn})
+
         # figure out the mapping
         key = self.mapping.setParameters(message[0], message[1], message[2])
         # if there is no state-switch, write the value into
@@ -36,10 +26,23 @@ class MidiInputHandler(object):
         if key != []:
             global_parameter[key[0]] = key[1]/127.0
 
-        print(key)
 
 class GlobalParameterHandler:
+    """GlobalParameterHandler checks the MIDI input from the MIDI Figher
+    , checks for state switches and maps the input to the correct channel
+    according to the information given in the readme.md
+    """
     def __init__(self):
+        """Initializes the class with the MIDI Figher beeing in the
+        generator state for each channel
+
+        self.current_state contains the state information as a vector with
+        the length of the number of channels
+        0 - generator state
+        1 - effect 1 state
+        2 - effect 2 state
+        3 - effect 3 state
+        """
         self.current_state = [0, 0, 0, 0]
 
     def setParameters(self, channel, key, value):
@@ -126,9 +129,12 @@ class GlobalParameterHandler:
 
 
 class MidiDevice:
-    def __init__(self,in_port,out_port):
+    """Initializes the MIDI input and enables communication with the
+    MIDI Device
+    """
+    def __init__(self, in_port, out_port):
         print("Initialize MIDI CONTROL")
-        global input_dict
+#        global input_dict
         self.input_port = in_port
         self.midiin, self.portname_in = open_midiinput(self.input_port)
         self.Handler = MidiInputHandler(self.portname_in)
@@ -166,8 +172,8 @@ class MidiDevice:
         self.color+=0x01
         root.after(500, test.logMidi)
 
-    def read(self):
-        return input_dict
+#    def read(self):
+#        return input_dict
 
     def send(self,Key,Value):
         self.midiout.send_message([self.cc0,Key,Value])
