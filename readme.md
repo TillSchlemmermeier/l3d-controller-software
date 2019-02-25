@@ -13,12 +13,9 @@ Readme for the L3D Cube software 3.0.
 
 Here, a rough overview of the thread structure and the signal flow is presented. The main routine starts the QT Gui, which will start the corresponding processes for the MIDI devices, the rendering engine and all other threads.
 
-The rendering thread contains a loop, which will call the rendering engine each time. This will produce a frame everytime it is called based on the information stored in the global variable.
+The rendering thread contains a loop, which will call the rendering engine each time. This will produce a frame everytime it is called based on the information stored in the global variable. The MIDI thread contains the MIDI classes for all devices. Their callbacks will process any incomming MIDI messages and will pass them to the correct place.
 
-The Midithread contains the MIDI classes for all devices. Thier callbacks will process any incomming MIDI messages and will pass them to the correct place.
-
-main() -> MainWindow() -> MainWindow.start_Renderer() -> midi Thread
-                                                      -> rendering Thread
+main() -> MainWindow() -> MainWindow.start_Renderer() -> midi Thread / rendering Thread
 
 midi Thread -> MidiDevice() -> MidiInputHandler() -> GlobalParameterHandler()
 
@@ -75,7 +72,6 @@ In the following, the global parameters are listed. Default values are given in 
 | 70 -  99 | **parameters channel 2**
 |100 - 129 | **parameters channel 3**
 |130 - 159 | **parameters channel 4**
-
 
 ## Testing for rendering engine
 
