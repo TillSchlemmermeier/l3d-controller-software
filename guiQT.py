@@ -85,18 +85,21 @@ class MainWindow(QtWidgets.QMainWindow):
         timer.setInterval(30)
         timer.start()
 
+
+        # start threads
+        self.midi_thread.start()
+        self.rendering_thread.start()
+
 #    def start_download(self,info):
 #        self.list_widget.addItem(info)
 
     def start_Renderer(self):
         """Routine to start all threads
         """
-        self.midi_thread.start()
-        self.rendering_thread.start()
+        global_parameter[0] = 1
 
     def stop_Renderer(self):
-        self.midi_thread.stop()
-        self.rendering_thread.stop()
+        global_parameter[0] = 0
 
     def show_Midimon(self):
         self.midimon_widget.show()
