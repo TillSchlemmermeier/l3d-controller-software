@@ -47,7 +47,7 @@ class g_growingface():
             #self.xpos = 4.5*randint(0,2)
             #self.ypos = 4.5*randint(0,2)
             #self.zpos = 4.5*randint(0,2)
-            list = ([0,5.5,5.5],[9,5.5,5.5],[5.5,0,5.5],[5.5,9,5.5],[5.5,5.5,0],[5.5,5.5,9])
+            list = ([0,4.5,4.5],[9,4.5,4.5],[4.5,0,4.5],[4.5,9,4.5],[4.5,4.5,0],[4.5,4.5,9])
             [self.xpos, self.ypos, self.zpos] = choice(list)
 
 

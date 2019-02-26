@@ -3,6 +3,7 @@ import pyaudio
 from scipy.fftpack import fft, fftfreq
 import scipy
 import struct
+from random import randint
 
 class g_soundrandom():
     def __init__(self):
@@ -86,7 +87,6 @@ class g_soundrandom():
 
         yy = [scipy.average(y[n:n+N]) for n in range(0, len(y), N)]
 
-        print(len(yy))
         yy = yy[:int(len(yy)/2)] # Discard half of the samples, as they are mirrored
 
         # now do some threshold detection

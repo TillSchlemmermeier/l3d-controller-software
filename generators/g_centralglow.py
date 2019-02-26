@@ -1,6 +1,6 @@
 # modules
 import numpy as np
-from generators.g_central_glow_f import gen_central_glow
+from generators.gen_central_glow_f import gen_central_glow
 import pyaudio
 from scipy.fftpack import fft, fftfreq
 import scipy

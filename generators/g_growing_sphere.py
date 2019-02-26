@@ -44,7 +44,7 @@ class g_growing_sphere():
         # scales to maxsize
         size = self.maxsize * osci
         # creates hollow sphere with parameters
-        world[0, :, :, :] = gen_hsphere(size, 5.5,5.5,5.5)
+        world[0, :, :, :] = gen_hsphere(size, 4.5, 4.5, 4.5)
         world[1:, :, :, :] = world[0, :, :, :]
         world[2:, :, :, :] = world[0, :, :, :]
 
