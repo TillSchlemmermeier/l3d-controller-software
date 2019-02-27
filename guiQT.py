@@ -9,7 +9,7 @@ from global_parameter_module import global_parameter
 import sys
 import tempfile     # what is this?
 import subprocess   # obsolete?
-import urllib.request
+#import urllib.request
 from PyQt5 import QtWidgets, QtGui, QtCore
 import numpy as np
 
