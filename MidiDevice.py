@@ -1,11 +1,11 @@
 
 import time as time
 from rtmidi.midiutil import open_midiinput,open_midioutput
-from rtmidi.midiconstants import NOTE_ON, NOTE_OFF,CONTROL_CHANGE
+#from rtmidi.midiconstants import NOTE_ON, NOTE_OFF,CONTROL_CHANGE
 from global_parameter_module import global_parameter
 
 
-class class_figher:
+class class_fighter:
     def __init__(self, in_port, out_port):
         """initializes the MIDI fighter"""
 
@@ -18,8 +18,6 @@ class class_figher:
         # 3 - effect 3 state
         self.current_state = [0, 0, 0, 0]
 
-        print("initialize midi fighter...")
-
         # initialize midi input
         self.input_port = in_port
         self.midiin, self.portname_in = open_midiinput(self.input_port)
@@ -29,9 +27,8 @@ class class_figher:
         self.midiout, self.portname_out = open_midioutput(self.output_port)
 
         # initializes the callback
-        # self.Handler = MidiInputHandler(self.portname_in)
-        # self.midiin.set_callback(self.Handler)
         self.midiin.set_callback(self.event)
+        self.sendstate()
 
     def event(self, event, data=None):
         """Call gets midi message and calls the mapping routine"""
@@ -46,8 +43,43 @@ class class_figher:
         if key != []:
             global_parameter[key[0]] = key[1]/127.0
         else:
-            pass
-            # here should be the color switching
+            # when a stateswitch is detected, send all values
+            # and colors back to midifighter
+            self.sendstate()
+
+    def sendstate(self):
+        """Sends colors and values to MidiFighter"""
+        # this contains the colors for the three different states
+        # generator : color 0
+        # effect 1  : color 40
+        # effect 2  : color 80
+        # effect 3  : color 120
+        color_dict = {0:10, 1:50, 2:70, 3:100}
+
+        # now we want to send the current values back!
+        # colors as well as current values!
+        for i in [0, 4, 8, 12]:
+            self.midiout.send_message([177, i, color_dict[self.current_state[0]]])
+            # calculate the position of the corresponding entry in the global variable
+            index = int(50+self.current_state[0]*5+i/4)
+            value = int(global_parameter[index]*127)
+            self.midiout.send_message([176, i, value])
+        for i in [1, 5, 9, 13]:
+            self.midiout.send_message([177, i, color_dict[self.current_state[1]]])
+            index = int(70+self.current_state[1]*5+i/4)
+            value = int(global_parameter[index]*127)
+            self.midiout.send_message([176, i, value])
+        for i in [2, 6,10, 14]:
+            self.midiout.send_message([177, i, color_dict[self.current_state[2]]])
+            index = int(100+self.current_state[2]*5+i/4)
+            value = int(global_parameter[index]*127)
+            self.midiout.send_message([176, i, value])
+        for i in [3, 7,11, 15]:
+            self.midiout.send_message([177, i, color_dict[self.current_state[3]]])
+            index = int(130+self.current_state[3]*5+i/4)
+            value = int(global_parameter[index]*127)
+            self.midiout.send_message([176, i, value])
+
 
     def setParameters(self, channel, key, value):
         """Routine to map the incomming midi values to the
@@ -124,11 +156,11 @@ class class_figher:
             if key == 3 and value == 0:
                 self.current_state[3] = 0
             elif key == 7 and value == 0:
-                self.current_state[4] = 1
+                self.current_state[3] = 1
             elif key == 11 and value == 0:
-                self.current_state[5] = 2
+                self.current_state[3] = 2
             elif key == 15 and value == 0:
-                self.current_state[6] = 3
+                self.current_state[3] = 3
 
 
 

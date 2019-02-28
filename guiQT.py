@@ -14,7 +14,7 @@ from PyQt5 import QtWidgets, QtGui, QtCore
 import numpy as np
 
 
-from MidiDevice import MidiDevice
+from MidiDevice import class_fighter
 #from PyQt5.QtCore import QObject,QThread, pyqtSigna
 #from mainwindow import Ui_MainWindow
 
@@ -23,7 +23,9 @@ def midi():
     '''
     Midi Thread
     '''
-    midifighter = MidiDevice(in_port = 1,out_port = 1)
+    print('...starting midi thread')
+    # we should do something to detect ports!
+    midifighter = class_fighter(in_port = 2,out_port = 2)
 
 
 def rendering(pause_time = 2, log = True):
