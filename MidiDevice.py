@@ -1,8 +1,108 @@
 
 import time as time
-from rtmidi.midiutil import open_midiinput,open_midioutput
+from rtmidi.midiutil import open_midiinput,open_midioutput, open_midiport
 #from rtmidi.midiconstants import NOTE_ON, NOTE_OFF,CONTROL_CHANGE
 from global_parameter_module import global_parameter
+import numpy as np
+
+class class_launchpad:
+    def __init__(self):
+        # open midi input
+        self.midiin, self.portname_in = open_midiinput(port = 'Launchpad')
+        self.midiout, self.portname_out = open_midioutput(port = 'Launchpad')
+        
+        # some fancy animation
+        for i in range(130):
+            self.midiout.send_message([144, i, 0])
+        for i in range(130):
+            time.sleep(0.005)
+            self.midiout.send_message([144, i, i])
+        time.sleep(0.1)
+        for i in range(130):
+            self.midiout.send_message([144, i, 0])
+
+        # set callback
+        self.midiin.set_callback(self.event)
+        # array for state switching
+        # states are preset, generator, effect1, effect2, effect3 for 
+        # each channel, which makes 20 states + idle state
+        self.state = 0
+        self.sendstate()
+
+    def event(self, event, data=None):
+        """Call gets midi message and calls the mapping routine"""
+        # gets message
+        message, deltatime = event
+
+        # switch channels on
+        if message[0] == 176:
+            if message[1]   == 104 and message[2] == 127:
+                global_parameter[40] = int(not global_parameter[40])
+            elif message[1] == 105 and message[2] == 127:
+                global_parameter[70] = int(not global_parameter[70])
+            elif message[1] == 106 and message[2] == 127:
+                global_parameter[100] = int(not global_parameter[100])
+            elif message[1] == 107 and message[2] == 127:
+                global_parameter[130] = int(not global_parameter[130])
+
+        # parse message
+        elif message[0] == 144 and message[2] == 0:
+            if self.state == 0:
+                # if in idle state, state can be switched
+                key = [int(message[1]/16), message[1]-16*int(message[1]/16)]
+                # check whether button is in range
+                if key[0] < 5 and key[1] < 4:
+                    self.state = key
+            else:
+                # if not idle, we can go back to idle
+                if message[1] == 0:
+                    self.state = 0
+
+        # send colors
+        self.sendstate()
+
+    def sendstate(self):
+        """send states and colors to midi device"""
+        for i in range(130):
+            self.midiout.send_message([144, i, 0])
+                    
+        self.midiout.send_message([176, 104, global_parameter[ 40]*127])
+        self.midiout.send_message([176, 105, global_parameter[ 70]*127])
+        self.midiout.send_message([176, 106, global_parameter[100]*127])
+        self.midiout.send_message([176, 107, global_parameter[130]*127])
+        
+        if self.state == 0:
+            for i in range(4):
+                self.midiout.send_message([144, i, 3])
+                self.midiout.send_message([144, i+16, 51])
+                self.midiout.send_message([144, i+32, 48])
+                self.midiout.send_message([144, i+48, 3])
+                self.midiout.send_message([144, i+64, 51])
+        else:
+            # select color
+            if self.state[0] == 0:
+                color = 3
+            elif self.state[0] == 1:
+                color = 51
+            elif self.state[0] == 2:
+                color = 48
+            elif self.state[0] == 3:
+                color = 3
+            elif self.state[0] == 4:
+                color =  51
+            else:
+                color = 0
+            
+            # send color
+            for i in range(130):
+                self.midiout.send_message([144, i, color])
+            
+            self.midiout.send_message([144, 0, 1])
+                           
+    def convert(self, number):
+        """converts numbers to correct range"""
+        correction = int(number/8)*8 / 2.0
+        return number - correction
 
 
 class class_fighter:
@@ -20,11 +120,11 @@ class class_fighter:
 
         # initialize midi input
         self.input_port = in_port
-        self.midiin, self.portname_in = open_midiinput(self.input_port)
+        self.midiin, self.portname_in = open_midiinput('fighter')
 
         # initialize midi output
         self.output_port = out_port
-        self.midiout, self.portname_out = open_midioutput(self.output_port)
+        self.midiout, self.portname_out = open_midioutput('fighter)
 
         # initializes the callback
         self.midiin.set_callback(self.event)
