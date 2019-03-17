@@ -15,10 +15,11 @@ class class_launchpad:
         for i in range(130):
             self.midiout.send_message([144, i, 0])
         for i in range(130):
-            time.sleep(0.005)
+            time.sleep(0.1)
             self.midiout.send_message([144, i, i])
         time.sleep(0.1)
         for i in range(130):
+            time.sleep(0.1)
             self.midiout.send_message([144, i, 0])
 
         # set callback
@@ -120,11 +121,11 @@ class class_fighter:
 
         # initialize midi input
         self.input_port = in_port
-        self.midiin, self.portname_in = open_midiinput('fighter')
+        self.midiin, self.portname_in = open_midiinput('Fighter')
 
         # initialize midi output
         self.output_port = out_port
-        self.midiout, self.portname_out = open_midioutput('fighter)
+        self.midiout, self.portname_out = open_midioutput('Fighter')
 
         # initializes the callback
         self.midiin.set_callback(self.event)
