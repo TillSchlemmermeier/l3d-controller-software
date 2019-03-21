@@ -10,6 +10,11 @@ from generators.g_wave import *
 from generators.g_rising_square import *
 from generators.g_planes_falling import *
 from generators.g_growingface import *
+from generators.g_snake import *
+from generators.sound_sphere import *
+from generators.soundcube import *
+from generators.soundrandom import *
+from generators.sphere import *
 from effects.e_blank import *
 from effects.e_rainbow import *
 
@@ -29,6 +34,11 @@ generators.append(g_wave)
 generartots.append(g_rising_square)
 generators.append(g_planes_falling)
 generators.append(g_growingface)
+generators.append(g_snake)
+generators.append(g_sound_sphere)
+generators.append(soundcube)
+generators.append(soundrandom)
+generators.append(sphere)
 
 effects = []
 
