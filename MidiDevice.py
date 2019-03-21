@@ -11,15 +11,8 @@ class class_launchpad:
         self.midiin, self.portname_in = open_midiinput(port = 'Launchpad')
         self.midiout, self.portname_out = open_midioutput(port = 'Launchpad')
         
-        # some fancy animation
+        # turn leds off
         for i in range(130):
-            self.midiout.send_message([144, i, 0])
-        for i in range(130):
-            time.sleep(0.1)
-            self.midiout.send_message([144, i, i])
-        time.sleep(0.1)
-        for i in range(130):
-            time.sleep(0.1)
             self.midiout.send_message([144, i, 0])
 
         # set callback
@@ -27,15 +20,16 @@ class class_launchpad:
         # array for state switching
         # states are preset, generator, effect1, effect2, effect3 for 
         # each channel, which makes 20 states + idle state
-        self.state = 0
-        self.sendstate()
+        self.state = 0	 # this is the idle state
+        self.sendstate() # send the current state to launchpad
 
     def event(self, event, data=None):
         """Call gets midi message and calls the mapping routine"""
-        # gets message
+        # gets message from midi input
         message, deltatime = event
 
         # switch channels on
+        # this are the round buttons at the top
         if message[0] == 176:
             if message[1]   == 104 and message[2] == 127:
                 global_parameter[40] = int(not global_parameter[40])
@@ -56,22 +50,26 @@ class class_launchpad:
                     self.state = key
             else:
                 # if not idle, we can go back to idle
+                # this is to close the selection matrix
                 if message[1] == 0:
                     self.state = 0
 
-        # send colors
+        # send colors and state at the end
         self.sendstate()
 
     def sendstate(self):
         """send states and colors to midi device"""
+        # first, turn all leds off
         for i in range(130):
             self.midiout.send_message([144, i, 0])
                     
+	# send the state of the channel switches (on/off)
         self.midiout.send_message([176, 104, global_parameter[ 40]*127])
         self.midiout.send_message([176, 105, global_parameter[ 70]*127])
         self.midiout.send_message([176, 106, global_parameter[100]*127])
         self.midiout.send_message([176, 107, global_parameter[130]*127])
         
+        # if idle state, we can open the selection menu
         if self.state == 0:
             for i in range(4):
                 self.midiout.send_message([144, i, 3])
@@ -101,7 +99,10 @@ class class_launchpad:
             self.midiout.send_message([144, 0, 1])
                            
     def convert(self, number):
-        """converts numbers to correct range"""
+        """
+        converts numbers to correct range
+        this is not used at the moment...
+        """
         correction = int(number/8)*8 / 2.0
         return number - correction
 
@@ -262,96 +263,3 @@ class class_fighter:
                 self.current_state[3] = 2
             elif key == 15 and value == 0:
                 self.current_state[3] = 3
-
-
-
-'''
-class MidiInputHandler: #(object):
-    def __init__(self, port):
-        """Initializes the input handler,
-        which gets the midi input via callback and
-        passes it to the global variable
-        """
-        self.port = port                # what is this for?
-        self._wallclock = time.time()   # we also don't need this
-        self.mapping = GlobalParameterHandler()
-
-    def __call__(self, event, data=None):
-        """Call gets midi message and calls the mapping routine"""
-        message, deltatime = event
-        self._wallclock += deltatime
-
-        # figure out the mapping
-        key = self.mapping.setParameters(message[0], message[1], message[2])
-        # if there is no state-switch, write the value into
-        # the global variable - all values go from 0 - 1
-        if key != []:
-            global_parameter[key[0]] = key[1]/127.0
-
-
-
-
-class MidiDevice:
-    """Initializes the MIDI input and enables communication with the
-    MIDI Device
-    """
-    def __init__(self, in_port, out_port):
-        print("Initialize MIDI CONTROL")
-#        global input_dict
-        self.input_port = in_port
-        self.midiin, self.portname_in = open_midiinput(self.input_port)
-        self.Handler = MidiInputHandler(self.portname_in)
-        self.midiin.set_callback(self.Handler)
-
-        self.output_port = out_port
-        self.midiout, self.portname_out = open_midioutput(self.output_port)
-
-        self.color = 0x01
-
-        self.cc0 = CONTROL_CHANGE | 0x00
-        self.cc1 = CONTROL_CHANGE | 0x01
-        self.cc2 = CONTROL_CHANGE | 0x02
-        self.cc3 = CONTROL_CHANGE | 0x03
-        self.cc4 = CONTROL_CHANGE | 0x04
-        self.cc5 = CONTROL_CHANGE | 0x05
-        self.cc6 = CONTROL_CHANGE | 0x06
-        self.cc8 = CONTROL_CHANGE | 0x08
-        self.makeRingBlink(0x00)
-        self.makeRingBlink(0x04)
-        self.makeRingBlink(0x08)
-        self.makeRingBlink(0x0B)
-        self.makeRainbow(0x01)
-        self.makeLedBlink(0x05)
-        self.stopBlink(0x0B)
-        #time.sleep(1)
-        #self.midiout.send_message([0xB2,0x00,0x3C])
-        #time.sleep(1)
-        #self.midiout.send_message([0xB3,0x00,0x04])
-
-
-    def logMidi(self):
-        print("Midi Channel :"+str(MidiChannelIn)+" | Midi Key :"+str(MidiKeyIn)+" | Midi Value : "+str(MidiValueIn))
-        self.setRGB(0x03,self.color)
-        self.color+=0x01
-        root.after(500, test.logMidi)
-
-#    def read(self):
-#        return input_dict
-
-    def send(self,Key,Value):
-        self.midiout.send_message([self.cc0,Key,Value])
-
-    def makeRingBlink(self,Key):
-        self.midiout.send_message([0xB2,Key,0x3C])
-        self.midiout.send_message([0xB3,Key,0x04])
-    def makeRainbow(self,Key):
-        self.midiout.send_message([0xB2,Key,0x7F])
-    def makeLedBlink(self,Key):
-        self.midiout.send_message([0xB2,Key,0x0C])
-    def stopBlink(self,Key):
-        self.midiout.send_message([0xB2,Key,0x00])
-    def setRGB(self,Key,Color):
-        self.midiout.send_message([0xB1,Key,Color])
-
-
-'''
