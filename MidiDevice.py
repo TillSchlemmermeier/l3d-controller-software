@@ -5,6 +5,42 @@ from rtmidi.midiutil import open_midiinput,open_midioutput, open_midiport
 from global_parameter_module import global_parameter
 import numpy as np
 
+class class_akai:
+    def __init__(self):
+        # open midi input
+        self.midiin, self.portname_in = open_midiinput(port = 'MIDI Mix')
+
+        # set callback
+        self.midiin.set_callback(self.event)
+
+    def event(self, event, data=None):
+        """Call gets midi message and calls the mapping routine"""
+        message, deltatime = event
+        print(message)
+        # faders are 19, 23, 27, 31, 49, 53, 57, 61,62
+
+        # global brightness
+        if message[1] = 61:
+            global_parameter[1] = message[2]/127.0
+        # channel brightness
+        elif message[1] = 49:
+            global_parameter[41] = message[2]/127.0
+        elif message[1] = 53:
+            global_parameter[71] = message[2]/127.0
+        elif message[1] = 57:
+            global_parameter[101] = message[2]/127.0
+        elif message[1] = 61:
+            global_parameter[131] = message[2]/127.0
+        # channel fade
+        elif message[1] = 19:
+            global_parameter[42] = message[2]/127.0
+        elif message[1] = 23:
+            global_parameter[72] = message[2]/127.0
+        elif message[1] = 27:
+            global_parameter[102] = message[2]/127.0
+        elif message[1] = 31:
+            global_parameter[132] = message[2]/127.0
+
 class class_launchpad:
     def __init__(self):
         # open midi input
@@ -59,7 +95,7 @@ class class_launchpad:
                         print('no stored presets...')
                     else:
                         index = 19 + self.state[0] + 5* self.state[1]
-                        global_parameter[index] = int(self.convert(message[1])-1))
+                        global_parameter[index] = int(self.convert(message[1])-1)
 
         # send colors and state at the end
         self.sendstate()
