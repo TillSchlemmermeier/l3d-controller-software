@@ -5,9 +5,9 @@ import pyaudio
 from scipy.fftpack import fft, fftfreq
 import scipy
 import struct
+from generators.g_genhsphere import gen_hsphere
 
-
-class g_centralglow():
+class g_sound_grow():
     def __init__(self):
         self.amount = 1.0
         # sound2light stuff
@@ -35,13 +35,13 @@ class g_centralglow():
             )
 
         self.threshold = 0.5
-
         self.size = 1
+        self.state = 0
 
     def control(self, amount, threshold, channel):
-        self.amount = amount*10
-        self.threshold = threshold*2
-        self.channel = int(channel*4)
+        self.amount = amount*15
+        self.threshold = threshold
+        self.channel = int(channel*6)
 
     def label(self):
         return ['amount',round(self.amount,2),
@@ -51,13 +51,20 @@ class g_centralglow():
     def generate(self, step, world):
         tempworld = np.zeros([10, 10, 10])
 
-        size = self.amount*self.update_line()[self.channel]-self.threshold
-        size = np.clip(size, 0, 10)
+        size = self.amount*(1+self.update_line()[self.channel]-self.threshold)
+        size = round(np.clip(size, 0, 10),2)
 
-
-        world[0, :, :, :] = gen_central_glow(size)
-        world[1, :, :, :] = world[0, :, :, :]
-        world[2, :, :, :] = world[0, :, :, :]
+        if size > 2 and self.state == 0:
+            self.state = 0.5
+        elif self.state > 10:
+            self.state = 0
+        elif self.state > 0 and self.state <=10:
+            self.state += 0.75
+            world[0, :, :, :] = gen_hsphere(self.state, 4.5, 4.5, 4.5)
+            world[1, :, :, :] = world[0, :, :, :]
+            world[2, :, :, :] = world[0, :, :, :]
+        else:
+            pass
 
         return np.clip(world, 0, 1)
 
