@@ -24,7 +24,11 @@ def midi():
     Midi Thread
     '''
     print('...starting midi thread')
+<<<<<<< HEAD
     # we should do something to detect ports! -> YES we should :)
+=======
+    # we should do something to detect ports!
+>>>>>>> 1c7786e15bf8006f3398bc04a355844bfb2170df
     midifighter = class_fighter(in_port = 2,out_port = 2)
 
 
