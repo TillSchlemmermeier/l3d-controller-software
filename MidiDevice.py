@@ -5,12 +5,48 @@ from rtmidi.midiutil import open_midiinput,open_midioutput, open_midiport
 from global_parameter_module import global_parameter
 import numpy as np
 
+class class_akai:
+    def __init__(self):
+        # open midi input
+        self.midiin, self.portname_in = open_midiinput(port = 'MIDI Mix')
+
+        # set callback
+        self.midiin.set_callback(self.event)
+
+    def event(self, event, data=None):
+        """Call gets midi message and calls the mapping routine"""
+        message, deltatime = event
+        print(message)
+        # faders are 19, 23, 27, 31, 49, 53, 57, 61,62
+
+        # global brightness
+        if message[1] = 61:
+            global_parameter[1] = message[2]/127.0
+        # channel brightness
+        elif message[1] = 49:
+            global_parameter[41] = message[2]/127.0
+        elif message[1] = 53:
+            global_parameter[71] = message[2]/127.0
+        elif message[1] = 57:
+            global_parameter[101] = message[2]/127.0
+        elif message[1] = 61:
+            global_parameter[131] = message[2]/127.0
+        # channel fade
+        elif message[1] = 19:
+            global_parameter[42] = message[2]/127.0
+        elif message[1] = 23:
+            global_parameter[72] = message[2]/127.0
+        elif message[1] = 27:
+            global_parameter[102] = message[2]/127.0
+        elif message[1] = 31:
+            global_parameter[132] = message[2]/127.0
+
 class class_launchpad:
     def __init__(self):
         # open midi input
         self.midiin, self.portname_in = open_midiinput(port = 'Launchpad')
         self.midiout, self.portname_out = open_midioutput(port = 'Launchpad')
-        
+
         # turn leds off
         for i in range(130):
             self.midiout.send_message([144, i, 0])
@@ -18,7 +54,7 @@ class class_launchpad:
         # set callback
         self.midiin.set_callback(self.event)
         # array for state switching
-        # states are preset, generator, effect1, effect2, effect3 for 
+        # states are preset, generator, effect1, effect2, effect3 for
         # each channel, which makes 20 states + idle state
         self.state = 0	 # this is the idle state
         self.sendstate() # send the current state to launchpad
@@ -53,6 +89,13 @@ class class_launchpad:
                 # this is to close the selection matrix
                 if message[1] == 0:
                     self.state = 0
+                else:
+                    # check for presets
+                    if self.state[0] == 0:
+                        print('no stored presets...')
+                    else:
+                        index = 19 + self.state[0] + 5* self.state[1]
+                        global_parameter[index] = int(self.convert(message[1])-1)
 
         # send colors and state at the end
         self.sendstate()
@@ -62,13 +105,13 @@ class class_launchpad:
         # first, turn all leds off
         for i in range(130):
             self.midiout.send_message([144, i, 0])
-                    
+
 	# send the state of the channel switches (on/off)
         self.midiout.send_message([176, 104, global_parameter[ 40]*127])
         self.midiout.send_message([176, 105, global_parameter[ 70]*127])
         self.midiout.send_message([176, 106, global_parameter[100]*127])
         self.midiout.send_message([176, 107, global_parameter[130]*127])
-        
+
         # if idle state, we can open the selection menu
         if self.state == 0:
             for i in range(4):
@@ -91,13 +134,13 @@ class class_launchpad:
                 color =  51
             else:
                 color = 0
-            
+
             # send color
             for i in range(130):
                 self.midiout.send_message([144, i, color])
-            
+
             self.midiout.send_message([144, 0, 1])
-                           
+
     def convert(self, number):
         """
         converts numbers to correct range
