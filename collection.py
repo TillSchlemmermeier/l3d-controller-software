@@ -7,6 +7,9 @@ from generators.g_wavepattern import *
 from generators.g_squares import *
 from generators.g_trees import *
 from generators.g_wave import *
+from generators.g_rising_square import *
+from generators.g_planes_falling import *
+from generators.g_growingface import *
 from effects.e_blank import *
 from effects.e_rainbow import *
 
@@ -23,6 +26,9 @@ generators.append(g_wavepattern)
 generators.append(g_squares)
 generators.append(g_trees)
 generators.append(g_wave)
+generartots.append(g_rising_square)
+generators.append(g_planes_falling)
+generators.append(g_growingface)
 
 effects = []
 
