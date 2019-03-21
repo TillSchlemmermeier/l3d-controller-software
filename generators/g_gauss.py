@@ -1,7 +1,7 @@
 # modules
 import numpy as np
 from scipy.stats import multivariate_normal
-from generators.gen_gauss import gen_gauss
+#from generators.gen_gauss import gen_gauss
 
 # fortran routine is in g_sphere_f.f90
 

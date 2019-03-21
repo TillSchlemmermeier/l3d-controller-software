@@ -10,6 +10,9 @@ world2vox_fortran: world2vox.f90
 	@f2py3 --quiet -c -m world2vox_fortran world2vox_revis.f90
 #	@f2py3 --quiet -c -m world2vox_fortran world2vox.f90
 
+g_genhsphere:
+	@f2py3 -c -m generators/g_genhsphere generators/g_growing_sphere_f.f90
+
 clean:
 	@echo 'Cleaning up...'
 	$(RM) *.so
@@ -17,4 +20,4 @@ clean:
 	$(RM) generators/*.so
 	$(RM) generators/*.pyc
 	$(RM) effects/*.so
-	$(RM) effects/*.pyc	
+	$(RM) effects/*.pyc
