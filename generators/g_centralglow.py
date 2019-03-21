@@ -43,10 +43,6 @@ class g_centralglow():
         self.threshold = threshold
         self.channel = int(channel*4)
 
-#        self.thres_list = self.thres_list*self.thres_factor
-        # new_list = [x+1 for x in my_list]
-#        self.thres_list = [x+self.thres_factor for x in self.thres_list]
-
     def label(self):
         return ['amount',round(self.amount,2),
                 'threshold',round(self.threshold,2),
@@ -58,7 +54,7 @@ class g_centralglow():
         size = 1+self.amount*(self.update_line()[self.channel]-self.threshold)
         size = np.clip(size, 1, 8)
 
-        world[0, :, :, :] = gen_central_glow(size)
+        world[0, :, :, :] = gen_central_glow(self.amount)
         world[1, :, :, :] = world[0, :, :, :]
         world[2, :, :, :] = world[0, :, :, :]
 

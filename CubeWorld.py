@@ -48,6 +48,7 @@ from generators.g_rising_square import g_rising_square
 from generators.g_soundrandom import g_soundrandom
 from generators.g_inandout import g_inandout
 from generators.g_centralglow import g_centralglow
+from generators.g_orbiter_big import g_orbiter_big
 
 # vox cube_generators
 from generators.g_obliqueplane import g_obliqueplane
@@ -55,6 +56,7 @@ from generators.g_obliqueplaneXYZ import g_obliqueplaneXYZ
 from generators.g_falling import g_falling
 from generators.g_smiley import g_smiley
 from generators.g_torusrotation import g_torusrotation
+from generators.g_centralglow import g_centralglow
 
 #load effect modules
 from effects.e_blank import e_blank

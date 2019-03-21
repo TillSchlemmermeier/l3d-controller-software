@@ -15,8 +15,8 @@ subroutine gen_central_glow(world, scale)
   do x=1, 10
     do y=1, 10
       do z=1, 10
-        tempvalue = sqrt(real((x-5)**2+(y-5)**2+(z-5)**2))
-        world(x,y,z) = scale * 1/(tempvalue+0.0001)
+        tempvalue = sqrt(real((x-5.5)**2+(y-5.5)**2+(z-5.5)**2))
+        world(x,y,z) = scale * 1/(tempvalue+0.0001)**2
       end do
     end do
   end do
