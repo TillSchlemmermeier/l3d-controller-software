@@ -5,7 +5,7 @@ import time
 from rendering_engine import rendering_engine
 # import global variable
 from global_parameter_module import global_parameter
-
+from copy import deepcopy
 import sys
 import tempfile     # what is this?
 import subprocess   # obsolete?
@@ -26,7 +26,7 @@ def midi():
     print('...starting midi thread')
     # we should do something to detect ports! -> YES we should :)
     midifighter = class_fighter(in_port = 2,out_port = 2)
-    launchpad = class_launchpad(in_port=3,out_port= 3)
+    #launchpad = class_launchpad(in_port=3,out_port= 3)
 
 
 def rendering(pause_time = 2, log = True):
@@ -270,13 +270,23 @@ class MainWindow(QtWidgets.QMainWindow):
         self.stringArray_ch4.append(QtWidgets.QLabel("Parameter 3 : 110"))
         self.stringArray_ch4.append(QtWidgets.QLabel("Parameter 4 : 110"))
 
-
         for item in self.stringArray_ch4:
             item.setStyleSheet("color: black; font: 9px;");
             fi_ch4_CGL.addWidget(item)
-#
 
+        #  copy params to check for changes
+        self.copied_params = deepcopy(global_parameter)
+        self.active_param = -1
 
+        # dict for converting global parameter to button
+        self.conv_dict = {2: 41, 3: 42, 4: 43,
+                          5: 45, 6: 46, 7: 47,
+                          8: 48, 10: 50,
+                          11: 51, 12: 52, 13: 53,
+                          15: 55, 16: 56,
+                          17: 57, 18: 58,
+                          20: 60, 21: 61, 22: 62,
+                          23: 63}
 
         self.widget = QtWidgets.QWidget(self)
         self.setCentralWidget(self.widget)
@@ -289,9 +299,8 @@ class MainWindow(QtWidgets.QMainWindow):
         # what do we need the timer for? -> to execute functions periodically in the GUI e.g. updating Strings
         timer = QtCore.QTimer(self)
         timer.timeout.connect(self.update_fighter_values)
-        timer.setInterval(20)
+        timer.setInterval(2)
         timer.start()
-
 
         # start threads
         self.midi_thread.start()
@@ -388,6 +397,93 @@ class MainWindow(QtWidgets.QMainWindow):
         self.stringArray_ch4[21].setText("Parameter 2 : "+str(global_parameter[151]))
         self.stringArray_ch4[22].setText("Parameter 3 : "+str(global_parameter[152]))
         self.stringArray_ch4[23].setText("Parameter 4 : "+str(global_parameter[153]))
+
+        # check for last changed value
+        index_changed = np.where((self.copied_params == global_parameter) == False)[0]
+
+        # lets just  do it for the first channel
+        for dings in self.conv_dict.items():
+            if dings[1] == index_changed:
+                self.active_param = dings[0]
+
+        # write all back to normal
+        '''
+        if index_changed in range(40,63):
+            for item in self.stringArray_ch1:
+                item.setStyleSheet("color: black; font: 9px;")
+
+        if index_changed in range(70,93):
+            for item in self.stringArray_ch2:
+                item.setStyleSheet("color: black; font: 9px;")
+
+        if index_changed in range(100,123):
+            for item in self.stringArray_ch3:
+                item.setStyleSheet("color: black; font: 9px;")
+
+        if index_changed in range(130,153):
+            for item in self.stringArray_ch4:
+                item.setStyleSheet("color: black; font: 9px;")
+                '''
+
+        # areas for generators, effect1, ...
+        area  = [[5,6,7,8],
+                 [10,11,12,13],
+                 [15,16,17,18],
+                 [20,21,22,23]]
+
+        # colors for each area
+        color = ['blue', 'green', 'orange', 'pink']
+
+        # loop through all fields and set colors
+        last_val_ch1 = 0
+        last_val_ch2 = 0
+        last_val_ch3 = 0
+        last_val_ch4 = 0
+        if self.active_param != -1:
+            for ar,c in zip(area,color):
+                if self.active_param in ar:
+                    for a in ar:
+
+                        if index_changed in range(40,63):
+                            self.stringArray_ch1[a].setStyleSheet("color: black; font: 12px; background-color: "+c)
+
+                        if index_changed in range(70,93):
+                            self.stringArray_ch2[a].setStyleSheet("color: black; font: 12px; background-color: "+c)
+
+                        if index_changed in range(100,123):
+                            self.stringArray_ch3[a].setStyleSheet("color: black; font: 12px; background-color: "+c)
+
+                        if index_changed in range(130,153):
+                            self.stringArray_ch4[a].setStyleSheet("color: black; font: 12px; background-color: "+c)
+
+#                        self.stringArray_ch2[a].setStyleSheet("color: black; font: 12px; background-color: "+c)
+#                        self.stringArray_ch3[a].setStyleSheet("color: black; font: 12px; background-color: "+c)
+#                        self.stringArray_ch4[a].setStyleSheet("color: black; font: 12px; background-color: "+c)
+                #self.stringArray_ch1[6].setStyleSheet("color: black; font: 12px; background-color: blue")
+                #self.stringArray_ch1[7].setStyleSheet("color: black; font: 12px; background-color: blue")
+                #self.stringArray_ch1[8].setStyleSheet("color: black; font: 12px; background-color: blue")
+            '''
+            if(self.active_param in (10,11,12,13)):
+                self.stringArray_ch1[10].setStyleSheet("color: black; font: 12px; background-color: green")
+                self.stringArray_ch1[11].setStyleSheet("color: black; font: 12px; background-color: green")
+                self.stringArray_ch1[12].setStyleSheet("color: black; font: 12px; background-color: green")
+                self.stringArray_ch1[13].setStyleSheet("color: black; font: 12px; background-color: green")
+            if(self.active_param in (15,16,17,18)):
+                self.stringArray_ch1[15].setStyleSheet("color: black; font: 12px; background-color: orange")
+                self.stringArray_ch1[16].setStyleSheet("color: black; font: 12px; background-color: orange")
+                self.stringArray_ch1[17].setStyleSheet("color: black; font: 12px; background-color: orange")
+                self.stringArray_ch1[18].setStyleSheet("color: black; font: 12px; background-color: orange")
+            if(self.active_param in (20,21,22,23)):
+                self.stringArray_ch1[20].setStyleSheet("color: black; font: 12px; background-color: pink")
+                self.stringArray_ch1[21].setStyleSheet("color: black; font: 12px; background-color: pink")
+                self.stringArray_ch1[22].setStyleSheet("color: black; font: 12px; background-color: pink")
+                self.stringArray_ch1[23].setStyleSheet("color: black; font: 12px; background-color: pink")
+            '''
+        #for item in self.stringArray_ch4:
+        #    item.setStyleSheet("color: black; font: 9px;");
+
+        self.copied_params = deepcopy(global_parameter)
+
 
 
 
