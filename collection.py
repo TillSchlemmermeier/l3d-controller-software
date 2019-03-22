@@ -29,6 +29,10 @@ from generators.g_inandout import *
 from generators.g_growing_corner import *
 from generators.g_falling import *
 from generators.g_drop import *
+from generators.g_darksphere import *
+from generators.g_cut import *
+from generators.g_cube import *
+from generators.g_cube_edges import *
 from effects.e_blank import *
 from effects.e_rainbow import *
 
@@ -67,6 +71,10 @@ generators.append(g_inandout)
 generators.append(g_growing_corner)
 generators.append(g_falling)
 generators.append(g_drop)
+generators.append(g_darksphere)
+generators.append(g_cut)
+generators.append(g_cube)
+generators.append(g_cube_edges)
 
 effects = []
 
