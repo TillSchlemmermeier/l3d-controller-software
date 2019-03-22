@@ -25,6 +25,10 @@ from generators.g_orbiter2 import *
 from generators.g_orbiter3 import *
 from generators.g_pyramid import *
 from generators.g_pyramid_upsidedown import *
+from generators.g_inandout import *
+from generators.g_growing_corner import *
+from generators.g_falling import *
+from generators.g_drop import *
 from effects.e_blank import *
 from effects.e_rainbow import *
 
@@ -59,6 +63,10 @@ generators.append(g_orbiter2)
 generators.append(g_orbiter3)
 generators.append(g_pyramid)
 generators.append(g_pyramid_upsidedown)
+generators.append(g_inandout)
+generators.append(g_growing_corner)
+generators.append(g_falling)
+generators.append(g_drop)
 
 effects = []
 
