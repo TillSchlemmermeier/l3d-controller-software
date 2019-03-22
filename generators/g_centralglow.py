@@ -54,8 +54,7 @@ class g_centralglow():
         size = self.amount*self.update_line()[self.channel]-self.threshold
         size = np.clip(size, 0, 10)
 
-
-        world[0, :, :, :] = gen_central_glow(size)
+        world[0, :, :, :] = gen_central_glow(size,5.5,5.5,5.5)
         world[1, :, :, :] = world[0, :, :, :]
         world[2, :, :, :] = world[0, :, :, :]
 

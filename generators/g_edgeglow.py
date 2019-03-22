@@ -7,7 +7,7 @@ import scipy
 import struct
 
 
-class g_centralglow():
+class g_edgeglow():
     def __init__(self):
         self.amount = 1.0
         # sound2light stuff
@@ -54,8 +54,16 @@ class g_centralglow():
         size = self.amount*self.update_line()[self.channel]-self.threshold
         size = np.clip(size, 0, 10)
 
+        temp1 = gen_central_glow(size,1,1,1)-0.1
+        temp2 = gen_central_glow(size,1,1,10)-0.1
+        temp3 = gen_central_glow(size,1,10,1)-0.1
+        temp4 = gen_central_glow(size,10,1,1)-0.1
+        temp5 = gen_central_glow(size,1,10,10)-0.1
+        temp6 = gen_central_glow(size,10,1,10)-0.1
+        temp7 = gen_central_glow(size,10,10,1)-0.1
+        temp8 = gen_central_glow(size,10,10,10)-0.1
 
-        world[0, :, :, :] = gen_central_glow(size)
+        world[0, :, :, :] = 0.1*(temp1+temp2+temp3+temp4+temp5+temp6+temp7+temp8)
         world[1, :, :, :] = world[0, :, :, :]
         world[2, :, :, :] = world[0, :, :, :]
 

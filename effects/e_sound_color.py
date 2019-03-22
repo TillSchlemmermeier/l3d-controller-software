@@ -13,18 +13,18 @@ class e_sound_color():
 
     def __init__(self):
 
-        self.max = 0.5
-        self.min = 0.5
-
-        self.c1 = 0.0
-        self.distance = 0.0
-
-        self.amount = 1
-
+        # sound2light stuff
         self.sample_rate = 44100
-        self.buffer_size = 2**10
+        self.buffer_size = 2**11
         self.thres_factor = 0
         self.channel = 1
+
+        pa = pyaudio.PyAudio()
+        chosen_device_index = -1
+        for x in range(0,pa.get_device_count()):
+            info = pa.get_device_info_by_index(x)
+            if info["name"] == "pulse":
+                chosen_device_index = info["index"]
 
         p = pyaudio.PyAudio()
 
@@ -39,12 +39,14 @@ class e_sound_color():
 
         self.threshold = 0.5
 
+        self.size = 1
+
 
     def control(self, amount, threshold, channel):
         self.amount = amount
         self.threshold = threshold
-        self.channel = int(channel*4)
-
+#        self.channel = int(channel*4)
+        self.base_color = channel
 #        self.thres_list = self.thres_list*self.thres_factor
         # new_list = [x+1 for x in my_list]
 #        self.thres_list = [x+self.thres_factor for x in self.thres_list]
@@ -56,26 +58,15 @@ class e_sound_color():
 
     def generate(self, step, world):
 
-        color_ind = self.update_line()
-
-        color = hsv_to_rgb(np.clip(color_ind[self.channel]*self.amount, 0, 1), 1.0, 1.0)
-
-        '''
-        if color_ind[self.channel] > self.max:
-            self.max = color_ind[self.channel]
-
-        if color_ind[self.channel] < self.min:
-            self.min = color_ind[self.channel]
-
-        if step % 20 == 0:
-            print(self.min, self.max)
-        '''
-
+        soundvalue = self.update_line()[2]+self.threshold
+        color = hsv_to_rgb(soundvalue*self.amount+self.base_color, 0, 1), 1.0, 1.0)
+        
         world[0,:,:,:] *= color[0]
         world[1,:,:,:] *= color[1]
         world[2,:,:,:] *= color[2]
 
         return np.clip(world,0,1)
+
 
     def get_fft(self, data):
         FFT = fft(data)                                # Returns an array of complex numbers
@@ -107,7 +98,7 @@ class e_sound_color():
         yy = yy[:int(len(yy)/2)] # Discard half of the samples, as they are mirrored
 
         # now do some threshold detection
-        for i in range(len(yy)):
-            yy[i] = self.control_threshold(yy[i], self.threshold)
+        # for i in range(len(yy)):
+        #    yy[i] = self.control_threshold(yy[i], self.threshold)
 
         return np.round(np.clip(yy,0,1),2)

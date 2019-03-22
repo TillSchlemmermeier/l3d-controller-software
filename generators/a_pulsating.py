@@ -37,7 +37,7 @@ class a_pulsating():
         size = np.abs(np.sin(self.counter / self.period * np.pi))*6
         brightness  = np.sin(self.counter / self.period * np.pi)**4
 
-        world[0, :, :, :] = np.clip(gen_hsphere(size, 5.5, 5.5, 5.5),0,1) * brightness
+        world[0, :, :, :] = np.clip(gen_hsphere(size, 4.5, 4.5, 4.5),0,1) * brightness
         world[1:, :, :, :] = world[0, :, :, :]
         world[2:, :, :, :] = world[0, :, :, :]
 
@@ -52,7 +52,7 @@ class a_pulsating():
         if self.counter > self.start_strobo*self.period:
             size = 6
             if self.counter % 2 == 0:
-                world[0, :, : ,:] = gen_hsphere(size, 5.5, 5.5, 5.5) * self.strobo_bright**6
+                world[0, :, : ,:] = gen_hsphere(size, 4.5, 4.5, 4.5) * self.strobo_bright**6
                 world[1, :, :, :] = world[0, :, :, :]
                 world[2, :, :, :] = world[0, :, :, :]
 

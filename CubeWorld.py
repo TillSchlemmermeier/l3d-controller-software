@@ -50,6 +50,7 @@ from generators.g_inandout import g_inandout
 from generators.g_centralglow import g_centralglow
 from generators.g_orbiter_big import g_orbiter_big
 from generators.g_sound_grow import g_sound_grow
+from generators.g_edgeglow import g_edgeglow
 
 # vox cube_generators
 from generators.g_obliqueplane import g_obliqueplane

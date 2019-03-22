@@ -14,7 +14,7 @@ class g_orbiter_big():
     - angle z osc
 
     '''
-# zentrum falsch
+
     def __init__(self):
         self.distance = 4
         self.theta = 0.1
