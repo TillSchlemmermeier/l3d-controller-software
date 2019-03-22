@@ -20,6 +20,11 @@ from generators.g_rotate_plane import *
 from generators.g_randomlines import *
 from generators.g_randomcross import *
 from generators.g_rain import *
+from generators.g_orbiter import *
+from generators.g_orbiter2 import *
+from generators.g_orbiter3 import *
+from generators.g_pyramid import *
+from generators.g_pyramid_upsidedown import *
 from effects.e_blank import *
 from effects.e_rainbow import *
 
@@ -49,6 +54,11 @@ generators.append(g_rotate_plane)
 generators.append(g_randomlines)
 generators.append(g_randomcross)
 generators.append(g_rain)
+generators.append(g_orbiter)
+generators.append(g_orbiter2)
+generators.append(g_orbiter3)
+generators.append(g_pyramid)
+generators.append(g_pyramid_upsidedown)
 
 effects = []
 
