@@ -33,6 +33,11 @@ from generators.g_darksphere import *
 from generators.g_cut import *
 from generators.g_cube import *
 from generators.g_cube_edges import *
+from generators.g_corner import *
+from generators.g_corner_grow import *
+from generators.g_columns import *
+from generators.g_circles import *
+from generators.g_centralglow import *
 from effects.e_blank import *
 from effects.e_rainbow import *
 
@@ -75,6 +80,11 @@ generators.append(g_darksphere)
 generators.append(g_cut)
 generators.append(g_cube)
 generators.append(g_cube_edges)
+generators.append(g_corner)
+generators.append(g_corner_grow)
+generators.append(g_columns)
+generators.append(g_circles)
+generators.append(g_centralgrow)
 
 effects = []
 
