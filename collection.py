@@ -38,6 +38,13 @@ from generators.g_corner_grow import *
 from generators.g_columns import *
 from generators.g_circles import *
 from generators.g_centralglow import *
+from generators.a_lines import *
+from generators.a_multi_cube_edges import *
+from generators.a_pulsating import *
+from generators.a_orbbot import *
+from generators.a_random_cubes import *
+from generators.a_squares_cut import *
+from generators.a_testbot import *
 from effects.e_blank import *
 from effects.e_rainbow import *
 
@@ -85,6 +92,13 @@ generators.append(g_corner_grow)
 generators.append(g_columns)
 generators.append(g_circles)
 generators.append(g_centralgrow)
+generators.append(a_lines)
+generators.append(a_multi_cube_edges)
+generators.append(a_pulsating)
+generators.append(a_orbbot)
+generators.append(a_random_cubes)
+generators.append(a_squares_cut)
+generators.append(a_testbot)
 
 effects = []
 
