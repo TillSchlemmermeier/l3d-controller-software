@@ -11,10 +11,15 @@ from generators.g_rising_square import *
 from generators.g_planes_falling import *
 from generators.g_growingface import *
 from generators.g_snake import *
-from generators.sound_sphere import *
-from generators.soundcube import *
-from generators.soundrandom import *
-from generators.sphere import *
+from generators.g_sound_sphere import *
+from generators.g_soundcube import *
+from generators.g_soundrandom import *
+from generators.g_sphere import *
+from generators.g_shooting_star import *
+from generators.g_rotate_plane import *
+from generators.g_randomlines import *
+from generators.g_randomcross import *
+from generators.g_rain import *
 from effects.e_blank import *
 from effects.e_rainbow import *
 
@@ -36,9 +41,14 @@ generators.append(g_planes_falling)
 generators.append(g_growingface)
 generators.append(g_snake)
 generators.append(g_sound_sphere)
-generators.append(soundcube)
-generators.append(soundrandom)
-generators.append(sphere)
+generators.append(g_soundcube)
+generators.append(g_soundrandom)
+generators.append(g_sphere)
+generators.append(g_shooting_star)
+generators.append(g_rotate_plane)
+generators.append(g_randomlines)
+generators.append(g_randomcross)
+generators.append(g_rain)
 
 effects = []
 
