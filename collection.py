@@ -37,7 +37,7 @@ from generators.g_corner import *
 from generators.g_corner_grow import *
 from generators.g_columns import *
 from generators.g_circles import *
-from generators.g_centralglow import *
+#from generators.g_centralglow import *
 from generators.a_lines import *
 from generators.a_multi_cube_edges import *
 from generators.a_pulsating import *
@@ -61,7 +61,7 @@ generators.append(g_wavepattern)
 generators.append(g_squares)
 generators.append(g_trees)
 generators.append(g_wave)
-generartots.append(g_rising_square)
+generators.append(g_rising_square)
 generators.append(g_planes_falling)
 generators.append(g_growingface)
 generators.append(g_snake)
@@ -91,7 +91,7 @@ generators.append(g_corner)
 generators.append(g_corner_grow)
 generators.append(g_columns)
 generators.append(g_circles)
-generators.append(g_centralgrow)
+#generators.append(g_centralgrow)
 generators.append(a_lines)
 generators.append(a_multi_cube_edges)
 generators.append(a_pulsating)
