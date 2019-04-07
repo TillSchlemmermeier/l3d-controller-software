@@ -15,7 +15,6 @@ class g_gauss():
     def return_values(self):
         pass
 
-    #def generate(self, step, dumpworld):
     def __call__(self, args):
         self.sigma = args[0]*5+1
         self.amplitude = args[1]*50
