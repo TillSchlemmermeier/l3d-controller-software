@@ -75,6 +75,7 @@ from effects.e_prod_saturation import e_prod_saturation
 from effects.e_prod_hue import e_prod_hue
 from effects.e_bright_osci import e_bright_osci
 from effects.e_cut_cube import e_cut_cube
+from effetcs.e_remove_random import e_remove_random
 #from effects.e_sound_color import e_sound_color
 
 #from effects.e_blur import e_blur
