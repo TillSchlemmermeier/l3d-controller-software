@@ -100,6 +100,8 @@ class rendering_engine:
         Arduino
         """
         package = self.header + self.get_cubedata()
+
+#        print('on in package?', self.get_cubedata())
         if not self.debug:
             self.arduino.write(bytearray(package))
 
@@ -145,12 +147,13 @@ class rendering_engine:
         # as a workaround, i'm inserting a global parameter to control
         # the maximum brightness of each individual channel, so addings
         # things can actually incease the brightness a bit more
+
         channel_brightness = [np.clip(global_parameter[41], 0, global_parameter[3]),
                               np.clip(global_parameter[71], 0, global_parameter[3]),
                               np.clip(global_parameter[101], 0, global_parameter[3]),
                               np.clip(global_parameter[131], 0, global_parameter[3])]
 
-        channel_brightness = [i*1/255.0 for i in channel_brightness]
+#                                     channel_brightness = [i*1/255.0 for i in channel_brightness]
 
         # copy channels together
         self.cubeworld = global_parameter[2] * self.cubeworld +\
@@ -164,9 +167,9 @@ class rendering_engine:
 
     def get_cubedata(self):
         """get vox format from the internal stored world"""
-        list1 = world2vox(self.cubeworld[0, :, :, :])
-        list2 = world2vox(self.cubeworld[1, :, :, :])
-        list3 = world2vox(self.cubeworld[2, :, :, :])
+        list1 = world2vox(np.clip(self.cubeworld[0, :, :, :], 0, 1))
+        list2 = world2vox(np.clip(self.cubeworld[1, :, :, :], 0, 1))
+        list3 = world2vox(np.clip(self.cubeworld[2, :, :, :], 0, 1))
 
         # stack this lists for each color, so that we have RGB ordering for
         # each LED

@@ -33,6 +33,7 @@ class class_channel:
         renders frame
         '''
         world = self.generator(parameters[5:10])
+
         world = self.effect_1(world, parameters[10:15])
         world = self.effect_2(world, parameters[15:20])
         world = self.effect_3(world, parameters[20:25])

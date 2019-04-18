@@ -16,7 +16,7 @@ class class_akai:
     def event(self, event, data=None):
         """Call gets midi message and calls the mapping routine"""
         message, deltatime = event
-        print(message)
+#        print(message)
         # faders are 19, 23, 27, 31, 49, 53, 57, 61,62
 
         # global brightness

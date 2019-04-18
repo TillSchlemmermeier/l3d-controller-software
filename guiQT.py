@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+##!/usr/bin/python3
 import threading    # do we need this or is QT taking care of everything?
 import time
 # import rendering class
@@ -14,22 +14,31 @@ from PyQt5 import QtWidgets, QtGui, QtCore
 import numpy as np
 
 
-from MidiDevice import class_fighter
+from MidiDevice import class_fighter, class_akai
 #from PyQt5.QtCore import QObject,QThread, pyqtSigna
 #from mainwindow import Ui_MainWindow
 
 
-def midi():
+def midi_fighter():
     '''
     Midi Thread
     '''
     print('...starting midi thread')
     # we should do something to detect ports! -> YES we should :)
     midifighter = class_fighter(in_port = 2,out_port = 2)
-    #launchpad = class_launchpad(in_port=3,out_port= 3)
+    launchpad = class_akai()
+
+def midi_akai():
+    '''
+    Midi Thread
+    '''
+    print('...starting midi thread')
+    # we should do something to detect ports! -> YES we should :)
+    midifighter = class_fighter(in_port = 2,out_port = 2)
+    launchpad = class_akai()
 
 
-def rendering(pause_time = 2, log = True):
+def rendering(pause_time = 0.001, log = False):
     '''
     Rendering Thread
     '''
@@ -319,13 +328,13 @@ class MainWindow(QtWidgets.QMainWindow):
         self.widget.setLayout(self.main_CL)
 
         # initialize threads
-        self.midi_thread = threading.Thread(name='midi', target=midi)
+        self.midi_thread = threading.Thread(name='midi_fighter', target=midi_fighter)
         self.rendering_thread = threading.Thread(name='render', target=rendering)
 
         # what do we need the timer for? -> to execute functions periodically in the GUI e.g. updating Strings
         timer = QtCore.QTimer(self)
         timer.timeout.connect(self.update_fighter_values)
-        timer.setInterval(2)
+        timer.setInterval(0.1)
         timer.start()
 
         # start threads
@@ -339,6 +348,13 @@ class MainWindow(QtWidgets.QMainWindow):
         """Routine to start all threads
         """
         global_parameter[0] = 1
+        global_parameter[1] = 1
+        global_parameter[2] = 0.5
+        global_parameter[3] = 1.0
+        global_parameter[20] = 1
+        global_parameter[40] = 1
+        global_parameter[41] = 1
+
 
     def stop_Renderer(self):
         global_parameter[0] = 0
@@ -442,32 +458,32 @@ class MainWindow(QtWidgets.QMainWindow):
             if item_2[1] == index_changed:
                 self.active_param[1] = item_2[0]
 
-            if item_2[1] == index_changed:
+            if item_3[1] == index_changed:
                 self.active_param[2] = item_3[0]
 
-            if item_2[1] == index_changed:
+            if item_4[1] == index_changed:
                 self.active_param[3] = item_4[0]
 
         # write all back to normal
 
-        if index_changed in range(40,63):
+        if index_changed in range(40,64):
             for item in self.stringArray_ch1:
                 item.setStyleSheet("color: black; font: 9px;")
 
-        if index_changed in range(70,93):
+        if index_changed in range(70,94):
             for item in self.stringArray_ch2:
                 item.setStyleSheet("color: black; font: 9px;")
 
-        if index_changed in range(100,123):
+        if index_changed in range(100,124):
             for item in self.stringArray_ch3:
                 item.setStyleSheet("color: black; font: 9px;")
 
-        if index_changed in range(130,153):
+        if index_changed in range(130,154):
             for item in self.stringArray_ch4:
                 item.setStyleSheet("color: black; font: 9px;")
 
         # colors for each area
-        color = ['blue', 'green', 'orange', 'pink']
+        color = ['#0066cc', '#00cc00', '#ff9933', '#ff0066']
 
         # areas for generators, effect1, ...
         area = [[ 5, 6, 7, 8],
@@ -475,31 +491,28 @@ class MainWindow(QtWidgets.QMainWindow):
                 [15,16,17,18],
                 [20,21,22,23]]
         # loop through all fields and set colors
-        last_val_ch1 = 0
-        last_val_ch2 = 0
-        last_val_ch3 = 0
-        last_val_ch4 = 0
+
         if self.active_param != -1:
             for ar,c in zip(area,color):
                 if self.active_param[0] in ar:
                     for a in ar:
-                        if index_changed in range(40,63):
-                            self.stringArray_ch1[a].setStyleSheet("color: black; font: 12px; background-color: "+c)
+                        if index_changed in range(40,64):
+                            self.stringArray_ch1[a].setStyleSheet("color: black; font: 15px; background-color: "+c)
 
                 if self.active_param[1] in ar:
                     for a in ar:
-                        if index_changed in range(70,93):
-                            self.stringArray_ch2[a].setStyleSheet("color: black; font: 12px; background-color: "+c)
+                        if index_changed in range(70,94):
+                            self.stringArray_ch2[a].setStyleSheet("color: black; font: 15px; background-color: "+c)
 
                 if self.active_param[2] in ar:
                     for a in ar:
-                        if index_changed in range(100,123):
-                            self.stringArray_ch3[a].setStyleSheet("color: black; font: 12px; background-color: "+c)
+                        if index_changed in range(100,124):
+                            self.stringArray_ch3[a].setStyleSheet("color: black; font: 15px; background-color: "+c)
 
                 if self.active_param[3] in ar:
                     for a in ar:
-                        if index_changed in range(130,153):
-                            self.stringArray_ch4[a].setStyleSheet("color: black; font: 12px; background-color: "+c)
+                        if index_changed in range(130,154):
+                            self.stringArray_ch4[a].setStyleSheet("color: black; font: 15px; background-color: "+c)
 
 #                        self.stringArray_ch2[a].setStyleSheet("color: black; font: 12px; background-color: "+c)
 #                        self.stringArray_ch3[a].setStyleSheet("color: black; font: 12px; background-color: "+c)
