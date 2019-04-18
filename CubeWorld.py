@@ -51,7 +51,7 @@ from generators.g_centralglow import g_centralglow
 from generators.g_orbiter_big import g_orbiter_big
 from generators.g_sound_grow import g_sound_grow
 from generators.g_edgeglow import g_edgeglow
-from generators.g_spiral import g_spiral
+from generators.g_blackhole import g_blackhole
 
 # vox cube_generators
 from generators.g_obliqueplane import g_obliqueplane
@@ -60,6 +60,7 @@ from generators.g_falling import g_falling
 from generators.g_smiley import g_smiley
 from generators.g_torusrotation import g_torusrotation
 from generators.g_centralglow import g_centralglow
+from generators.g_rotating_cube import g_rotating_cube
 
 #load effect modules
 from effects.e_blank import e_blank
@@ -76,7 +77,7 @@ from effects.e_prod_saturation import e_prod_saturation
 from effects.e_prod_hue import e_prod_hue
 from effects.e_bright_osci import e_bright_osci
 from effects.e_cut_cube import e_cut_cube
-from effetcs.e_remove_random import e_remove_random
+from effects.e_remove_random import e_remove_random
 #from effects.e_sound_color import e_sound_color
 
 #from effects.e_blur import e_blur
