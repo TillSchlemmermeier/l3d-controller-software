@@ -276,10 +276,10 @@ class MainWindow(QtWidgets.QMainWindow):
 
         #  copy params to check for changes
         self.copied_params = deepcopy(global_parameter)
-        self.active_param = -1
+        self.active_param = [-1, -1, -1, -1]
 
         # dict for converting global parameter to button
-        self.conv_dict = {2: 41, 3: 42, 4: 43,
+        self.conv_dict1 = {2: 41, 3: 42, 4: 43,
                           5: 45, 6: 46, 7: 47,
                           8: 48, 10: 50,
                           11: 51, 12: 52, 13: 53,
@@ -287,6 +287,32 @@ class MainWindow(QtWidgets.QMainWindow):
                           17: 57, 18: 58,
                           20: 60, 21: 61, 22: 62,
                           23: 63}
+
+        self.conv_dict2 = {2: 71, 3: 72, 4: 73,
+                          5: 75, 6: 76, 7: 77,
+                          8: 78, 10: 80,
+                          11: 81, 12: 82, 13: 83,
+                          15: 85, 16: 86,
+                          17: 87, 18: 88,
+                          20: 90, 21: 91, 22: 92,
+                          23: 93}
+        self.conv_dict3 = {2: 101, 3: 102, 4: 103,
+                          5: 105, 6: 106, 7: 107,
+                          8: 108, 10: 110,
+                          11: 111, 12: 112, 13: 113,
+                          15: 115, 16: 116,
+                          17: 117, 18: 118,
+                          20: 120, 21: 121, 22: 122,
+                          23: 123}
+
+        self.conv_dict4 = {2: 131, 3: 132, 4: 133,
+                          5: 135, 6: 136, 7: 137,
+                          8: 138, 10: 140,
+                          11: 141, 12: 142, 13: 143,
+                          15: 145, 16: 146,
+                          17: 147, 18: 148,
+                          20: 150, 21: 151, 22: 152,
+                          23: 153}
 
         self.widget = QtWidgets.QWidget(self)
         self.setCentralWidget(self.widget)
@@ -401,11 +427,26 @@ class MainWindow(QtWidgets.QMainWindow):
         # check for last changed value
         index_changed = np.where((self.copied_params == global_parameter) == False)[0]
 
-        # lets just  do it for the first channel
-        for dings in self.conv_dict.items():
-            if dings[1] == index_changed:
-                self.active_param = dings[0]
+        if np.shape(index_changed)[0] > 1:
+            index_changed = index_changed[0]
 
+#        print(np.where((self.copied_params == global_parameter) == False)[0])
+
+        # lets just  do it for the first channel
+        for item_1, item_2, item_3, item_4 in zip(self.conv_dict1.items(), self.conv_dict2.items(), self.conv_dict3.items(), self.conv_dict4.items()):
+            # compare value with last changed key
+            if item_1[1] == index_changed:
+                # save key of last changed value
+                self.active_param[0] = item_1[0]
+
+            if item_2[1] == index_changed:
+                self.active_param[1] = item_2[0]
+
+            if item_2[1] == index_changed:
+                self.active_param[2] = item_3[0]
+
+            if item_2[1] == index_changed:
+                self.active_param[3] = item_4[0]
 
         # write all back to normal
 
@@ -424,7 +465,7 @@ class MainWindow(QtWidgets.QMainWindow):
         if index_changed in range(130,153):
             for item in self.stringArray_ch4:
                 item.setStyleSheet("color: black; font: 9px;")
-                
+
         # colors for each area
         color = ['blue', 'green', 'orange', 'pink']
 
@@ -440,20 +481,23 @@ class MainWindow(QtWidgets.QMainWindow):
         last_val_ch4 = 0
         if self.active_param != -1:
             for ar,c in zip(area,color):
-                if self.active_param in ar:
+                if self.active_param[0] in ar:
                     for a in ar:
                         if index_changed in range(40,63):
                             self.stringArray_ch1[a].setStyleSheet("color: black; font: 12px; background-color: "+c)
-                            #for i in (5,10,15,20):
-                            #    if i!=a:
-                            #        self.stringArray_ch1[a].setStyleSheet("color: black; font: 9px;")
 
+                if self.active_param[1] in ar:
+                    for a in ar:
                         if index_changed in range(70,93):
                             self.stringArray_ch2[a].setStyleSheet("color: black; font: 12px; background-color: "+c)
 
+                if self.active_param[2] in ar:
+                    for a in ar:
                         if index_changed in range(100,123):
                             self.stringArray_ch3[a].setStyleSheet("color: black; font: 12px; background-color: "+c)
 
+                if self.active_param[3] in ar:
+                    for a in ar:
                         if index_changed in range(130,153):
                             self.stringArray_ch4[a].setStyleSheet("color: black; font: 12px; background-color: "+c)
 
