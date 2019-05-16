@@ -1,25 +1,36 @@
 # modules
 import numpy as np
 from random import choice, uniform
-from generators.g_genhsphere import gen_hsphere
+from generators.g_torusrotation import g_torusrotation
+from generators.g_growing_sphere import g_growing_sphere
+
 from colorsys import rgb_to_hsv, hsv_to_rgb
 
 
-class a_pulsating():
+class a_pulsating_torus():
     '''
-    Automat: pulsating
+    Automat: pulsating torus
+
+    the torus should rotate all the time, in blue
     '''
 
     def __init__(self):
-        self.counter = 0
-        self.period = 200
-        self.start_strobo = 10
-        self.strobo_bright = 0
-        self.strobo_counter = 100
 
-        # initialize generator
+        # initialize torus
+        self.torus = g_torusrotation()
+        self.torus.control([0.0, 0.0, 0.0])
 
-        self.color =  hsv_to_rgb(uniform(-0.5,0.5), 1.0, 1.0)
+        # initialize growing_sphere
+        self.sphere = g_growing_sphere()
+        self.sphere.control([0.0, 0.1, 0.0])
+
+        # we have two oscillations
+        # 1: size of sphere
+        # 2: fade of torus
+
+       self.blue =  hsv_to_rgb(240/360.0, 1.0, 1.0)
+       self.red =  hsv_to_rgb(24/360.0, 1.0, 1.0)
+       self.orange =  hsv_to_rgb(48/360.0, 1.0, 1.0)
 
     def control(self, count_fade, start_strobo, blub1):
         self.period = int(count_fade * 200)+50

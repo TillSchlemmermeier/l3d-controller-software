@@ -52,6 +52,7 @@ from generators.g_orbiter_big import g_orbiter_big
 from generators.g_sound_grow import g_sound_grow
 from generators.g_edgeglow import g_edgeglow
 from generators.g_blackhole import g_blackhole
+from generators.a_pulsating_torus import a_pulsating_torus
 
 # vox cube_generators
 from generators.g_obliqueplane import g_obliqueplane
