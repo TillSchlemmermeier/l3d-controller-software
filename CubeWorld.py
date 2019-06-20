@@ -5,7 +5,6 @@ from cube_utils import world2vox
 import sys
 
 # load generator modules
-
 from generators.g_cube import g_cube
 from generators.g_growing_sphere import g_growing_sphere
 from generators.g_random import g_random
@@ -96,7 +95,6 @@ from generators.a_lines import a_lines
 from generators.a_squares_cut import a_squares_cut
 
 # load effect modules
-
 class CubeWorld:
 
     def __init__(self):
@@ -118,6 +116,8 @@ class CubeWorld:
 
         # world for master
         self.world_TOT = np.zeros([3, 10, 10, 10])
+        self.world_TOT_stored = np.zeros([3, 10, 10, 10])
+
         #channel volume
         self.amount_a=1.0
         self.amount_b=1.0
@@ -162,11 +162,11 @@ class CubeWorld:
         self.CHC.append(e_blank())
         self.CHC.append(e_blank())
 
-        print('\nInitialize Artnet stream...\n')
-    #    self.artnet = socket.socket(socket.AF_INET, socket.SOCK_RAW, socket.IPPROTO_UDP)
+        # print('\nInitialize Artnet stream...\n')
+        # self.artnet = socket.socket(socket.AF_INET, socket.SOCK_RAW, socket.IPPROTO_UDP)
 
-        #self.artnet.setsockopt(socket.SOL_SOCKET,socket.SO_RCVBUF, 1)
-    #    self.artnet.settimeout(0.006) # 0.01 works
+        # self.artnet.setsockopt(socket.SOL_SOCKET,socket.SO_RCVBUF, 1)
+        # self.artnet.settimeout(0.006) # 0.01 works
         self.artnet_universe = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
 
 
@@ -179,14 +179,13 @@ class CubeWorld:
         # put colors together in the correct order
         # this might be a speed-bottleneck? we should check
         # and do it in a faster way, numpy or else
-        #liste = []
-        #for i in range(1000):
+        # liste = []
+        # for i in range(1000):
         #    liste.append(list1[i])
         #    liste.append(list2[i])
         #    liste.append(list3[i])
 
         liste = list(np.stack((list1, list2, list3)).flatten('F'))
-
         return liste
 
     def control(self, key, value):
@@ -272,7 +271,6 @@ class CubeWorld:
             self.speed_B = int(round(self.control_dict[23]*30)+1)
             self.speed_C = int(round(self.control_dict[27]*30)+1)
 
-
         self.world_CHA_fade[:] = self.world_CHA
         self.world_CHB_fade[:] = self.world_CHB
         self.world_CHC_fade[:] = self.world_CHC
@@ -282,8 +280,6 @@ class CubeWorld:
         self.world_CHC[:, :, :, :] = 0.0
 
         # Generator A
-
-
         if step%self.speed_A == 0:
             # Generator A
             self.CHA[0].control(self.control_dict[16],self.control_dict[17],self.control_dict[18])
@@ -319,6 +315,7 @@ class CubeWorld:
             self.CHC[2].control(self.control_dict[91],self.control_dict[92],self.control_dict[93])
             self.world_CHC = self.CHC[2].generate(step, self.world_CHC)
 
+        '''
         if self.switch_artnet or self.switch_artnet_color:
             # overwrite colors
             self.world_CHA[0,:,:,:] *= self.artnet_universe[0]
@@ -360,35 +357,35 @@ class CubeWorld:
 
             self.world_TOT = np.clip(self.artnet_universe[16] * self.world_TOT,0,0.999)
 
-
         else :
-            # Channel-Brightness
-            self.amount_a = self.control_dict[31]
-            self.amount_b = self.control_dict[49]
-            self.amount_c = self.control_dict[53]
+        '''
+        # Channel-Brightness
+        self.amount_a = self.control_dict[31]
+        self.amount_b = self.control_dict[49]
+        self.amount_c = self.control_dict[53]
 
-            # Channel-Fade
-            self.fade_A = self.control_dict[57]
-            self.fade_B = self.control_dict[61]
-            self.fade_C = self.control_dict[62]
+        # Channel-Fade
+        self.fade_A = self.control_dict[57]
+        self.fade_B = self.control_dict[61]
+        self.fade_C = self.control_dict[62]
 
-            # Global Brightness
-            self.brightness = self.control_dict[58]
+        # Global Brightness
+        self.brightness = self.control_dict[58]
 
-            # Global fade
-            self.fade = self.control_dict[59]
+        # Global fade
+        self.fade = self.control_dict[59]
 
-            self.world_CHA = self.world_CHA + (self.world_CHA_fade * self.fade_A)
-            self.world_CHB = self.world_CHB + (self.world_CHB_fade * self.fade_B)
-            self.world_CHC = self.world_CHC + (self.world_CHC_fade * self.fade_C)
+        self.world_CHA = self.world_CHA + (self.world_CHA_fade * self.fade_A)
+        self.world_CHB = self.world_CHB + (self.world_CHB_fade * self.fade_B)
+        self.world_CHC = self.world_CHC + (self.world_CHC_fade * self.fade_C)
 
+        # Sum Channels
+        self.world_TOT = self.amount_a * self.world_CHA +  \
+                         self.amount_b * self.world_CHB +  \
+                         self.amount_c * self.world_CHC +  \
+                         self.fade * self.world_TOT_stored
 
-            # Sum Channels
-            self.world_TOT = self.amount_a * self.world_CHA +  \
-                             self.amount_b * self.world_CHB +  \
-                             self.amount_c * self.world_CHC +  \
-                             self.fade * self.world_TOT
-
-
-
-            self.world_TOT = np.clip(self.brightness * self.world_TOT,0,0.999)
+        # store world without brightness applied for global fade
+        self.world_TOT_stored = np.clip(self.world_TOT,0,0.999)
+        # write final world
+        self.world_TOT = np.clip(self.brightness * self.world_TOT,0,0.999)
