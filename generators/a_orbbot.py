@@ -24,7 +24,7 @@ class a_orbbot():
 
         generator = g_orbiter()
 
-        generator.control(0.5*(np.sin(self.counter * 0.01)*0.5+0.5),0.4,0.05)
+        generator.control(0.5*(np.sin(self.counter * 0.01)*0.5+0.5), 0.4, 0.05)
 
         world[:, :, :, :] = generator.generate(self.counter, 0)
 
