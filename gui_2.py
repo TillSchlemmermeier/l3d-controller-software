@@ -25,7 +25,6 @@ import pyaudio
 MidiKey = 0
 MidiValue = 0
 
-
 # sound2light stuff ende
 
 class App(Tk):
@@ -71,16 +70,16 @@ class App(Tk):
                            "g_rain", "g_circles", "g_falling", "g_obliqueplane", "g_obliqueplaneXYZ", "g_smiley",
                            "g_torusrotation","g_growingface","g_pyramid", "g_orbiter3","g_gauss","g_wave",
                            "g_drop", "g_pyramid_upsidedown", 'g_cube_edges', 'a_orbbot', 'a_squares_cut',
-                           'a_lines', 'a_pulsating', 'a_multi_cube_edges', 'g_squares', 'g_rotate_plane',
+                           'a_lines', 'a_multi_cube_edges', 'g_squares', 'g_rotate_plane',
                            'a_random_cubes', 'g_soundcube', 'g_cut', 'g_bouncy', 'g_darksphere', 'g_sound_sphere',
                            'g_trees', 'g_rising_square', 'g_inandout', 'g_soundrandom', 'g_orbiter_big', 'g_centralglow',
-                           'g_sound_grow', 'g_edgeglow', 'g_blackhole', 'g_rotating_cube', 'a_pulsating_torus']
+                           'g_sound_grow', 'g_edgeglow', 'g_blackhole', 'g_rotating_cube', 'g_osci_corner', 'g_sides' ] #'a_pulsating', 'a_pulsating_torus'
 
         self.effects = ["e_blank","e_fade2blue","e_rainbow","e_staticcolor", "e_violetblue", "e_redyellow",
                         "e_tremolo", "e_gradient", "e_prod_saturation", "e_prod_hue",
                         "e_bright_osci", 'e_cut_cube', 'e_rare_strobo', 'e_s2l', 'e_remove_random']
 
-	# sort generators and effects
+        # sort generators and effects
         self.generators.sort()
         self.effects.sort()
 
@@ -93,6 +92,7 @@ class App(Tk):
 
         self.send_array_rgb = bytearray(3009)
 
+        # what am i for?
         self.MidiButtonListBool = {1:False,4:False,7:False,10:False,13:False,16:False,19:False,22:False,3:False,6:False,9:False,12:False,15:False,18:False,21:False,24:False}
 
         #self.funkyImage = Text(frame)
@@ -384,7 +384,7 @@ class App(Tk):
         self.G2SFade = Label(frame, textvariable=self.G3FadeValue,font=(self.font, "12"))
         self.G2SFade.grid(row=8, column=6)
 
-# L3D-Functions
+    # L3D-Functions
     def startsending(self):
         self.do_send_rgb = True
         self.send_data_rgb()
@@ -516,10 +516,37 @@ class MidiInputHandler(object):
         # output = message
         # print("[%s] @%0.6f %r" % (self.port, self._wallclock, message))
         # print(message[1],message[2])
+
+        # here, we write something into a global variable
         global MidiKey
         MidiKey = message[1]
         global MidiValue
         MidiValue = message[2]
+
+class MidiInputHandler_Fighter(object):
+
+    def __init__(self, port):
+        self.port = port
+        self._wallclock = time.time()
+        self.converting_dict = {0: 85, 4: 86, 8: 87,
+                                1: 88, 5: 89, 9: 90,
+                                2: 91, 6: 92,10: 93}
+
+    def __call__(self, event, data=None):
+        message, deltatime = event
+        self._wallclock += deltatime
+        # output = message
+        # print("[%s] @%0.6f %r" % (self.port, self._wallclock, message))
+        # midi fighter got:
+        # print('Fighter send:', message[1],message[2])
+
+        if message[1] in self.converting_dict.keys():
+            # here, we write something into a global variable
+            global MidiKey
+            MidiKey = self.converting_dict[message[1]]
+            global MidiValue
+            MidiValue = message[2]
+
 
 # -----------------------------------------
 
@@ -533,7 +560,7 @@ if __name__ == "__main__":
     midiin_b, portname_in_b = open_midiinput(port_b)
     #midiout, portname_out = open_midioutput(port)
     midiin_a.set_callback(MidiInputHandler(portname_in_a))
-    midiin_b.set_callback(MidiInputHandler(portname_in_b))
+    midiin_b.set_callback(MidiInputHandler_Fighter(portname_in_b))
 
     # print('Testing audio...')
     #

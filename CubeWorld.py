@@ -51,7 +51,9 @@ from generators.g_orbiter_big import g_orbiter_big
 from generators.g_sound_grow import g_sound_grow
 from generators.g_edgeglow import g_edgeglow
 from generators.g_blackhole import g_blackhole
-from generators.a_pulsating_torus import a_pulsating_torus
+from generators.g_swell import g_swell
+from generators.g_growing_square import g_growing_square
+#from generators.a_pulsating_torus import a_pulsating_torus
 
 # vox cube_generators
 from generators.g_obliqueplane import g_obliqueplane
@@ -61,6 +63,8 @@ from generators.g_smiley import g_smiley
 from generators.g_torusrotation import g_torusrotation
 from generators.g_centralglow import g_centralglow
 from generators.g_rotating_cube import g_rotating_cube
+from generators.g_osci_corner import g_osci_corner
+from generators.g_sides import g_sides
 
 #load effect modules
 from effects.e_blank import e_blank
@@ -89,7 +93,9 @@ from effects.e_s2l import e_s2l
 from generators.a_testbot import a_testbot
 from generators.a_orbbot import a_orbbot
 from generators.a_lines import a_lines
-from generators.a_pulsating import a_pulsating
+#from generators.a_pulsating import a_pulsating
+from generators.a_jukebox import a_jukebox
+from generators.a_jukebox_ambient import a_jukebox_ambient
 from generators.a_squares_cut import a_squares_cut
 
 # load effect modules

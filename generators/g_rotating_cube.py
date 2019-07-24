@@ -27,7 +27,7 @@ class g_rotating_cube():
         self.zspeed = 10*zspeed
 
     def label(self):
-        return ['size',round(self.size, 2),'x speed', self.xspeed,'y+z speed', self.yspeed]
+        return ['x speed',round(self.xspeed, 2),'y speed', np.round(self.xspeed, 2),'z speed', np.round(self.yspeed, 2)]
 
 
     def generate(self, step, dumpworld):
