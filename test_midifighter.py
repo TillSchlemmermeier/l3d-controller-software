@@ -1,23 +1,19 @@
 '''
 Simple script to test the rendering_engine
 '''
-import threading
+
 import time
 from MidiDevice import class_fighter
-# import global variable
-from global_parameter_module import global_parameter
+import multiprocessing as mp
 
-
-def midi():
+def midi(array):
     '''
     Midi Thread
     '''
     print('Starting midi')
-    midifighter = class_fighter(in_port = 2,out_port = 2)
+    midifighter = class_fighter(global_parameter)
 
-
-
-def main():
+def main(global_parameter):
     '''
     rendering thread
     '''
@@ -32,9 +28,13 @@ def main():
 
 
 # create threads
-midi_thread = threading.Thread(name='midi', target=midi)
-main_thread = threading.Thread(name='main', target=main)
+midi_thread = mp.Process(target=midi)
+main_thread = mp.Process(target=main)
 
 # start threads
 midi_thread.start()
 main_thread.start()
+
+
+midi_thread.join()
+main_thread.join()

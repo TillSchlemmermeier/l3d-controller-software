@@ -15,45 +15,41 @@ import numpy as np
 
 
 from MidiDevice import class_fighter, class_akai
+
+import multiprocessing as mp
+
 #from PyQt5.QtCore import QObject,QThread, pyqtSigna
 #from mainwindow import Ui_MainWindow
 
 
-def midi_fighter():
+def midi_fighter(array):
     '''
     Midi Thread
     '''
     print('...starting midi thread')
     # we should do something to detect ports! -> YES we should :)
-    midifighter = class_fighter(in_port = 2,out_port = 2)
-    launchpad = class_akai()
+    midifighter = class_fighter(array)
+    #launchpad = class_akai()
 
-def midi_akai():
-    '''
-    Midi Thread
-    '''
-    print('...starting midi thread')
-    # we should do something to detect ports! -> YES we should :)
-    midifighter = class_fighter(in_port = 2,out_port = 2)
-    launchpad = class_akai()
-
-
-def rendering(pause_time = 0.001, log = False):
+def rendering(array, pause_time = 0.001, log = False):
     '''
     Rendering Thread
     '''
+    print('...starting rendering thread')
 
     if log == True:
         # long sleeping time, so logfile is not flooded
         pause_time = 2
 
     # start rendering engine
+
     frame_renderer = rendering_engine(log)
+    '''
     while True:
         time.sleep(pause_time)
         # render frame
         frame_renderer.run()
-
+    '''
 
 class MainWindow(QtWidgets.QMainWindow):
 
@@ -288,7 +284,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.active_param = [-1, -1, -1, -1]
 
         # dict for converting global parameter to button
-        self.conv_dict1 = {2: 41, 3: 42, 4: 43,
+        self.conv_dict1 = {1:40, 2: 41, 3: 42, 4: 43,
                           5: 45, 6: 46, 7: 47,
                           8: 48, 10: 50,
                           11: 51, 12: 52, 13: 53,
@@ -297,7 +293,7 @@ class MainWindow(QtWidgets.QMainWindow):
                           20: 60, 21: 61, 22: 62,
                           23: 63}
 
-        self.conv_dict2 = {2: 71, 3: 72, 4: 73,
+        self.conv_dict2 = {1:70, 2: 71, 3: 72, 4: 73,
                           5: 75, 6: 76, 7: 77,
                           8: 78, 10: 80,
                           11: 81, 12: 82, 13: 83,
@@ -305,7 +301,7 @@ class MainWindow(QtWidgets.QMainWindow):
                           17: 87, 18: 88,
                           20: 90, 21: 91, 22: 92,
                           23: 93}
-        self.conv_dict3 = {2: 101, 3: 102, 4: 103,
+        self.conv_dict3 = {1: 100, 2: 101, 3: 102, 4: 103,
                           5: 105, 6: 106, 7: 107,
                           8: 108, 10: 110,
                           11: 111, 12: 112, 13: 113,
@@ -314,7 +310,7 @@ class MainWindow(QtWidgets.QMainWindow):
                           20: 120, 21: 121, 22: 122,
                           23: 123}
 
-        self.conv_dict4 = {2: 131, 3: 132, 4: 133,
+        self.conv_dict4 = {1: 130, 2: 131, 3: 132, 4: 133,
                           5: 135, 6: 136, 7: 137,
                           8: 138, 10: 140,
                           11: 141, 12: 142, 13: 143,
@@ -328,9 +324,12 @@ class MainWindow(QtWidgets.QMainWindow):
         self.widget.setLayout(self.main_CL)
 
         # initialize threads
-        self.midi_thread = threading.Thread(name='midi_fighter', target=midi_fighter)
-        self.rendering_thread = threading.Thread(name='render', target=rendering)
+        #self.midi_thread = threading.Thread(name='midi_fighter', target=midi_fighter)
+        #self.rendering_thread = threading.Thread(name='render', target=rendering)
 
+        array = mp.Array("i",[0,255])
+        self.proc_midi = mp.Process(target=midi_fighter, args = [array])
+        self.proc_renderer = mp.Process(target=rendering, args = [array])
         # what do we need the timer for? -> to execute functions periodically in the GUI e.g. updating Strings
         timer = QtCore.QTimer(self)
         timer.timeout.connect(self.update_fighter_values)
@@ -338,8 +337,19 @@ class MainWindow(QtWidgets.QMainWindow):
         timer.start()
 
         # start threads
-        self.midi_thread.start()
-        self.rendering_thread.start()
+        #self.midi_thread.start()
+        #self.rendering_thread.start()
+        print('start');
+        self.proc_midi.start();
+        #self.proc_renderer.start()
+        time.sleep(1)
+        print('join');
+        self.proc_midi.join();
+        #self.proc_renderer.join();
+        print('done')
+
+
+
 
 #    def start_download(self,info):
 #        self.list_widget.addItem(info)
@@ -360,6 +370,7 @@ class MainWindow(QtWidgets.QMainWindow):
         global_parameter[0] = 0
 
     def update_fighter_values(self):
+        self.stringArray_ch1[1].setText("Generator : "+str(round(global_parameter[40],2)))
         self.stringArray_ch1[2].setText("Brightness : "+str(round(global_parameter[41],2)))
         self.stringArray_ch1[3].setText("Fade : "+str(round(global_parameter[42],2)))
         self.stringArray_ch1[4].setText("Shutter : "+str(round(global_parameter[43],2)))
@@ -380,6 +391,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.stringArray_ch1[22].setText("Parameter 3 : "+str(round(global_parameter[62],2)))
         self.stringArray_ch1[23].setText("Parameter 4 : "+str(round(global_parameter[63],2)))
 
+        self.stringArray_ch2[1].setText("Generator : "+str(round(global_parameter[70],2)))
         self.stringArray_ch2[2].setText("Brightness : "+str(round(global_parameter[71],2)))
         self.stringArray_ch2[3].setText("Fade : "+str(round(global_parameter[72],2)))
         self.stringArray_ch2[4].setText("Shutter : "+str(round(global_parameter[73],2)))
@@ -400,6 +412,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.stringArray_ch2[22].setText("Parameter 3 : "+str(round(global_parameter[92],2)))
         self.stringArray_ch2[23].setText("Parameter 4 : "+str(round(global_parameter[93],2)))
 
+        self.stringArray_ch3[1].setText("Generator : "+str(round(global_parameter[100],2)))
         self.stringArray_ch3[2].setText("Brightness : "+str(round(global_parameter[101],2)))
         self.stringArray_ch3[3].setText("Fade : "+str(round(global_parameter[102],2)))
         self.stringArray_ch3[4].setText("Shutter : "+str(round(global_parameter[103],2)))
@@ -420,6 +433,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.stringArray_ch3[22].setText("Parameter 3 : "+str(round(global_parameter[122],2)))
         self.stringArray_ch3[23].setText("Parameter 4 : "+str(round(global_parameter[123],2)))
 
+        self.stringArray_ch4[1].setText("Generator : "+str(round(global_parameter[130],2)))
         self.stringArray_ch4[2].setText("Brightness : "+str(round(global_parameter[131],2)))
         self.stringArray_ch4[3].setText("Fade : "+str(round(global_parameter[132],2)))
         self.stringArray_ch4[4].setText("Shutter : "+str(round(global_parameter[133],2)))

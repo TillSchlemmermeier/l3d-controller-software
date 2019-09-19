@@ -2,16 +2,18 @@
 import time as time
 from rtmidi.midiutil import open_midiinput,open_midioutput, open_midiport
 #from rtmidi.midiconstants import NOTE_ON, NOTE_OFF,CONTROL_CHANGE
-from global_parameter_module import global_parameter
+# from global_parameter_module import global_parameter
 import numpy as np
 
 class class_akai:
-    def __init__(self):
+    def __init__(self, array):
         # open midi input
         self.midiin, self.portname_in = open_midiinput(port = 'MIDI Mix')
 
         # set callback
         self.midiin.set_callback(self.event)
+
+        self.global_parameter = array
 
     def event(self, event, data=None):
         """Call gets midi message and calls the mapping routine"""
@@ -21,25 +23,25 @@ class class_akai:
 
         # global brightness
         if message[1] == 61:
-            global_parameter[1] = message[2]/127.0
+            self.global_parameter[1] = message[2]/127.0
         # channel brightness
         elif message[1] == 49:
-            global_parameter[41] = message[2]/127.0
+            self.global_parameter[41] = message[2]/127.0
         elif message[1] == 53:
-            global_parameter[71] = message[2]/127.0
+            self.global_parameter[71] = message[2]/127.0
         elif message[1] == 57:
-            global_parameter[101] = message[2]/127.0
+            self.global_parameter[101] = message[2]/127.0
         elif message[1] == 61:
-            global_parameter[131] = message[2]/127.0
+            self.global_parameter[131] = message[2]/127.0
         # channel fade
         elif message[1] == 19:
-            global_parameter[42] = message[2]/127.0
+            self.global_parameter[42] = message[2]/127.0
         elif message[1] == 23:
-            global_parameter[72] = message[2]/127.0
+            self.global_parameter[72] = message[2]/127.0
         elif message[1] == 27:
-            global_parameter[102] = message[2]/127.0
+            self.global_parameter[102] = message[2]/127.0
         elif message[1] == 31:
-            global_parameter[132] = message[2]/127.0
+            self.global_parameter[132] = message[2]/127.0
 
 class class_launchpad:
     def __init__(self):
@@ -151,7 +153,7 @@ class class_launchpad:
 
 
 class class_fighter:
-    def __init__(self, in_port, out_port):
+    def __init__(self, array):
         """initializes the MIDI fighter"""
 
         # initialize variables
@@ -164,16 +166,20 @@ class class_fighter:
         self.current_state = [0, 0, 0, 0]
 
         # initialize midi input
-        self.input_port = in_port
-        self.midiin, self.portname_in = open_midiinput('Fighter')
+        # self.input_port = in_port
+        self.midiin, self.portname_in = open_midiinput('MidiFighter')
 
         # initialize midi output
-        self.output_port = out_port
+        # self.output_port = out_port
         self.midiout, self.portname_out = open_midioutput('Fighter')
 
         # initializes the callback
         self.midiin.set_callback(self.event)
         self.sendstate()
+
+        self.global_parameter = array
+
+        print('figher init ist durch!')
 
     def event(self, event, data=None):
         """Call gets midi message and calls the mapping routine"""
@@ -183,10 +189,12 @@ class class_fighter:
         # figure out the mapping
         key = self.setParameters(message[0], message[1], message[2])
 
+        print(key)
+
         # if there is no state-switch, write the value into
         # the global variable - all values go from 0 - 1
         if key != []:
-            global_parameter[key[0]] = key[1]/127.0
+            self.global_parameter[key[0]] = key[1]/127.0
         else:
             # when a stateswitch is detected, send all values
             # and colors back to midifighter
@@ -209,22 +217,22 @@ class class_fighter:
             self.midiout.send_message([177, i, color_dict[self.current_state[0]]])
             # calculate the position of the corresponding entry in the global variable
             index = int(45+self.current_state[0]*5+i/4)
-            value = int(global_parameter[index]*127)
+            value = int(self.global_parameter[index]*127)
             self.midiout.send_message([176, i, value])
         for i in [1, 5, 9, 13]:
             self.midiout.send_message([177, i, color_dict[self.current_state[1]]])
             index = int(75+self.current_state[1]*5+i/4)
-            value = int(global_parameter[index]*127)
+            value = int(self.global_parameter[index]*127)
             self.midiout.send_message([176, i, value])
         for i in [2, 6,10, 14]:
             self.midiout.send_message([177, i, color_dict[self.current_state[2]]])
             index = int(105+self.current_state[2]*5+i/4)
-            value = int(global_parameter[index]*127)
+            value = int(self.global_parameter[index]*127)
             self.midiout.send_message([176, i, value])
         for i in [3, 7,11, 15]:
             self.midiout.send_message([177, i, color_dict[self.current_state[3]]])
             index = int(135+self.current_state[3]*5+i/4)
-            value = int(global_parameter[index]*127)
+            value = int(self.global_parameter[index]*127)
             self.midiout.send_message([176, i, value])
 
 
@@ -236,11 +244,32 @@ class class_fighter:
         [position, value]
         """
 
+        '''
+        Master Controls
+        16-17-18-19
+        20-21-22-23
+        24-25-26-27
+        28-29-30-31
+        '''
         # check for state switches
         if channel == 177:
             self.setstate(key, value)
             return []
         else:
+            # write master commands for each channel
+            if key in [16,20,24,28]:     # channel 1
+                basic_index = 40
+                state = 0
+            elif key in [17,21,25,29]:   # channel 2
+                basic_index = 70
+                state = 0
+            elif key in [18,22,26,30]:  # channel 3
+                basic_index = 100
+                state = 0
+            elif key in [19,23,27,31]:  # channel 4
+                basic_index = 130
+                state = 0
+
             # get position to write for each channel
             if key in [0, 4, 8, 12]:     # channel 1
                 basic_index = 45
@@ -263,8 +292,17 @@ class class_fighter:
                 key = 2
             elif key in [12, 13, 14, 15]:   # effect 3
                 key = 3
+            elif key in [16, 17,18, 19]:    # Master C 1
+                key = 0
+            elif key in [20, 21, 22, 23]:   #;Master C 2
+                key = 1
+            elif key in [24, 25, 26, 27]:   # Master C 3
+                key = 2
+            elif key in [28, 29, 30, 31]:   # Master C 4
+                key = 3
 
             # return [position in global variable, key]
+            #print('index: '+str(basic_index + state*5 + key)+'value: '+str(value))
             return [basic_index + state*5 + key, value]
 
     def setstate(self, key, value):
