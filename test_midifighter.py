@@ -5,13 +5,14 @@ Simple script to test the rendering_engine
 import time
 from MidiDevice import class_fighter
 import multiprocessing as mp
+import numpy as np
 
 def midi(array):
     '''
     Midi Thread
     '''
     print('Starting midi')
-    midifighter = class_fighter(global_parameter)
+    midifighter = class_fighter(array)
 
 def main(global_parameter):
     '''
@@ -27,9 +28,12 @@ def main(global_parameter):
         print('1 :: Effect 3 : ', global_parameter[65:69])
 
 
+global_array = mp.Array('i', [0 for x in range(255)])
+print(global_array[:])
+
 # create threads
-midi_thread = mp.Process(target=midi)
-main_thread = mp.Process(target=main)
+midi_thread = mp.Process(target=midi, args = [global_array])
+main_thread = mp.Process(target=main, args = [global_array])
 
 # start threads
 midi_thread.start()

@@ -156,6 +156,8 @@ class class_fighter:
     def __init__(self, array):
         """initializes the MIDI fighter"""
 
+        self.global_parameter = array
+
         # initialize variables
         # self.current_state contains the state information as a vector with
         # the length of the number of channels
@@ -167,7 +169,7 @@ class class_fighter:
 
         # initialize midi input
         # self.input_port = in_port
-        self.midiin, self.portname_in = open_midiinput('MidiFighter')
+        self.midiin, self.portname_in = open_midiinput('Fighter')
 
         # initialize midi output
         # self.output_port = out_port
@@ -176,9 +178,7 @@ class class_fighter:
         # initializes the callback
         self.midiin.set_callback(self.event)
         self.sendstate()
-
-        self.global_parameter = array
-
+        
         print('figher init ist durch!')
 
     def event(self, event, data=None):
