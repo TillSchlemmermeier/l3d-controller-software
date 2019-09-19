@@ -53,6 +53,7 @@ from generators.g_edgeglow import g_edgeglow
 from generators.g_blackhole import g_blackhole
 from generators.g_swell import g_swell
 from generators.g_growing_square import g_growing_square
+from generators.g_collision import g_collision
 #from generators.a_pulsating_torus import a_pulsating_torus
 
 # vox cube_generators
@@ -82,6 +83,9 @@ from effects.e_prod_hue import e_prod_hue
 from effects.e_bright_osci import e_bright_osci
 from effects.e_cut_cube import e_cut_cube
 from effects.e_remove_random import e_remove_random
+from effects.e_rotating_blue_orange import e_rotating_blue_orange
+from effects.e_rotating_black_blue import e_rotating_black_blue
+from effects.e_rotating_black_white import e_rotating_black_white
 #from effects.e_sound_color import e_sound_color
 
 #from effects.e_blur import e_blur
