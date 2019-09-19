@@ -178,7 +178,7 @@ class class_fighter:
         # initializes the callback
         self.midiin.set_callback(self.event)
         self.sendstate()
-        
+
         print('figher init ist durch!')
 
     def event(self, event, data=None):
@@ -189,8 +189,6 @@ class class_fighter:
         # figure out the mapping
         key = self.setParameters(message[0], message[1], message[2])
 
-        print(key)
-
         # if there is no state-switch, write the value into
         # the global variable - all values go from 0 - 1
         if key != []:
@@ -199,6 +197,7 @@ class class_fighter:
             # when a stateswitch is detected, send all values
             # and colors back to midifighter
             self.sendstate()
+            # pass
 
     def sendstate(self):
         """Sends colors and values to MidiFighter"""

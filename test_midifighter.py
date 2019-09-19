@@ -14,6 +14,10 @@ def midi(array):
     print('Starting midi')
     midifighter = class_fighter(array)
 
+    while True:
+        time.sleep(1)
+        pass
+
 def main(global_parameter):
     '''
     rendering thread
@@ -28,7 +32,7 @@ def main(global_parameter):
         print('1 :: Effect 3 : ', global_parameter[65:69])
 
 
-global_array = mp.Array('i', [0 for x in range(255)])
+global_array = mp.Array('d', [0 for x in range(255)])
 print(global_array[:])
 
 # create threads
