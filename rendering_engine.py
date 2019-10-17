@@ -105,6 +105,7 @@ class rendering_engine:
         package = self.header + self.get_cubedata()
 
         if not self.debug:
+            #print(bytearray(package))
             self.arduino.write(bytearray(package))
 
         else:
@@ -176,5 +177,5 @@ class rendering_engine:
         # stack this lists for each color, so that we have RGB ordering for
         # each LED
         liste = list(np.stack((list1, list2, list3)).flatten('F'))
-
+        #print(liste)
         return liste

@@ -68,12 +68,13 @@ if __name__ == '__main__':
     global_parameter = mp.Array('d', [0 for x in range(255)])
     #self.rendering_thread.start()
 
-
+    '''
     with mp.Pool(processes=3) as pool:
         gui = pool.apply_async(gui(global_parameter))
         midi = pool.apply_async(midi_fighter(global_parameter))
-
         render = pool.apply_async(rendering(global_parameter))
+
+
 
 
     print('Done')
@@ -92,5 +93,3 @@ if __name__ == '__main__':
     self.proc_renderer.join();
     proc_gui.join();
     print('done')
-
-    '''
