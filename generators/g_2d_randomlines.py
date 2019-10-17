@@ -1,7 +1,7 @@
 # modules
 import numpy as np
 from random import randint
-from convert2d import convert2d
+from generators.convert2d import convert2d
 
 class g_2d_randomlines():
 

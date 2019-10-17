@@ -1,7 +1,7 @@
 
 import numpy as np
 
-def convert2d(2dworld):
+def convert2d(world2d):
     world = np.zeros([3, 10, 10, 10])
     world[:, :, :, 0] = world2d[:, 10:, :10]
     world[:, :, :, 1] = world2d[:, 10:, 10:20]
