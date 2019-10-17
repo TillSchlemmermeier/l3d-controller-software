@@ -14,6 +14,7 @@ world2vox_fortran: world2vox.f90
 	f2py3 -c -m g_genhsphere g_growing_sphere_f.f90;\
 	f2py3 -c -m g_orbiter_big_f g_orbiter_big_f.f90;\
 	f2py3 -c -m g_shooting_star_f g_shooting_star_f.f90;\
+        f2py3 -c -m circle2d 2d_cirlce.f90;\
 
 
 clean:
