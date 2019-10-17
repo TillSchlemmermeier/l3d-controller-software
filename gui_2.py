@@ -74,8 +74,9 @@ class App(Tk):
                            'a_random_cubes', 'g_soundcube', 'g_cut', 'g_bouncy', 'g_darksphere', 'g_sound_sphere',
                            'g_trees', 'g_rising_square', 'g_inandout', 'g_soundrandom', 'g_orbiter_big', 'g_centralglow',
                            'g_sound_grow', 'g_edgeglow', 'g_blackhole', 'g_rotating_cube', 'g_osci_corner', 'g_sides',
-                           'g_growing_square', 'a_jukebox' , 'a_jukebox_ambient', 'g_swell', 'g_collision', 'g_2d_randomlines',
-                           'g_2d_growing_circle'] # 'g_2d_moving_line',  'a_pulsating', 'a_pulsating_torus'
+                           'g_growing_square', 'a_jukebox' , 'a_jukebox_ambient', 'g_swell', 'g_collision', 'g_soundsnake']
+                           # 'g_2d_moving_line',  'a_pulsating', 'a_pulsating_torus' 'g_2d_randomlines',
+                           # 'g_2d_growing_circle', 
         self.effects = ["e_blank","e_fade2blue","e_rainbow","e_staticcolor", "e_violetblue", "e_redyellow",
                         "e_tremolo", "e_gradient", "e_prod_saturation", "e_prod_hue",
                         "e_bright_osci", 'e_cut_cube', 'e_rare_strobo', 'e_s2l', 'e_remove_random', 'e_rotating_blue_orange',

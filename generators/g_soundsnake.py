@@ -1,7 +1,7 @@
 # modules
 import numpy as np
 import pyaudio
-from random import choice, uniform
+from random import choice, random, randint
 from scipy.fftpack import fft, fftfreq
 import scipy
 import struct
@@ -37,40 +37,64 @@ class g_soundsnake():
         self.threshold = 0.5
 
         self.counter = 0
-        self.pos = [randint(0,9 ), randint(0,9 ), randint(0,9 )]
+        self.pos = [randint(0, 9), randint(0, 9), randint(0, 9)]
         self.axis = 0
         self.direction = 1
+        self.frames = 20
+
+        self.oldworld = np.zeros([3, 10, 10, 10])
 
     def control(self, amount, threshold, channel):
         self.amount = amount*10
         self.threshold = threshold*2
-        self.channel = int(channel*4)
+        self.channel = 3
+        self.frames = int(channel*20)
 
     def label(self):
-        return ['amount',round(self.amount,2),
-                'threshold',round(self.threshold,2),
-                'channel',round(self.channel)]
+        return ['amount', round(self.amount,2),
+                'threshold', round(self.threshold,2),
+                'frames', round(self.frames)]
 
     def generate(self, step, world):
-        tempworld = np.zeros([10, 10, 10])
+        world = np.zeros([3, 10, 10, 10])
 
         sound = self.amount*self.update_line()[self.channel]
         if sound > self.threshold:
-            self.counter = 20
+            self.oldworld[:, :, :, :] = 0.0
+            self.counter = self.frames
 
         if self.counter > 0:
-            # draw led
-            world[:, pos[0], pos[1], pos[2]] = 1.0
+            world[:, self.pos[0], self.pos[1], self.pos[2]] = 1.0
+
+            if self.frames == 20:
+                world += self.oldworld
+                self.oldworld = world
+                self.counter -= 1
+
             # move
-            pos[self.axis] += self.direction
-            if uniform() > 0.5:
+            self.pos[self.axis] += self.direction
+            if random() > 0.3:
                 self.axis = choice([0, 1, 2])
                 self.direction = choice([-1, 1])
 
             self.counter -= 1
-        else:
-            self.pos = [randint(0,9 ), randint(0,9 ), randint(0,9 )]
 
+            if self.pos[0] > 9:
+                self.pos[0] = 0
+            if self.pos[0] < 0:
+                self.pos[0] = 9
+            if self.pos[1] > 9:
+                self.pos[1] = 0
+            if self.pos[1] < 0:
+                self.pos[1] = 9
+            if self.pos[2] > 9:
+                self.pos[2] = 0
+            if self.pos[2] < 0:
+                self.pos[2] = 9
+
+        else:
+            self.oldworld[:, :, :, :] = 0.0
+            self.pos = [randint(0,9 ), randint(0,9 ), randint(0,9 )]
 
         return np.clip(world, 0, 1)
 

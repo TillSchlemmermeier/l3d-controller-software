@@ -54,6 +54,7 @@ from generators.g_blackhole import g_blackhole
 from generators.g_swell import g_swell
 from generators.g_growing_square import g_growing_square
 from generators.g_collision import g_collision
+from generators.g_soundsnake import g_soundsnake
 #from generators.a_pulsating_torus import a_pulsating_torus
 
 # 2d cube_generators
