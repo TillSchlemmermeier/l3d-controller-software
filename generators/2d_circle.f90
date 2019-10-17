@@ -18,7 +18,7 @@ subroutine circle2d(world, s_size, xpos, ypos)
   do x=1, 20
     do y=1, 40
       tempvalue = sqrt((x-xpos-1)**2+(y-ypos-1)**2)
-      world(x,y) = 1/abs((s_size-tempvalue+0.0001))**7
+      world(x,y) = 1/abs((s_size-tempvalue+0.0001))**4
     end do
   end do
 

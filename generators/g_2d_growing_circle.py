@@ -1,8 +1,9 @@
 # modules
 import numpy as np
 from random import randint
-from convert2d import convert2d
+from generators.convert2d import convert2d
 from generators.circle2d import circle2d
+from scipy.signal import sawtooth
 
 class g_2d_growing_circle():
 
@@ -34,11 +35,11 @@ class g_2d_growing_circle():
         # scales to maxsize
         size = self.maxsize * osci
         # creates hollow sphere with parameters
-        world2d[0 , :, :] = gen_hsphere(size, 14.5, 4.5)
-        world2d[1:, :, :] = world2d[0, :, :, :]
-        world2d[2:, :, :] = world2d[0, :, :, :]
+        world2d[0 , :, :] = circle2d(size, 14.5, 19.5)
+        world2d[1:, :, :] = world2d[0, :, :]
+        world2d[2:, :, :] = world2d[0, :, :]
 
         # now we have to convert it
-        world = convert2d(world_2d)
+        world = convert2d(world2d)
 
         return np.clip(world, 0, 1)

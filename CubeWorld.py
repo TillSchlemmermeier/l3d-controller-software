@@ -58,7 +58,8 @@ from generators.g_collision import g_collision
 
 # 2d cube_generators
 from generators.g_2d_randomlines import g_2d_randomlines
-from generators.g_2d_moving_line import g_2d_moving_line
+#from generators.g_2d_moving_line import g_2d_moving_line
+from generators.g_2d_growing_circle import g_2d_growing_circle
 
 # vox cube_generators
 from generators.g_obliqueplane import g_obliqueplane
