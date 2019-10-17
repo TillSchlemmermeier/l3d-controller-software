@@ -1,9 +1,9 @@
 # modules
 import numpy as np
 from random import randint
-from convert2d import convert2d
+from generators.convert2d import convert2d
 
-class g_square_sides():
+class g_2d_moving_line():
 
     def __init__(self):
         self.direction = 'right'
@@ -23,7 +23,7 @@ class g_square_sides():
         world_2d = np.zeros([3, 20, 40])
 
         # draw lines
-        if self.direction == 'right'
+        if self.direction == 'right':
             world_2d[:, :, self.counter] = 1.0
         else:
             world_2d[:, :, 39-self.counter] = 1.0
