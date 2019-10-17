@@ -56,6 +56,9 @@ from generators.g_growing_square import g_growing_square
 from generators.g_collision import g_collision
 #from generators.a_pulsating_torus import a_pulsating_torus
 
+# 2d cube_generators
+from generators.g_2d_randomlines import g_2d_randomlines
+
 # vox cube_generators
 from generators.g_obliqueplane import g_obliqueplane
 from generators.g_obliqueplaneXYZ import g_obliqueplaneXYZ
