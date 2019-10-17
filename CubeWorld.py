@@ -87,6 +87,9 @@ from effects.e_rotating_blue_orange import e_rotating_blue_orange
 from effects.e_rotating_black_blue import e_rotating_black_blue
 from effects.e_rotating_black_white import e_rotating_black_white
 #from effects.e_sound_color import e_sound_color
+from effects.e_rotating_black_red import e_rotating_black_red
+from effects.e_rotating_black_orange import e_rotating_black_orange
+
 
 #from effects.e_blur import e_blur
 from effects.e_rare_strobo import e_rare_strobo

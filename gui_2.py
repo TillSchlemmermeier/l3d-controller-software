@@ -78,7 +78,7 @@ class App(Tk):
         self.effects = ["e_blank","e_fade2blue","e_rainbow","e_staticcolor", "e_violetblue", "e_redyellow",
                         "e_tremolo", "e_gradient", "e_prod_saturation", "e_prod_hue",
                         "e_bright_osci", 'e_cut_cube', 'e_rare_strobo', 'e_s2l', 'e_remove_random', 'e_rotating_blue_orange',
-                        'e_rotating_black_white', 'e_rotating_black_blue']
+                        'e_rotating_black_white', 'e_rotating_black_blue', 'e_rotating_black_orange', 'e_rotating_black_red']
 
         # sort generators and effects
         self.generators.sort()
