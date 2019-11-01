@@ -39,7 +39,7 @@ class g_edgeglow():
         self.size = 1
 
     def control(self, amount, threshold, channel):
-        self.amount = amount*10
+        self.amount = amount*60
         self.threshold = threshold*2
         self.channel = int(channel*4)
 
@@ -51,8 +51,8 @@ class g_edgeglow():
     def generate(self, step, world):
         tempworld = np.zeros([10, 10, 10])
 
-        size = self.amount*self.update_line()[self.channel]-self.threshold
-        size = np.clip(size, 0, 10)
+        size = self.update_line()[self.channel] - self.threshold
+        size = np.clip(size, 0, 10)*self.amount
 
         temp1 = gen_central_glow(size,1,1,1)-0.1
         temp2 = gen_central_glow(size,1,1,10)-0.1
@@ -67,7 +67,7 @@ class g_edgeglow():
         world[1, :, :, :] = world[0, :, :, :]
         world[2, :, :, :] = world[0, :, :, :]
 
-        return np.clip(world, 0, 1)
+        return np.clip(world, 0, 1)**2
 
     def get_fft(self, data):
         FFT = fft(data)                                # Returns an array of complex numbers
