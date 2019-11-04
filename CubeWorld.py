@@ -60,8 +60,13 @@ from generators.g_supernova import g_supernova
 
 # 2d cube_generators
 from generators.g_2d_randomlines import g_2d_randomlines
-#from generators.g_2d_moving_line import g_2d_moving_line
+# from generators.g_2d_moving_line import g_2d_moving_line
 from generators.g_2d_growing_circle import g_2d_growing_circle
+from generators.g_2d_rain import g_2d_rain
+from generators.g_2d_square import g_2d_square
+from generators.g_2d_portal import g_2d_portal
+from generators.g_2d_random_inner_square import g_2d_random_inner_square
+from generators.g_2d_random import g_2d_random
 
 # vox cube_generators
 from generators.g_obliqueplane import g_obliqueplane
@@ -73,6 +78,7 @@ from generators.g_centralglow import g_centralglow
 from generators.g_rotating_cube import g_rotating_cube
 from generators.g_osci_corner import g_osci_corner
 from generators.g_sides import g_sides
+from generators.g_2d_test import g_2d_test
 
 #load effect modules
 from effects.e_blank import e_blank

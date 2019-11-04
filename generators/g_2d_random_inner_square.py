@@ -1,13 +1,14 @@
 # modules
 import numpy as np
 from random import randint
-from convert2d import convert2d
+from generators.convert2d import convert2d
 
 class g_2d_random_inner_square():
 
     def __init__(self):
+        pass
 
-    def control(self, waiting frames, blub1, blub2):
+    def control(self, blub0, blub1, blub2):
         pass
 
     def label(self):
@@ -20,15 +21,16 @@ class g_2d_random_inner_square():
         size = randint(0, 4)
 
         # turn on till maximum size
-        world[:, size: 9-size, size*2:19-size*2] = 1.0
+        world_2d[:, size: 10-size, 10+size:30-size] = 1.0
 
         # delete inner
-        world[:, size+1: 8-size, size*2+2:17-size*2] = 0.0
+        if size < 4:
+            world_2d[:, size+1: 9-size, 10+size+1:29-size] = 0.0
 
         # delete sides
-        world[:,10:, :] = 0.0
-        world[:,:, :10] = 0.0
-        world[:,:, 30] = 0.0
+        world_2d[:,10:, :] = 0.0
+        world_2d[:,:, :10] = 0.0
+        world_2d[:,:, 30:] = 0.0
 
 
         world = convert2d(world_2d)

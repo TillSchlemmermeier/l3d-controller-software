@@ -1,37 +1,25 @@
 # modules
 import numpy as np
 from random import randint
-from convert2d import convert2d
+from generators.convert2d import convert2d
 
-class g_square_sides():
+class g_2d_random():
 
     def __init__(self):
-        self.direction = 'right'
-        self.counter = 0
+        self.number = 1
 
     def control(self, *args):
-        if round(args[0]) > 0:
-            self.direction = 'left'
-        else:
-            self.direction = 'right'
+        self.number = int(args[0]*9)+1
 
     def label(self):
-        return ['Direction',self.direction,'empty', 'empty','empty','empty']
+        return ['Number',self.number,'empty', 'empty','empty','empty']
 
     def generate(self, step, dumpworld):
 
         world_2d = np.zeros([3, 20, 40])
 
-        # draw lines
-        if self.direction == 'right'
-            world_2d[:, :, self.counter] = 1.0
-        else:
-            world_2d[:, :, 39-self.counter] = 1.0
-
-        # take care of counter
-        self.counter += 1
-        if self.counter > 39:
-            self.counter = 0
+        for i in range(self.number):
+            world_2d[:, randint(0,19), randint(0,39)] = 1
 
         # now we have to convert it
         world = convert2d(world_2d)

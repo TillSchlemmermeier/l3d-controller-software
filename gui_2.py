@@ -64,17 +64,19 @@ class App(Tk):
         self.artnet_color_switch = IntVar()   # callback variable for artnet switch
 
 	# load generators and effects
-        self.generators = ["g_blank", "g_cube", "g_random", "g_growing_sphere","g_orbiter","g_randomlines",
-                           "g_sphere", "g_snake","g_planes", "g_planes_falling", "g_corner", "g_corner_grow",
+        self.generators = ["g_blank", "g_random", "g_orbiter","g_randomlines",
+                           "g_sphere", "g_planes", "g_planes_falling",
                            "g_shooting_star", "g_orbiter2", "g_randomcross",  "g_growing_corner",
-                           "g_rain", "g_circles", "g_falling", "g_obliqueplane", "g_obliqueplaneXYZ", "g_smiley",
-                           "g_torusrotation","g_growingface","g_pyramid", "g_orbiter3","g_gauss","g_wave",
-                           "g_drop", "g_pyramid_upsidedown", 'g_cube_edges', 'a_orbbot', 'a_squares_cut',
-                           'a_lines', 'a_multi_cube_edges', 'g_squares', 'g_rotate_plane',
-                           'a_random_cubes', 'g_soundcube', 'g_cut', 'g_bouncy', 'g_darksphere', 'g_sound_sphere',
-                           'g_trees', 'g_rising_square', 'g_inandout', 'g_soundrandom', 'g_orbiter_big', 'g_centralglow',
-                           'g_sound_grow', 'g_edgeglow', 'g_blackhole', 'g_rotating_cube', 'g_osci_corner', 'g_sides',
-                           'g_growing_square', 'a_jukebox' , 'a_jukebox_ambient', 'g_swell', 'g_collision', 'g_soundsnake', 'g_supernova', 'g_2d_moving_line',  'a_pulsating', 'a_pulsating_torus' 'g_2d_randomlines', 'g_2d_growing_circle']
+                           "g_rain",  "g_falling", "g_obliqueplane", "g_obliqueplaneXYZ",
+                           "g_torusrotation","g_growingface", "g_orbiter3","g_gauss","g_wave",
+                           'a_orbbot',  'g_squares', 'g_rotate_plane',
+                           'g_soundcube',  'g_bouncy',  'g_sound_sphere',
+                           'g_trees',   'g_soundrandom', 'g_orbiter_big', 'g_centralglow',
+                           'g_sound_grow', 'g_edgeglow', 'g_blackhole', 'g_rotating_cube',  'g_sides',
+                           'g_growing_square', 'g_swell',   'g_supernova',  'a_pulsating', 'a_pulsating_torus' 'g_2d_randomlines', 'g_2d_growing_circle', 'g_2d_rain', 'g_2d_square', 'g_2d_random_inner_square', 'g_2d_test', 'g_2d_portal', 'g_2d_random']
+
+                           # , 'a_jukebox' , 'a_jukebox_ambient' 'a_random_cubes', 'a_lines', 'a_multi_cube_edges', 'a_squares_cut','g_soundsnake', "g_circles", 'g_collision',"g_corner", "g_corner_grow", "g_cube", 'g_cube_edges','g_cut', "g_drop", 'g_darksphere',"g_growing_sphere",'g_inandout','g_osci_corner', "g_pyramid_upsidedown",  ,"g_pyramid"'g_rising_square', "g_smiley","g_snake",
+
         self.effects = ["e_blank","e_fade2blue","e_rainbow","e_staticcolor", "e_violetblue", "e_redyellow",
                         "e_tremolo", "e_gradient", "e_prod_saturation", "e_prod_hue",
                         "e_bright_osci", 'e_cut_cube', 'e_rare_strobo', 'e_s2l', 'e_remove_random', 'e_rotating_blue_orange',

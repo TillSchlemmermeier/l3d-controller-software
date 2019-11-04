@@ -35,7 +35,7 @@ class g_2d_growing_circle():
         # scales to maxsize
         size = self.maxsize * osci
         # creates hollow sphere with parameters
-        world2d[0 , :, :] = circle2d(size, 14.5, 19.5)
+        world2d[0 , :, :] = circle2d(size, 4.5, 19.5)
         world2d[1:, :, :] = world2d[0, :, :]
         world2d[2:, :, :] = world2d[0, :, :]
 
