@@ -46,6 +46,7 @@ class rendering_engine:
 
         # assign global setParameters
         self.global_parameter = array
+        self.test_list = [0 for i in range(1000)]
 
         # take care of logging
         if self.logging:
@@ -85,6 +86,7 @@ class rendering_engine:
         self.channels.append(class_channel(4))
 
         logging.warning('Initialisation complete')
+        print('init renderer')
 
     def run(self):
         """generates a frame and sends the package when cube is turned on"""
@@ -102,15 +104,22 @@ class rendering_engine:
         and send it through serial interface to the
         Arduino
         """
-        package = self.header + self.get_cubedata()
 
-        if not self.debug:
-            #print(bytearray(package))
-            self.arduino.write(bytearray(package))
+        #list = self.get_cubedata()
+        package = bytearray(self.header + self.test_list)
+#        package = bytearray(self.header + [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0])
+#        print(np.shape(self.header + [x*0 for x in range(3000)]))
+#        print(np.clip(self.get_cubedata(),0,255))
+        print(len(self.test_list))
 
-        else:
-            logging.info('Frame '+str(self.framecounter))
-            logging.info(package)
+        self.arduino.write(package)
+
+        # if not self.debug:
+        #     self.arduino.write(bytearray(package))
+        #
+        # else:
+        #     logging.info('Frame '+str(self.framecounter))
+        #     logging.info(package)
 
     def generate_frame(self):
         """
@@ -167,6 +176,7 @@ class rendering_engine:
 
         # adjust global brightness
         self.cubeworld *= self.global_parameter[1]
+        print(self.framecounter)
 
     def get_cubedata(self):
         """get vox format from the internal stored world"""

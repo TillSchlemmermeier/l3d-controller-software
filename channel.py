@@ -37,6 +37,6 @@ class class_channel:
         world = self.effect_1(world, parameters[10:15])
         world = self.effect_2(world, parameters[15:20])
         world = self.effect_3(world, parameters[20:25])
-        print(world)
+        # print(world)
 
         return world
