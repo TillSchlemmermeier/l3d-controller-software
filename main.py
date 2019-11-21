@@ -88,8 +88,8 @@ if __name__ == '__main__':
     proc_midi.start();
     proc_renderer.start()
     proc_gui.start()
-    time.sleep(1)
-    proc_midi.join();
-    self.proc_renderer.join();
-    proc_gui.join();
+#    time.sleep(1)
+#    proc_midi.join();
+#    self.proc_renderer.join();
+#    proc_gui.join();
     print('done')

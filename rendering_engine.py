@@ -46,7 +46,7 @@ class rendering_engine:
 
         # assign global setParameters
         self.global_parameter = array
-        self.test_list = [0 for i in range(1000)]
+        self.test_list = [0 for i in range(3000)]
 
         # take care of logging
         if self.logging:
