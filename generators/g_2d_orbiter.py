@@ -3,7 +3,7 @@ from scipy.signal import sawtooth
 from generators.sphere2d import sphere2d
 from generators.convert2d import convert2d
 
-
+ 
 class g_2d_orbiter():
     '''
     Generator: orbiter

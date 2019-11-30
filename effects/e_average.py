@@ -13,11 +13,11 @@ class e_average():
         self.amount = amount
 
     def label(self):
-        return ['blur amount',self.blur,'empty', 'empty','empty','empty']
+        return ['blur amount', np.round(self.amount, 2),'empty', 'empty','empty','empty']
 
     def generate(self, step, world):
 
         for i in range(3):
-            world[i, :, :, :] = (1-self.amount)world[i, :, :, :] + self.amount*fftconvolve(world[i, :, :, :], self.mean, mode='same')
+            world[i, :, :, :] = (1-self.amount)*world[i, :, :, :] + self.amount*fftconvolve(world[i, :, :, :], self.mean, mode='same')
 
         return np.clip(world, 0, 1)

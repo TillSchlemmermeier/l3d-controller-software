@@ -109,7 +109,7 @@ from effects.e_rotating_black_red import e_rotating_black_red
 from effects.e_rotating_black_orange import e_rotating_black_orange
 from effects.e_s2l_shiftcolor import e_s2l_shiftcolor
 from effects.e_s2l_revis import e_s2l_revis
-
+from effects.e_average import e_average
 #from effects.e_blur import e_blur
 from effects.e_rare_strobo import e_rare_strobo
 #from effects.e_color_silpion import e_color_silpion

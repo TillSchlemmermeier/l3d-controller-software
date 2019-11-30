@@ -75,7 +75,7 @@ class App(Tk):
                            'g_growing_square', 'g_swell',   'g_supernova',  'a_pulsating', 'a_pulsating_torus', 'a_jukebox' , 'a_jukebox_ambient' 'a_random_cubes', 'a_lines', 'a_multi_cube_edges', 'a_squares_cut','g_soundsnake', "g_circles", 'g_collision',"g_corner", "g_corner_grow", "g_cube", 'g_cube_edges','g_cut', "g_drop", 'g_darksphere',"g_growing_sphere",'g_inandout','g_osci_corner', "g_pyramid_upsidedown", "g_pyramid"'g_rising_square', "g_smiley","g_snake",
                            'g_2d_randomlines', 'g_2d_growing_circle', 'g_2d_rain', 'g_2d_square', 'g_2d_test', 'g_2d_portal', 'g_2d_random', 'g_2d_random_squares', 'g_2d_patches', 'g_2d_orbiter', 'g_2d_conway']
 
-        self.effects = ["e_blank","e_fade2blue","e_rainbow","e_staticcolor", "e_violetblue", "e_redyellow", "e_tremolo", "e_gradient", "e_prod_saturation", "e_prod_hue", "e_bright_osci", 'e_cut_cube', 'e_rare_strobo', 'e_s2l', 'e_remove_random', 'e_rotating_blue_orange', 'e_rotating_black_white', 'e_rotating_black_blue', 'e_squared', 'e_rotating_black_orange', 'e_rotating_black_red', 'e_s2l_shiftcolor', 'e_s2l_revis', 'e_random_brightness']
+        self.effects = ["e_blank","e_fade2blue","e_rainbow","e_staticcolor", "e_violetblue", "e_redyellow", "e_tremolo", "e_gradient", "e_prod_saturation", "e_prod_hue", "e_bright_osci", 'e_cut_cube', 'e_rare_strobo', 'e_s2l', 'e_remove_random', 'e_rotating_blue_orange', 'e_rotating_black_white', 'e_rotating_black_blue', 'e_squared', 'e_rotating_black_orange', 'e_rotating_black_red', 'e_s2l_shiftcolor', 'e_s2l_revis', 'e_random_brightness', 'e_average']
 
         # sort generators and effects
         self.generators.sort()
