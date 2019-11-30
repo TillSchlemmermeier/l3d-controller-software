@@ -6,10 +6,10 @@ class g_2d_column():
     def __init__(self, test = False, dim = [60, 10]):
         self.dim = dim
         self.test = test
-
+        self.amplitude = 1.0
 
     def control(self, *args):
-        self.amplitude = dist*2
+        self.amplitude = args[0]*2
 
     def label(self):
         return ['ampli',round(self.amplitude,2), 'empty', 'empty','empty','empty']
