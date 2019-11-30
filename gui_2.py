@@ -4,8 +4,7 @@ from tkinter.ttk import Combobox
 from tkinter import *
 
 from cube_utils import *
-# from cube_animations import rain_gen, gen_dots, plain_gen
-# from cube_interactive import dots_on_sphere, random, sphere, speed_decorator, hsphere, planes, lines, cube, corner, circle, blur, moveandfade, seperate, blow, random_lines
+
 from cube_rgb import createRGBWorld, combineRGBWorlds, manipulateRGBWorld, generateRainbowWorld
 # from cube_effects import *
 # from cube_generators import *
@@ -73,14 +72,10 @@ class App(Tk):
                            'g_soundcube',  'g_bouncy',  'g_sound_sphere',
                            'g_trees',   'g_soundrandom', 'g_orbiter_big', 'g_centralglow',
                            'g_sound_grow', 'g_edgeglow', 'g_blackhole', 'g_rotating_cube',  'g_sides',
-                           'g_growing_square', 'g_swell',   'g_supernova',  'a_pulsating', 'a_pulsating_torus' 'g_2d_randomlines', 'g_2d_growing_circle', 'g_2d_rain', 'g_2d_square', 'g_2d_random_inner_square', 'g_2d_test', 'g_2d_portal', 'g_2d_random']
+                           'g_growing_square', 'g_swell',   'g_supernova',  'a_pulsating', 'a_pulsating_torus', 'a_jukebox' , 'a_jukebox_ambient' 'a_random_cubes', 'a_lines', 'a_multi_cube_edges', 'a_squares_cut','g_soundsnake', "g_circles", 'g_collision',"g_corner", "g_corner_grow", "g_cube", 'g_cube_edges','g_cut', "g_drop", 'g_darksphere',"g_growing_sphere",'g_inandout','g_osci_corner', "g_pyramid_upsidedown", "g_pyramid"'g_rising_square', "g_smiley","g_snake"]
+                           # 'g_2d_randomlines', 'g_2d_growing_circle', 'g_2d_rain', 'g_2d_square', 'g_2d_random_inner_square', 'g_2d_test', 'g_2d_portal', 'g_2d_random']
 
-                           # , 'a_jukebox' , 'a_jukebox_ambient' 'a_random_cubes', 'a_lines', 'a_multi_cube_edges', 'a_squares_cut','g_soundsnake', "g_circles", 'g_collision',"g_corner", "g_corner_grow", "g_cube", 'g_cube_edges','g_cut', "g_drop", 'g_darksphere',"g_growing_sphere",'g_inandout','g_osci_corner', "g_pyramid_upsidedown",  ,"g_pyramid"'g_rising_square', "g_smiley","g_snake",
-
-        self.effects = ["e_blank","e_fade2blue","e_rainbow","e_staticcolor", "e_violetblue", "e_redyellow",
-                        "e_tremolo", "e_gradient", "e_prod_saturation", "e_prod_hue",
-                        "e_bright_osci", 'e_cut_cube', 'e_rare_strobo', 'e_s2l', 'e_remove_random', 'e_rotating_blue_orange',
-                        'e_rotating_black_white', 'e_rotating_black_blue', 'e_rotating_black_orange', 'e_rotating_black_red']
+        self.effects = ["e_blank","e_fade2blue","e_rainbow","e_staticcolor", "e_violetblue", "e_redyellow", "e_tremolo", "e_gradient", "e_prod_saturation", "e_prod_hue", "e_bright_osci", 'e_cut_cube', 'e_rare_strobo', 'e_s2l', 'e_remove_random', 'e_rotating_blue_orange', 'e_rotating_black_white', 'e_rotating_black_blue', 'e_squared', 'e_rotating_black_orange', 'e_rotating_black_red', 'e_s2l_shiftcolor', 'e_s2l_revis', 'e_random_brightness']
 
         # sort generators and effects
         self.generators.sort()

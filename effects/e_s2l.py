@@ -9,7 +9,7 @@ class e_s2l():
         self.amount = 1.0
         # sound2light stuff
         self.sample_rate = 44100
-        self.buffer_size = 2**11
+        self.buffer_size = 2**10
         self.thres_factor = 0
         self.channel = 1
 
@@ -60,13 +60,14 @@ class e_s2l():
 
     def generate(self, step, world):
         total_volume = self.update_line()
+
         world[0, :, :, :] *= total_volume[self.channel]*self.amount
         world[1, :, :, :] *= total_volume[self.channel]*self.amount
         world[2, :, :, :] *= total_volume[self.channel]*self.amount
         return np.clip(world, 0, 1)
 
     def get_fft(self, data):
-        FFT = fft(data)                                # Returns an array of complex numbers
+        FFT = fft(data)                                # #Returns an array of complex numbers
         freqs = fftfreq(self.buffer_size, 1.0/self.sample_rate)  # Returns an array containing the frequency values
 
         y = abs(FFT[0:int(len(FFT)/2)])/1000                # Get amplitude and scale
