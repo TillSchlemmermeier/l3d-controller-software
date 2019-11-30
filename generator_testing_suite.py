@@ -1,7 +1,7 @@
 # choose generator here
 
-from generators.g_collision import g_collision
-generator = g_collision()
+from generators.g_2d_square import g_2d_square
+generator = g_2d_square()
 
 # modules
 import numpy as np
@@ -9,6 +9,8 @@ from random import random
 from progress.bar import Bar
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
+
+
 
 def create_leds():
     list_world = []
@@ -51,7 +53,7 @@ bar.finish()
 print('generating images...')
 a,b,c = random(), random(), random()
 print('input values:', np.round([a,b,c], 2))
-generator = g_collision()
+generator = g_2d_square()
 generator.control(a,b,c)
 leds = create_leds()
 

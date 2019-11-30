@@ -3,10 +3,10 @@ import numpy as np
 from random import randint
 from generators.convert2d import convert2d
 
-class g_2d_random():
+class g_2d_random_squares():
 
-    def __init__(self, test = False, dim = [60, 10]):
-        self.number = 1
+    def __init__(self, test = False, dim = [60, 10] ):
+        self.number = 2
         self.dim = dim
         self.test = test
 
@@ -20,8 +20,16 @@ class g_2d_random():
 
         world_2d = np.zeros([3, self.dim[0], self.dim[1]])
 
+
         for i in range(self.number):
-            world_2d[:, randint(0,self.dim[0]-1), randint(0,self.dim[1]-1)] = 1
+            x = randint(0,self.dim[0]-1)
+            y = randint(0,self.dim[1]-1)
+
+            size = randint(0,5)
+
+            world_2d[:, x-size:x+size, y-size:y+size] = 1.0
+            world_2d[:, x-size+1:x+size-1, y-size+1:y+size-1] = 0.0
+
 
         if not self.test:
             # convert it to 2d
