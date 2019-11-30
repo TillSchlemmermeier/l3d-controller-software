@@ -8,9 +8,9 @@ from generators.g_2d_rain import g_2d_rain
 from generators.g_2d_square import g_2d_square
 from generators.g_2d_portal import g_2d_portal
 from generators.g_2d_randomlines import g_2d_randomlines
-from generators.g_2d_growing_circle import g_2d_growing_circle
-# from generators.g_2d_random_inner_square import g_2d_random_inner_square
+# from generators.g_2d_growing_circle import g_2d_growing_circle
 from generators.g_2d_random_squares import g_2d_random_squares
+<<<<<<< HEAD
 from generators.g_2d_orbiter import g_2d_orbiter
 from generators.g_2d_patches import g_2d_patches
 
@@ -18,6 +18,15 @@ from generators.g_2d_patches import g_2d_patches
 #generator = g_2d_random_squares(test = True)
 #generator = g_2d_orbiter(test = True)
 generator = g_2d_patches(test = True)
+=======
+#from generators.g_2d_orbiter import g_2d_orbiter
+from generators.g_2d_conway import g_2d_conway
+
+# generator = g_2d_square(test = True)
+# generator = g_2d_random_squares(test = True)
+# generator = g_2d_orbiter(test = True)
+generator = g_2d_conway(test = True)
+>>>>>>> 9d5298a7ea1f2d2614b635ccea6d8d046a27ae3e
 
 def convert(world):
     list_world = []
@@ -62,7 +71,10 @@ plt.ylim(-0.5, 9.5)
 
 def animate(i, world, scat):
 
+<<<<<<< HEAD
 #    time.sleep(0.5)
+=======
+>>>>>>> 9d5298a7ea1f2d2614b635ccea6d8d046a27ae3e
 
     world *= 0.5
     world += generator.generate(i, world)
