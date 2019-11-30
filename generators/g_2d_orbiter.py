@@ -1,6 +1,8 @@
 import numpy as np
 from scipy.signal import sawtooth
 from generators.sphere2d import sphere2d
+from generators.convert2d import convert2d
+
 
 class g_2d_orbiter():
     '''
@@ -44,7 +46,14 @@ class g_2d_orbiter():
         world[1,:,:] = world[0,:,:]
         world[2,:,:] = world[0,:,:]
 
-        return world
+        if not self.test:
+            # convert it to 2d
+            world3d = convert2d(world)
+        else:
+            world3d = world
+
+
+        return world3d
 
 def polar2z(r, theta):
     # polar coordinates to cartesian

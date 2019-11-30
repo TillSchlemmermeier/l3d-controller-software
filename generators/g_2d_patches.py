@@ -6,7 +6,7 @@ from generators.convert2d import convert2d
 class g_2d_patches():
 
     def __init__(self, test = False, dim = [60, 10]):
-        self.pos = [randint(1,55), randint(1,5)]
+        self.pos = [randint(0,54), randint(1,4)]
         self.dim = dim
         self.test = test
 
@@ -48,7 +48,7 @@ class g_2d_patches():
         pass
 
     def label(self):
-        return ['Number',self.number,'Speed', self.wait,'Up/Down',self.dir]
+        return ['empty','empty','empty', 'empty','empty','empty']
 
     def generate(self, step, dumpworld):
 
@@ -56,7 +56,7 @@ class g_2d_patches():
 
         if self.counter == 0:
             self.counter = len(self.patch_frames)
-            self.pos = [randint(0,55), randint(0,5)]
+            self.pos = [randint(0,54), randint(0,4)]
 
         else:
             world_2d[0, self.pos[0]:self.pos[0]+6, self.pos[1]:self.pos[1]+5] = self.patch_frames[-self.counter]

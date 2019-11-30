@@ -43,7 +43,7 @@ class g_2d_growing_circle():
 
         if not self.test:
             # convert it to 2d
-            world = convert2d(world_2d)
+            world = convert2d(world2d)
         else:
             world = world2d
 
