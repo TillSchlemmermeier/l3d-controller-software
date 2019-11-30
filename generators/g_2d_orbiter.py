@@ -23,7 +23,7 @@ class g_2d_orbiter():
 
     def control(self, dist, theta, fade):
         self.distance = dist*8
-        self.theta = 2*(theta-0.5)
+        self.theta = 3*(theta-0.5)
         self.fade = 3+3*fade
 
     def label(self):
