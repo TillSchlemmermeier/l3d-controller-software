@@ -9,7 +9,7 @@ class e_s2l_revis():
         self.amount = 1.0
         # sound2light stuff
         self.rate = 44100
-        self.buffer = 2**11
+        self.buffer = 882
         self.last = 0
 
         p = pyaudio.PyAudio()
@@ -30,12 +30,12 @@ class e_s2l_revis():
     def control(self, amount, threshold, channel):
         self.amount = amount
         self.threshold = threshold
-        self.channel = int(channel*4)
+        # self.channel = int(channel*4)
 
     def label(self):
         return ['amount',round(self.amount,2),
                 'threshold',round(self.threshold,2),
-                'channel',round(self.channel)]
+                'channel',round(self.channel, 2)]
 
     def generate(self, step, world):
         total_volume = self.update_line()
@@ -45,14 +45,12 @@ class e_s2l_revis():
         return np.clip(world, 0, 1)
 
     def update_line(self):
-        try:
-            data = np.fft.rfft(np.fromstring(
-                self.stream.read(self.buffer), dtype=np.float32)
-            )
+        data = np.fft.rfft(np.fromstring(
+            self.stream.read(self.buffer), dtype=np.float32))
 
-            volume = np.mean(np.abs(data)[int(len(data)/2):])
+        volume = np.mean(np.abs(data)[int(len(data)/2):])
 
-        except IOError:
-            pass
+
+        self.channel = volume
 
         return np.clip(volume-self.threshold, 0, 1E3)

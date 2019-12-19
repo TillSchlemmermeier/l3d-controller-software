@@ -28,7 +28,7 @@ class g_2d_moving_orbiter():
     def control(self, dist, theta, moving):
         self.amplitude = dist*30
         self.theta = 3*(theta-0.5)
-        self.moving = moving*2
+        self.moving = moving
 #        self.fade = 3+3*fade
 
     def label(self):
@@ -44,10 +44,10 @@ class g_2d_moving_orbiter():
 
         [sx, sy] = polar2z(temp_d, temp_theta)
 
-        x = np.sin(self.moving) * self.amplitude
+        x = 29.5 - np.sin(step*self.moving) * self.amplitude
 
         # switch on leds depending on distance
-        world[0,:,:] = sphere2d(sx+self.dim[0]/2-0.5 + x, sy+self.dim[1]/2-0.5, self.fade)
+        world[0,:,:] = sphere2d(x+sx, sy+self.dim[1]/2-0.5, self.fade)
         world[1,:,:] = world[0,:,:]
         world[2,:,:] = world[0,:,:]
 

@@ -9,7 +9,7 @@ class e_s2l():
         self.amount = 1.0
         # sound2light stuff
         self.sample_rate = 44100
-        self.buffer_size = 2**10
+        self.buffer_size = 882
         self.thres_factor = 0
         self.channel = 1
 

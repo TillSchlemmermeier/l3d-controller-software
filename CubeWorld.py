@@ -56,6 +56,7 @@ from generators.g_growing_square import g_growing_square
 from generators.g_collision import g_collision
 from generators.g_soundsnake import g_soundsnake
 from generators.g_supernova import g_supernova
+from generators.g_column  import g_column
 #from generators.a_pulsating_torus import a_pulsating_torus
 
 # 2d cube_generators
@@ -83,8 +84,9 @@ from generators.g_centralglow import g_centralglow
 from generators.g_rotating_cube import g_rotating_cube
 from generators.g_osci_corner import g_osci_corner
 from generators.g_sides import g_sides
-
-
+from generators.g_2d_moving_orbiter import g_2d_moving_orbiter
+from generators.g_2d_column import g_2d_column
+from generators.g_2d_growing_circle_2 import g_2d_growing_circle_2
 #load effect modules
 from effects.e_blank import e_blank
 from effects.e_fade2blue import e_fade2blue
@@ -109,7 +111,7 @@ from effects.e_rotating_black_red import e_rotating_black_red
 from effects.e_rotating_black_orange import e_rotating_black_orange
 from effects.e_s2l_shiftcolor import e_s2l_shiftcolor
 from effects.e_s2l_revis import e_s2l_revis
-from effects.e_average import e_average
+from effects.e_mean import e_mean
 #from effects.e_blur import e_blur
 from effects.e_rare_strobo import e_rare_strobo
 #from effects.e_color_silpion import e_color_silpion

@@ -35,7 +35,7 @@ def init_line():
 
 def update_line(i):
     try:
-        data = np.fft.rfft(np.fromstring(
+        data = np.fft.rfft(np.frombuffer(
             stream.read(BUFFER), dtype=np.float32)
         )
     except IOError:

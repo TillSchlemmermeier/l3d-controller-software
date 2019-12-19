@@ -18,7 +18,7 @@ class g_2d_column():
         # generate empty world
         world = np.zeros([3, self.dim[0], self.dim[1]])
 
-        for i in range(30):
+        for i in range(29):
             world[:, i, :] = i/30.0
             world[:, -i, :] = i/30.0
 

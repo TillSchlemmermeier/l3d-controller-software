@@ -2,12 +2,13 @@
 import numpy as np
 from scipy.signal import fftconvolve, gaussian
 
-class e_average():
+class e_mean():
 
     def __init__(self):
         self.amount = 0.1
         self.mean = np.zeros([3,3,3])
-        self.mean[:, :, :] = 1/27.0
+        self.mean[:, :, :] = 1/18.0
+
 
     def control(self, amount, blub0, blub1):
         self.amount = amount
