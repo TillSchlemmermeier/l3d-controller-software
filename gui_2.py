@@ -72,23 +72,17 @@ class App(Tk):
                            'g_soundcube',  'g_bouncy',  'g_sound_sphere',
                            'g_trees',   'g_soundrandom', 'g_orbiter_big', 'g_centralglow',
                            'g_sound_grow', 'g_edgeglow', 'g_blackhole', 'g_rotating_cube',  'g_sides',
-                           'g_growing_square', 'g_swell',   'g_supernova',  'a_pulsating', 'a_pulsating_torus', 'a_jukebox' , 'a_jukebox_ambient' 'a_random_cubes', 'a_lines', 'a_multi_cube_edges', 'a_squares_cut','g_soundsnake', "g_circles", 'g_collision',"g_corner", "g_corner_grow", "g_cube", 'g_cube_edges','g_cut', "g_drop", 'g_darksphere',"g_growing_sphere",'g_inandout','g_osci_corner', "g_pyramid_upsidedown", "g_pyramid"'g_rising_square', "g_smiley","g_snake", "g_column"]
+                           'g_growing_square', 'g_swell',   'g_supernova',  'a_pulsating', 'a_pulsating_torus', 'a_jukebox' , 'a_jukebox_ambient' 'a_random_cubes', 'a_lines', 'a_multi_cube_edges', 'a_squares_cut','g_soundsnake', "g_circles", 'g_collision',"g_corner", "g_corner_grow", "g_cube", 'g_cube_edges','g_cut', "g_drop", 'g_darksphere',"g_growing_sphere",'g_inandout','g_osci_corner', "g_pyramid_upsidedown", "g_pyramid"'g_rising_square', "g_smiley","g_snake", "g_column", "a_multi_cube_edges_2"]
                            #'g_2d_randomlines', 'g_2d_growing_circle', 'g_2d_rain', 'g_2d_square', 'g_2d_test', 'g_2d_portal', 'g_2d_random', 'g_2d_random_squares', 'g_2d_patches', 'g_2d_orbiter', 'g_2d_conway', 'g_2d_column', 'g_2d_growing_circle_2','g_2d_moving_orbiter']
 
-        self.effects = ["e_blank","e_fade2blue","e_rainbow","e_staticcolor", "e_violetblue", "e_redyellow", "e_tremolo", "e_gradient", "e_prod_saturation", "e_prod_hue", "e_bright_osci", 'e_cut_cube', 'e_rare_strobo', 'e_s2l', 'e_remove_random', 'e_rotating_blue_orange', 'e_rotating_black_white', 'e_rotating_black_blue', 'e_squared', 'e_rotating_black_orange', 'e_rotating_black_red', 'e_s2l_shiftcolor', 'e_s2l_revis', 'e_random_brightness', 'e_mean']
+        self.effects = ["e_blank","e_fade2blue","e_rainbow","e_staticcolor", "e_violetblue", "e_redyellow", "e_tremolo", "e_gradient", "e_prod_saturation", "e_prod_hue", "e_bright_osci", 'e_cut_cube', 'e_rare_strobo', 'e_s2l', 'e_remove_random', 'e_rotating_blue_orange', 'e_rotating_black_white', 'e_rotating_black_blue', 'e_squared', 'e_rotating_black_orange', 'e_rotating_black_red', 'e_s2l_shiftcolor', 'e_s2l_revis', 'e_random_brightness', 'e_mean', 'e_mean_vertical', 'e_growing_sphere']
 
         # sort generators and effects
         self.generators.sort()
         self.effects.sort()
 
-        # Header Information
-        self.hSpeed = 1
-        self.hBright = 250
-        self.hPal = 116
-        self.hPalMode = 0
-        self.hRGBMode = 1
-
-        self.send_array_rgb = bytearray(3009)
+        #array for transmission
+        self.send_array_rgb = bytearray(3004)
 
         # what am i for?
         self.MidiButtonListBool = {1:False,4:False,7:False,10:False,13:False,16:False,19:False,22:False,3:False,6:False,9:False,12:False,15:False,18:False,21:False,24:False}
@@ -460,14 +454,9 @@ class App(Tk):
             send_list.append(int(69))  # E
             send_list.append(int(69))  # E
             send_list.append(int(70))  # F
-            send_list.append(int(self.hSpeed))    # SPEED
-            send_list.append(int(self.hBright))   # BRIGHT
-            send_list.append(int(self.hPalMode))  # PalMODE
-            send_list.append(int(self.hPal))      # Pal Select
-            send_list.append(int(self.hRGBMode))  # RGB Mode ON
 
             # this sleep is stupid, we need another solution!
-            time.sleep(0.015)
+            time.sleep(0.005)
             send_list.extend(self.cubeWorld.get_cubedata())
             package = bytearray(send_list)
 

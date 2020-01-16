@@ -35,11 +35,11 @@ class g_growing_sphere():
 
         # oscillates between 0 and 1
         if self.oscillate < 0.3:
-            osci = np.sin(step*self.growspeed)*0.5 + 1
+            osci = np.sin(step*self.growspeed)*0.5 + 0.5
         elif self.oscillate > 0.7:
-            osci = sawtooth(step*self.growspeed, 0)*0.5 + 1
+            osci = sawtooth(step*self.growspeed, 0)*0.5 + 0.5
         else:
-            osci = sawtooth(step*self.growspeed)*0.5 + 1
+            osci = sawtooth(step*self.growspeed)*0.5 + 0.5
 
         # scales to maxsize
         size = self.maxsize * osci

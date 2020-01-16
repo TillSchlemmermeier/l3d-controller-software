@@ -4,10 +4,10 @@ import numpy as np
 class e_squared():
 
     def __init__(self):
-        self.speed = 1
+        self.exponent = 1
 
     def control(self, speed, blub0, blub1):
-        self.speed = 1.0 + speed
+        self.exponent = 0.5 + speed*2
 
     def label(self):
         return ['exponent', round(self.exponent,2),'empty', 'empty','empty','empty']

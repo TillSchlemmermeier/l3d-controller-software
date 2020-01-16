@@ -1,20 +1,9 @@
 # modules
 import numpy as np
-# from cube_utils import *
 from scipy.signal import sawtooth
-
+from generators.g_genhsphere import gen_hsphere
 
 class e_growing_sphere():
-    '''
-    effect: growing_sphere
-
-    a growing hollow sphere in the middle of the cube
-
-    Parameters:
-    - maxsize
-    - growspeed
-    - oscillate y/n
-    '''
 
     def __init__(self):
         self.maxsize = 10
@@ -23,7 +12,7 @@ class e_growing_sphere():
         self.oscillate = 0
 
     def label(self):
-        return ['maxsize',round(self.maxsize,2),'growspeed',round(self.growspeed,2),'oscillate?',round(self.oscillate,2)]
+        return ['rest brightness',round(self.amount,2),'growspeed',round(self.growspeed,2),'oscillate',round(self.oscillate,2)]
 
     def control(self, amount, growspeed, oscillate):
         self.amount = amount
@@ -31,23 +20,23 @@ class e_growing_sphere():
         self.oscillate = oscillate
 
     def generate(self, step, dumpworld):
-        world = np.zeros([3, 10, 10, 10])
+        world = dumpworld
 
         # oscillates between 0 and 1
         if self.oscillate < 0.5:
-            osci = np.sin(step*self.growspeed)*0.5 + 1
+            osci = np.sin(step*self.growspeed)*0.5 + 0.5
         else:
-            osci = sawtooth(step*self.growspeed)*0.5 + 1
+            osci = sawtooth(step*self.growspeed)*0.5 + 0.5
 
         # scales to maxsize
         size = self.maxsize * osci
 
         # creates hollow sphere with parameters
-        world[0, :, :, :] *= self.amount/hsphere(size)
-        world[1, :, :, :] *= self.amount/hsphere(size)
-        world[2, :, :, :] *= self.amount/hsphere(size)
+        world[0, :, :, :] = world[0, :, :, :] * (self.amount + np.clip(gen_hsphere(size, 4.5, 4.5, 4.5),0,1))
+        world[1, :, :, :] = world[1, :, :, :] * (self.amount + np.clip(gen_hsphere(size, 4.5, 4.5, 4.5),0,1))
+        world[2, :, :, :] = world[2, :, :, :] * (self.amount + np.clip(gen_hsphere(size, 4.5, 4.5, 4.5),0,1))
 
-        return world
+        return np.clip(world,0,1)
 
 
 def hsphere(radius):

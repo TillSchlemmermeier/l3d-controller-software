@@ -26,7 +26,8 @@ class g_column():
             else:
                 world[:, 9-i, :, :] = i/30.0
 
+        world = np.clip(world,0,1)
         world = world ** self.amplitude
         world -= uniform(0,1)
 
-        return world
+        return np.clip(world,0,1)

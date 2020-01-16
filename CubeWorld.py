@@ -57,6 +57,7 @@ from generators.g_collision import g_collision
 from generators.g_soundsnake import g_soundsnake
 from generators.g_supernova import g_supernova
 from generators.g_column  import g_column
+from generators.a_multi_cube_edges_2 import a_multi_cube_edges_2
 #from generators.a_pulsating_torus import a_pulsating_torus
 
 # 2d cube_generators
@@ -73,7 +74,6 @@ from generators.g_2d_orbiter import g_2d_orbiter
 from generators.g_2d_patches import g_2d_patches
 from generators.g_2d_random_squares import g_2d_random_squares
 
-
 # vox cube_generators
 from generators.g_obliqueplane import g_obliqueplane
 from generators.g_obliqueplaneXYZ import g_obliqueplaneXYZ
@@ -87,6 +87,7 @@ from generators.g_sides import g_sides
 from generators.g_2d_moving_orbiter import g_2d_moving_orbiter
 from generators.g_2d_column import g_2d_column
 from generators.g_2d_growing_circle_2 import g_2d_growing_circle_2
+
 #load effect modules
 from effects.e_blank import e_blank
 from effects.e_fade2blue import e_fade2blue
@@ -103,6 +104,7 @@ from effects.e_prod_hue import e_prod_hue
 from effects.e_bright_osci import e_bright_osci
 from effects.e_cut_cube import e_cut_cube
 from effects.e_remove_random import e_remove_random
+from effects.e_growing_sphere import e_growing_sphere
 from effects.e_rotating_blue_orange import e_rotating_blue_orange
 from effects.e_rotating_black_blue import e_rotating_black_blue
 from effects.e_rotating_black_white import e_rotating_black_white
@@ -112,6 +114,7 @@ from effects.e_rotating_black_orange import e_rotating_black_orange
 from effects.e_s2l_shiftcolor import e_s2l_shiftcolor
 from effects.e_s2l_revis import e_s2l_revis
 from effects.e_mean import e_mean
+from effects.e_mean_vertical import e_mean_vertical
 #from effects.e_blur import e_blur
 from effects.e_rare_strobo import e_rare_strobo
 #from effects.e_color_silpion import e_color_silpion
@@ -321,6 +324,10 @@ class CubeWorld:
             self.CHA[1].control(self.control_dict[20],self.control_dict[21],self.control_dict[22])
             self.world_CHA = self.CHA[1].generate(step, self.world_CHA)
             # Effect A 2
+
+        self.world_CHA = self.world_CHA + (self.world_CHA_fade * self.fade_A)
+
+        if step%self.speed_A == 0:
             self.CHA[2].control(self.control_dict[85],self.control_dict[86],self.control_dict[87])
             self.world_CHA = self.CHA[2].generate(step, self.world_CHA)
 
@@ -332,6 +339,11 @@ class CubeWorld:
             # Effect B 1
             self.CHB[1].control(self.control_dict[28],self.control_dict[29],self.control_dict[30])
             self.world_CHB = self.CHB[1].generate(step, self.world_CHB)
+
+
+        self.world_CHB = self.world_CHB + (self.world_CHB_fade * self.fade_B)
+
+        if step%self.speed_B == 0:
             # Effect B 2
             self.CHB[2].control(self.control_dict[88],self.control_dict[89],self.control_dict[90])
             self.world_CHB = self.CHB[2].generate(step, self.world_CHB)
@@ -344,9 +356,14 @@ class CubeWorld:
             # Effect C 1
             self.CHC[1].control(self.control_dict[50],self.control_dict[51],self.control_dict[52])
             self.world_CHC = self.CHC[1].generate(step, self.world_CHC)
+
+        self.world_CHC = self.world_CHC + (self.world_CHC_fade * self.fade_C)
+
+        if step%self.speed_C == 0:
             # Effect C 2
             self.CHC[2].control(self.control_dict[91],self.control_dict[92],self.control_dict[93])
             self.world_CHC = self.CHC[2].generate(step, self.world_CHC)
+
 
         '''
         if self.switch_artnet or self.switch_artnet_color:
@@ -408,9 +425,9 @@ class CubeWorld:
         # Global fade
         self.fade = self.control_dict[59]
 
-        self.world_CHA = self.world_CHA + (self.world_CHA_fade * self.fade_A)
-        self.world_CHB = self.world_CHB + (self.world_CHB_fade * self.fade_B)
-        self.world_CHC = self.world_CHC + (self.world_CHC_fade * self.fade_C)
+        #self.world_CHA = self.world_CHA + (self.world_CHA_fade * self.fade_A)
+        #self.world_CHB = self.world_CHB + (self.world_CHB_fade * self.fade_B)
+        #self.world_CHC = self.world_CHC + (self.world_CHC_fade * self.fade_C)
 
         # Sum Channels
         self.world_TOT = self.amount_a * self.world_CHA +  \
