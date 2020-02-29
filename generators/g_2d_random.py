@@ -5,7 +5,7 @@ from generators.convert2d import convert2d
 
 class g_2d_random():
 
-    def __init__(self, test = False, dim = [60, 10]):
+    def __init__(self, test = False, dim = [20, 10]):
         self.number = 1
         self.dim = dim
         self.test = test

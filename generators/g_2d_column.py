@@ -3,7 +3,7 @@ from generators.convert2d import convert2d
 from random import uniform
 
 class g_2d_column():
-    def __init__(self, test = False, dim = [60, 10]):
+    def __init__(self, test = False, dim = [20, 10]):
         self.dim = dim
         self.test = test
         self.amplitude = 1.0

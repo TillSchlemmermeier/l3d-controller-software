@@ -7,7 +7,7 @@ from scipy.signal import sawtooth
 
 class g_2d_growing_circle_2():
 
-    def __init__(self, test = False, dim = [60, 10]):
+    def __init__(self, test = False, dim = [20, 10]):
         self.maxsize = 5
         self.minsize = 1
         self.speed = 0

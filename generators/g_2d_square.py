@@ -5,7 +5,7 @@ from generators.convert2d import convert2d
 
 class g_2d_square():
 
-    def __init__(self, test = False, dim = [60, 10] ):
+    def __init__(self, test = False, dim = [20, 10] ):
         self.wait = 2
         self.step = 0
         self.state = 1

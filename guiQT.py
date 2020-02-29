@@ -230,7 +230,7 @@ class MainWindow(QtWidgets.QMainWindow):
         global_parameter[0] = 0
 
     def update_fighter_values(self):
-        self.stringArray_ch1[2].setText("Brightness : "+str(global_parameter[41])
+        self.stringArray_ch1[2].setText("Brightness : "+str(global_parameter[41]))
         self.stringArray_ch1[2].setText("Fade : "+str(global_parameter[42]))
         self.stringArray_ch1[2].setText("Shutter : "+str(global_parameter[43]))
 

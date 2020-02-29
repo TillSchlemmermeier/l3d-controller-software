@@ -5,7 +5,7 @@ from generators.convert2d import convert2d
 
 class g_2d_patches():
 
-    def __init__(self, test = False, dim = [60, 10]):
+    def __init__(self, test = False, dim = [20, 10]):
         self.pos = [randint(0,54), randint(1,4)]
         self.dim = dim
         self.test = test

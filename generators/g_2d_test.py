@@ -16,7 +16,7 @@ class g_2d_test():
 
     def generate(self, step, dumpworld):
 
-        world_2d = np.zeros([3, 60, 10])
+        world_2d = np.zeros([3, 20, 10])
 
 
         if self.counter >= 60:

@@ -3,7 +3,7 @@ from scipy.signal import sawtooth
 from generators.sphere2d import sphere2d
 from generators.convert2d import convert2d
 
- 
+
 class g_2d_orbiter():
     '''
     Generator: orbiter
@@ -16,7 +16,7 @@ class g_2d_orbiter():
     - angle z osc
 
     '''
-    def __init__(self, test = False, dim = [60, 10]):
+    def __init__(self, test = False, dim = [20, 10]):
         self.distance = 2
         self.theta = 0.5
         self.dim = dim

@@ -16,7 +16,7 @@ class g_2d_moving_orbiter():
     - angle z osc
 
     '''
-    def __init__(self, test = False, dim = [60, 10]):
+    def __init__(self, test = False, dim = [20, 10]):
         self.distance = 2
         self.theta = 0.5
         self.dim = dim

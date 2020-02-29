@@ -7,11 +7,11 @@ from generators.g_growing_sphere import g_growing_sphere
 from colorsys import rgb_to_hsv, hsv_to_rgb
 
 
-class a_pulsating_torus():
+class a_pulsating():
     '''
-    Automat: pulsating torus
+    Automat: pulsating
 
-    the torus should rotate all the time, in blue
+    does stuff
     '''
 
     def __init__(self):
@@ -28,9 +28,9 @@ class a_pulsating_torus():
         # 1: size of sphere
         # 2: fade of torus
 
-       self.blue =  hsv_to_rgb(240/360.0, 1.0, 1.0)
-       self.red =  hsv_to_rgb(24/360.0, 1.0, 1.0)
-       self.orange =  hsv_to_rgb(48/360.0, 1.0, 1.0)
+        self.blue =  hsv_to_rgb(240/360.0, 1.0, 1.0)
+        self.red =  hsv_to_rgb(24/360.0, 1.0, 1.0)
+        self.orange =  hsv_to_rgb(48/360.0, 1.0, 1.0)
 
     def control(self, count_fade, start_strobo, blub1):
         self.period = int(count_fade * 200)+50
