@@ -307,12 +307,14 @@ class MainWindow(QtWidgets.QMainWindow):
         """
         self.global_parameter[0] = 1
         self.global_parameter[1] = 1
-        self.global_parameter[2] = 0.5
+        self.global_parameter[2] = 0.0
         self.global_parameter[3] = 1.0
         self.global_parameter[20] = 1
+        # activate channel 1
         self.global_parameter[40] = 1
         self.global_parameter[41] = 1
-
+        # activate channel 2
+        self.global_parameter[70] = 1
 
     def stop_Renderer(self):
         self.global_parameter[0] = 0

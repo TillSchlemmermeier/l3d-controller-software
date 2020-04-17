@@ -5,9 +5,7 @@ import numpy as np
 class g_cube():
     '''
     Generator: cube
-
     a cube in the cube
-
     Parameters:
     - size
     - sides y/n : just the edges or also the sides of the cube?
@@ -22,7 +20,7 @@ class g_cube():
 
     def __call__(self, args):
         self.size = round(args[0]*4)
-        if sides > 0:
+        if args[0] > 0.5:
             self.sides = False
         else:
             self.sides = True

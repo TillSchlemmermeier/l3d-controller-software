@@ -55,6 +55,9 @@ generators = []
 generators.append(g_blank)
 generators.append(g_random)
 generators.append(g_planes)
+generators.append(g_cube)
+
+
 generators.append(g_gauss)
 generators.append(g_growing_sphere)
 generators.append(g_wavepattern)

@@ -13,7 +13,7 @@ import subprocess   # obsolete?
 from PyQt5 import QtWidgets, QtGui, QtCore
 import numpy as np
 
-from MidiDevice import class_fighter, class_akai
+from MidiDevice import class_fighter, class_akai, class_launchpad
 from gui_class import MainWindow
 
 import multiprocessing as mp
@@ -22,14 +22,15 @@ import multiprocessing as mp
 #from mainwindow import Ui_MainWindow
 
 
-def midi_fighter(array):
+def midi_devices(array):
     '''
     Midi Thread
     '''
     print('...starting midi thread')
     # we should do something to detect ports! -> YES we should :)
     midifighter = class_fighter(array)
-    # launchpad = class_akai()
+    launchpad = class_launchpad(array)
+    akai = class_akai(array)
 
     while True:
         time.sleep(1)
@@ -74,20 +75,16 @@ if __name__ == '__main__':
         midi = pool.apply_async(midi_fighter(global_parameter))
         render = pool.apply_async(rendering(global_parameter))
 
-
-
-
     print('Done')
-
     '''
-
-    proc_midi = mp.Process(target=midi_fighter, args = [global_parameter])
+    proc_midi = mp.Process(target=midi_devices, args = [global_parameter])
     proc_renderer = mp.Process(target=rendering, args = [global_parameter])
     proc_gui = mp.Process(target=gui, args = [global_parameter])
     print('start');
     proc_midi.start();
     proc_renderer.start()
     proc_gui.start()
+
 #    time.sleep(1)
 #    proc_midi.join();
 #    self.proc_renderer.join();

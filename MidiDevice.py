@@ -2,7 +2,7 @@
 import time as time
 from rtmidi.midiutil import open_midiinput,open_midioutput, open_midiport
 #from rtmidi.midiconstants import NOTE_ON, NOTE_OFF,CONTROL_CHANGE
-# from global_parameter_module import global_parameter
+#from global_parameter_module import global_parameter
 import numpy as np
 
 class class_akai:
@@ -12,17 +12,16 @@ class class_akai:
 
         # set callback
         self.midiin.set_callback(self.event)
-
         self.global_parameter = array
 
     def event(self, event, data=None):
         """Call gets midi message and calls the mapping routine"""
         message, deltatime = event
-#        print(message)
+
         # faders are 19, 23, 27, 31, 49, 53, 57, 61,62
 
         # global brightness
-        if message[1] == 61:
+        if message[1] == 62:
             self.global_parameter[1] = message[2]/127.0
         # channel brightness
         elif message[1] == 49:
@@ -44,11 +43,11 @@ class class_akai:
             self.global_parameter[132] = message[2]/127.0
 
 class class_launchpad:
-    def __init__(self):
+    def __init__(self,array):
         # open midi input
         self.midiin, self.portname_in = open_midiinput(port = 'Launchpad')
         self.midiout, self.portname_out = open_midioutput(port = 'Launchpad')
-
+        self.global_parameter = array
         # turn leds off
         for i in range(130):
             self.midiout.send_message([144, i, 0])
@@ -70,13 +69,13 @@ class class_launchpad:
         # this are the round buttons at the top
         if message[0] == 176:
             if message[1]   == 104 and message[2] == 127:
-                global_parameter[40] = int(not global_parameter[40])
+                self.global_parameter[40] = int(not self.global_parameter[40])
             elif message[1] == 105 and message[2] == 127:
-                global_parameter[70] = int(not global_parameter[70])
+                self.global_parameter[70] = int(not self.global_parameter[70])
             elif message[1] == 106 and message[2] == 127:
-                global_parameter[100] = int(not global_parameter[100])
+                self.global_parameter[100] = int(not self.global_parameter[100])
             elif message[1] == 107 and message[2] == 127:
-                global_parameter[130] = int(not global_parameter[130])
+                self.global_parameter[130] = int(not self.global_parameter[130])
 
         # parse message
         elif message[0] == 144 and message[2] == 0:
@@ -97,7 +96,8 @@ class class_launchpad:
                         print('no stored presets...')
                     else:
                         index = 19 + self.state[0] + 5* self.state[1]
-                        global_parameter[index] = int(self.convert(message[1])-1)
+                        self.global_parameter[index] = int(self.convert(message[1])-1)
+                        print('launchpad sets: ', index, self.global_parameter[index])
 
         # send colors and state at the end
         self.sendstate()
@@ -109,10 +109,10 @@ class class_launchpad:
             self.midiout.send_message([144, i, 0])
 
 	# send the state of the channel switches (on/off)
-        self.midiout.send_message([176, 104, global_parameter[ 40]*127])
-        self.midiout.send_message([176, 105, global_parameter[ 70]*127])
-        self.midiout.send_message([176, 106, global_parameter[100]*127])
-        self.midiout.send_message([176, 107, global_parameter[130]*127])
+        self.midiout.send_message([176, 104, self.global_parameter[ 40]*127])
+        self.midiout.send_message([176, 105, self.global_parameter[ 70]*127])
+        self.midiout.send_message([176, 106, self.global_parameter[100]*127])
+        self.midiout.send_message([176, 107, self.global_parameter[130]*127])
 
         # if idle state, we can open the selection menu
         if self.state == 0:
