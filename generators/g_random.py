@@ -1,6 +1,7 @@
 # modules
 import numpy as np
 from random import randint
+from global_parameter
 
 class g_random():
     '''
@@ -10,8 +11,10 @@ class g_random():
         print(' initialize g_random')
         self.number_of_leds = 1
 
-    def return_values():
-        pass#return {'Number of LEDs', self.number_of_leds}
+    def return_values(self):
+        return [['Number of LEDs', str(self.number_of_leds)],
+				['', ''],
+				['', '']]
 
     def __call__(self, args):
         self.number_of_leds = int((args[0])*10)

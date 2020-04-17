@@ -11,7 +11,9 @@ class e_rotation():
         self.step = 0
 
     def return_values(self):
-        pass
+        return [['', ''],
+				['', ''],
+				['', '']]
 
     def __call__(self, world, args):
         self.xspeed = 10*args[0]

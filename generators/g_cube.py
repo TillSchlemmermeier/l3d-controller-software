@@ -16,7 +16,9 @@ class g_cube():
         self.sides = False
 
     def return_values(self):
-        pass
+        return [['', ''],
+				['', ''],
+				['', '']]
 
     def __call__(self, args):
         self.size = round(args[0]*4)

@@ -19,7 +19,7 @@ class rendering_engine:
     - entries ordered as described in
       readme
     """
-    def __init__(self, array, log=False):
+    def __init__(self, array, labels, log=False):
         """
         Initialises the rendering engine
 
@@ -46,6 +46,7 @@ class rendering_engine:
 
         # assign global setParameters
         self.global_parameter = array
+		self.global_label = label
         self.test_list = [64 for i in range(3000)]
 
         # take care of logging
@@ -127,6 +128,8 @@ class rendering_engine:
         index_settings = 20     # information about choice of generators, ...
         index_parameters = 40   # parameter like brightness, generator settings, ...
 
+		index_label = 0
+
         for i in range(4):      # loop through channels
             channel = self.channels[i]
             # check whether cannel is active, otherwise overrides channel world
@@ -139,6 +142,10 @@ class rendering_engine:
 
                 # calculate frame
                 new_world = channel.render_frame(self.framecounter, self.global_parameter[index_parameters:index_parameters+30])
+
+				# get current values
+				print(channel.get_labels())
+				
             else:
                 new_world = np.zeros([3, 10, 10, 10])
 
@@ -148,6 +155,7 @@ class rendering_engine:
             # increase index
             index_settings += 5
             index_parameters += 30
+			index_label += 16
 
         # calculate brightness for channels
         # we have the problem, that we want the channels to add

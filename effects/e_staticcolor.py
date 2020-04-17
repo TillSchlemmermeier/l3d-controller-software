@@ -15,7 +15,9 @@ class e_staticcolor():
         self.blue = 1.0
 
     def return_values(self):
-        pass
+        return [['', ''],
+				['', ''],
+				['', '']]
 
     def __call__(self, world, args):
 

@@ -9,5 +9,10 @@ class e_blank():
     def __init__(self):
         pass
 
+    def return_values():
+        return [['', ''],
+				['', ''],
+				['', '']]
+
     def __call__(self, world, args):
         return world

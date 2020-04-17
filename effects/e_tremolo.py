@@ -14,7 +14,9 @@ class e_tremolo():
         self.step = 0
 
     def return_values(self):
-        pass
+        return [['', ''],
+				['', ''],
+				['', '']]
 
     def __call__(self, world, args):
 		# parse input

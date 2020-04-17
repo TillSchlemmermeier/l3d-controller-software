@@ -14,7 +14,9 @@ class g_wave():
         self.maxsize = 30
 
     def return_values(self):
-        pass
+        return [['', ''],
+				['', ''],
+				['', '']]
 
     #def generate(self, step, dumpworld):
     def __call__(self, args):

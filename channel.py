@@ -36,6 +36,15 @@ class class_channel:
     def get_settings(self):
         return self.settings_list
 
+	def get_labels(self):
+		list = []
+		list.append(self.generator.return_values())
+		list.append(self.effect_1.return_values())
+		list.append(self.effect_2.return_values())
+		list.append(self.effect_3.return_values())
+
+		return list
+
     def render_frame(self, framecounter, parameters):
         '''
         renders frame
@@ -45,5 +54,5 @@ class class_channel:
         world = self.effect_1(world, parameters[10:15])
         world = self.effect_2(world, parameters[15:20])
         world = self.effect_3(world, parameters[20:25])
-        
+
         return world
