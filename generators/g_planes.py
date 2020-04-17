@@ -9,9 +9,11 @@ class g_planes():
     Moves planes through the cube
     '''
     def __init__(self):
+        print(' initializing g_planes')
         self.speed = 10
         self.dir = 1
         self.type = 0
+        self.step = 0
 
         self.dict = {0: 'x, oscillating',
                      1: 'x, one-way',
@@ -25,7 +27,7 @@ class g_planes():
 
     def __call__(self, args):
         # parsing input
-        self.speed = int((args[0]+1)*10)
+        self.speed = args[0]*10
         self.dir = int(round(args[1]*6))
 
         # calculate frame
@@ -35,7 +37,7 @@ class g_planes():
         else:
             type = 1    # rising ramp
 
-        position = int(round((sawtooth(0.1*step*self.speed, type)+1)*4.51))
+        position = int(round((sawtooth(0.1*self.step*self.speed, type)+1)*4.51))
 
         if self.dir == 0:
             world[:, position,:,:] = 1.0
@@ -44,4 +46,5 @@ class g_planes():
         else:
             world[:, :,:,position] = 1.0
 
+        self.step += 1
         return world

@@ -1,59 +1,24 @@
-#!/usr/bin/python3
-import threading    # do we need this or is QT taking care of everything?
 import time
 # import rendering class
-from rendering_engine import rendering_engine
+# from rendering_engine import rendering_engine
 # import global variable
-from global_parameter_module import global_parameter
-from copy import deepcopy
+#from global_parameter_module import global_parameter
+# from copy import deepcopy
 import sys
-import tempfile     # what is this?
-import subprocess   # obsolete?
+# import tempfile     # what is this?
+# import subprocess   # obsolete?
 #import urllib.request
 from PyQt5 import QtWidgets, QtGui, QtCore
 import numpy as np
 
-
-from MidiDevice import class_fighter
-#from PyQt5.QtCore import QObject,QThread, pyqtSigna
-#from mainwindow import Ui_MainWindow
-
-
-def midi():
-    '''
-    Midi Thread
-    '''
-    print('...starting midi thread')
-    # we should do something to detect ports! -> YES we should :)
-    midifighter = class_fighter(in_port = 2,out_port = 2)
-    #launchpad = class_launchpad(in_port=3,out_port= 3)
-
-
-def rendering(pause_time = 2, log = True):
-    '''
-    Rendering Thread
-    '''
-
-    if log == True:
-        # long sleeping time, so logfile is not flooded
-        pause_time = 2
-
-    # start rendering engine
-    frame_renderer = rendering_engine(log)
-    while True:
-        time.sleep(pause_time)
-        # render frame
-        frame_renderer.run()
-
-
 class MainWindow(QtWidgets.QMainWindow):
 
-    def __init__(self, parent=None):
+    def __init__(self, array,parent=None):
         super(MainWindow, self).__init__()
         #global MidiKey
         #global MidiValue
         #global MidiChannel
-
+        self.global_parameter = array#mp.Array('d', [0 for x in range(255)])
         # initialize layout
         # creating main container-frame, parent it to QWindow
         self.main_CF = QtWidgets.QFrame(self)
@@ -209,7 +174,6 @@ class MainWindow(QtWidgets.QMainWindow):
         self.stringArray_ch2.append(QtWidgets.QLabel("Parameter 4 : 110"))
 
 
-
         for item in self.stringArray_ch2:
             item.setStyleSheet("color: black; font: 9px;");
             fi_ch2_CGL.addWidget(item)
@@ -275,11 +239,12 @@ class MainWindow(QtWidgets.QMainWindow):
             fi_ch4_CGL.addWidget(item)
 
         #  copy params to check for changes
-        self.copied_params = deepcopy(global_parameter)
-        self.active_param = -1
+        # self.copied_params = deepcopy(global_parameter)
+        self.copied_params = self.global_parameter[:]
+        self.active_param = [-1, -1, -1, -1]
 
         # dict for converting global parameter to button
-        self.conv_dict = {2: 41, 3: 42, 4: 43,
+        self.conv_dict1 = {1:40, 2: 41, 3: 42, 4: 43,
                           5: 45, 6: 46, 7: 47,
                           8: 48, 10: 50,
                           11: 51, 12: 52, 13: 53,
@@ -288,23 +253,51 @@ class MainWindow(QtWidgets.QMainWindow):
                           20: 60, 21: 61, 22: 62,
                           23: 63}
 
+        self.conv_dict2 = {1:70, 2: 71, 3: 72, 4: 73,
+                          5: 75, 6: 76, 7: 77,
+                          8: 78, 10: 80,
+                          11: 81, 12: 82, 13: 83,
+                          15: 85, 16: 86,
+                          17: 87, 18: 88,
+                          20: 90, 21: 91, 22: 92,
+                          23: 93}
+        self.conv_dict3 = {1: 100, 2: 101, 3: 102, 4: 103,
+                          5: 105, 6: 106, 7: 107,
+                          8: 108, 10: 110,
+                          11: 111, 12: 112, 13: 113,
+                          15: 115, 16: 116,
+                          17: 117, 18: 118,
+                          20: 120, 21: 121, 22: 122,
+                          23: 123}
+
+        self.conv_dict4 = {1: 130, 2: 131, 3: 132, 4: 133,
+                          5: 135, 6: 136, 7: 137,
+                          8: 138, 10: 140,
+                          11: 141, 12: 142, 13: 143,
+                          15: 145, 16: 146,
+                          17: 147, 18: 148,
+                          20: 150, 21: 151, 22: 152,
+                          23: 153}
+
         self.widget = QtWidgets.QWidget(self)
         self.setCentralWidget(self.widget)
         self.widget.setLayout(self.main_CL)
 
         # initialize threads
-        self.midi_thread = threading.Thread(name='midi', target=midi)
-        self.rendering_thread = threading.Thread(name='render', target=rendering)
+        #self.midi_thread = threading.Thread(name='midi_fighter', target=midi_fighter)
+        #self.rendering_thread = threading.Thread(name='render', target=rendering)
+
+        #global_parameter = mp.Array("d",[0,255])
 
         # what do we need the timer for? -> to execute functions periodically in the GUI e.g. updating Strings
         timer = QtCore.QTimer(self)
         timer.timeout.connect(self.update_fighter_values)
-        timer.setInterval(2)
+        timer.setInterval(0.1)
         timer.start()
 
         # start threads
-        self.midi_thread.start()
-        self.rendering_thread.start()
+        #self.midi_thread.start()
+
 
 #    def start_download(self,info):
 #        self.list_widget.addItem(info)
@@ -312,149 +305,178 @@ class MainWindow(QtWidgets.QMainWindow):
     def start_Renderer(self):
         """Routine to start all threads
         """
-        global_parameter[0] = 1
+        self.global_parameter[0] = 1
+        self.global_parameter[1] = 1
+        self.global_parameter[2] = 0.0
+        self.global_parameter[3] = 1.0
+        self.global_parameter[20] = 1
+        # activate channel 1
+        self.global_parameter[40] = 1
+        self.global_parameter[41] = 1
+        # activate channel 2
+        self.global_parameter[70] = 1
 
     def stop_Renderer(self):
-        global_parameter[0] = 0
+        self.global_parameter[0] = 0
 
     def update_fighter_values(self):
-        self.stringArray_ch1[2].setText("Brightness : "+str(global_parameter[41]))
-        self.stringArray_ch1[3].setText("Fade : "+str(global_parameter[42]))
-        self.stringArray_ch1[4].setText("Shutter : "+str(global_parameter[43]))
-        self.stringArray_ch1[5].setText("Parameter 1 : "+str(global_parameter[45]))
-        self.stringArray_ch1[6].setText("Parameter 2 : "+str(global_parameter[46]))
-        self.stringArray_ch1[7].setText("Parameter 3 : "+str(global_parameter[47]))
-        self.stringArray_ch1[8].setText("Parameter 4 : "+str(global_parameter[48]))
-        self.stringArray_ch1[10].setText("Parameter 1 : "+str(global_parameter[50]))
-        self.stringArray_ch1[11].setText("Parameter 2 : "+str(global_parameter[51]))
-        self.stringArray_ch1[12].setText("Parameter 3 : "+str(global_parameter[52]))
-        self.stringArray_ch1[13].setText("Parameter 4 : "+str(global_parameter[53]))
-        self.stringArray_ch1[15].setText("Parameter 1 : "+str(global_parameter[55]))
-        self.stringArray_ch1[16].setText("Parameter 2 : "+str(global_parameter[56]))
-        self.stringArray_ch1[17].setText("Parameter 3 : "+str(global_parameter[57]))
-        self.stringArray_ch1[18].setText("Parameter 4 : "+str(global_parameter[58]))
-        self.stringArray_ch1[20].setText("Parameter 1 : "+str(global_parameter[60]))
-        self.stringArray_ch1[21].setText("Parameter 2 : "+str(global_parameter[61]))
-        self.stringArray_ch1[22].setText("Parameter 3 : "+str(global_parameter[62]))
-        self.stringArray_ch1[23].setText("Parameter 4 : "+str(global_parameter[63]))
+        self.stringArray_ch1[1].setText("Generator : "+str(round(self.global_parameter[40],2)))
+        self.stringArray_ch1[2].setText("Brightness : "+str(round(self.global_parameter[41],2)))
+        self.stringArray_ch1[3].setText("Fade : "+str(round(self.global_parameter[42],2)))
+        self.stringArray_ch1[4].setText("Shutter : "+str(round(self.global_parameter[43],2)))
+        self.stringArray_ch1[5].setText("Parameter 1 : "+str(round(self.global_parameter[45],2)))
+        self.stringArray_ch1[6].setText("Parameter 2 : "+str(round(self.global_parameter[46],2)))
+        self.stringArray_ch1[7].setText("Parameter 3 : "+str(round(self.global_parameter[47],2)))
+        self.stringArray_ch1[8].setText("Parameter 4 : "+str(round(self.global_parameter[48],2)))
+        self.stringArray_ch1[10].setText("Parameter 1 : "+str(round(self.global_parameter[50],2)))
+        self.stringArray_ch1[11].setText("Parameter 2 : "+str(round(self.global_parameter[51],2)))
+        self.stringArray_ch1[12].setText("Parameter 3 : "+str(round(self.global_parameter[52],2)))
+        self.stringArray_ch1[13].setText("Parameter 4 : "+str(round(self.global_parameter[53],2)))
+        self.stringArray_ch1[15].setText("Parameter 1 : "+str(round(self.global_parameter[55],2)))
+        self.stringArray_ch1[16].setText("Parameter 2 : "+str(round(self.global_parameter[56],2)))
+        self.stringArray_ch1[17].setText("Parameter 3 : "+str(round(self.global_parameter[57],2)))
+        self.stringArray_ch1[18].setText("Parameter 4 : "+str(round(self.global_parameter[58],2)))
+        self.stringArray_ch1[20].setText("Parameter 1 : "+str(round(self.global_parameter[60],2)))
+        self.stringArray_ch1[21].setText("Parameter 2 : "+str(round(self.global_parameter[61],2)))
+        self.stringArray_ch1[22].setText("Parameter 3 : "+str(round(self.global_parameter[62],2)))
+        self.stringArray_ch1[23].setText("Parameter 4 : "+str(round(self.global_parameter[63],2)))
 
-        self.stringArray_ch2[2].setText("Brightness : "+str(global_parameter[71]))
-        self.stringArray_ch2[3].setText("Fade : "+str(global_parameter[72]))
-        self.stringArray_ch2[4].setText("Shutter : "+str(global_parameter[73]))
-        self.stringArray_ch2[5].setText("Parameter 1 : "+str(global_parameter[75]))
-        self.stringArray_ch2[6].setText("Parameter 2 : "+str(global_parameter[76]))
-        self.stringArray_ch2[7].setText("Parameter 3 : "+str(global_parameter[77]))
-        self.stringArray_ch2[8].setText("Parameter 4 : "+str(global_parameter[78]))
-        self.stringArray_ch2[10].setText("Parameter 1 : "+str(global_parameter[80]))
-        self.stringArray_ch2[11].setText("Parameter 2 : "+str(global_parameter[81]))
-        self.stringArray_ch2[12].setText("Parameter 3 : "+str(global_parameter[82]))
-        self.stringArray_ch2[13].setText("Parameter 4 : "+str(global_parameter[83]))
-        self.stringArray_ch2[15].setText("Parameter 1 : "+str(global_parameter[85]))
-        self.stringArray_ch2[16].setText("Parameter 2 : "+str(global_parameter[86]))
-        self.stringArray_ch2[17].setText("Parameter 3 : "+str(global_parameter[87]))
-        self.stringArray_ch2[18].setText("Parameter 4 : "+str(global_parameter[88]))
-        self.stringArray_ch2[20].setText("Parameter 1 : "+str(global_parameter[90]))
-        self.stringArray_ch2[21].setText("Parameter 2 : "+str(global_parameter[91]))
-        self.stringArray_ch2[22].setText("Parameter 3 : "+str(global_parameter[92]))
-        self.stringArray_ch2[23].setText("Parameter 4 : "+str(global_parameter[93]))
+        self.stringArray_ch2[1].setText("Generator : "+str(round(self.global_parameter[70],2)))
+        self.stringArray_ch2[2].setText("Brightness : "+str(round(self.global_parameter[71],2)))
+        self.stringArray_ch2[3].setText("Fade : "+str(round(self.global_parameter[72],2)))
+        self.stringArray_ch2[4].setText("Shutter : "+str(round(self.global_parameter[73],2)))
+        self.stringArray_ch2[5].setText("Parameter 1 : "+str(round(self.global_parameter[75],2)))
+        self.stringArray_ch2[6].setText("Parameter 2 : "+str(round(self.global_parameter[76],2)))
+        self.stringArray_ch2[7].setText("Parameter 3 : "+str(round(self.global_parameter[77],2)))
+        self.stringArray_ch2[8].setText("Parameter 4 : "+str(round(self.global_parameter[78],2)))
+        self.stringArray_ch2[10].setText("Parameter 1 : "+str(round(self.global_parameter[80],2)))
+        self.stringArray_ch2[11].setText("Parameter 2 : "+str(round(self.global_parameter[81],2)))
+        self.stringArray_ch2[12].setText("Parameter 3 : "+str(round(self.global_parameter[82],2)))
+        self.stringArray_ch2[13].setText("Parameter 4 : "+str(round(self.global_parameter[83],2)))
+        self.stringArray_ch2[15].setText("Parameter 1 : "+str(round(self.global_parameter[85],2)))
+        self.stringArray_ch2[16].setText("Parameter 2 : "+str(round(self.global_parameter[86],2)))
+        self.stringArray_ch2[17].setText("Parameter 3 : "+str(round(self.global_parameter[87],2)))
+        self.stringArray_ch2[18].setText("Parameter 4 : "+str(round(self.global_parameter[88],2)))
+        self.stringArray_ch2[20].setText("Parameter 1 : "+str(round(self.global_parameter[90],2)))
+        self.stringArray_ch2[21].setText("Parameter 2 : "+str(round(self.global_parameter[91],2)))
+        self.stringArray_ch2[22].setText("Parameter 3 : "+str(round(self.global_parameter[92],2)))
+        self.stringArray_ch2[23].setText("Parameter 4 : "+str(round(self.global_parameter[93],2)))
 
-        self.stringArray_ch3[2].setText("Brightness : "+str(global_parameter[101]))
-        self.stringArray_ch3[3].setText("Fade : "+str(global_parameter[102]))
-        self.stringArray_ch3[4].setText("Shutter : "+str(global_parameter[103]))
-        self.stringArray_ch3[5].setText("Parameter 1 : "+str(global_parameter[105]))
-        self.stringArray_ch3[6].setText("Parameter 2 : "+str(global_parameter[106]))
-        self.stringArray_ch3[7].setText("Parameter 3 : "+str(global_parameter[107]))
-        self.stringArray_ch3[8].setText("Parameter 4 : "+str(global_parameter[108]))
-        self.stringArray_ch3[10].setText("Parameter 1 : "+str(global_parameter[110]))
-        self.stringArray_ch3[11].setText("Parameter 2 : "+str(global_parameter[111]))
-        self.stringArray_ch3[12].setText("Parameter 3 : "+str(global_parameter[112]))
-        self.stringArray_ch3[13].setText("Parameter 4 : "+str(global_parameter[113]))
-        self.stringArray_ch3[15].setText("Parameter 1 : "+str(global_parameter[115]))
-        self.stringArray_ch3[16].setText("Parameter 2 : "+str(global_parameter[116]))
-        self.stringArray_ch3[17].setText("Parameter 3 : "+str(global_parameter[117]))
-        self.stringArray_ch3[18].setText("Parameter 4 : "+str(global_parameter[118]))
-        self.stringArray_ch3[20].setText("Parameter 1 : "+str(global_parameter[120]))
-        self.stringArray_ch3[21].setText("Parameter 2 : "+str(global_parameter[121]))
-        self.stringArray_ch3[22].setText("Parameter 3 : "+str(global_parameter[122]))
-        self.stringArray_ch3[23].setText("Parameter 4 : "+str(global_parameter[123]))
+        self.stringArray_ch3[1].setText("Generator : "+str(round(self.global_parameter[100],2)))
+        self.stringArray_ch3[2].setText("Brightness : "+str(round(self.global_parameter[101],2)))
+        self.stringArray_ch3[3].setText("Fade : "+str(round(self.global_parameter[102],2)))
+        self.stringArray_ch3[4].setText("Shutter : "+str(round(self.global_parameter[103],2)))
+        self.stringArray_ch3[5].setText("Parameter 1 : "+str(round(self.global_parameter[105],2)))
+        self.stringArray_ch3[6].setText("Parameter 2 : "+str(round(self.global_parameter[106],2)))
+        self.stringArray_ch3[7].setText("Parameter 3 : "+str(round(self.global_parameter[107],2)))
+        self.stringArray_ch3[8].setText("Parameter 4 : "+str(round(self.global_parameter[108],2)))
+        self.stringArray_ch3[10].setText("Parameter 1 : "+str(round(self.global_parameter[110],2)))
+        self.stringArray_ch3[11].setText("Parameter 2 : "+str(round(self.global_parameter[111],2)))
+        self.stringArray_ch3[12].setText("Parameter 3 : "+str(round(self.global_parameter[112],2)))
+        self.stringArray_ch3[13].setText("Parameter 4 : "+str(round(self.global_parameter[113],2)))
+        self.stringArray_ch3[15].setText("Parameter 1 : "+str(round(self.global_parameter[115],2)))
+        self.stringArray_ch3[16].setText("Parameter 2 : "+str(round(self.global_parameter[116],2)))
+        self.stringArray_ch3[17].setText("Parameter 3 : "+str(round(self.global_parameter[117],2)))
+        self.stringArray_ch3[18].setText("Parameter 4 : "+str(round(self.global_parameter[118],2)))
+        self.stringArray_ch3[20].setText("Parameter 1 : "+str(round(self.global_parameter[120],2)))
+        self.stringArray_ch3[21].setText("Parameter 2 : "+str(round(self.global_parameter[121],2)))
+        self.stringArray_ch3[22].setText("Parameter 3 : "+str(round(self.global_parameter[122],2)))
+        self.stringArray_ch3[23].setText("Parameter 4 : "+str(round(self.global_parameter[123],2)))
 
-        self.stringArray_ch4[2].setText("Brightness : "+str(global_parameter[131]))
-        self.stringArray_ch4[3].setText("Fade : "+str(global_parameter[132]))
-        self.stringArray_ch4[4].setText("Shutter : "+str(global_parameter[133]))
-        self.stringArray_ch4[5].setText("Parameter 1 : "+str(global_parameter[135]))
-        self.stringArray_ch4[6].setText("Parameter 2 : "+str(global_parameter[136]))
-        self.stringArray_ch4[7].setText("Parameter 3 : "+str(global_parameter[137]))
-        self.stringArray_ch4[8].setText("Parameter 4 : "+str(global_parameter[138]))
-        self.stringArray_ch4[10].setText("Parameter 1 : "+str(global_parameter[140]))
-        self.stringArray_ch4[11].setText("Parameter 2 : "+str(global_parameter[141]))
-        self.stringArray_ch4[12].setText("Parameter 3 : "+str(global_parameter[142]))
-        self.stringArray_ch4[13].setText("Parameter 4 : "+str(global_parameter[143]))
-        self.stringArray_ch4[15].setText("Parameter 1 : "+str(global_parameter[145]))
-        self.stringArray_ch4[16].setText("Parameter 2 : "+str(global_parameter[146]))
-        self.stringArray_ch4[17].setText("Parameter 3 : "+str(global_parameter[147]))
-        self.stringArray_ch4[18].setText("Parameter 4 : "+str(global_parameter[148]))
-        self.stringArray_ch4[20].setText("Parameter 1 : "+str(global_parameter[150]))
-        self.stringArray_ch4[21].setText("Parameter 2 : "+str(global_parameter[151]))
-        self.stringArray_ch4[22].setText("Parameter 3 : "+str(global_parameter[152]))
-        self.stringArray_ch4[23].setText("Parameter 4 : "+str(global_parameter[153]))
+        self.stringArray_ch4[1].setText("Generator : "+str(round(self.global_parameter[130],2)))
+        self.stringArray_ch4[2].setText("Brightness : "+str(round(self.global_parameter[131],2)))
+        self.stringArray_ch4[3].setText("Fade : "+str(round(self.global_parameter[132],2)))
+        self.stringArray_ch4[4].setText("Shutter : "+str(round(self.global_parameter[133],2)))
+        self.stringArray_ch4[5].setText("Parameter 1 : "+str(round(self.global_parameter[135],2)))
+        self.stringArray_ch4[6].setText("Parameter 2 : "+str(round(self.global_parameter[136],2)))
+        self.stringArray_ch4[7].setText("Parameter 3 : "+str(round(self.global_parameter[137],2)))
+        self.stringArray_ch4[8].setText("Parameter 4 : "+str(round(self.global_parameter[138],2)))
+        self.stringArray_ch4[10].setText("Parameter 1 : "+str(round(self.global_parameter[140],2)))
+        self.stringArray_ch4[11].setText("Parameter 2 : "+str(round(self.global_parameter[141],2)))
+        self.stringArray_ch4[12].setText("Parameter 3 : "+str(round(self.global_parameter[142],2)))
+        self.stringArray_ch4[13].setText("Parameter 4 : "+str(round(self.global_parameter[143],2)))
+        self.stringArray_ch4[15].setText("Parameter 1 : "+str(round(self.global_parameter[145],2)))
+        self.stringArray_ch4[16].setText("Parameter 2 : "+str(round(self.global_parameter[146],2)))
+        self.stringArray_ch4[17].setText("Parameter 3 : "+str(round(self.global_parameter[147],2)))
+        self.stringArray_ch4[18].setText("Parameter 4 : "+str(round(self.global_parameter[148],2)))
+        self.stringArray_ch4[20].setText("Parameter 1 : "+str(round(self.global_parameter[150],2)))
+        self.stringArray_ch4[21].setText("Parameter 2 : "+str(round(self.global_parameter[151],2)))
+        self.stringArray_ch4[22].setText("Parameter 3 : "+str(round(self.global_parameter[152],2)))
+        self.stringArray_ch4[23].setText("Parameter 4 : "+str(round(self.global_parameter[153],2)))
 
         # check for last changed value
-        index_changed = np.where((self.copied_params == global_parameter) == False)[0]
+        index_changed = np.where((self.copied_params == self.global_parameter) == False)[0]
+
+        if np.shape(index_changed)[0] > 1:
+            index_changed = index_changed[0]
+
+#        print(np.where((self.copied_params == self.global_parameter) == False)[0])
 
         # lets just  do it for the first channel
-        for dings in self.conv_dict.items():
-            if dings[1] == index_changed:
-                self.active_param = dings[0]
+        for item_1, item_2, item_3, item_4 in zip(self.conv_dict1.items(), self.conv_dict2.items(), self.conv_dict3.items(), self.conv_dict4.items()):
+            # compare value with last changed key
+            if item_1[1] == index_changed:
+                # save key of last changed value
+                self.active_param[0] = item_1[0]
+
+            if item_2[1] == index_changed:
+                self.active_param[1] = item_2[0]
+
+            if item_3[1] == index_changed:
+                self.active_param[2] = item_3[0]
+
+            if item_4[1] == index_changed:
+                self.active_param[3] = item_4[0]
 
         # write all back to normal
-        '''
-        if index_changed in range(40,63):
+
+        if index_changed in range(40,64):
             for item in self.stringArray_ch1:
                 item.setStyleSheet("color: black; font: 9px;")
 
-        if index_changed in range(70,93):
+        if index_changed in range(70,94):
             for item in self.stringArray_ch2:
                 item.setStyleSheet("color: black; font: 9px;")
 
-        if index_changed in range(100,123):
+        if index_changed in range(100,124):
             for item in self.stringArray_ch3:
                 item.setStyleSheet("color: black; font: 9px;")
 
-        if index_changed in range(130,153):
+        if index_changed in range(130,154):
             for item in self.stringArray_ch4:
                 item.setStyleSheet("color: black; font: 9px;")
-                '''
-
-        # areas for generators, effect1, ...
-        area  = [[5,6,7,8],
-                 [10,11,12,13],
-                 [15,16,17,18],
-                 [20,21,22,23]]
 
         # colors for each area
-        color = ['blue', 'green', 'orange', 'pink']
+        color = ['#0066cc', '#00cc00', '#ff9933', '#ff0066']
 
+        # areas for generators, effect1, ...
+        area = [[ 5, 6, 7, 8],
+                [10,11,12,13],
+                [15,16,17,18],
+                [20,21,22,23]]
         # loop through all fields and set colors
-        last_val_ch1 = 0
-        last_val_ch2 = 0
-        last_val_ch3 = 0
-        last_val_ch4 = 0
+
         if self.active_param != -1:
             for ar,c in zip(area,color):
-                if self.active_param in ar:
+                if self.active_param[0] in ar:
                     for a in ar:
+                        if index_changed in range(40,64):
+                            self.stringArray_ch1[a].setStyleSheet("color: black; font: 15px; background-color: "+c)
 
-                        if index_changed in range(40,63):
-                            self.stringArray_ch1[a].setStyleSheet("color: black; font: 12px; background-color: "+c)
+                if self.active_param[1] in ar:
+                    for a in ar:
+                        if index_changed in range(70,94):
+                            self.stringArray_ch2[a].setStyleSheet("color: black; font: 15px; background-color: "+c)
 
-                        if index_changed in range(70,93):
-                            self.stringArray_ch2[a].setStyleSheet("color: black; font: 12px; background-color: "+c)
+                if self.active_param[2] in ar:
+                    for a in ar:
+                        if index_changed in range(100,124):
+                            self.stringArray_ch3[a].setStyleSheet("color: black; font: 15px; background-color: "+c)
 
-                        if index_changed in range(100,123):
-                            self.stringArray_ch3[a].setStyleSheet("color: black; font: 12px; background-color: "+c)
-
-                        if index_changed in range(130,153):
-                            self.stringArray_ch4[a].setStyleSheet("color: black; font: 12px; background-color: "+c)
+                if self.active_param[3] in ar:
+                    for a in ar:
+                        if index_changed in range(130,154):
+                            self.stringArray_ch4[a].setStyleSheet("color: black; font: 15px; background-color: "+c)
 
 #                        self.stringArray_ch2[a].setStyleSheet("color: black; font: 12px; background-color: "+c)
 #                        self.stringArray_ch3[a].setStyleSheet("color: black; font: 12px; background-color: "+c)
@@ -482,7 +504,8 @@ class MainWindow(QtWidgets.QMainWindow):
         #for item in self.stringArray_ch4:
         #    item.setStyleSheet("color: black; font: 9px;");
 
-        self.copied_params = deepcopy(global_parameter)
+        # self.copied_params = deepcopy(global_parameter) old, for threading
+        self.copied_params = self.global_parameter[:]
 
 
 
@@ -522,15 +545,3 @@ class MainWindow(QtWidgets.QMainWindow):
                 self.midimon_valueStringArray[i][j].setText("Midi: "+str(count)+" - "+str(global_parameter[count]))
                 count+=1
 '''
-
-def main():
-    """main routine
-    """
-    app = QtWidgets.QApplication(sys.argv)
-    window = MainWindow()
-    window.resize(640, 480)
-    window.show()
-    sys.exit(app.exec_())
-
-if __name__ == '__main__':
-    main()

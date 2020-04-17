@@ -3,7 +3,7 @@ import numpy as np
 import logging
 import serial
 from world2vox_fortran import world2vox_f as world2vox
-from global_parameter_module import global_parameter
+#from global_parameter_module import global_parameter
 from channel import class_channel
 #from convert_dict import converting_dict
 
@@ -19,7 +19,7 @@ class rendering_engine:
     - entries ordered as described in
       readme
     """
-    def __init__(self, log=False):
+    def __init__(self, array, log=False):
         """
         Initialises the rendering engine
 
@@ -37,12 +37,16 @@ class rendering_engine:
         self.header = [int(66),
                        int(69),
                        int(69),
-                       int(70),
-                       int(1),      # Speed
-                       int(200),    # Brightness
-                       int(116),    # hPal
-                       int(0),      # hPalMode
-                       int(1)]      # hRGBMode
+                       int(70)]#,
+                       #int(1),      # Speed
+                       #int(200),    # Brightness
+                       #int(116),    # hPal
+                       #int(0),      # hPalMode
+                       #int(1)]      # hRGBMode
+
+        # assign global setParameters
+        self.global_parameter = array
+        self.test_list = [64 for i in range(3000)]
 
         # take care of logging
         if self.logging:
@@ -51,7 +55,7 @@ class rendering_engine:
                                 format='%(asctime)s %(message)s')
         else:
             logging.basicConfig(filename='log_rendering_enginge.log',
-                                level=logging.WARNING,
+                                level=logging.INFO,
                                 format="%(asctime)s %(message)s")
 
         logging.info('Variables initialised')
@@ -82,11 +86,12 @@ class rendering_engine:
         self.channels.append(class_channel(4))
 
         logging.warning('Initialisation complete')
+        print('init renderer')
 
     def run(self):
         """generates a frame and sends the package when cube is turned on"""
         # check wether 'running' flag is set
-        if global_parameter[0] == 1:
+        if self.global_parameter[0] == 1:
             self.generate_frame()
             self.send_frame()
             self.framecounter += 1
@@ -99,13 +104,23 @@ class rendering_engine:
         and send it through serial interface to the
         Arduino
         """
-        package = self.header + self.get_cubedata()
-        if not self.debug:
-            self.arduino.write(bytearray(package))
 
-        else:
-            logging.info('Frame '+str(self.framecounter))
-            logging.info(package)
+        #list = self.get_cubedata()
+        #print(list)
+        package = bytearray(self.header + self.get_cubedata())
+#        package = bytearray(self.header + [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0])
+#        print(np.shape(self.header + [x*0 for x in range(3000)]))
+#        print(np.clip(self.get_cubedata(),0,255))
+        #print(len(self.test_list))
+
+        self.arduino.write(package)
+
+        # if not self.debug:
+        #     self.arduino.write(bytearray(package))
+        #
+        # else:
+        #     logging.info('Frame '+str(self.framecounter))
+        #     logging.info(package)
 
     def generate_frame(self):
         """
@@ -123,17 +138,20 @@ class rendering_engine:
             channel = self.channels[i]
             # check whether cannel is active, otherwise overrides channel world
             # with zeros
-            if int(global_parameter[index_parameters]) == 1:
-                # pass channel settings
-                channel.set_settings(global_parameter[index_settings:index_settings+5])
+            if int(self.global_parameter[index_parameters]) == 1:
+                # check for changes
+                if channel.get_settings() != self.global_parameter[index_settings:index_settings+5]:
+                    # pass channel settings
+                    channel.set_settings(self.global_parameter[index_settings:index_settings+5])
+
                 # calculate frame
-                new_world = channel.render_frame(self.framecounter, global_parameter[index_parameters:index_parameters+30])
+                new_world = channel.render_frame(self.framecounter, self.global_parameter[index_parameters:index_parameters+30])
             else:
                 new_world = np.zeros([3, 10, 10, 10])
 
             # apply fade
-            self.channelworld[i, :, :, :] = new_world + global_parameter[index_parameters+2]*\
-                                            self.channelworld[i, :, :, :]
+            self.channelworld[i, :, :, :] = new_world # + self.global_parameter[index_parameters+2]*\
+            #                                 self.channelworld[i, :, :, :]
             # increase index
             index_settings += 5
             index_parameters += 30
@@ -145,31 +163,37 @@ class rendering_engine:
         # as a workaround, i'm inserting a global parameter to control
         # the maximum brightness of each individual channel, so addings
         # things can actually incease the brightness a bit more
-        channel_brightness = [np.clip(global_parameter[41], 0, global_parameter[3]),
-                              np.clip(global_parameter[71], 0, global_parameter[3]),
-                              np.clip(global_parameter[101], 0, global_parameter[3]),
-                              np.clip(global_parameter[131], 0, global_parameter[3])]
 
-        channel_brightness = [i*1/255.0 for i in channel_brightness]
+        channel_brightness = [np.clip(self.global_parameter[41], 0, self.global_parameter[3]),
+                              np.clip(self.global_parameter[71], 0, self.global_parameter[3]),
+                              np.clip(self.global_parameter[101], 0, self.global_parameter[3]),
+                              np.clip(self.global_parameter[131], 0, self.global_parameter[3])]
+
+#                                     channel_brightness = [i*1/255.0 for i in channel_brightness]
 
         # copy channels together
-        self.cubeworld = global_parameter[2] * self.cubeworld +\
+        self.cubeworld = self.global_parameter[2] * self.cubeworld +\
                          channel_brightness[0] * self.channelworld[0, :, :, :] +\
                          channel_brightness[1] * self.channelworld[1, :, :, :] +\
                          channel_brightness[2] * self.channelworld[2, :, :, :] +\
                          channel_brightness[3] * self.channelworld[3, :, :, :]
 
         # adjust global brightness
-        self.cubeworld *= global_parameter[1]
+        self.cubeworld *= self.global_parameter[1]
+        #print(self.framecounter)
 
     def get_cubedata(self):
         """get vox format from the internal stored world"""
-        list1 = world2vox(self.cubeworld[0, :, :, :])
-        list2 = world2vox(self.cubeworld[1, :, :, :])
-        list3 = world2vox(self.cubeworld[2, :, :, :])
+        list1 = world2vox(np.clip(self.cubeworld[0, :, :, :], 0, 1))
+        list2 = world2vox(np.clip(self.cubeworld[1, :, :, :], 0, 1))
+        list3 = world2vox(np.clip(self.cubeworld[2, :, :, :], 0, 1))
+
+        #print('')
+        #print(self.cubeworld[:, 0, 0, 0])
+        #print(list1[:3])
 
         # stack this lists for each color, so that we have RGB ordering for
         # each LED
         liste = list(np.stack((list1, list2, list3)).flatten('F'))
-
+        #print(liste[:10])
         return liste

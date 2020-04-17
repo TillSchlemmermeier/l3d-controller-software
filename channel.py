@@ -17,24 +17,33 @@ class class_channel:
         self.effect_1 = effects[0]()
         self.effect_2 = effects[0]()
         self.effect_3 = effects[0]()
+        self.settings_list = [0, 0, 0, 0]
+
         logging.info('Channel '+str(self.id)+' initialised')
 
     def set_settings(self, settings):
         '''
         sets the settings of a channel
         '''
+        # print(settings)
         self.generator = generators[int(settings[0])]()
         self.effect_1 = effects[int(settings[1])]()
         self.effect_2 = effects[int(settings[2])]()
         self.effect_3 = effects[int(settings[3])]()
+
+        self.settings_list = settings
+
+    def get_settings(self):
+        return self.settings_list
 
     def render_frame(self, framecounter, parameters):
         '''
         renders frame
         '''
         world = self.generator(parameters[5:10])
+
         world = self.effect_1(world, parameters[10:15])
         world = self.effect_2(world, parameters[15:20])
         world = self.effect_3(world, parameters[20:25])
-
+        
         return world
