@@ -45,9 +45,11 @@ from generators.a_orbbot import *
 from generators.a_random_cubes import *
 from generators.a_squares_cut import *
 from generators.a_testbot import *
+
 from effects.e_blank import *
 from effects.e_rainbow import *
-
+from effects.e_tremolo import *
+form effects.e_rotate import *
 
 
 generators = []
@@ -107,3 +109,6 @@ effects = []
 
 effects.append(e_blank)
 effects.append(e_rainbow)
+effects.append(e_staticcolor)
+effects.append(e_tremolo)
+effects.append(e_rotate)
