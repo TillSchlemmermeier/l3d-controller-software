@@ -36,14 +36,14 @@ class class_channel:
     def get_settings(self):
         return self.settings_list
 
-	def get_labels(self):
-		list = []
-		list.append(self.generator.return_values())
-		list.append(self.effect_1.return_values())
-		list.append(self.effect_2.return_values())
-		list.append(self.effect_3.return_values())
+    def get_labels(self):
+        list = []
+        list.append(self.generator.return_values())
+        list.append(self.effect_1.return_values())
+        list.append(self.effect_2.return_values())
+        list.append(self.effect_3.return_values())
 
-		return list
+        return list
 
     def render_frame(self, framecounter, parameters):
         '''

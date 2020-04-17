@@ -1,7 +1,6 @@
 # modules
 import numpy as np
 from random import randint
-from global_parameter
 
 class g_random():
     '''

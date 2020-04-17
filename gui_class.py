@@ -19,26 +19,102 @@ class MainWindow(QtWidgets.QMainWindow):
         #global MidiValue
         #global MidiChannel
         self.global_parameter = array#mp.Array('d', [0 for x in range(255)])
+
         # initialize layout
         # creating main container-frame, parent it to QWindow
         self.main_CF = QtWidgets.QFrame(self)
-        self.main_CF.setStyleSheet('background-color: rgba(150, 0, 0, 1);')
+        self.main_CF.setStyleSheet('background-color: rgba(150, 0, 0, 1)')
         self.setCentralWidget(self.main_CF)
         # creating layout and parent it to main container
         # is it correct, that main_CL now manages children of main_CF ?
-        self.main_CL = QtWidgets.QVBoxLayout(self.main_CF)
+        self.main_CL = QtWidgets.QHBoxLayout(self.main_CF)
 
         # creating the first subcontainer + layout, parenting it
         control_CGF = QtWidgets.QFrame(self.main_CF)
         self.main_CL.addWidget(control_CGF)
         control_CGF.setStyleSheet('background-color: rgba(150, 150, 0, 1);')
-        control_CGL = QtWidgets.QHBoxLayout(control_CGF)
+        control_CGL = QtWidgets.QVBoxLayout(control_CGF)
+        control_CGF.setFixedWidth(100)
 
+        # Creatin subcontaiver for
         # creating the second subcontainer + layout, parenting it(LAUNCHPAD)
         launchpad_CGF = QtWidgets.QFrame(self.main_CF)
         self.main_CL.addWidget(launchpad_CGF)
         launchpad_CGF.setStyleSheet('background-color: rgba(0, 150, 0, 1);')
-        launchpad_CGL = QtWidgets.QHBoxLayout(launchpad_CGF)
+        launchpad_CGL = QtWidgets.QGridLayout(launchpad_CGF)
+        launchpad_CGL.addWidget(QtWidgets.QLabel(' 1'),0,0)
+        launchpad_CGL.addWidget(QtWidgets.QLabel(' 2'),0,1)
+        launchpad_CGL.addWidget(QtWidgets.QLabel(' 3'),0,2)
+        launchpad_CGL.addWidget(QtWidgets.QLabel(' 4'),0,3)
+        launchpad_CGL.addWidget(QtWidgets.QLabel(' 5'),0,4)
+        launchpad_CGL.addWidget(QtWidgets.QLabel(' 6'),0,5)
+        launchpad_CGL.addWidget(QtWidgets.QLabel(' 7'),0,6)
+        launchpad_CGL.addWidget(QtWidgets.QLabel(' 8'),0,7)
+
+        launchpad_CGL.addWidget(QtWidgets.QLabel(' 9'),1,0)
+        launchpad_CGL.addWidget(QtWidgets.QLabel('10'),1,1)
+        launchpad_CGL.addWidget(QtWidgets.QLabel('11'),1,2)
+        launchpad_CGL.addWidget(QtWidgets.QLabel('12'),1,3)
+        launchpad_CGL.addWidget(QtWidgets.QLabel('13'),1,4)
+        launchpad_CGL.addWidget(QtWidgets.QLabel('14'),1,5)
+        launchpad_CGL.addWidget(QtWidgets.QLabel('15'),1,6)
+        launchpad_CGL.addWidget(QtWidgets.QLabel('16'),1,7)
+
+        launchpad_CGL.addWidget(QtWidgets.QLabel('17'),2,0)
+        launchpad_CGL.addWidget(QtWidgets.QLabel('18'),2,1)
+        launchpad_CGL.addWidget(QtWidgets.QLabel('19'),2,2)
+        launchpad_CGL.addWidget(QtWidgets.QLabel('20'),2,3)
+        launchpad_CGL.addWidget(QtWidgets.QLabel('21'),2,4)
+        launchpad_CGL.addWidget(QtWidgets.QLabel('22'),2,5)
+        launchpad_CGL.addWidget(QtWidgets.QLabel('23'),2,6)
+        launchpad_CGL.addWidget(QtWidgets.QLabel('24'),2,7)
+
+        launchpad_CGL.addWidget(QtWidgets.QLabel('25'),3,0)
+        launchpad_CGL.addWidget(QtWidgets.QLabel('26'),3,1)
+        launchpad_CGL.addWidget(QtWidgets.QLabel('27'),3,2)
+        launchpad_CGL.addWidget(QtWidgets.QLabel('28'),3,3)
+        launchpad_CGL.addWidget(QtWidgets.QLabel('29'),3,4)
+        launchpad_CGL.addWidget(QtWidgets.QLabel('30'),3,5)
+        launchpad_CGL.addWidget(QtWidgets.QLabel('31'),3,6)
+        launchpad_CGL.addWidget(QtWidgets.QLabel('32'),3,7)
+
+        launchpad_CGL.addWidget(QtWidgets.QLabel('33'),4,0)
+        launchpad_CGL.addWidget(QtWidgets.QLabel('34'),4,1)
+        launchpad_CGL.addWidget(QtWidgets.QLabel('35'),4,2)
+        launchpad_CGL.addWidget(QtWidgets.QLabel('36'),4,3)
+        launchpad_CGL.addWidget(QtWidgets.QLabel('37'),4,4)
+        launchpad_CGL.addWidget(QtWidgets.QLabel('38'),4,5)
+        launchpad_CGL.addWidget(QtWidgets.QLabel('39'),4,6)
+        launchpad_CGL.addWidget(QtWidgets.QLabel('40'),4,7)
+
+        launchpad_CGL.addWidget(QtWidgets.QLabel('41'),5,0)
+        launchpad_CGL.addWidget(QtWidgets.QLabel('42'),5,1)
+        launchpad_CGL.addWidget(QtWidgets.QLabel('43'),5,2)
+        launchpad_CGL.addWidget(QtWidgets.QLabel('44'),5,3)
+        launchpad_CGL.addWidget(QtWidgets.QLabel('45'),5,4)
+        launchpad_CGL.addWidget(QtWidgets.QLabel('46'),5,5)
+        launchpad_CGL.addWidget(QtWidgets.QLabel('47'),5,6)
+        launchpad_CGL.addWidget(QtWidgets.QLabel('48'),5,7)
+
+        launchpad_CGL.addWidget(QtWidgets.QLabel('49'),6,0)
+        launchpad_CGL.addWidget(QtWidgets.QLabel('50'),6,1)
+        launchpad_CGL.addWidget(QtWidgets.QLabel('51'),6,2)
+        launchpad_CGL.addWidget(QtWidgets.QLabel('52'),6,3)
+        launchpad_CGL.addWidget(QtWidgets.QLabel('53'),6,4)
+        launchpad_CGL.addWidget(QtWidgets.QLabel('53'),6,5)
+        launchpad_CGL.addWidget(QtWidgets.QLabel('54'),6,6)
+        launchpad_CGL.addWidget(QtWidgets.QLabel('55'),6,7)
+
+        launchpad_CGL.addWidget(QtWidgets.QLabel('56'),7,0)
+        launchpad_CGL.addWidget(QtWidgets.QLabel('57'),7,1)
+        launchpad_CGL.addWidget(QtWidgets.QLabel('58'),7,2)
+        launchpad_CGL.addWidget(QtWidgets.QLabel('59'),7,3)
+        launchpad_CGL.addWidget(QtWidgets.QLabel('60'),7,4)
+        launchpad_CGL.addWidget(QtWidgets.QLabel('61'),7,5)
+        launchpad_CGL.addWidget(QtWidgets.QLabel('62'),7,6)
+        launchpad_CGL.addWidget(QtWidgets.QLabel('63'),7,7)
+
+        '''
         # SUB containers for launchpad columns 1-8
         la_co1_CGF = QtWidgets.QFrame(launchpad_CGF)
         launchpad_CGL.addWidget(la_co1_CGF)
@@ -79,7 +155,7 @@ class MainWindow(QtWidgets.QMainWindow):
         launchpad_CGL.addWidget(la_co8_CGF)
         la_co8_CGF.setStyleSheet('background-color: rgba(200, 200, 200, 1);')
         la_co8_CGL = QtWidgets.QVBoxLayout(la_co8_CGF)
-
+        '''
 
 
         # doing the same with a third container(MIDIFIGHTER)
@@ -108,11 +184,11 @@ class MainWindow(QtWidgets.QMainWindow):
         fi_ch4_CGF.setStyleSheet('background-color: rgba(200, 200, 200, 1);')
         fi_ch4_CGL = QtWidgets.QVBoxLayout(fi_ch4_CGF)
 ####
-        self.button_StartR = QtWidgets.QPushButton("Start Renderer")
-        self.button_StopR = QtWidgets.QPushButton("Stop Renderer")
+        self.button_StartR = QtWidgets.QPushButton("Start")
+        self.button_StopR = QtWidgets.QPushButton("Stop")
         self.button_StartR.clicked.connect(self.start_Renderer)
         self.button_StopR.clicked.connect(self.stop_Renderer)
-        self.string_GlobalBrightness = QtWidgets.QLabel("Global Brightness : ")
+        self.string_GlobalBrightness = QtWidgets.QLabel("GB : ")
 
         control_CGL.addWidget(self.button_StartR)
         control_CGL.addWidget(self.button_StopR)
@@ -323,7 +399,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.global_parameter[0] = 0
 
     def update_global_values(self):
-        self.string_GlobalBrightness.setText("Global Brightness : "+str(round(self.global_parameter[1],2)))
+        self.string_GlobalBrightness.setText("An : "+str(round(self.global_parameter[1],2)))
 
     def update_fighter_values(self):
         self.stringArray_ch1[1].setText("Generator : "+str(round(self.global_parameter[40],2)))

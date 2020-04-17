@@ -12,6 +12,7 @@ import subprocess   # obsolete?
 #import urllib.request
 from PyQt5 import QtWidgets, QtGui, QtCore
 import numpy as np
+# from ctypes import c_wchar_p
 
 from MidiDevice import class_fighter, class_akai, class_launchpad
 from gui_class import MainWindow
@@ -67,7 +68,7 @@ def gui(array):
 
 if __name__ == '__main__':
     global_parameter = mp.Array('d', [0 for x in range(255)])
-	global_label = mp.Array('s', [['', ''] for x in range(100)])
+    global_label =     mp.Array('d', [0 for x in range(100)])
     #self.rendering_thread.start()
 
     '''
@@ -79,8 +80,8 @@ if __name__ == '__main__':
     print('Done')
     '''
     proc_midi = mp.Process(target=midi_devices, args = [global_parameter])
-    proc_renderer = mp.Process(target=rendering, args = [global_parameter, global_label])
-    proc_gui = mp.Process(target=gui, args = [global_parameter, global_label])
+    proc_renderer = mp.Process(target=rendering, args = [global_parameter])
+    proc_gui = mp.Process(target=gui, args = [global_parameter])
     print('start');
     proc_midi.start();
     proc_renderer.start()

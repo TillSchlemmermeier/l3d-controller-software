@@ -9,7 +9,7 @@ class e_blank():
     def __init__(self):
         pass
 
-    def return_values():
+    def return_values(self):
         return [['', ''],
 				['', ''],
 				['', '']]
