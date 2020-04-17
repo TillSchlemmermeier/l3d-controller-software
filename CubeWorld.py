@@ -58,6 +58,7 @@ from generators.g_soundsnake import g_soundsnake
 from generators.g_supernova import g_supernova
 from generators.g_column  import g_column
 from generators.a_multi_cube_edges_2 import a_multi_cube_edges_2
+from generators.g_text import g_text
 #from generators.a_pulsating_torus import a_pulsating_torus
 
 # 2d cube_generators
@@ -69,6 +70,7 @@ from generators.g_2d_square import g_2d_square
 from generators.g_2d_portal import g_2d_portal
 from generators.g_2d_random import g_2d_random
 from generators.g_2d_test import g_2d_test
+from generators.g_2d_outer_square import g_2d_outer_square
 from generators.g_2d_conway import g_2d_conway
 from generators.g_2d_orbiter import g_2d_orbiter
 from generators.g_2d_patches import g_2d_patches

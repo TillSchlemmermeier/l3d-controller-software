@@ -18,8 +18,7 @@ class g_2d_test():
 
         world_2d = np.zeros([3, 20, 10])
 
-
-        if self.counter >= 60:
+        if self.counter >= 20:
             self.counter = 0
         else:
             world_2d[0, self.counter, :] = 1.0
@@ -29,7 +28,6 @@ class g_2d_test():
         world_2d[:,-1, :] = 1.0
         world_2d[:, :, 0] = 1.0
         world_2d[:, :,-1] = 1.0
-
 
 #        world_2d[0, :, 0] = 1.0
 #        world_2d[1, :, 10] = 1.0

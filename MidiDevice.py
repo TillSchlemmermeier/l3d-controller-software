@@ -7,7 +7,7 @@ root = Tk()
 #Globals
 MidiKeyIn = 0
 MidiValueIn = 0
-MidiChannelIn = 0
+MidiChannelIn = 0            self
 input_dict = {}
 
 class MidiInputHandler(object):

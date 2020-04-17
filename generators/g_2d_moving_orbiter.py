@@ -32,7 +32,7 @@ class g_2d_moving_orbiter():
 #        self.fade = 3+3*fade
 
     def label(self):
-        return ['distance',round(self.distance,2),'theta', round(self.theta,2),'moving speed',np.round(self.moving, 2)]
+        return ['amplitude',round(self.amplitude,2),'theta', round(self.theta,2),'moving speed',np.round(self.moving, 2)]
 
     def generate(self, step, dumpworld):
         # generate empty world
@@ -44,7 +44,7 @@ class g_2d_moving_orbiter():
 
         [sx, sy] = polar2z(temp_d, temp_theta)
 
-        x = 29.5 - np.sin(step*self.moving) * self.amplitude
+        x = 9.5 - np.sin(step*self.moving) * self.amplitude
 
         # switch on leds depending on distance
         world[0,:,:] = sphere2d(x+sx, sy+self.dim[1]/2-0.5, self.fade)
