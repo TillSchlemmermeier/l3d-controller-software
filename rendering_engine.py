@@ -105,14 +105,7 @@ class rendering_engine:
         Arduino
         """
 
-        #list = self.get_cubedata()
-        #print(list)
         package = bytearray(self.header + self.get_cubedata())
-#        package = bytearray(self.header + [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0])
-#        print(np.shape(self.header + [x*0 for x in range(3000)]))
-#        print(np.clip(self.get_cubedata(),0,255))
-        #print(len(self.test_list))
-
         self.arduino.write(package)
 
         # if not self.debug:
@@ -150,8 +143,8 @@ class rendering_engine:
                 new_world = np.zeros([3, 10, 10, 10])
 
             # apply fade
-            self.channelworld[i, :, :, :] = new_world # + self.global_parameter[index_parameters+2]*\
-            #                                 self.channelworld[i, :, :, :]
+            self.channelworld[i, :, :, :] = new_world + self.global_parameter[index_parameters+2]*\
+                                             self.channelworld[i, :, :, :]
             # increase index
             index_settings += 5
             index_parameters += 30

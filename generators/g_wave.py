@@ -13,7 +13,6 @@ class g_wave():
         self.position = 1
         self.maxsize = 30
 
-
     def return_values(self):
         pass
 
@@ -23,7 +22,6 @@ class g_wave():
         self.speed = args[1]*2.5+0.4
 
         world = np.zeros([3, 10, 10, 10])
-
 
         a = np.zeros([10,10])
 
@@ -36,7 +34,6 @@ class g_wave():
                 self.maxsize=20
             else:
                 self.maxsize=31
-
 
         i = self.counter
         direction = self.direction

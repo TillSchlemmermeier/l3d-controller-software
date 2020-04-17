@@ -49,7 +49,8 @@ from generators.a_testbot import *
 from effects.e_blank import *
 from effects.e_rainbow import *
 from effects.e_tremolo import *
-form effects.e_rotate import *
+from effects.e_rotation import *
+from effects.e_staticcolor import *
 
 
 generators = []
@@ -58,14 +59,14 @@ generators.append(g_blank)
 generators.append(g_random)
 generators.append(g_planes)
 generators.append(g_cube)
-
+generators.append(g_wave)
 
 generators.append(g_gauss)
 generators.append(g_growing_sphere)
 generators.append(g_wavepattern)
 generators.append(g_squares)
 generators.append(g_trees)
-generators.append(g_wave)
+
 generators.append(g_rising_square)
 generators.append(g_planes_falling)
 generators.append(g_growingface)
@@ -111,4 +112,4 @@ effects.append(e_blank)
 effects.append(e_rainbow)
 effects.append(e_staticcolor)
 effects.append(e_tremolo)
-effects.append(e_rotate)
+effects.append(e_rotation)

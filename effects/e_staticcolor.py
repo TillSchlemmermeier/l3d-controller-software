@@ -15,14 +15,13 @@ class e_staticcolor():
         self.blue = 1.0
 
     def return_values(self):
-		pass
+        pass
 
+    def __call__(self, world, args):
 
-    def _call__(self, world, args):
-
-		self.red   = args[0]
-		self.green = args[1]
-		self.blue  = args[2]
+        self.red   = args[0]
+        self.green = args[1]
+        self.blue  = args[2]
 
         world[0, :, :, :] = world[0, :, :, :]*self.red
         world[1, :, :, :] = world[1, :, :, :]*self.green

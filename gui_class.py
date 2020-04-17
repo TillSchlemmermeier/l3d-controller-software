@@ -112,9 +112,11 @@ class MainWindow(QtWidgets.QMainWindow):
         self.button_StopR = QtWidgets.QPushButton("Stop Renderer")
         self.button_StartR.clicked.connect(self.start_Renderer)
         self.button_StopR.clicked.connect(self.stop_Renderer)
+        self.string_GlobalBrightness = QtWidgets.QLabel("Global Brightness : ")
 
         control_CGL.addWidget(self.button_StartR)
         control_CGL.addWidget(self.button_StopR)
+        control_CGL.addWidget(self.string_GlobalBrightness)
 ###
         self.stringArray_ch1 = []
         self.stringArray_ch1.append(QtWidgets.QLabel("Channel 1"))
@@ -292,6 +294,7 @@ class MainWindow(QtWidgets.QMainWindow):
         # what do we need the timer for? -> to execute functions periodically in the GUI e.g. updating Strings
         timer = QtCore.QTimer(self)
         timer.timeout.connect(self.update_fighter_values)
+        timer.timeout.connect(self.update_global_values)
         timer.setInterval(0.1)
         timer.start()
 
@@ -318,6 +321,9 @@ class MainWindow(QtWidgets.QMainWindow):
 
     def stop_Renderer(self):
         self.global_parameter[0] = 0
+
+    def update_global_values(self):
+        self.string_GlobalBrightness.setText("Global Brightness : "+str(round(self.global_parameter[1],2)))
 
     def update_fighter_values(self):
         self.stringArray_ch1[1].setText("Generator : "+str(round(self.global_parameter[40],2)))
