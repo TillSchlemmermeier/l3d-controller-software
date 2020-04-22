@@ -21,6 +21,7 @@ class g_growing_sphere():
         self.maxsize = 10
         self.growspeed = 1
         self.oscillate = 0
+        self.step = 0
 
     #def label(self):
     #    return ['maxsize',round(self.maxsize,2),'growspeed',round(self.growspeed,2),'osci, ex, im',round(self.oscillate,2)]
@@ -38,14 +39,15 @@ class g_growing_sphere():
 
         # oscillates between 0 and 1
         if self.oscillate < 0.3:
-            osci = np.sin(step*self.growspeed)*0.5 + 1
+            osci = np.sin(self.step*self.growspeed)*0.5 + 1
         elif self.oscillate > 0.7:
-            osci = sawtooth(step*self.growspeed, 0)*0.5 + 1
+            osci = sawtooth(self.step*self.growspeed, 0)*0.5 + 1
         else:
-            osci = sawtooth(step*self.growspeed)*0.5 + 1
+            osci = sawtooth(self.step*self.growspeed)*0.5 + 1
 
         # scales to maxsize
         size = self.maxsize * osci
+        self.step += 1
         # creates hollow sphere with parameters
         world[0, :, :, :] = gen_hsphere(size, 4.5, 4.5, 4.5)
         world[1:, :, :, :] = world[0, :, :, :]

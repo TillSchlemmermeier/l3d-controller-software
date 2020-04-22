@@ -17,7 +17,7 @@ class g_trees():
         self.nled = 1
         self.speed = 2
         self.flatworld = np.zeros([4,10,10])
-
+        self.step = 0
     def return_values(self):
         pass
 
@@ -42,11 +42,11 @@ class g_trees():
         world[1, :, :, :] = world[0, :, :, :]
         world[2, :, :, :] = world[0, :, :, :]
 
-        if step % self.speed == 0:
+        if self.step % self.speed == 0:
             self.flatworld = np.roll(self.flatworld, shift = -1, axis = 1)
             self.flatworld = np.roll(self.flatworld, shift = randint(-1,1), axis = 2)
 
             self.flatworld[:, 9, :] = 0.0
 
-
+        self.step += 1
         return np.clip(world, 0, 1)

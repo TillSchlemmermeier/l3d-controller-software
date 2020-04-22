@@ -19,6 +19,7 @@ class g_rising_square():
         self.pause = 2
         self.random = 0
         self.flatworld = np.zeros([3, 4,10,10])
+        self.step = 0
 
     def return_values():
         pass
@@ -31,7 +32,7 @@ class g_rising_square():
 #    def generate(self, step, dumpworld):
         world = np.zeros([3,10,10,10])
 
-        if step % self.pause == 0:
+        if self.step % self.pause == 0:
             if self.random == 0:
                 for i in range(self.nled):
                     self.flatworld[:, :, 9, :] = 1.0
@@ -47,8 +48,8 @@ class g_rising_square():
         world[:, :, 0, :] = self.flatworld[:, 3, :, :]
 
 
-        if step % self.speed == 0:
+        if self.step % self.speed == 0:
             self.flatworld = np.roll(self.flatworld, shift = -1, axis = 2)
             self.flatworld[:, :, 9, :] = 0.0
-
+        self.step += 1
         return np.clip(world, 0, 1)
