@@ -17,6 +17,7 @@ class e_rare_strobo():
         self.disp_prop = 0
         self.counter = 0
         self.state = 'wait'
+        self.step = 0
 
     def control(self, waiting_frames, strobo_frames, disp_prop):
         self.waiting_frames = int(waiting_frames*300)+50
@@ -41,7 +42,7 @@ class e_rare_strobo():
 
         elif self.state == 'strobo':
             # strobo part
-            world[:, :, :, :] *= step % 2
+            world[:, :, :, :] *= self.step % 2
             self.counter += 1
 
 
@@ -57,4 +58,6 @@ class e_rare_strobo():
             if self.counter > self.strobo_frames:
                 self.state = 'wait'
 
+            self.step +=1
+            
         return np.clip(world, 0, 1)

@@ -12,6 +12,7 @@ class e_newgradient():
         self.speed = 0.5
         self.c1 = {'r':1.0, 'g':0.0, 'b':0.0}
         self.c2 = {'r':0.0, 'g':0.0, 'b':1.0}
+        self.step = 0
 
 
     def control(self, speed, c1, c2):
@@ -29,17 +30,19 @@ class e_newgradient():
 
 #        corr_red = 0.5*(np.mean(self.c1['r'] - self.c2['r']))
         corr_red = abs(self.c1['r'] - self.c2['r'])
-        red = corr_red *(np.sin(self.speed*step))-([self.c1['r'], self.c2['r']].min()+1)
+        red = corr_red *(np.sin(self.speed*self.step))-([self.c1['r'], self.c2['r']].min()+1)
 
         corr_green = 0.5*(np.mean(self.c1['g'] - self.c2['g']))
-        green = corr_green *(np.sin(self.speed*step) + 1)
+        green = corr_green *(np.sin(self.speed*self.step) + 1)
 
         corr_blue = 0.5*(np.mean(self.c1['b'] - self.c2['b']))
-        blue = corr_blue *(np.sin(self.speed*step) + 1)
+        blue = corr_blue *(np.sin(self.speed*self.step) + 1)
 
         world[0, :, :, :] = world[0, :, :, :]*red
         world[1, :, :, :] = world[1, :, :, :]*green
         world[2, :, :, :] = world[2, :, :, :]*blue
+
+        self.step += 1
 
         return np.clip(world, 0, 1)
 
