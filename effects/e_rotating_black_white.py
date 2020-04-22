@@ -11,6 +11,7 @@ class e_rotating_black_white():
         self.xspeed = 0.1
         self.yspeed = 0.1
         self.zspeed = 0.0
+        self.step = 0
 
         # create gradient
         self.colorworld = np.zeros([3, 10, 10, 10])
@@ -18,32 +19,38 @@ class e_rotating_black_white():
         for i in range(10):
             self.colorworld[:, i, :, :] = (i/9.0)**2
 
-    def control(self, xspeed, yspeed, zspeed):
-        self.xspeed = 10*xspeed+0.01
-        self.yspeed = 10*yspeed
-        self.zspeed = 10*zspeed
+#        self.colorworld[0, :, :, :] *= self.color['r']
+#        self.colorworld[0, :, :, :] *= self.color['g']
+#        self.colorworld[0, :, :, :] *= self.color['b']
 
-    def label(self):
-        return ['rotating speed 1', round(self.xspeed, 2),
-                'rotating speed 2', round(self.yspeed, 2),
-                'rotating speed 3', round(self.zspeed, 2)]
 
-    def generate(self, step, world):
+    def return_values(self):
+        return [['', ''],
+				['', ''],
+				['', '']]
+
+
+    def __call__(self, world, args):
+		# parse input
+        self.xspeed = args[0]*15+0.01
+        self.yspeed = args[1]*15
+        self.zspeed = args[2]*15
 
         # rotate
-        newworld = rotate(self.colorworld, step*self.xspeed,
+        newworld = rotate(self.colorworld, self.step*self.xspeed,
                           axes = (1,2), order = 1,
 	                      mode = 'nearest', reshape = False)
 
-        newworld = rotate(newworld, step*self.yspeed,
+        newworld = rotate(newworld, self.step*self.yspeed,
                           axes = (1,3), order = 1,
 	                      mode = 'nearest', reshape = False)
 
-        newworld = rotate(newworld, step*self.zspeed,
+        newworld = rotate(newworld, self.step*self.zspeed,
                           axes = (2,3), order = 1,
 	                      mode = 'nearest', reshape = False)
 
-
         world = newworld * world
+
+        self.step += 1
 
         return np.clip(world, 0, 1)
