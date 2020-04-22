@@ -30,6 +30,7 @@ In the following, the global parameters are listed. Default values are given in 
 |        1 | brightness               | 0-1    | 0.5
 |        2 | fade                     | 0-1    | 0.0
 |        3 | brightness limiter       | 0-1    | 0.8
+|        4 | state of launchpad       | 0-19   | 0
 | 10 -  19 | **sound2light**
 | 20 -  39 | **channel settings**
 |       20 | generator channel 1      | 0-255  | 0
