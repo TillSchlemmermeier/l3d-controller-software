@@ -486,13 +486,10 @@ class MainWindow(QtWidgets.QMainWindow):
         self.stringArray_ch4[23].setText("Parameter 4 : "+str(round(self.global_parameter[153],2)))
 
         # check for last changed value
-        index_changed = np.where((self.copied_params == self.global_parameter) == False)[0]
+        index_changed = np.where((np.array(self.copied_params) == np.array(self.global_parameter)) == False)[0]
 
         if np.shape(index_changed)[0] > 1:
             index_changed = index_changed[0]
-
-        #print(index_changed)
-#        print(np.where((self.copied_params == self.global_parameter) == False)[0])
 
         # lets just  do it for the first channel
         for item_1, item_2, item_3, item_4 in zip(self.conv_dict1.items(), self.conv_dict2.items(), self.conv_dict3.items(), self.conv_dict4.items()):
@@ -560,70 +557,4 @@ class MainWindow(QtWidgets.QMainWindow):
                         if index_changed in range(130,154):
                             self.stringArray_ch4[a].setStyleSheet("color: black; font: 15px; background-color: "+c)
 
-#                        self.stringArray_ch2[a].setStyleSheet("color: black; font: 12px; background-color: "+c)
-#                        self.stringArray_ch3[a].setStyleSheet("color: black; font: 12px; background-color: "+c)
-#                        self.stringArray_ch4[a].setStyleSheet("color: black; font: 12px; background-color: "+c)
-                #self.stringArray_ch1[6].setStyleSheet("color: black; font: 12px; background-color: blue")
-                #self.stringArray_ch1[7].setStyleSheet("color: black; font: 12px; background-color: blue")
-                #self.stringArray_ch1[8].setStyleSheet("color: black; font: 12px; background-color: blue")
-            '''
-            if(self.active_param in (10,11,12,13)):
-                self.stringArray_ch1[10].setStyleSheet("color: black; font: 12px; background-color: green")
-                self.stringArray_ch1[11].setStyleSheet("color: black; font: 12px; background-color: green")
-                self.stringArray_ch1[12].setStyleSheet("color: black; font: 12px; background-color: green")
-                self.stringArray_ch1[13].setStyleSheet("color: black; font: 12px; background-color: green")
-            if(self.active_param in (15,16,17,18)):
-                self.stringArray_ch1[15].setStyleSheet("color: black; font: 12px; background-color: orange")
-                self.stringArray_ch1[16].setStyleSheet("color: black; font: 12px; background-color: orange")
-                self.stringArray_ch1[17].setStyleSheet("color: black; font: 12px; background-color: orange")
-                self.stringArray_ch1[18].setStyleSheet("color: black; font: 12px; background-color: orange")
-            if(self.active_param in (20,21,22,23)):
-                self.stringArray_ch1[20].setStyleSheet("color: black; font: 12px; background-color: pink")
-                self.stringArray_ch1[21].setStyleSheet("color: black; font: 12px; background-color: pink")
-                self.stringArray_ch1[22].setStyleSheet("color: black; font: 12px; background-color: pink")
-                self.stringArray_ch1[23].setStyleSheet("color: black; font: 12px; background-color: pink")
-            '''
-        #for item in self.stringArray_ch4:
-        #    item.setStyleSheet("color: black; font: 9px;");
-
-        # self.copied_params = deepcopy(global_parameter) old, for threading
         self.copied_params = self.global_parameter[:]
-
-
-
-
-'''
-    def init_channelView_widget(self):
-        self.ChannelViewWidget = (QtWidgets.QWidget(self))
-        grid = QtWidgets.QGridLayout(self)
-        self.ChannelViewWidget.setLayout(grid)
-        self.stringArray = []
-        for i in range(4):
-            self.stringArray.append(QtWidgets.QLabel("Channel "+str(i)))
-            self.stringArray.append(QtWidgets.QLabel("Generator : DUMMY"))
-            self.stringArray.append(QtWidgets.QLabel("Brightness : 127"))
-            self.stringArray.append(QtWidgets.QLabel("Fade : 0"))
-            self.stringArray.append(QtWidgets.QLabel("Shutter : 0"))
-            self.stringArray.append(QtWidgets.QLabel("Parameter 1 : 89"))
-            self.stringArray.append(QtWidgets.QLabel("Parameter 2 : 54"))
-            self.stringArray.append(QtWidgets.QLabel("Parameter 3 : 110"))
-            self.stringArray.append(QtWidgets.QLabel("Effect 1 : DUMMY"))
-            self.stringArray.append(QtWidgets.QLabel("Parameter 1 : 0"))
-            self.stringArray.append(QtWidgets.QLabel("Parameter 2 : 127"))
-            self.stringArray.append(QtWidgets.QLabel("Parameter 3 : 110"))
-            self.stringArray.append(QtWidgets.QLabel("Effect 2 : DUMMY"))
-            self.stringArray.append(QtWidgets.QLabel("Parameter 1 : 0"))
-            self.stringArray.append(QtWidgets.QLabel("Parameter 2 : 127"))
-            self.stringArray.append(QtWidgets.QLabel("Parameter 3 : 110"))
-            l=0
-            for item in self.stringArray:
-                grid.addWidget(item,l,i)
-                l+=1
-
-    def update_midimonitor(self):
-        count=0
-        for i in range(4):
-            for j in range(4):
-                self.midimon_valueStringArray[i][j].setText("Midi: "+str(count)+" - "+str(global_parameter[count]))
-                count+=1
-'''
