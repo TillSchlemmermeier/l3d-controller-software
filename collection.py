@@ -52,6 +52,7 @@ from effects.e_tremolo import *
 from effects.e_rotation import *
 from effects.e_staticcolor import *
 from effects.e_palettes import *
+from effects.e_s2l import *
 
 generators = []
 
@@ -114,3 +115,4 @@ effects.append(e_staticcolor)
 effects.append(e_tremolo)
 effects.append(e_rotation)
 effects.append(e_palettes)
+effects.append(e_s2l)
