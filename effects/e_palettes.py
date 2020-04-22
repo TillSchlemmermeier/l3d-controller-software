@@ -148,7 +148,7 @@ class e_palettes:
                         ,Bilbao_20
                         ,Buda_20
                         ,Davos_20
-#                        ,Devon_2
+                        ,Devon_2
                         ,GrayC_20
                         ,Hawaii_20
                         ,Imola_20
