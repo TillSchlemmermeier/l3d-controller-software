@@ -104,11 +104,16 @@ class class_launchpad:
 
     def sendstate(self):
         """send states and colors to midi device"""
+        # send the state to a global parameter entry
+        # state 0 is closed
+        self.global_parameter[4] = self.state[0]*self.state[1]
+        print('launchpad state:', self.state)
+
         # first, turn all leds off
         for i in range(130):
             self.midiout.send_message([144, i, 0])
 
-	# send the state of the channel switches (on/off)
+        # send the state of the channel switches (on/off)
         self.midiout.send_message([176, 104, self.global_parameter[ 40]*127])
         self.midiout.send_message([176, 105, self.global_parameter[ 70]*127])
         self.midiout.send_message([176, 106, self.global_parameter[100]*127])
