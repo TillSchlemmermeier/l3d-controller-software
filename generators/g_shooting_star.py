@@ -13,6 +13,7 @@ class g_shooting_star():
         self.refresh = 16   # number of frames after creating a new shooting star
         self.speed = 1.0    # moving speed
         self.s0, self.v = gen_line(self.speed)
+        self.step = 0
 
     def return_values(self):
         pass
@@ -25,12 +26,12 @@ class g_shooting_star():
         world = np.zeros([3, 10, 10, 10])
 
         # every <refresh> frames: generate new vector
-        if step == 1 or step % self.refresh == 0:
+        if self.step == 1 or self.step % self.refresh == 0:
             self.s0, self.v = gen_line(self.speed)
 
-        [sx, sy, sz] = s(self.s0, self.v, step % self.refresh)
+        [sx, sy, sz] = s(self.s0, self.v, self.step % self.refresh)
         # return current position of shooting star
-
+        self.step += 1
         # switch on leds depending on distance
         world[0,:,:,:] = np.rot90(gen_shooting_star(sx,sy,sz), axes = [0,1], k=3)
         world[1,:,:,:] = world[0,:,:,:]

@@ -53,6 +53,30 @@ from effects.e_rotation import *
 from effects.e_staticcolor import *
 from effects.e_palettes import *
 from effects.e_s2l import *
+from effects\e_gradient import *
+from effects\e_blur import *
+from effects\e_bright_osci import *
+from effects\e_cut_cube import *
+from effects\e_fade2blue import *
+from effects\e_growing_sphere import *
+from effects\e_mean import *
+from effects\e_mean_vertical import *
+from effects\e_newgradient import *
+from effects\e_outer_shadow import *
+from effects\e_prod_hue import *
+from effects\e_prod_saturation import *
+from effects\e_random_brightness import *
+from effects\e_rare_strobo import *
+from effects\e_redyellow import *
+from effects\e_remove_random import *
+from effects\e_rotating_black_blue import *
+from effects\e_rotating_black_orange import *
+from effects\e_rotating_black_red import *
+from effects\e_rotating_black_white import *
+from effects\e_rotating_blue_orange import *
+from effects\e_sound_color import *
+from effects\e_squared import *
+from effects\e_violetblue import *
 
 generators = []
 
@@ -73,39 +97,39 @@ generators.append(g_planes_falling)
 generators.append(g_growingface)
 generators.append(g_snake)
 generators.append(g_sound_sphere)
-# generators.append(g_soundcube)
-# generators.append(g_soundrandom)
-# generators.append(g_sphere)
-# generators.append(g_shooting_star)
-# generators.append(g_rotate_plane)
-# generators.append(g_randomlines)
-# generators.append(g_randomcross)
-# generators.append(g_rain)
-# generators.append(g_orbiter)
-# generators.append(g_orbiter2)
-# generators.append(g_orbiter3)
-# generators.append(g_pyramid)
-# generators.append(g_pyramid_upsidedown)
-# generators.append(g_inandout)
-# generators.append(g_growing_corner)
-# generators.append(g_falling)
-# generators.append(g_drop)
-# generators.append(g_darksphere)
-# generators.append(g_cut)
-# generators.append(g_cube)
-# generators.append(g_cube_edges)
-# generators.append(g_corner)
-# generators.append(g_corner_grow)
-# generators.append(g_columns)
-# generators.append(g_circles)
-# #generators.append(g_centralgrow)
-# generators.append(a_lines)
-# generators.append(a_multi_cube_edges)
-# generators.append(a_pulsating)
-# generators.append(a_orbbot)
-# generators.append(a_random_cubes)
-# generators.append(a_squares_cut)
-# generators.append(a_testbot)
+generators.append(g_soundcube)
+generators.append(g_soundrandom)
+generators.append(g_sphere)
+generators.append(g_shooting_star)
+generators.append(g_rotate_plane)
+generators.append(g_randomlines)
+generators.append(g_randomcross)
+generators.append(g_rain)
+generators.append(g_orbiter)
+generators.append(g_orbiter2)
+generators.append(g_orbiter3)
+generators.append(g_pyramid)
+generators.append(g_pyramid_upsidedown)
+generators.append(g_inandout)
+generators.append(g_growing_corner)
+generators.append(g_falling)
+generators.append(g_drop)
+generators.append(g_darksphere)
+generators.append(g_cut)
+generators.append(g_cube)
+generators.append(g_cube_edges)
+generators.append(g_corner)
+generators.append(g_corner_grow)
+generators.append(g_columns)
+generators.append(g_circles)
+generators.append(g_centralgrow)
+generators.append(a_lines)
+generators.append(a_multi_cube_edges)
+generators.append(a_pulsating)
+generators.append(a_orbbot)
+generators.append(a_random_cubes)
+generators.append(a_squares_cut)
+generators.append(a_testbot)
 
 effects = []
 
@@ -116,3 +140,27 @@ effects.append(e_tremolo)
 effects.append(e_rotation)
 effects.append(e_palettes)
 effects.append(e_s2l)
+#effects.append(e_gradient)
+effects.append(e_blur)
+effects.append(e_bright_osci)
+effects.append(e_cut_cube)
+effects.append(e_fade2blue)
+effects.append(e_growing_sphere)
+effects.append(e_mean)
+effects.append(e_mean_vertical)
+effects.append(e_newgradient)
+effects.append(e_outer_shadow)
+effects.append(e_prod_hue)
+effects.append(e_prod_saturation)
+effects.append(e_random_brightness)
+effects.append(e_rare_strobo)
+effects.append(e_redyellow)
+effects.append(e_remove_random)
+effects.append(e_rotating_black_blue)
+effects.append(e_rotating_black_orange)
+effects.append(e_rotating_black_red)
+effects.append(e_rotating_black_white)
+effects.append(e_rotating_blue_orange)
+effects.append(e_sound_color)
+effects.append(e_squared)
+effects.append(e_violetblue)
