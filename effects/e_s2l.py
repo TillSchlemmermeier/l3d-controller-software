@@ -10,7 +10,7 @@ class e_s2l():
         self.amount = 1.0
         # sound2light stuff
         self.sample_rate = 44100
-        self.buffer_size = 882
+        self.buffer_size = 3000
         self.thres_factor = 0
         self.channel = 1
 
@@ -27,10 +27,6 @@ class e_s2l():
 
         self.threshold = 0.5
 
-    # def control(self, amount, threshold, channel):
-    #     self.amount = amount
-    #     self.threshold = threshold
-    #     self.channel = int(channel*4)
 
     def return_values(self):
         return [['', ''],
@@ -39,9 +35,11 @@ class e_s2l():
 
     def __call__(self, world, args):
         total_volume = self.update_line()
+        # print(len(total_volume))
 
         self.amount = args[0]
-        self.channel = int(args[1]*len(total_volume))
+        self.channel = int(args[1]*len(total_volume)-1)
+        self.theshold = args[2]
 
         world[0, :, :, :] *= total_volume[self.channel]*self.amount
         world[1, :, :, :] *= total_volume[self.channel]*self.amount
@@ -58,6 +56,12 @@ class e_s2l():
         # Subtract noise floor (empirically determined)
         return (freqs, y)
 
+    def control_threshold(self, dat, thres):
+        if dat < thres:
+            return 0.0
+        else:
+            return dat
+
     def update_line(self):
         buf = self.stream.read(self.buffer_size)
         data = scipy.array(struct.unpack("%dh"%(self.buffer_size), buf))
@@ -68,13 +72,13 @@ class e_s2l():
         # y = y / 5.0
 
         # Average into chunks of N
-        N = 100
+        N = 10
 
         yy = [scipy.average(y[n:n+N]) for n in range(0, len(y), N)]
         yy = yy[:int(len(yy)/2)] # Discard half of the samples, as they are mirrored
 
         # now do some threshold detection
-        # for i in range(len(yy)):
-        #    yy[i] = self.control_threshold(yy[i], self.threshold)
+        for i in range(len(yy)):
+            yy[i] = self.control_threshold(yy[i], self.threshold)
 
         return np.round(np.clip(yy, 0, 1), 4)
