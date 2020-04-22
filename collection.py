@@ -69,15 +69,12 @@ from effects.e_random_brightness import *
 from effects.e_rare_strobo import *
 from effects.e_redyellow import *
 from effects.e_remove_random import *
-from effects.e_rotating_black_blue import *
-from effects.e_rotating_black_orange import *
-from effects.e_rotating_black_red import *
-from effects.e_rotating_black_white import *
+from effects.e_rotating_black_color import *
 from effects.e_rotating_blue_orange import *
 from effects.e_sound_color import *
 from effects.e_squared import *
 from effects.e_violetblue import *
-from effects.e_black_color import *
+
 
 generators = []
 
