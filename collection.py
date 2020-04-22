@@ -77,6 +77,7 @@ from effects.e_rotating_blue_orange import *
 from effects.e_sound_color import *
 from effects.e_squared import *
 from effects.e_violetblue import *
+from effects.e_black_color import *
 
 generators = []
 
@@ -156,7 +157,7 @@ effects.append(e_random_brightness)
 effects.append(e_rare_strobo)
 effects.append(e_redyellow)
 effects.append(e_remove_random)
-effects.append(e_rotating_black_blue)
+effects.append(e_rotating_black_color)
 # effects.append(e_rotating_black_orange)
 # effects.append(e_rotating_black_red)
 # effects.append(e_rotating_black_white)
