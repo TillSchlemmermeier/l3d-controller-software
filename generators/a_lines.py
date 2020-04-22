@@ -15,14 +15,14 @@ class a_lines():
     def __init__(self):
         self.counter = 0
 
-	# counter for changes
+	    # counter for changes
         self.start_strobo = 4
         self.count_strobo = 20
         self.count_fade = 100
 
         # initialize generator
         self.generator = g_cube()
-        self.generator.control(1,1,0)
+        # self.generator.control(1,1,0)
 
         self.edge_list = [[0, 0, slice(0, 10)],
                           [0, 9, slice(0, 10)],
@@ -60,7 +60,7 @@ class a_lines():
         # do strobo with cube
         if self.counter > self.start_strobo*self.count_fade:
             if self.counter % 2 == 0:
-                world[:, :, :, :] = self.generator.generate(self.counter,0)
+                world[:, :, :, :] = self.generator(self.counter,0)
 
         if self.counter > self.count_strobo+self.start_strobo*self.count_fade:
             self.counter = -1

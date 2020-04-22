@@ -17,6 +17,7 @@ class g_columns():
         self.y = 2
         self.z = 2
         self.counter = 0
+        self.step = 0
 
     def return_values(self):
         pass
@@ -39,8 +40,8 @@ class g_columns():
         self.safe_world[0,:,:] = 0
 
         # create new spot in the upper most layer and blur it
-        world[0, 0, self.y, self.z] = np.sin(step*self.osc_speed)**6
-        world[0, :, :, :] = blur(world[0, :,:,:], self.blur*np.sin(step*self.osc_speed)*0.5 + 0.5)
+        world[0, 0, self.y, self.z] = np.sin(self.step*self.osc_speed)**6
+        world[0, :, :, :] = blur(world[0, :,:,:], self.blur*np.sin(self.step*self.osc_speed)*0.5 + 0.5)
 
         # copy old world into new world
         world[0, :, :, :] += self.safe_world
@@ -51,6 +52,7 @@ class g_columns():
         self.safe_world = world[0, :, :, :]
 
         self.counter += 1
+        self.step += 1
 
         return np.clip(world, 0, 1)
 

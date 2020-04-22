@@ -48,6 +48,7 @@ class g_drop():
     def __init__(self):
         self.speed = 1
         self.drops = []
+        self.step = 1
         self.drops.append(self.drop())
 
     def return_values(self):
@@ -70,7 +71,9 @@ class g_drop():
                 del(self.drops[i-n_del])
                 n_del += 1
 
-        if step%self.speed == 0:
+        if self.step%self.speed == 0:
             self.drops.append(self.drop())
+
+        self.step += 1
 
         return np.clip(world, 0, 1)

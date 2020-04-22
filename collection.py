@@ -74,7 +74,7 @@ from effects.e_rotating_black_orange import *
 from effects.e_rotating_black_red import *
 from effects.e_rotating_black_white import *
 from effects.e_rotating_blue_orange import *
-from effects.e_sound_color import *
+#from effects.e_sound_color import *
 from effects.e_squared import *
 from effects.e_violetblue import *
 
@@ -97,8 +97,8 @@ generators.append(g_planes_falling)
 generators.append(g_growingface)
 generators.append(g_snake)
 generators.append(g_sound_sphere)
-generators.append(g_soundcube)
-generators.append(g_soundrandom)
+#generators.append(g_soundcube)
+#generators.append(g_soundrandom)
 generators.append(g_sphere)
 generators.append(g_shooting_star)
 generators.append(g_rotate_plane)
@@ -122,7 +122,7 @@ generators.append(g_corner)
 generators.append(g_corner_grow)
 generators.append(g_columns)
 generators.append(g_circles)
-generators.append(g_centralgrow)
+#generators.append(g_centralgrow)
 generators.append(a_lines)
 generators.append(a_multi_cube_edges)
 generators.append(a_pulsating)
@@ -161,6 +161,6 @@ effects.append(e_rotating_black_orange)
 effects.append(e_rotating_black_red)
 effects.append(e_rotating_black_white)
 effects.append(e_rotating_blue_orange)
-effects.append(e_sound_color)
+#effects.append(e_sound_color)
 effects.append(e_squared)
 effects.append(e_violetblue)

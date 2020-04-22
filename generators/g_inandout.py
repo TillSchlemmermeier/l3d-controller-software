@@ -17,7 +17,7 @@ class g_inandout:
         self.number = int(args[0]*6+1)
         self.fadespeed = 0.5*args[1]+0.01
 
-        tempworld = np.zeros([10, 10, 10])
+        world = np.zeros([3, 10, 10, 10])
 
         # check for new leds
         if len(self.leds) < self.number:
@@ -58,14 +58,7 @@ class led:
             else:
                 self.dy = 1
 
-
     def __call__(self):
-
-#        print(self.state)
-#        print(self.brightness)
-#        if self.state == 1:
-#            print(self.x, self.y, self.z, self.brightness)
-
         # perform action
         if self.state == 0:
             self.brightness += self.fadespeed
@@ -73,7 +66,6 @@ class led:
             #self.x += self.dx
             self.y += self.dy
             self.z += self.dz
-#            print(self.x, self.y, self.z)
 
         output = [self.state,
                   np.clip(self.x,0,9),

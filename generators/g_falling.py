@@ -30,6 +30,7 @@ class g_falling():
         self.counter = 0
         self.max = len(self.voxdata)
         self.wait = 5
+        self.step = 0
 
     def return_values(self):
         pass
@@ -51,8 +52,10 @@ class g_falling():
         world[2,:,:,:] = world[0,:,:,:]
 
         # increase counter
-        if step % self.wait == 0:
+        if self.step % self.wait == 0:
             self.counter += 1
+
+        self.step += 1
         # return world
         return np.clip(world,0,1)
 

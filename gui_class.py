@@ -491,6 +491,7 @@ class MainWindow(QtWidgets.QMainWindow):
         if np.shape(index_changed)[0] > 1:
             index_changed = index_changed[0]
 
+        #print(index_changed)
 #        print(np.where((self.copied_params == self.global_parameter) == False)[0])
 
         # lets just  do it for the first channel
