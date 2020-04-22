@@ -27,6 +27,7 @@ class e_rotating_black_blue():
     def return_values(self):
         return [['', ''],
 				['', ''],
+                ['', ''],
 				['', '']]
 
 
