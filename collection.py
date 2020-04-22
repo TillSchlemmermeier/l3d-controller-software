@@ -70,6 +70,7 @@ from effects.e_rare_strobo import *
 from effects.e_redyellow import *
 from effects.e_remove_random import *
 from effects.e_rotating_black_color import *
+from effects.e_rotating_black_white import *
 from effects.e_rotating_blue_orange import *
 #from effects.e_sound_color import *
 from effects.e_squared import *
@@ -155,9 +156,6 @@ effects.append(e_rare_strobo)
 effects.append(e_redyellow)
 effects.append(e_remove_random)
 effects.append(e_rotating_black_color)
-#effects.append(e_rotating_black_blue)
-#effects.append(e_rotating_black_orange)
-#effects.append(e_rotating_black_red)
 #effects.append(e_rotating_black_white)
 #effects.append(e_rotating_blue_orange)
 #effects.append(e_sound_color)
