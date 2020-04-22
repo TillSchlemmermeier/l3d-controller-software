@@ -106,7 +106,9 @@ class class_launchpad:
         """send states and colors to midi device"""
         # send the state to a global parameter entry
         # state 0 is closed
-        self.global_parameter[4] = self.state[0]*self.state[1]
+        # get starting number of channel
+        channel_number = self.state[0]*4
+        self.global_parameter[4] = channel_number*self.state[1]
         print('launchpad state:', self.state)
 
         # first, turn all leds off
