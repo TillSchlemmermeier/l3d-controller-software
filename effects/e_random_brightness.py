@@ -7,6 +7,7 @@ class e_random_brightness():
     def __init__(self):
         self.speed = 1
         self.brightness = uniform(0,1)
+        self.step = 0
 
     def control(self, speed, blub0, blub1):
         self.speed = int(speed*10)+1
@@ -16,7 +17,9 @@ class e_random_brightness():
 
     def generate(self, step, world):
 
-        if step % self.speed == 0:
+        if self.step % self.speed == 0:
             self.brightness = uniform(0, 1)
+
+        self.step += 1
 
         return np.clip(world*self.brightness, 0, 1)
