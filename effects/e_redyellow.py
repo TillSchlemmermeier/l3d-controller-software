@@ -15,13 +15,16 @@ class e_redyellow():
         self.blue = 0.0
         self.step = 0
 
-    def control(self, speed, blub0, blub1):
-        self.speed = speed*0.1
+    def return_values(self):
+        return [['', ''],
+				['', ''],
+                ['', ''],
+				['', '']]
 
-    def label(self):
-        return ['speed',round(self.speed,2),'empty', 'empty','empty','empty']
+    def __call__(self, world, args)
+        # parse input
+        self.speed = args[0]*0.1
 
-    def generate(self, step, world):
 
         self.green = np.sin(self.speed*self.step)
 
@@ -29,6 +32,6 @@ class e_redyellow():
         world[1, :, :, :] = world[1, :, :, :]*self.green
         world[2, :, :, :] = world[2, :, :, :]*self.blue
 
-        self.step += 1        
+        self.step += 1
 
         return np.clip(world, 0, 1)
