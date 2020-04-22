@@ -14,11 +14,10 @@ import numpy as np
 class MainWindow(QtWidgets.QMainWindow):
 
     def __init__(self, array,parent=None):
+
         super(MainWindow, self).__init__()
-        #global MidiKey
-        #global MidiValue
-        #global MidiChannel
-        self.global_parameter = array#mp.Array('d', [0 for x in range(255)])
+
+        self.global_parameter = array
 
         # initialize layout
         # creating main container-frame, parent it to QWindow
@@ -371,7 +370,7 @@ class MainWindow(QtWidgets.QMainWindow):
         timer = QtCore.QTimer(self)
         timer.timeout.connect(self.update_fighter_values)
         timer.timeout.connect(self.update_global_values)
-        timer.setInterval(0.1)
+        timer.setInterval(10)
         timer.start()
 
         # start threads
