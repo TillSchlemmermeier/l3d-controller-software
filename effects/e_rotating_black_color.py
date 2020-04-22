@@ -3,7 +3,7 @@ import numpy as np
 from scipy.ndimage.interpolation import rotate
 
 
-class e_rotating_black_blue():
+class e_rotating_black_color():
 
 
     def __init__(self):
@@ -19,9 +19,11 @@ class e_rotating_black_blue():
         self.colorworld = np.zeros([3, 10, 10, 10])
 
         for i in range(10):
-            self.colorworld[0, i, :, :] = (self.color['r']/9.0)**2
-            self.colorworld[1, i, :, :] = (self.color['g']/9.0)**2
-            self.colorworld[2, i, :, :] = (self.color['b']/9.0)**2
+            self.colorworld[:, i, :, :] = (i/9.0)**2
+
+#        self.colorworld[0, :, :, :] *= self.color['r']
+#        self.colorworld[0, :, :, :] *= self.color['g']
+#        self.colorworld[0, :, :, :] *= self.color['b']
 
 
     def return_values(self):
@@ -33,9 +35,9 @@ class e_rotating_black_blue():
 
     def __call__(self, world, args):
 		# parse input
-        self.xspeed = args[0]*10+0.01
-        self.yspeed = args[1]*10
-        self.zspeed = args [2]*10
+        self.xspeed = args[0]*15+0.01
+        self.yspeed = args[1]*15
+        self.zspeed = args[2]*15
         self.color = color_translate(args[3])
 
         # rotate
@@ -51,6 +53,14 @@ class e_rotating_black_blue():
                           axes = (2,3), order = 1,
 	                      mode = 'nearest', reshape = False)
 
+
+        #self.colorworld[0, :, :, :] *= self.color['r']
+        #self.colorworld[0, :, :, :] *= self.color['g']
+        #self.colorworld[0, :, :, :] *= self.color['b']
+
+        newworld[0, :, :, :] = newworld[0, :, :, :]*self.color['r']
+        newworld[1, :, :, :] = newworld[1, :, :, :]*self.color['g']
+        newworld[2, :, :, :] = newworld[2, :, :, :]*self.color['b']
 
         world = newworld * world
 

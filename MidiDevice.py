@@ -107,9 +107,12 @@ class class_launchpad:
         # send the state to a global parameter entry
         # state 0 is closed
         # get starting number of channel
-        channel_number = self.state[0]*4
-        self.global_parameter[4] = channel_number*self.state[1]
-        print('launchpad state:', self.state)
+        if self.state == 0:
+            self.global_parameter[4] = 0
+        else:
+            channel_number = self.state[0]*4
+            self.global_parameter[4] = channel_number*self.state[1]
+            print('launchpad state:', self.state)
 
         # first, turn all leds off
         for i in range(130):
