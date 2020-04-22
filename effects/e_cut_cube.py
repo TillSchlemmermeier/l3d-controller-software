@@ -9,6 +9,7 @@ class e_cut_cube():
 
     def __init__(self):
         self.speed = 2
+        self.step = 0
 
     def control(self, speed, blub0, blub1):
         self.speed = int(speed*10)+1
@@ -19,7 +20,7 @@ class e_cut_cube():
     def generate(self, step, world):
         num = randint(0,7)
 
-        if step % self.speed == 0:
+        if self.step % self.speed == 0:
 
             if num == 0:
                 world[:, :5, :5, :5] = 0
@@ -37,5 +38,7 @@ class e_cut_cube():
                 world[:, 5:, 5:, :5] = 0
             if num == 7:
                 world[:, 5:, 5:, 5:] = 0
+
+            self.step += 1
 
         return np.clip(world, 0, 1)
