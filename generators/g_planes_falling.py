@@ -14,6 +14,7 @@ class g_planes_falling():
     def __init__(self):
         self.speed = 10
         self.dir = 1
+        self.step = 0
 
     def return_values():
         pass
@@ -24,7 +25,7 @@ class g_planes_falling():
 
     #def generate(self, step, dumpworld):
         world = np.zeros([3, 10, 10, 10])
-        position = int( round((sawtooth(0.1*step*self.speed)+1)*4.5))
+        position = int( round((sawtooth(0.1*self.step*self.speed)+1)*4.5))
 
         if self.dir == 0:
             world[:, position,:,:] = 1.0
@@ -32,5 +33,5 @@ class g_planes_falling():
             world[:, :, position,:] = 1.0
         else:
             world[:, :,:,position] = 1.0
-
+        self.step += 1
         return world

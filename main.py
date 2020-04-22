@@ -7,8 +7,8 @@ from rendering_engine import rendering_engine
 #from global_parameter_module import global_parameter
 from copy import deepcopy
 import sys
-import tempfile     # what is this?
-import subprocess   # obsolete?
+#import tempfile     # what is this?
+#import subprocess   # obsolete?
 #import urllib.request
 from PyQt5 import QtWidgets, QtGui, QtCore
 import numpy as np
@@ -68,17 +68,9 @@ def gui(array):
 
 if __name__ == '__main__':
     global_parameter = mp.Array('d', [0 for x in range(255)])
-    global_label =     mp.Array('d', [0 for x in range(100)])
-    #self.rendering_thread.start()
+    # global_label =     mp.Array('d', [0 for x in range(100)])
 
-    '''
-    with mp.Pool(processes=3) as pool:
-        gui = pool.apply_async(gui(global_parameter))
-        midi = pool.apply_async(midi_fighter(global_parameter))
-        render = pool.apply_async(rendering(global_parameter))
 
-    print('Done')
-    '''
     proc_midi = mp.Process(target=midi_devices, args = [global_parameter])
     proc_renderer = mp.Process(target=rendering, args = [global_parameter])
     proc_gui = mp.Process(target=gui, args = [global_parameter])

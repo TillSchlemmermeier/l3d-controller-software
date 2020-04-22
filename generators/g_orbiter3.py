@@ -19,6 +19,7 @@ class g_orbiter3():
         self.distance = 4
         self.theta = 0.1
         self.rho = 0.1
+        self.step = 0
 
     def return_values(self):
         pass
@@ -34,8 +35,8 @@ class g_orbiter3():
 
         # generate current position
         temp_d = self.distance
-        temp_theta = sawtooth(self.theta*step)*np.pi
-        temp_rho = np.sin(self.rho*step)
+        temp_theta = sawtooth(self.theta*self.step)*np.pi
+        temp_rho = np.sin(self.rho*self.step)
 
         [sx, sy, sz] = polar2z(temp_d, temp_theta, temp_rho)
 
@@ -43,6 +44,8 @@ class g_orbiter3():
         world[0,:,:,:] = gen_shooting_star(sx+5.5,sy+5.5,sz+5.5)
         world[1,:,:,:] = world[0,:,:,:]
         world[2,:,:,:] = world[0,:,:,:]
+
+        self.step += 1
 
         return world
 

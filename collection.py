@@ -52,6 +52,31 @@ from effects.e_tremolo import *
 from effects.e_rotation import *
 from effects.e_staticcolor import *
 from effects.e_palettes import *
+from effects.e_s2l import *
+from effects.e_gradient import *
+from effects.e_blur import *
+from effects.e_bright_osci import *
+from effects.e_cut_cube import *
+from effects.e_fade2blue import *
+from effects.e_growing_sphere import *
+from effects.e_mean import *
+from effects.e_mean_vertical import *
+from effects.e_newgradient import *
+from effects.e_outer_shadow import *
+from effects.e_prod_hue import *
+from effects.e_prod_saturation import *
+from effects.e_random_brightness import *
+from effects.e_rare_strobo import *
+from effects.e_redyellow import *
+from effects.e_remove_random import *
+from effects.e_rotating_black_blue import *
+from effects.e_rotating_black_orange import *
+from effects.e_rotating_black_red import *
+from effects.e_rotating_black_white import *
+from effects.e_rotating_blue_orange import *
+from effects.e_sound_color import *
+from effects.e_squared import *
+from effects.e_violetblue import *
 
 generators = []
 
@@ -61,12 +86,12 @@ generators.append(g_planes)
 generators.append(g_cube)
 generators.append(g_wave)
 
-generators.append(g_gauss)
+#generators.append(g_gauss)
 generators.append(g_growing_sphere)
-generators.append(g_wavepattern)
+# generators.append(g_wavepattern)
 generators.append(g_squares)
 generators.append(g_trees)
-
+#
 generators.append(g_rising_square)
 generators.append(g_planes_falling)
 generators.append(g_growingface)
@@ -97,7 +122,7 @@ generators.append(g_corner)
 generators.append(g_corner_grow)
 generators.append(g_columns)
 generators.append(g_circles)
-#generators.append(g_centralgrow)
+generators.append(g_centralgrow)
 generators.append(a_lines)
 generators.append(a_multi_cube_edges)
 generators.append(a_pulsating)
@@ -114,3 +139,28 @@ effects.append(e_staticcolor)
 effects.append(e_tremolo)
 effects.append(e_rotation)
 effects.append(e_palettes)
+effects.append(e_s2l)
+#effects.append(e_gradient)
+effects.append(e_blur)
+effects.append(e_bright_osci)
+effects.append(e_cut_cube)
+effects.append(e_fade2blue)
+effects.append(e_growing_sphere)
+effects.append(e_mean)
+effects.append(e_mean_vertical)
+effects.append(e_newgradient)
+effects.append(e_outer_shadow)
+effects.append(e_prod_hue)
+effects.append(e_prod_saturation)
+effects.append(e_random_brightness)
+effects.append(e_rare_strobo)
+effects.append(e_redyellow)
+effects.append(e_remove_random)
+effects.append(e_rotating_black_blue)
+effects.append(e_rotating_black_orange)
+effects.append(e_rotating_black_red)
+effects.append(e_rotating_black_white)
+effects.append(e_rotating_blue_orange)
+effects.append(e_sound_color)
+effects.append(e_squared)
+effects.append(e_violetblue)

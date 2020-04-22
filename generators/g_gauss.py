@@ -11,6 +11,7 @@ class g_gauss():
         self.sigma = 1
         self.amplitude = 30
         self.speed = 1
+        self.step = 0
 
     def return_values(self):
         pass
@@ -32,9 +33,9 @@ class g_gauss():
         sigma = np.array([self.sigma,self.sigma])
         covariance = np.diag(sigma**2)
 
-        gauss = np.sin(step*self.speed)*multivariate_normal.pdf(yz, mean=mu, cov=covariance)*self.amplitude*self.sigma**2+5
+        gauss = np.sin(self.step*self.speed)*multivariate_normal.pdf(yz, mean=mu, cov=covariance)*self.amplitude*self.sigma**2+5
         gauss = gauss.reshape(10,10)
-
+        self.step += 1
         #print(gauss)
         world[0,:,:,:] = gen_gauss(gauss)
 
