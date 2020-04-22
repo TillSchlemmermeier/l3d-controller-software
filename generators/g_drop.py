@@ -14,7 +14,6 @@ class g_drop():
             self.brightness = 0.0
 
             self.state = 0
-            self.counter = 0
 
         def do_step(self):
 

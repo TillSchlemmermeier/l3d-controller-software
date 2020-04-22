@@ -10,6 +10,7 @@ class g_pyramid_upsidedown():
     def __init__(self):
         self.size = 1
         self.speed = 0.2
+        self.step = 0
 
     def return_values(self):
         pass
@@ -48,6 +49,8 @@ class g_pyramid_upsidedown():
 
         # brightness
         for x in range(10):
-            world[:,x,:,:] *= sawtooth(self.speed*step+x, width = 0)
+            world[:,x,:,:] *= sawtooth(self.speed*self.step+x, width = 0)
+
+        self.step += 1
 
         return np.clip(world, 0, 1)
