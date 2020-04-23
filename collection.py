@@ -79,27 +79,26 @@ from effects.e_violetblue import *
 
 generators = []
 
+#row 1
 generators.append(g_blank)
 generators.append(g_random)
 generators.append(g_planes)
 generators.append(g_cube)
 generators.append(g_wave)
-
-#generators.append(g_gauss)
 generators.append(g_growing_sphere)
-# generators.append(g_wavepattern)
 generators.append(g_squares)
+
+#row 2
 generators.append(g_trees)
-#
 generators.append(g_rising_square)
 generators.append(g_planes_falling)
 generators.append(g_growingface)
 generators.append(g_snake)
 generators.append(g_sound_sphere)
-#generators.append(g_soundcube)
-#generators.append(g_soundrandom)
 generators.append(g_sphere)
 generators.append(g_shooting_star)
+
+#row 3
 generators.append(g_rotate_plane)
 generators.append(g_randomlines)
 generators.append(g_randomcross)
@@ -108,6 +107,8 @@ generators.append(g_orbiter)
 generators.append(g_orbiter2)
 generators.append(g_orbiter3)
 generators.append(g_pyramid)
+
+#row 4
 generators.append(g_pyramid_upsidedown)
 generators.append(g_inandout)
 generators.append(g_growing_corner)
@@ -116,12 +117,18 @@ generators.append(g_drop)
 generators.append(g_darksphere)
 generators.append(g_cut)
 generators.append(g_cube)
+
+#row 5
 generators.append(g_cube_edges)
 generators.append(g_corner)
 generators.append(g_corner_grow)
 generators.append(g_columns)
 generators.append(g_circles)
-#generators.append(g_centralgrow)
+generators.append(g_blank)
+generators.append(g_blank)
+generators.append(g_blank)
+
+#row 6
 generators.append(a_lines)
 generators.append(a_multi_cube_edges)
 generators.append(a_pulsating)
@@ -129,15 +136,23 @@ generators.append(a_orbbot)
 generators.append(a_random_cubes)
 generators.append(a_squares_cut)
 generators.append(a_testbot)
+# generators.append(g_wavepattern)
+#generators.append(g_gauss)
+#generators.append(g_soundcube)
+#generators.append(g_soundrandom)
+#generators.append(g_centralgrow)
 
 effects = []
 
+#row 1
 effects.append(e_blank)
 effects.append(e_rainbow)
 effects.append(e_staticcolor)
 effects.append(e_tremolo)
 effects.append(e_rotation)
 effects.append(e_palettes)
+
+#row 2
 effects.append(e_s2l)
 effects.append(e_gradient)
 effects.append(e_blur)
@@ -146,6 +161,8 @@ effects.append(e_cut_cube)
 effects.append(e_fade2blue)
 effects.append(e_growing_sphere)
 effects.append(e_mean)
+
+#row 3
 effects.append(e_mean_vertical)
 effects.append(e_newgradient)
 effects.append(e_outer_shadow)
@@ -154,6 +171,8 @@ effects.append(e_prod_saturation)
 effects.append(e_random_brightness)
 effects.append(e_rare_strobo)
 effects.append(e_redyellow)
+
+#row 4
 effects.append(e_remove_random)
 effects.append(e_rotating_black_color)
 effects.append(e_rotating_black_white)
