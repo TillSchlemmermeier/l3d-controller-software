@@ -144,39 +144,46 @@ generators.append(a_testbot)
 
 effects = []
 
-#row 1
+#row 1: colors
 effects.append(e_blank)
 effects.append(e_rainbow)
 effects.append(e_staticcolor)
-effects.append(e_tremolo)
-effects.append(e_rotation)
-effects.append(e_palettes)
-
-#row 2
-effects.append(e_s2l)
 effects.append(e_gradient)
-effects.append(e_blur)
-effects.append(e_bright_osci)
-effects.append(e_cut_cube)
-effects.append(e_fade2blue)
-effects.append(e_growing_sphere)
-effects.append(e_mean)
-
-#row 3
-effects.append(e_mean_vertical)
 effects.append(e_newgradient)
-effects.append(e_outer_shadow)
-effects.append(e_prod_hue)
-effects.append(e_prod_saturation)
-effects.append(e_random_brightness)
-effects.append(e_rare_strobo)
+effects.append(e_palettes)
 effects.append(e_redyellow)
 
-#row 4
-effects.append(e_remove_random)
+#row 2: brightness
+effects.append(e_s2l)
+effects.append(e_tremolo)
+effects.append(e_rare_strobo)
+effects.append(e_blur)
+effects.append(e_bright_osci)
+effects.append(e_mean)
+effects.append(e_mean_vertical)
+effects.append(e_random_brightness)
+
+#row 4: rotation
 effects.append(e_rotating_black_color)
 effects.append(e_rotating_black_white)
 effects.append(e_rotating_blue_orange)
+effects.append(e_rotation)
+effects.append(e_blank)
+effects.append(e_blank)
+effects.append(e_blank)
+effects.append(e_blank)
+
+#row 3: shapes
+effects.append(e_cut_cube)
+effects.append(e_growing_sphere)
+effects.append(e_outer_shadow)
+
+
+effects.append(e_prod_hue)
+effects.append(e_prod_saturation)
+effects.append(e_fade2blue)
+
+
 #effects.append(e_sound_color)
 #effects.append(e_squared)
 #effects.append(e_violetblue)
