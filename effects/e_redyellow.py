@@ -21,7 +21,7 @@ class e_redyellow():
                 ['', ''],
 				['', '']]
 
-    def __call__(self, world, args)
+    def __call__(self, world, args):
         # parse input
         self.speed = args[0]*0.1
 
