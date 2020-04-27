@@ -19,7 +19,7 @@ class rendering_engine:
     - entries ordered as described in
       readme
     """
-    def __init__(self, array, log=False):
+    def __init__(self, array, label, log=False):
         """
         Initialises the rendering engine
 
@@ -29,11 +29,15 @@ class rendering_engine:
               but only errors/warnings
         """
 
+
         # initialise variables
         self.framecounter = 0
         self.logging = log
-        self.debug = False          # debugging mode, switches on if no
+        self.debug = False          # debugging mode, switches  on if no
                                     # arduino is found
+
+        self.label = label
+
         self.header = [int(66),
                        int(69),
                        int(69),
@@ -144,7 +148,16 @@ class rendering_engine:
                 new_world = channel.render_frame(self.framecounter, self.global_parameter[index_parameters:index_parameters+30])
 
 				# get current values
-                # print(channel.get_labels())
+
+                temp = channel.get_labels()
+                self.label[0] = 99
+
+                '''
+                for i in range(len(temp)):
+                    self.label[index_label + i] = temp[i].encode()
+
+                index_label += 30
+                '''
 
             else:
                 new_world = np.zeros([3, 10, 10, 10])
@@ -189,8 +202,6 @@ class rendering_engine:
         list2 = world2vox(np.clip(self.cubeworld[1, :, :, :], 0, 1))
         list3 = world2vox(np.clip(self.cubeworld[2, :, :, :], 0, 1))
 
-        #print('')
-        #print(self.cubeworld[:, 0, 0, 0])
         #print(list1[:3])
 
         # stack this lists for each color, so that we have RGB ordering for

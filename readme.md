@@ -77,3 +77,19 @@ In the following, the global parameters are listed. Default values are given in 
 ## Testing for rendering engine
 
 The script 'test_rendering_engine.py' starts the frame renderer in a thread to check for errors. Check the log file for output. The global variable is inside *global_parameter_module.py* and imported by any thread, which is using it.
+
+
+## list of label
+| 0 | generator 1 name
+| 1-4 | generator 1 params
+| 5 | effect 1 name
+| 6-9 | effect params
+| 10 | effect 2 name
+| 11-14 | effect params
+| 15 | effect 3 name
+| 16-19 | effect params
+| 20 | effect 4 name
+| 21-25 | effect params
+| 30 - 59 | channel 2
+| 60 - 99 | channel 3
+|100 -139 | channel 4

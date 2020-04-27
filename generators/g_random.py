@@ -11,9 +11,7 @@ class g_random():
         self.number_of_leds = 1
 
     def return_values(self):
-        return [['Number of LEDs', str(self.number_of_leds)],
-				['', ''],
-				['', '']]
+        return ['g_random', 'Number of LEDs', '', '']
 
     def __call__(self, args):
         self.number_of_leds = int((args[0])*10)

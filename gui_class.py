@@ -13,12 +13,12 @@ import numpy as np
 
 class MainWindow(QtWidgets.QMainWindow):
 
-    def __init__(self, array,parent=None):
+    def __init__(self, array, label,parent=None):
 
         super(MainWindow, self).__init__()
 
         self.global_parameter = array
-
+        self.global_label = label
         # initialize layout
         # creating main container-frame, parent it to QWindow
         self.main_CF = QtWidgets.QFrame(self)
@@ -193,9 +193,10 @@ class MainWindow(QtWidgets.QMainWindow):
         control_CGL.addWidget(self.button_StopR)
         control_CGL.addWidget(self.string_GlobalBrightness)
 ###
+
         self.stringArray_ch1 = []
         self.stringArray_ch1.append(QtWidgets.QLabel("Channel 1"))
-        self.stringArray_ch1.append(QtWidgets.QLabel("Generator : DUMMY"))
+        self.stringArray_ch1.append(QtWidgets.QLabel("Generator : "))
         self.stringArray_ch1.append(QtWidgets.QLabel("Brightness : 127"))
         self.stringArray_ch1.append(QtWidgets.QLabel("Fade : 0"))
         self.stringArray_ch1.append(QtWidgets.QLabel("Shutter : 0"))
@@ -401,7 +402,8 @@ class MainWindow(QtWidgets.QMainWindow):
         self.string_GlobalBrightness.setText("An : "+str(round(self.global_parameter[1],2)))
 
     def update_fighter_values(self):
-        self.stringArray_ch1[1].setText("Generator : "+str(round(self.global_parameter[40],2)))
+        #print(self.global_label[0])
+        self.stringArray_ch1[1].setText("Generator : "+str(self.global_label[0]))
         self.stringArray_ch1[2].setText("Brightness : "+str(round(self.global_parameter[41],2)))
         self.stringArray_ch1[3].setText("Fade : "+str(round(self.global_parameter[42],2)))
         self.stringArray_ch1[4].setText("Shutter : "+str(round(self.global_parameter[43],2)))
@@ -495,7 +497,7 @@ class MainWindow(QtWidgets.QMainWindow):
         for item_1, item_2, item_3, item_4 in zip(self.conv_dict1.items(), self.conv_dict2.items(), self.conv_dict3.items(), self.conv_dict4.items()):
             # compare value with last changed key
             if item_1[1] == index_changed:
-                # save key of last changed value
+                # save key of last changed value:question
                 self.active_param[0] = item_1[0]
 
             if item_2[1] == index_changed:

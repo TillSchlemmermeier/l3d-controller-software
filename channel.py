@@ -38,10 +38,14 @@ class class_channel:
 
     def get_labels(self):
         list = []
-        list.append(self.generator.return_values())
-        list.append(self.effect_1.return_values())
-        list.append(self.effect_2.return_values())
-        list.append(self.effect_3.return_values())
+        temp = self.generator.return_values()
+        if len(temp) == 4:
+            list.extend(temp)
+        else:
+            list.extend(['none', 'none', 'none', 'none'])
+        #list.append(self.effect_1.return_values())
+        #list.append(self.effect_2.return_values())
+        #list.append(self.effect_3.return_values())
 
         return list
 
