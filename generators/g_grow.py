@@ -1,6 +1,7 @@
 # modules
 import numpy as np
 from random import randint, random
+from time import sleep
 
 class g_grow():
 
@@ -8,8 +9,7 @@ class g_grow():
         self.branch = 0
         self.probecolor = 1
         self.age = 0.02
-        self.active = []
-        self.active.append([randint(0, 9), randint(0, 9), randint(0, 9)])
+        self.active = [randint(0, 9), randint(0, 9), randint(0, 9)]
 
         self.world = np.zeros([3, 10, 10, 10])
         self.state = 'grow'
@@ -42,12 +42,12 @@ class g_grow():
             while True:
                 # check for infinity loop
                 if breakcounter > 20:
-                    print('growing stuck!'')
+                    print('growing stuck!')
                 else:
                     breakcounter += 1
 
                 # create probe
-                self.probe = [self.active[0]+randint(-1,1), self.active[1]+randint(-1,1), self.active[1]+randint(-1,1)]
+                self.probe = [self.active[0]+randint(-1,1), self.active[1]+randint(-1,1), self.active[2]+randint(-1,1)]
 
                 # check for boundaries
                 for i in range(3):
@@ -57,16 +57,17 @@ class g_grow():
                         self.probe[i] = 9
 
                 # check that the place is free
-                if self.world[self.probe[0], self.probe[1], self.probe[2]] == 0:
+                if self.world[0, self.probe[0], self.probe[1], self.probe[2]] == 0:
                     if self.probecolor == 1:
                         color = [1.0, 0, 0]
                     else:
                         color = [0.5, 0.5, 0.5]
 
-                    for c in color:
-                        self.world[c, self.probe[0], self.probe[1], self.probe[2]] = 1.0
+                    for c,i in zip(color, range(3)):
+                        self.world[i, self.probe[0], self.probe[1], self.probe[2]] = c
 
                     self.state = 'check'
+                    break
 
         # check whether exploring was succesful
         elif self.state == 'check':
@@ -93,4 +94,4 @@ class g_grow():
             print('unkown state!')
             self.state = 'grow'
 
-        return np.clip(world, 0, 1)
+        return np.clip(self.world, 0, 1)

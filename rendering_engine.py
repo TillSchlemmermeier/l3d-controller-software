@@ -148,16 +148,12 @@ class rendering_engine:
                 new_world = channel.render_frame(self.framecounter, self.global_parameter[index_parameters:index_parameters+30])
 
 				# get current values
-
                 temp = channel.get_labels()
-                self.label[0] = 99
+                for j in range(5):
+                    print(temp[j])
+                    self.label[j+index_label] = temp[j]
 
-                '''
-                for i in range(len(temp)):
-                    self.label[index_label + i] = temp[i].encode()
-
-                index_label += 30
-                '''
+                index_label += 20
 
             else:
                 new_world = np.zeros([3, 10, 10, 10])

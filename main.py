@@ -67,8 +67,9 @@ def gui(array,label):
 if __name__ == '__main__':
     # define global variables
     global_parameter = mp.Array('d', [0 for x in range(255)])
-    global_label =     mp.Array('d', [1 for x in range(150)])
+    global_label =     mp.Array(c_char_p, 100)
 
+    global_label[0] = b'test'
     # assign processes
     proc_midi = mp.Process(target=midi_devices, args = [global_parameter])
     proc_renderer = mp.Process(target=rendering, args = [global_parameter, global_label])
@@ -81,8 +82,8 @@ if __name__ == '__main__':
     proc_gui.start()
 
 #    time.sleep(1)
-#    proc_midi.join();
-#    self.proc_renderer.join();
-#    proc_gui.join();
+    proc_midi.join();
+    proc_renderer.join();
+    proc_gui.join();
 
     print('done')

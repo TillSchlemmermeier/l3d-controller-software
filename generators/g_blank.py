@@ -10,9 +10,7 @@ class g_blank():
         pass
 
     def return_values(self):
-        return [['', ''],
-				['', ''],
-				['', '']]
+        return [b'blank', b'', b'', b'', b'']
 
     def __call__(self, args):
         return np.zeros([3, 10, 10, 10])

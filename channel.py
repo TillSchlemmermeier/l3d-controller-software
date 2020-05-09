@@ -39,10 +39,12 @@ class class_channel:
     def get_labels(self):
         list = []
         temp = self.generator.return_values()
-        if len(temp) == 4:
-            list.extend(temp)
-        else:
-            list.extend(['none', 'none', 'none', 'none'])
+        for t in temp:
+            list.append(t)
+
+        for i in range(15):
+            list.append(b'empty')
+
         #list.append(self.effect_1.return_values())
         #list.append(self.effect_2.return_values())
         #list.append(self.effect_3.return_values())

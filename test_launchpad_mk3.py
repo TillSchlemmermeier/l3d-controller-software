@@ -2,7 +2,7 @@ import time
 from rtmidi.midiutil import open_midiinput,open_midioutput, open_midiport
 import numpy as np
 
-class class_launchpad:
+class class_launchpad_mk3:
     def __init__(self, array):
         # open midi input
         self.midiin, self.portname_in = open_midiinput(port = '20:1')

@@ -11,6 +11,7 @@ import sys
 from PyQt5 import QtWidgets, QtGui, QtCore
 import numpy as np
 
+
 class MainWindow(QtWidgets.QMainWindow):
 
     def __init__(self, array, label,parent=None):
@@ -402,8 +403,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.string_GlobalBrightness.setText("An : "+str(round(self.global_parameter[1],2)))
 
     def update_fighter_values(self):
-        #print(self.global_label[0])
-        self.stringArray_ch1[1].setText("Generator : "+str(self.global_label[0]))
+        self.stringArray_ch1[1].setText("Generator : "+str(self.global_label[0],'utf-8'))
         self.stringArray_ch1[2].setText("Brightness : "+str(round(self.global_parameter[41],2)))
         self.stringArray_ch1[3].setText("Fade : "+str(round(self.global_parameter[42],2)))
         self.stringArray_ch1[4].setText("Shutter : "+str(round(self.global_parameter[43],2)))
