@@ -60,12 +60,16 @@ class class_launchpad_mk3:
                     # global variable
                     # send to global parameter array which menu is open
                     # we can hardcode this for testing
-                    if message[1] == 81:
-                        self.global_parameter[200] = 1
-                    elif message[1] == 71:
-                        self.global_parameter[200] = 2
-                    else:
-                        pass
+
+                    # check for channel
+                    if key[1]-1 == 0:
+                        self.global_parameter[200] = key[0]
+                    elif key[1]-1 == 1:
+                        self.global_parameter[200] = key[0]+5
+                    elif key[1]-1 == 2:
+                        self.global_parameter[200] = key[0]+10
+                    elif key[1]-1 == 3:
+                        self.global_parameter[200] = key[0]+15
 
             else:
                 # if not idle, we can go back to idle
@@ -121,7 +125,7 @@ class class_launchpad_mk3:
         for i in range(11,89):
             self.midiout.send_message([144, i, 0])
 
-        print(self.global_parameter[ 40])
+        # print(self.global_parameter[ 40])
         # send the state of the channel switches (on/off)
         self.midiout.send_message([176, 91, self.global_parameter[ 40]*127])
         self.midiout.send_message([176, 92, self.global_parameter[ 70]*127])

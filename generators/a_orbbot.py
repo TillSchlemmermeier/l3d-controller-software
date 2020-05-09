@@ -15,16 +15,15 @@ class a_orbbot():
         return [b'a_orbbot', b'', b'', b'', b'']
 
     def __call__(self, args):
-        pass
 
         # create world
         world = np.zeros([3, 10, 10, 10])
 
         generator = g_orbiter()
 
-        generator.control(0.5*(np.sin(self.counter * 0.01)*0.5+0.5),0.4,0.05)
+#        generator.control(0.5*(np.sin(self.counter * 0.01)*0.5+0.5),0.4,0.05)
 
-        world[:, :, :, :] = generator.generate(self.counter, 0)
+        world[:, :, :, :] = generator([0.5*(np.sin(self.counter * 0.01)*0.5+0.5), 0.4, 0.05])
 
         self.counter += 1
 

@@ -305,7 +305,7 @@ class MainWindow(QtWidgets.QMainWindow):
         current_labels = labels[int(self.global_parameter[200]), :, :]
         for x in range(8):
             for y in range(8):
-                self.padlabels[y][x].setText(current_labels[x, y])
+                self.padlabels[x][y].setText(current_labels[x, y])
 
 
     def update_fighter_values(self):

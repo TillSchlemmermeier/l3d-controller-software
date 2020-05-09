@@ -23,6 +23,7 @@ class g_darksphere():
         self.growspeed = 1
         self.nled = 10
         self.oscillate = 0
+        self.step = 0
         self.lastworld = np.zeros([3,10,10,10])
 
     #Strings for GUI
@@ -32,7 +33,7 @@ class g_darksphere():
     def __call__(self, args):
         self.maxsize = args[0]*10
         self.growspeed = args[1]
-        self.nled = int(oscillate*20)+1
+        self.nled = int(args[2]*20)+1
 
         world = np.zeros([3, 10, 10, 10])
         for i in range(self.nled):
@@ -41,7 +42,7 @@ class g_darksphere():
         world += self.lastworld*0.9
         self.lastworld = world
 
-        osci = sawtooth(step*self.growspeed*0.5)*0.5 + 1
+        osci = sawtooth(self.step*self.growspeed*0.5)*0.5 + 1
 
         # scales to maxsize
         size = 5 * osci
@@ -57,5 +58,5 @@ class g_darksphere():
         world[2, :, :, :] -= darkworld[:, :, :]
 
         #self.lastworld = world
-
+        self.step += 1
         return np.round(np.clip(world, 0, 1), 3)

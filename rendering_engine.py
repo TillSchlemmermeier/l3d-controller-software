@@ -153,7 +153,7 @@ class rendering_engine:
 			# get current values
             temp = channel.get_labels()
             for j in range(19):
-                # print(temp[j])
+                #print(temp[j])
                 self.label[j+index_label] = temp[j]
 
             # apply fade

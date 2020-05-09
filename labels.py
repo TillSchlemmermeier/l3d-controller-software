@@ -1,6 +1,6 @@
 import numpy as np
 
-labels = np.full((21, 8, 8), 'empty')
+labels = np.full((21, 8, 8), '              ')
 labels[1:, 0, 0] = 'close'
 
 #  1 - 5 (inklusiv): channel 1
@@ -15,7 +15,7 @@ for i in [2, 7, 12, 17]:
     labels[i, 0, 3] = 'planes'
     labels[i, 0, 4] = 'cube'
     labels[i, 0, 5] = 'wave'
-    labels[i, 0, 6] = 'growing sphere'
+    labels[i, 0, 6] = 'growing\nsphere'
     labels[i, 0, 7] = 'squares'
     labels[i, 0, 7] = 'random'
 

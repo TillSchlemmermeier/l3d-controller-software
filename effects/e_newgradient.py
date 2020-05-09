@@ -18,8 +18,6 @@ class e_newgradient():
     def return_values(self):
         return [b'newgradient', b'speed', b'Color 1', b'Color 2', b'']
 
-
-
     def __call__(self, world, args):
         # parsing input
         self.speed = args[0]*0.01
@@ -29,7 +27,7 @@ class e_newgradient():
 
 #        corr_red = 0.5*(np.mean(self.c1['r'] - self.c2['r']))
         corr_red = abs(self.c1['r'] - self.c2['r'])
-        red = corr_red *(np.sin(self.speed*self.step))-([self.c1['r'], self.c2['r']].min()+1)
+        red = corr_red *(np.sin(self.speed*self.step))-(min([self.c1['r'], self.c2['r']])+1)
 
         corr_green = 0.5*(np.mean(self.c1['g'] - self.c2['g']))
         green = corr_green *(np.sin(self.speed*self.step) + 1)
