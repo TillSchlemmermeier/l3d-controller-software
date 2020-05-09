@@ -21,8 +21,9 @@ class a_pulsating():
 
         self.color =  hsv_to_rgb(uniform(-0.5,0.5), 1.0, 1.0)
 
+    #Strings for GUI
     def return_values(self):
-        pass
+        return [b'a_pulsating', b'period', b'start_strobo', b'', b'']
 
     def __call__(self, args):
         self.period = int(args[0] * 200)+50

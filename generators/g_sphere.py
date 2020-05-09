@@ -11,8 +11,9 @@ class g_sphere():
         self.size = 2
         self.color = 0
 
-    def return_values():
-        pass#return {'Number of LEDs', self.number_of_leds}
+    #Strings for GUI
+    def return_values(self):
+        return [b'sphere', b'size', b'', b'', b'']
 
     def __call__(self, args):
         self.size = round(args[0]*10)

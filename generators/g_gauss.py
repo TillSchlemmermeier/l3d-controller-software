@@ -13,8 +13,9 @@ class g_gauss():
         self.speed = 1
         self.step = 0
 
+    #Strings for GUI
     def return_values(self):
-        pass
+        return [b'gauss', b'sigma', b'amplitude', b'speed', b'']
 
     def __call__(self, args):
         self.sigma = args[0]*5+1

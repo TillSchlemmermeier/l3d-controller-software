@@ -28,10 +28,9 @@ class e_s2l():
         self.threshold = 0.5
 
 
+    #strings for GUI
     def return_values(self):
-        return [['', ''],
-				['', ''],
-				['', '']]
+        return [b's2l', b'amount', b'channel', b'threshold', b'']
 
     def __call__(self, world, args):
         total_volume = self.update_line()
@@ -39,7 +38,7 @@ class e_s2l():
 
         self.amount = args[0]
         self.channel = int(args[1]*len(total_volume)-1)
-        self.theshold = args[2]
+        self.threshold = args[2]
 
         world[0, :, :, :] *= total_volume[self.channel]*self.amount
         world[1, :, :, :] *= total_volume[self.channel]*self.amount

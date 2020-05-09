@@ -14,8 +14,9 @@ class g_corner_grow():
 
         self.waitingcounter = 0
 
+    #Strings for GUI
     def return_values(self):
-        pass
+        return [b'corner_grow', b'waiting', b'', b'', b'']
 
     def __call__(self, args):
         self.waiting = int(args[0]*50)

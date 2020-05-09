@@ -12,10 +12,9 @@ class e_rainbow:
         self.green = 1.0
         self.blue = 0.0
 
+    #strings for GUI
     def return_values(self):
-        return [['', ''],
-				['', ''],
-				['', '']]
+        return [b'rainbow', b'speed', b'', b'', b'']
 
     def __call__(self, world, args):
         # parsing input

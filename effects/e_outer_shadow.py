@@ -9,11 +9,12 @@ class e_outer_shadow():
     def __init__(self):
         self.radius = 9.0
 
+    #strings for GUI
+    def return_values(self):
+        return [b'outer_shadow', b'radius', b'', b'', b'']    
+
     def control(self, radius, blub0, blub1):
         self.radius = radius*10
-
-    def label(self):
-        return ['radius',self.radius,'empty', 'empty','empty','empty']
 
     def generate(self, step, world):
 

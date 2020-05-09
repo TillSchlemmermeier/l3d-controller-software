@@ -15,10 +15,9 @@ class g_cube():
         self.size = 4
         self.sides = False
 
+    #Strings for GUI
     def return_values(self):
-        return [['', ''],
-				['', ''],
-				['', '']]
+        return [b'cube', b'size', b'sides (Off / On)', b'', b'']
 
     def __call__(self, args):
         self.size = round(args[0]*4)

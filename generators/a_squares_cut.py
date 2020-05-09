@@ -25,14 +25,15 @@ class a_squares_cut():
         self.generator2 = g_cut()
         self.generator2.control(1,0,0)
 
+    #Strings for GUI
     def return_values(self):
-        pass
+        return [b'a_squares_cut', b'start', b'dimm', b'', b'']
 
     def __call__(self, args):
         self.square_start = int(300*args[0])
         self.square_dimm = args[1]*0.1+0.001
 
-    
+
         # create world
         world = np.zeros([3, 10, 10, 10])
 

@@ -38,8 +38,9 @@ class g_centralglow():
 
         self.size = 1
 
+    #Strings for GUI
     def return_values(self):
-        pass
+        return [b'centralgrow', b'amount', b'threshold', b'channel']
 
     def __call__(self, args):
         self.amount = args[0]*6

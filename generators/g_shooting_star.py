@@ -15,8 +15,9 @@ class g_shooting_star():
         self.s0, self.v = gen_line(self.speed)
         self.step = 0
 
+    #Strings for GUI
     def return_values(self):
-        pass
+        return [b'shooting_star', b'refresh', b'speed', b'', b'']
 
     #def generate(self, step, dumpworld):
     def __call__(self, args):

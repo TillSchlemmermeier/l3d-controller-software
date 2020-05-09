@@ -10,11 +10,13 @@ class e_blur():
     def __init__(self):
         self.blur = 0.1
 
+    #strings for GUI
+    def return_values(self):
+        return [b'blur', b'blur intensity', b'', b'', b'']
+
+
     def control(self, blur, blub0, blub1):
         self.blur = blur
-
-    def label(self):
-        return ['blur amount',self.blur,'empty', 'empty','empty','empty']
 
     def generate(self, step, world):
         # create gaussian window

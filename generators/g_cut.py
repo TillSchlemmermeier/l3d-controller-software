@@ -31,8 +31,9 @@ class g_cut():
         self.edge = choice(self.edge_list)
 
 
+    #Strings for GUI
     def return_values(self):
-        pass
+        return [b'cut', b'speed', b'', b'', b'']
 
     def __call__(self, args):
         self.speed = args[0]*0.5 + 0.001

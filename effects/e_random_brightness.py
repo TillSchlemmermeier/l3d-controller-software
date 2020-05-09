@@ -9,11 +9,12 @@ class e_random_brightness():
         self.brightness = uniform(0,1)
         self.step = 0
 
+    #strings for GUI
+    def return_values(self):
+        return [b'random_brightness', b'speed', b'', b'', b'']
+
     def control(self, speed, blub0, blub1):
         self.speed = int(speed*10)+1
-
-    def label(self):
-        return ['speed', self.speed,'empty', 'empty','empty','empty']
 
     def generate(self, step, world):
 

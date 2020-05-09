@@ -35,8 +35,9 @@ class g_soundcube():
 
         self.size = 1
 
-    def return_values():
-        pass#return {'Number of LEDs', self.number_of_leds}
+    #Strings for GUI
+    def return_values(self):
+        return [b'soundcube', b'amount', b'threshold', b'channel', b'']
 
     def __call__(self, args):
         self.amount = args[0]*6

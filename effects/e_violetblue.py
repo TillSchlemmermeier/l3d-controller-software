@@ -14,11 +14,12 @@ class e_violetblue():
         self.green = 0.0
         self.blue = 1.0
 
+    #strings for GUI
+    def return_values(self):
+        return [b'violetblue', b'speed', b'', b'', b'']
+
     def control(self, speed, blub0, blub1):
         self.speed = speed*0.1
-
-    def label(self):
-        return ['speed',round(self.speed,2),'empty', 'empty','empty','empty']
 
     def generate(self, step, world):
 

@@ -13,8 +13,9 @@ class g_rotate_plane():
         self.zspeed = 0.0
         self.step = 0
 
+    #Strings for GUI
     def return_values(self):
-        pass
+        return [b'rotate_plane', b'xspeed', b'yspeed', b'zspeed', b'']
 
     #def generate(self, step, dumpworld):
     def __call__(self, args):

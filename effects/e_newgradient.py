@@ -14,15 +14,15 @@ class e_newgradient():
         self.c2 = {'r':0.0, 'g':0.0, 'b':1.0}
         self.step = 0
 
+    #strings for GUI
+    def return_values(self):
+        return [b'newgradient', b'speed', b'Color 1', b'Color 2', b'']
+
 
     def control(self, speed, c1, c2):
         self.speed = speed*0.1
         self.c1 = color_translate(c1)
         self.c2 = color_translate(c2)
-
-
-    def label(self):
-        return ['speed',round(self.speed,2),'empty', 'empty','empty','empty']
 
 
     def generate(self, step, world):

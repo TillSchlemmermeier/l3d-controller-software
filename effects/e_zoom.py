@@ -9,10 +9,9 @@ class e_zoom():
         self.amount = 0.5
         self.degree = 1
 
+    #strings for GUI
     def return_values(self):
-        return [['', ''],
-				['', ''],
-				['', '']]
+        return [b'zoom', b'amount', b'degree', b'', b'']
 
     def __call__(self, world, args):
 		# parse input

@@ -19,8 +19,9 @@ class g_columns():
         self.counter = 0
         self.step = 0
 
+    #Strings for GUI
     def return_values(self):
-        pass
+        return [b'columns', b'blur', b'reset', b'osc_speed', b'']
 
     def __call__(self, args):
         self.blur = round(args[0]*4)

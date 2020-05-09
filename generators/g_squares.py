@@ -9,8 +9,9 @@ class g_squares():
         self.type = 0
         self.step = 0
 
+    #Strings for GUI
     def return_values(self):
-        pass
+        return [b'squares', b'speed', b'dir', b'type', b'']
 
     #def generate(self, step, dumpworld):
     def __call__(self, args):

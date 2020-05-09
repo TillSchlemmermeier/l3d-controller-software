@@ -20,8 +20,9 @@ class a_random_cubes():
         self.generator = g_cube()
         self.generator.control(1,1,0)
 
+    #Strings for GUI
     def return_values(self):
-        pass
+        return [b'random_cubes', b'wait', b'strobo', b'', b'']
 
     def __call__(self, args):
         self.count_wait = int(args[0] * 200)+50

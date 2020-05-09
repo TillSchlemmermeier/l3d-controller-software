@@ -13,10 +13,9 @@ class g_wave():
         self.position = 1
         self.maxsize = 30
 
+    #Strings for GUI
     def return_values(self):
-        return [['', ''],
-				['', ''],
-				['', '']]
+        return [b'wave', b'sigma', b'speed', b'', b'']
 
     #def generate(self, step, dumpworld):
     def __call__(self, args):

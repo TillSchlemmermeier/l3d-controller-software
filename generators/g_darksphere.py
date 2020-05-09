@@ -25,8 +25,9 @@ class g_darksphere():
         self.oscillate = 0
         self.lastworld = np.zeros([3,10,10,10])
 
+    #Strings for GUI
     def return_values(self):
-        pass
+        return [b'darksphere', b'maxsize', b'growspeed', b'number of LEDs', b'']
 
     def __call__(self, args):
         self.maxsize = args[0]*10

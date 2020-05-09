@@ -21,8 +21,9 @@ class g_rising_square():
         self.flatworld = np.zeros([3, 4,10,10])
         self.step = 0
 
-    def return_values():
-        pass
+    #Strings for GUI
+    def return_values(self):
+        return [b'rising_square', b'speed', b'random', b'pause', b'']
 
     def __call__(self, args):
         self.speed = int((args[0]*6)+1)

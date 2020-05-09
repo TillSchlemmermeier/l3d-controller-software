@@ -9,8 +9,9 @@ class g_inandout:
         self.leds = []
 
 
+    #Strings for GUI
     def return_values(self):
-        pass
+        return [b'inandout', b'number', b'fadespeed', b'', b'']
 
     #def generate(self, step, dumpworld):
     def __call__(self, args):

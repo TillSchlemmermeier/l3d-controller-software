@@ -10,8 +10,9 @@ class a_orbbot():
     def __init__(self):
         self.counter = 1
 
+    #Strings for GUI
     def return_values(self):
-        pass
+        return [b'a_orbbot', b'', b'', b'', b'']
 
     def __call__(self, args):
         pass

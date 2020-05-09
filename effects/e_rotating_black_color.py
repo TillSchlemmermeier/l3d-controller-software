@@ -26,11 +26,9 @@ class e_rotating_black_color():
 #        self.colorworld[0, :, :, :] *= self.color['b']
 
 
+    #strings for GUI
     def return_values(self):
-        return [['', ''],
-				['', ''],
-                ['', ''],
-				['', '']]
+        return [b'rotating_black_color', b'X speed', b'Y speed', b'Z speed', b'color']
 
 
     def __call__(self, world, args):

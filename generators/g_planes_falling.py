@@ -16,8 +16,9 @@ class g_planes_falling():
         self.dir = 1
         self.step = 0
 
-    def return_values():
-        pass
+    #Strings for GUI
+    def return_values(self):
+        return [b'planes_falling', b'speed', b'direction x/y/z', b'', b'']
 
     def __call__(self, args):
         self.speed = int(args[0]*9)

@@ -18,8 +18,10 @@ class g_trees():
         self.speed = 2
         self.flatworld = np.zeros([4,10,10])
         self.step = 0
+
+    #Strings for GUI
     def return_values(self):
-        pass
+        return [b'trees', b'number of LEDs', b'speed', b'', b'']
 
     #def generate(self, step, dumpworld):
     def __call__(self, args):

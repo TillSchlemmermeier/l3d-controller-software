@@ -53,8 +53,9 @@ class g_cube_edges():
         self.direction = choice([-1, 1])
         seed()
 
+    #Strings for GUI
     def return_values(self):
-        pass
+        return [b'cube_edges', b'speed', b'number', b'', b'']
 
     def __call__(self, args):
         self.speed = args[0]

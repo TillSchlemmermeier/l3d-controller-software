@@ -11,8 +11,9 @@ class g_wavepattern():
         self.freq = 0.5
         self.speed = 1.0
 
+    #Strings for GUI
     def return_values(self):
-        pass
+        return [b'wavepattern', b'freq', b'speed', b'', b'']
 
     #def control(self, freq, speed, blub1):
     def __call__(self, args):

@@ -12,12 +12,13 @@ class e_prod_hue():
         self.c1 = 0.0
         self.distance = 0.2
 
+    #strings for GUI
+    def return_values(self):
+        return [b'prod_hue', b'Color', b'distance', b'', b'']
+
     def control(self, c1, c2, balance):
         self.c1 = c1
         self.distance = c2
-
-    def label(self):
-        return ['central color',round(self.c1,2),'diversity', round(self.distance,2,),'empty','empty']
 
     def generate(self, step, world):
 

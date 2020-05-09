@@ -9,8 +9,9 @@ class g_corner():
     def __init__(self):
         self.size = 0
 
+    #Strings for GUI
     def return_values(self):
-        pass
+        return [b'corner', b'size', b'', b'', b'']
 
     def __call__(self, args):
         self.size = int(args[0]*5)

@@ -8,8 +8,9 @@ class g_randomlines():
     def __init__(self):
         self.blub0 = 0
 
+    #Strings for GUI
     def return_values(self):
-        pass
+        return [b'randomlines', b'', b'', b'', b'']
 
     #def generate(self, step, dumpworld):
     def __call__(self, args):

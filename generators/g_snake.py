@@ -26,8 +26,9 @@ class g_snake():
         self.world[:, 4, 4, 4] = 1.0
 
 
-    def return_values():
-        pass#return {'Number of LEDs', self.number_of_leds}
+    #Strings for GUI
+    def return_values(self):
+        return [b'snake', b'turn probability', b'', b'', b'']
 
     def __call__(self, args):
         self.turnprop = args[0]

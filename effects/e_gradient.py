@@ -12,6 +12,10 @@ class e_gradient():
         self.c2 = [0.4,0.4,0.0]
         self.balance = 1.0
 
+    #strings for GUI
+    def return_values(self):
+        return [b'gradient', b'Color 1', b'Color 2', b'', b'']
+
     def control(self, c1, c2, balance):
         self.c1 = c1 # hsv_to_rgb(c1,1,1)
         self.c2 = c2 # hsv_to_rgb(c2,1,1)
@@ -21,9 +25,6 @@ class e_gradient():
             temp = self.c1
             self.c1 = self.c2
             self.c2 = temp
-
-    def label(self):
-        return ['c1',self.c1,'c2', self.c2,'balance',self.balance]
 
     def generate(self, step, world):
 

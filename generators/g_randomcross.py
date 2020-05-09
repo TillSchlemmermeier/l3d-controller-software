@@ -8,8 +8,9 @@ class g_randomcross():
         self.number = 2
         self.length = 3
 
+    #Strings for GUI
     def return_values(self):
-        pass
+        return [b'randomcross', b'number(1/2/3)', b'length', b'', b'']
 
     #def generate(self, step, dumpworld):
     def __call__(self, args):

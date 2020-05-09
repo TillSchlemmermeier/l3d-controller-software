@@ -14,10 +14,9 @@ class e_staticcolor():
         self.green = 1.0
         self.blue = 1.0
 
+    #strings for GUI
     def return_values(self):
-        return [['', ''],
-				['', ''],
-				['', '']]
+        return [b'staticcolor', b'Red', b'Green', b'Blue', b'']
 
     def __call__(self, world, args):
 
