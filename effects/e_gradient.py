@@ -16,17 +16,18 @@ class e_gradient():
     def return_values(self):
         return [b'gradient', b'Color 1', b'Color 2', b'', b'']
 
-    def control(self, c1, c2, balance):
-        self.c1 = c1 # hsv_to_rgb(c1,1,1)
-        self.c2 = c2 # hsv_to_rgb(c2,1,1)
-        self.balance = balance*2
+
+    def __call__(self, world, args):
+        # parsing input
+        self.c1 = args[0] # hsv_to_rgb(c1,1,1)
+        self.c2 = args[1] # hsv_to_rgb(c2,1,1)
+        self.balance = args[2]*2
 
         if self.c2 > self.c1:
             temp = self.c1
             self.c1 = self.c2
             self.c2 = temp
 
-    def generate(self, step, world):
 
         # generate color list
         x = np.array([0,1,2,3,4,5,6,7,8,9])
@@ -39,7 +40,7 @@ class e_gradient():
             world[1,x,:,:] = world[1,x,:,:] * color[1]
             world[2,x,:,:] = world[2,x,:,:] * color[2]
 
-        return np.clip(world,0,1)
+        return np.clip(world, 0, 1)
 
 
     def sigmoid(self, x):

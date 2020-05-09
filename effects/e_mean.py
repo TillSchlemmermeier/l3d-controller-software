@@ -13,10 +13,10 @@ class e_mean():
     def return_values(self):
         return [b'mean', b'amount', b'', b'', b'']
 
-    def control(self, amount, blub0, blub1):
-        self.amount = amount
 
-    def generate(self, step, world):
+    def __call__(self, world, args):
+        # parsing input
+        self.amount = args[0]
 
         for i in range(3):
             world[i, :, :, :] = (1-self.amount)*world[i, :, :, :] + self.amount*fftconvolve(world[i, :, :, :], self.mean, mode='same')

@@ -10,11 +10,11 @@ class e_squared():
     def return_values(self):
         return [b'squared', b'exponent', b'', b'', b'']
 
-    def control(self, speed, blub0, blub1):
-        self.exponent = 0.5 + speed*2
 
 
-    def generate(self, step, world):
+    def __call__(self, world, args):
+        # parsing input
+        self.exponent = 0.5 + args[0]*2
 
         world = world**self.exponent
 

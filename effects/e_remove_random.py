@@ -11,10 +11,10 @@ class e_remove_random():
     def return_values(self):
         return [b'remove_random', b'speed', b'', b'', b'']
 
-    def control(self, speed, blub0, blub1):
-        self.n = int(speed*200)+1
 
-    def generate(self, step, world):
+    def __call__(self, world, args):
+        # parsing input
+        self.n = int(args[0]*200)+1
 
         for i in range(self.n):
             world[:, randint(0,9), randint(0,9), randint(0,9)] = 0.0

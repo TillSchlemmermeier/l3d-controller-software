@@ -11,12 +11,12 @@ class e_outer_shadow():
 
     #strings for GUI
     def return_values(self):
-        return [b'outer_shadow', b'radius', b'', b'', b'']    
+        return [b'outer_shadow', b'radius', b'', b'', b'']
 
-    def control(self, radius, blub0, blub1):
-        self.radius = radius*10
 
-    def generate(self, step, world):
+    def __call__(self, world, args):
+        # parsing input
+        self.radius = args[0]*10
 
         posx = 4.5
         posy = 4.5

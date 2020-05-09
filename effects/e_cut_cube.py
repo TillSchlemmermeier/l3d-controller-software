@@ -15,10 +15,11 @@ class e_cut_cube():
     def return_values(self):
         return [b'cut_cube', b'speed', b'', b'', b'']
 
-    def control(self, speed, blub0, blub1):
-        self.speed = int(speed*10)+1
 
-    def generate(self, step, world):
+    def __call__(self, world, args):
+        # parsing input
+        self.speed = (args[0]*10)+1
+
         num = randint(0,7)
 
         if self.step % self.speed == 0:

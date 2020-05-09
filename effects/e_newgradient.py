@@ -19,13 +19,12 @@ class e_newgradient():
         return [b'newgradient', b'speed', b'Color 1', b'Color 2', b'']
 
 
-    def control(self, speed, c1, c2):
-        self.speed = speed*0.1
-        self.c1 = color_translate(c1)
-        self.c2 = color_translate(c2)
 
-
-    def generate(self, step, world):
+    def __call__(self, world, args):
+        # parsing input
+        self.speed = args[0]*0.01
+        self.c1 = color_translate(args[1])
+        self.c2 = color_translate(args[2])
 
 
 #        corr_red = 0.5*(np.mean(self.c1['r'] - self.c2['r']))

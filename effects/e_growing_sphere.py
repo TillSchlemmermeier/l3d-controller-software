@@ -16,13 +16,12 @@ class e_growing_sphere():
     def return_values(self):
         return [b'growing_sphere', b'amount', b'growspeed', b'oscillate (sin/sawtooth)', b'']
 
-    def control(self, amount, growspeed, oscillate):
-        self.amount = amount
-        self.growspeed = growspeed
-        self.oscillate = oscillate
 
-    def generate(self, step, dumpworld):
-        world = dumpworld
+    def __call__(self, world, args):
+        # parsing input
+        self.amount = args[0]
+        self.growspeed = args[1]
+        self.oscillate = args[2]
 
         # oscillates between 0 and 1
         if self.oscillate < 0.5:
@@ -40,7 +39,7 @@ class e_growing_sphere():
         world[1, :, :, :] = world[1, :, :, :] * (self.amount + np.clip(gen_hsphere(size, 4.5, 4.5, 4.5),0,1))
         world[2, :, :, :] = world[2, :, :, :] * (self.amount + np.clip(gen_hsphere(size, 4.5, 4.5, 4.5),0,1))
 
-        return np.clip(world,0,1)
+        return np.clip(world, 0, 1)
 
 
 def hsphere(radius):
