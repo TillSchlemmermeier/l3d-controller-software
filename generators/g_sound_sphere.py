@@ -35,8 +35,9 @@ class g_sound_sphere():
         self.threshold = 0.5
 
 
-    def return_values():
-        pass#return {'Number of LEDs', self.number_of_leds}
+    #Strings for GUI
+    def return_values(self):
+        return [b'sound_sphere', b'amount', b'threshold', b'oscillate', b'']
 
     def __call__(self, args):
         self.amount = args[0]*10

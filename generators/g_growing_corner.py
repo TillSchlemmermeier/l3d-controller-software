@@ -28,8 +28,9 @@ class g_growing_corner():
         self.ypos = 0
         self.zpos = 0
 
+    #Strings for GUI
     def return_values(self):
-        pass
+        return [b'growing_corner', b'maxsize', b'growspeed', b'steps', b'']
 
     #def generate(self, step, dumpworld):
     def __call__(self, args):

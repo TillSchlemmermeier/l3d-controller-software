@@ -29,8 +29,9 @@ class g_growingface():
         self.ypos = 0
         self.zpos = 0
 
-    def return_values():
-        pass
+    #Strings for GUI
+    def return_values(self):
+        return [b'growingface', b'maxsize', b'growspeed', b'steps', b'']
 
     def __call__(self, args):
         self.maxsize = args[0]*18

@@ -16,10 +16,9 @@ class g_grow():
 
         self.probes = []
 
+    #Strings for GUI
     def return_values(self):
-        return [['', ''],
-				['', ''],
-				['', '']]
+        return [b'grow', b'branch', b'probecolor', b'age', b'']
 
     def __call__(self, args):
         # parse arguments

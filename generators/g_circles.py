@@ -68,7 +68,7 @@ class g_circles():
 
 
     def return_values(self):
-        pass
+        return [b'circles', b'number', b'', b'', b'']
 
     def __call__(self, args):
         self.number = int(args[0]*10)

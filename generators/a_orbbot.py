@@ -11,7 +11,7 @@ class a_orbbot():
         self.counter = 1
 
     def return_values(self):
-        pass
+        return [b'a_orbbot', b'', b'', b'', b'']
 
     def __call__(self, args):
         pass

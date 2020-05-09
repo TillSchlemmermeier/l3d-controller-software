@@ -21,8 +21,9 @@ class g_orbiter():
         self.rho = 0.1
         self.step = 0
 
+    #Strings for GUI
     def return_values(self):
-        pass
+        return [b'orbiter', b'distance', b'theta', b'rho', b'']
 
     #def generate(self, step, dumpworld):
     def __call__(self, args):

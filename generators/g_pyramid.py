@@ -12,8 +12,9 @@ class g_pyramid():
         self.speed = 0.2
         self.step = 0
 
+    #Strings for GUI
     def return_values(self):
-        pass
+        return [b'pyramid', b'size', b'speed', b'', b'']
 
     #def generate(self, step, dumpworld):
     def __call__(self, args):

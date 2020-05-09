@@ -23,10 +23,10 @@ class g_growing_sphere():
         self.oscillate = 0
         self.step = 0
 
-    #def label(self):
-    #    return ['maxsize',round(self.maxsize,2),'growspeed',round(self.growspeed,2),'osci, ex, im',round(self.oscillate,2)]
+
+    #Strings for GUI
     def return_values(self):
-        pass
+        return [b'growing_sphere', b'maxsize', b'growspeed', b'oscillate (sin/sawtooth)', b'']
 
     #def control(self, maxsize, growspeed, oscillate):
     def __call__(self, args):

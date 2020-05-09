@@ -51,8 +51,9 @@ class g_drop():
         self.step = 1
         self.drops.append(self.drop())
 
+    #Strings for GUI
     def return_values(self):
-        pass
+        return [b'drop', b'speed', b'', b'', b'']
 
     #def generate(self, step, dumpworld):
     def __call__(self, args):

@@ -22,11 +22,10 @@ class g_planes():
                      4: 'z, oscillating',
                      5: 'z, one-way'}
 
+    #Strings for GUI
     def return_values(self):
-        return [['', ''],
-				['', ''],
-				['', '']]
-				
+        return [b'planes', b'speed', b'direction (up&down / down)', b'', b'']
+
     def __call__(self, args):
         # parsing input
         self.speed = args[0]*10

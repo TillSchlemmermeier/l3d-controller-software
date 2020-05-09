@@ -40,7 +40,7 @@ class a_multi_cube_edges():
 
 
     def return_values(self):
-        pass
+        return [b'a_multi_cube_edges', b'wait_frames', b'speed', b'', b'']
 
     def __call__(self, args):
         self.wait_frames = int(args[0] * 100)+1

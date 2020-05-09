@@ -32,8 +32,9 @@ class g_falling():
         self.wait = 5
         self.step = 0
 
+    #Strings for GUI
     def return_values(self):
-        pass
+        return [b'falling', b'wait', b'', b'', b'']
 
     #def generate(self, step, dumpworld):
     def __call__(self, args):

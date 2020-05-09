@@ -41,7 +41,7 @@ class a_lines():
 
 
     def return_values(self):
-        pass
+        return [b'a_lines', b'count_fade', b'', b'', b'']
 
     def __call__(self, args):
         self.count_fade = int(args[0] * 200)+50

@@ -18,8 +18,9 @@ class g_rain():
         self.fade = 0.5
         self.lastworld = np.zeros([10, 10, 10])
 
+    #Strings for GUI
     def return_values(self):
-        pass
+        return [b'rain', b'numbers', b'fade', b'', b'']
 
     #def generate(self, step, dumpworld):
     def __call__(self, args):
