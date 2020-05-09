@@ -1,6 +1,6 @@
 import numpy as np
 
-labels = np.full((20, 8, 8), 'empty')
+labels = np.full((21, 8, 8), 'empty')
 labels[1:, 0, 0] = 'close'
 
 #  1 - 5 (inklusiv): channel 1
