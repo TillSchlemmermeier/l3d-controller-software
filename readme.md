@@ -73,6 +73,8 @@ In the following, the global parameters are listed. Default values are given in 
 | 70 -  99 | **parameters channel 2**
 |100 - 129 | **parameters channel 3**
 |130 - 159 | **parameters channel 4**
+|200 - 220 | system parameters
+|      100 | selection menu           | 0-21   | 0
 
 ## Testing for rendering engine
 
@@ -88,8 +90,6 @@ The script 'test_rendering_engine.py' starts the frame renderer in a thread to c
 | 11-14 | effect params
 | 15 | effect 3 name
 | 16-19 | effect params
-| 20 | effect 4 name
-| 21-25 | effect params
-| 30 - 59 | channel 2
-| 60 - 99 | channel 3
-|100 -139 | channel 4
+| 20 - 39 | channel 2
+| 40 - 59 | channel 3
+| 60 - 79 | channel 4
