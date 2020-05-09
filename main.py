@@ -69,7 +69,9 @@ if __name__ == '__main__':
     global_parameter = mp.Array('d', [0 for x in range(255)])
     global_label =     mp.Array(c_char_p, 100)
 
-    global_label[0] = b'test'
+    for i in range(100):
+        global_label[i] = b'init'
+
     # assign processes
     proc_midi = mp.Process(target=midi_devices, args = [global_parameter])
     proc_renderer = mp.Process(target=rendering, args = [global_parameter, global_label])

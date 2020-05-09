@@ -147,16 +147,14 @@ class rendering_engine:
                 # calculate frame
                 new_world = channel.render_frame(self.framecounter, self.global_parameter[index_parameters:index_parameters+30])
 
-				# get current values
-                temp = channel.get_labels()
-                for j in range(5):
-                    print(temp[j])
-                    self.label[j+index_label] = temp[j]
-
-                index_label += 20
-
             else:
                 new_world = np.zeros([3, 10, 10, 10])
+
+			# get current values
+            temp = channel.get_labels()
+            for j in range(19):
+                # print(temp[j])
+                self.label[j+index_label] = temp[j]
 
             # apply fade
             self.channelworld[i, :, :, :] = new_world + self.global_parameter[index_parameters+2]*\
@@ -164,7 +162,7 @@ class rendering_engine:
             # increase index
             index_settings += 5
             index_parameters += 30
-            index_label += 16
+            index_label += 20
 
         # calculate brightness for channels
         # we have the problem, that we want the channels to add

@@ -42,12 +42,19 @@ class class_channel:
         for t in temp:
             list.append(t)
 
-        for i in range(15):
-            list.append(b'empty')
+        temp = self.effect_1.return_values()
+        for t in temp:
+            list.append(t)
 
-        #list.append(self.effect_1.return_values())
-        #list.append(self.effect_2.return_values())
-        #list.append(self.effect_3.return_values())
+        temp = self.effect_2.return_values()
+        for t in temp:
+            list.append(t)
+
+        temp = self.effect_3.return_values()
+        for t in temp:
+            list.append(t)
+
+        # print('lenght in channel', len(list))
 
         return list
 

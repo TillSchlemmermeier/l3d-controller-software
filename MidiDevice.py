@@ -27,7 +27,7 @@ class class_launchpad_mk3:
         """Call gets midi message and calls the mapping routine"""
         # gets message from midi input
         message, deltatime = event
-        print(message)
+        #print(message)
 
         # switch channels on
         # this are the round buttons at the top
@@ -41,19 +41,32 @@ class class_launchpad_mk3:
             elif message[1] == 94 and message[2] == 127:
                 self.global_parameter[130] = int(not self.global_parameter[130])
 
-        # parse message
+        # check whether button was pressed
         elif message[0] == 144 and message[2] == 0:
-            # print('')
-            # print('message', message)
-            # print('state before', self.state)
+            # parse message of launchpad
+            # state == 0 : menu is closed
+            # state == <int> : menu is open
+
             if self.state == 0:
                 # if in idle state, state can be switched
+                # and menu is openend
                 key = [9-int(message[1]*0.1), message[1]%10]
 
                 # check whether button is in range
                 if key[0] <= 5 and key[1] <= 4:
                     self.state = key
-            #        print(self.state)
+
+                    # now we have to send the current state to
+                    # global variable
+                    # send to global parameter array which menu is open
+                    # we can hardcode this for testing
+                    if message[1] == 81:
+                        self.global_parameter[200] = 1
+                    elif message[1] == 71:
+                        self.global_parameter[200] = 2
+                    else:
+                        pass
+
             else:
                 # if not idle, we can go back to idle
                 # this is to close the selection matrix
@@ -62,24 +75,14 @@ class class_launchpad_mk3:
                 if message[1] == 81:
                     # print('close menu')
                     self.state = 0
-                    # set menu as "closed" in global parameter
                     self.global_parameter[200] = 0
+
                 else:
                     # check for presets
                     if self.state[0] == 1:
                         print('no stored presets...')
-                        self.global_parameter[200] = 1
+
                     else:
-                        # send to global parameter array which menu is open
-                        # we can hardcode this for testing
-                        if message[1] == 81:
-                            self.global_parameter[200] = 2
-                        elif message[1] == 71:
-                            self.global_parameter[200] = 2
-                        else:
-                            pass
-
-
                         # figure out the state
                         index = 18 + (self.state[1]-1)*5 + self.state[0]
 
@@ -87,11 +90,11 @@ class class_launchpad_mk3:
                         add = -82 + (8-int(message[1]*0.1))*18
 
                         self.global_parameter[index] = message[1]+add
-                        print('launchpad sets: ', index, self.global_parameter[index])
+                        #print('launchpad sets: ', index, self.global_parameter[index])
 
         # send colors and state at the end
         self.sendstate()
-        print('state after', self.state)
+        #print('state after', self.state)
 
     def convert(self, number):
         """
