@@ -43,9 +43,9 @@ class class_launchpad_mk3:
 
         # parse message
         elif message[0] == 144 and message[2] == 0:
-            print('')
-            print('message', message)
-            print('state before', self.state)
+            # print('')
+            # print('message', message)
+            # print('state before', self.state)
             if self.state == 0:
                 # if in idle state, state can be switched
                 key = [9-int(message[1]*0.1), message[1]%10]
@@ -60,13 +60,27 @@ class class_launchpad_mk3:
                 # self.state[0] ist reihe
                 # self.state[1] ist spalte
                 if message[1] == 81:
-                    print('close menu')
+                    # print('close menu')
                     self.state = 0
+                    # set menu as "closed" in global parameter
+                    self.global_parameter[200] = 0
                 else:
                     # check for presets
                     if self.state[0] == 1:
                         print('no stored presets...')
+                        self.global_parameter[200] = 1
                     else:
+                        # send to global parameter array which menu is open
+                        # we can hardcode this for testing
+                        if message[1] == 81:
+                            self.global_parameter[200] = 2
+                        elif message[1] == 71:
+                            self.global_parameter[200] = 2
+                        else:
+                            pass
+
+
+                        # figure out the state
                         index = 18 + (self.state[1]-1)*5 + self.state[0]
 
                         # addition
