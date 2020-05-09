@@ -43,4 +43,4 @@ class e_cut_cube():
 
             self.step += 1
 
-        return world
+        return np.clip(world, 0, 1)

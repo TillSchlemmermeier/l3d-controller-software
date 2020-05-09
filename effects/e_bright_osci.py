@@ -30,4 +30,4 @@ class e_bright_osci():
 
         self.step += 1
 
-        return world
+        return np.clip(world, 0, 1)

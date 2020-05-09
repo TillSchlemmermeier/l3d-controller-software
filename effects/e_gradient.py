@@ -40,7 +40,7 @@ class e_gradient():
             world[1,x,:,:] = world[1,x,:,:] * color[1]
             world[2,x,:,:] = world[2,x,:,:] * color[2]
 
-        return world
+        return np.clip(world, 0, 1)
 
 
     def sigmoid(self, x):

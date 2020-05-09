@@ -59,4 +59,4 @@ class e_rare_strobo():
 
             self.step +=1
 
-        return np.clip(world)
+        return np.clip(world, 0, 1)

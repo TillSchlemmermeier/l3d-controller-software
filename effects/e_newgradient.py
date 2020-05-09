@@ -43,7 +43,7 @@ class e_newgradient():
 
         self.step += 1
 
-        return world
+        return np.clip(world, 0, 1)
 
 def color_translate(value):
     value *= 127

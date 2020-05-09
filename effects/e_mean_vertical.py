@@ -21,4 +21,4 @@ class e_mean_vertical():
         for i in range(3):
             world[i, :, :, :] = (1-self.amount)*world[i, :, :, :] + self.amount*fftconvolve(world[i, :, :, :], self.mean, mode='same')
 
-        return world
+        return np.clip(world, 0, 1)

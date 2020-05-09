@@ -39,7 +39,7 @@ class e_growing_sphere():
         world[1, :, :, :] = world[1, :, :, :] * (self.amount + np.clip(gen_hsphere(size, 4.5, 4.5, 4.5),0,1))
         world[2, :, :, :] = world[2, :, :, :] * (self.amount + np.clip(gen_hsphere(size, 4.5, 4.5, 4.5),0,1))
 
-        return world
+        return np.clip(world, 0, 1)
 
 
 def hsphere(radius):

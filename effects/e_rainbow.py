@@ -40,4 +40,4 @@ class e_rainbow:
         world[1, :, :, :] = world[1, :, :, :]*self.green
         world[2, :, :, :] = world[2, :, :, :]*self.blue
 
-        return world
+        return np.clip(world, 0, 1)

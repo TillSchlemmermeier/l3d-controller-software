@@ -27,4 +27,4 @@ class e_prod_hue():
         world[1,:,:,:] *= color[1]
         world[2,:,:,:] *= color[2]
 
-        return world
+        return np.clip(world, 0, 1)

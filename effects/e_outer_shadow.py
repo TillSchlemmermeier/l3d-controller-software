@@ -28,4 +28,4 @@ class e_outer_shadow():
                     dist = np.sqrt((x-posx)**2+(y-posy)**2+(z-posz)**2)
                     world[:, x, y, z] /= (dist*self.radius)
 
-        return world
+        return np.clip(world, 0, 1)

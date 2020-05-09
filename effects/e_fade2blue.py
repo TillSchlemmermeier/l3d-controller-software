@@ -27,4 +27,4 @@ class e_fade2blue():
         world[2, :, :, :] += self.amount*world[0, :, :, :] + self.amount*world[1, :, :, :]
         world[:2, :, :, :] -= world[:2, :, :, :]*self.amount
 
-        return world
+        return np.clip(world, 0, 1)

@@ -34,4 +34,4 @@ class e_blur():
         world[1, :, :, :] = fftconvolve(world[1, :, :, :], gauss, mode='same')
         world[2, :, :, :] = fftconvolve(world[2, :, :, :], gauss, mode='same')
 
-        return world
+        return np.clip(world, 0, 1)
