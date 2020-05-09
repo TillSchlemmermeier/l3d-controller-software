@@ -66,7 +66,8 @@ class g_circles():
         self.size2[4:6,3] = 1.0
         self.size2[4:6,6] = 1.0
 
-
+        
+    #Strings for GUI
     def return_values(self):
         return [b'circles', b'number', b'', b'', b'']
 

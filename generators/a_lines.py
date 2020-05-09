@@ -39,7 +39,7 @@ class a_lines():
                           ]
         self.edge = choice(self.edge_list)
 
-
+    #Strings for GUI
     def return_values(self):
         return [b'a_lines', b'count_fade', b'', b'', b'']
 

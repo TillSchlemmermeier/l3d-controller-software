@@ -38,7 +38,7 @@ class a_multi_cube_edges():
                           [slice(0, 10), 9, 9], # 11
                           ]
 
-
+    #Strings for GUI
     def return_values(self):
         return [b'a_multi_cube_edges', b'wait_frames', b'speed', b'', b'']
 
