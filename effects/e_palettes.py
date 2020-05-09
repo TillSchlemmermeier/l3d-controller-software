@@ -197,4 +197,4 @@ class e_palettes:
         world[1, :, :, :] = world[1, :, :, :]*self.green/255.0
         world[2, :, :, :] = world[2, :, :, :]*self.blue/255.0
 
-        return np.clip(world, 0, 1)
+        return world

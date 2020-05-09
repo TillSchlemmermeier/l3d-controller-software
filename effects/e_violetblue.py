@@ -18,10 +18,10 @@ class e_violetblue():
     def return_values(self):
         return [b'violetblue', b'speed', b'', b'', b'']
 
-    def control(self, speed, blub0, blub1):
-        self.speed = speed*0.1
 
-    def generate(self, step, world):
+    def __call__(self, world, args):
+        # parsing input
+        self.speed = args[0]*0.1
 
         self.red = np.sin(self.speed*step)
 

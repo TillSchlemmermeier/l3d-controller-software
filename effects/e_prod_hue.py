@@ -16,11 +16,10 @@ class e_prod_hue():
     def return_values(self):
         return [b'prod_hue', b'Color', b'distance', b'', b'']
 
-    def control(self, c1, c2, balance):
-        self.c1 = c1
-        self.distance = c2
-
-    def generate(self, step, world):
+    def __call__(self, world, args):
+        # parsing input
+        self.c1 = args[0]
+        self.distance = args[1]
 
         color = hsv_to_rgb(self.c1+uniform(-0.5,0.5)*self.distance,1.0,1.0)
 
@@ -28,4 +27,4 @@ class e_prod_hue():
         world[1,:,:,:] *= color[1]
         world[2,:,:,:] *= color[2]
 
-        return np.clip(world,0,1)
+        return world

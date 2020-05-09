@@ -15,11 +15,11 @@ class e_bright_osci():
     def return_values(self):
         return [b'bright_osci', b'speed', b'shape', b'', b'']
 
-    def control(self, speed, shape, amplitude):
-        self.speed = speed*2-1
-        self.shape = shape*3+0.001
 
-    def generate(self, step, world):
+    def __call__(self, world, args):
+        # parsing input
+        self.speed = args[0]*2-1
+        self.shape = args[1]*3+0.001
 
         # modulate brightness
         for x in range(10):
@@ -30,4 +30,4 @@ class e_bright_osci():
 
         self.step += 1
 
-        return np.clip(world, 0, 1)
+        return world

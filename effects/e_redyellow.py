@@ -32,4 +32,4 @@ class e_redyellow():
 
         self.step += 1
 
-        return np.clip(world, 0, 1)
+        return world

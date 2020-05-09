@@ -14,11 +14,10 @@ class e_blur():
     def return_values(self):
         return [b'blur', b'blur intensity', b'', b'', b'']
 
+    def __call__(self, world, args):
+        # parsing input
+        self.blur = args[0]
 
-    def control(self, blur, blub0, blub1):
-        self.blur = blur
-
-    def generate(self, step, world):
         # create gaussian window
         dim = 5
         a = gaussian(dim, self.blur+0.001, sym=True)**2
@@ -35,4 +34,4 @@ class e_blur():
         world[1, :, :, :] = fftconvolve(world[1, :, :, :], gauss, mode='same')
         world[2, :, :, :] = fftconvolve(world[2, :, :, :], gauss, mode='same')
 
-        return np.clip(world, 0, 1)
+        return world

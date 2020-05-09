@@ -20,11 +20,11 @@ class e_fade2blue():
     def return_values(self):
         return [b'fade2blue', b'amount', b'', b'', b'']
 
-    def control(self, amount, blub0, blub1):
-        self.amount = amount
+    def __call__(self, world, args):
+        # parsing input
+        self.amount = args[0]
 
-    def generate(self, step, world):
         world[2, :, :, :] += self.amount*world[0, :, :, :] + self.amount*world[1, :, :, :]
         world[:2, :, :, :] -= world[:2, :, :, :]*self.amount
 
-        return np.clip(world, 0, 1)
+        return world

@@ -19,16 +19,16 @@ class e_rare_strobo():
         self.state = 'wait'
         self.step = 0
 
-    def control(self, waiting_frames, strobo_frames, disp_prop):
-        self.waiting_frames = int(waiting_frames*300)+50
-        self.strobo_frames = int(strobo_frames*20)+2
-        self.disp_prop = disp_prop*0.5
 
     #strings for GUI
     def return_values(self):
         return [b'rare_strobo', b'Waiting Frames', b'Strobo Frames', b'Displacement Probability', b'']
 
-    def generate(self, step, world):
+    def __call__(self, world, args):
+        # parsing input
+        self.waiting_frames = int(args[0]*300)+50
+        self.strobo_frames = int(args[1]*20)+2
+        self.disp_prop = args[2]*0.5
 
         if self.state == 'wait':
             # waiting part
@@ -59,4 +59,4 @@ class e_rare_strobo():
 
             self.step +=1
 
-        return np.clip(world, 0, 1)
+        return np.clip(world)
