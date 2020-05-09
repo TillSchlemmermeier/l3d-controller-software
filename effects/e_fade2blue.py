@@ -16,11 +16,12 @@ class e_fade2blue():
     def __init__(self):
         self.amount = 0.5
 
+    #strings for GUI
+    def return_values(self):
+        return [b'fade2blue', b'amount', b'', b'', b'']
+
     def control(self, amount, blub0, blub1):
         self.amount = amount
-
-    def label(self):
-        return ['amount',round(self.amount,2),'empty', 'empty','empty','empty']  
 
     def generate(self, step, world):
         world[2, :, :, :] += self.amount*world[0, :, :, :] + self.amount*world[1, :, :, :]

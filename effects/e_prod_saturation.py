@@ -12,12 +12,13 @@ class e_prod_saturation():
         self.c1 = 0.0
         self.distance = 0.0
 
+    #strings for GUI
+    def return_values(self):
+        return [b'prod_saturation', b'color 1', b'distance', b'', b'']
+
     def control(self, c1, c2, balance):
         self.c1 = c1
         self.distance = c2
-
-    def label(self):
-        return ['c1',round(self.c1,2),'distance', round(self.distance,2),'empty','empty']
 
     def generate(self, step, world):
 

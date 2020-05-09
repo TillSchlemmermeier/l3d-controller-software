@@ -10,10 +10,9 @@ class e_rotation():
         self.zspeed = 0.0
         self.step = 0
 
+    #strings for GUI
     def return_values(self):
-        return [['', ''],
-				['', ''],
-				['', '']]
+        return [b'rotation', b'X speed', b'Y speed', b'Z speed', b'']
 
     def __call__(self, world, args):
         self.xspeed = 10*args[0]

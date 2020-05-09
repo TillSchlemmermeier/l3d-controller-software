@@ -15,11 +15,9 @@ class e_redyellow():
         self.blue = 0.0
         self.step = 0
 
+    #strings for GUI
     def return_values(self):
-        return [['', ''],
-				['', ''],
-                ['', ''],
-				['', '']]
+        return [b'redyellow', b'speed', b'', b'', b'']
 
     def __call__(self, world, args):
         # parse input

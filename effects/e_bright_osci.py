@@ -11,14 +11,13 @@ class e_bright_osci():
         self.shape = 1.0
         self.step = 0
 
+    #strings for GUI
+    def return_values(self):
+        return [b'bright_osci', b'speed', b'shape', b'', b'']
+
     def control(self, speed, shape, amplitude):
         self.speed = speed*2-1
         self.shape = shape*3+0.001
-
-    def label(self):
-        return ['Speed', round(self.speed,2),
-                'Shape', round(self.shape,2),
-                'empty','empty']
 
     def generate(self, step, world):
 

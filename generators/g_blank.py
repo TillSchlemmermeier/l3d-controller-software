@@ -9,6 +9,7 @@ class g_blank():
     def __init__(self):
         pass
 
+    #strings for GUI
     def return_values(self):
         return [b'blank', b'', b'', b'', b'']
 

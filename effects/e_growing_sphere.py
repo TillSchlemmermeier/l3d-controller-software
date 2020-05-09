@@ -12,8 +12,9 @@ class e_growing_sphere():
         self.oscillate = 0
         self.step = 0
 
-    def label(self):
-        return ['rest brightness',round(self.amount,2),'growspeed',round(self.growspeed,2),'oscillate',round(self.oscillate,2)]
+    #strings for GUI
+    def return_values(self):
+        return [b'growing_sphere', b'amount', b'growspeed', b'oscillate (sin/sawtooth)', b'']
 
     def control(self, amount, growspeed, oscillate):
         self.amount = amount

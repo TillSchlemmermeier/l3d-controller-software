@@ -41,6 +41,10 @@ class e_sound_color():
 
         self.size = 1
 
+    #strings for GUI
+    def return_values(self):
+        return [b'sound_color', b'amount', b'threshold', b'color', b'']
+
 
     def control(self, amount, threshold, channel):
         self.amount = amount
@@ -51,16 +55,12 @@ class e_sound_color():
         # new_list = [x+1 for x in my_list]
 #        self.thres_list = [x+self.thres_factor for x in self.thres_list]
 
-    def label(self):
-        return ['amount',round(self.amount,2),
-                'threshold',round(self.threshold,2),
-                'channel',round(self.channel)]
 
     def generate(self, step, world):
 
         soundvalue = self.update_line()[2]+self.threshold
         color = hsv_to_rgb(soundvalue*self.amount+self.base_color, 0, 1), 1.0, 1.0)
-        
+
         world[0,:,:,:] *= color[0]
         world[1,:,:,:] *= color[1]
         world[2,:,:,:] *= color[2]

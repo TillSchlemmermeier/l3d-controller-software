@@ -11,11 +11,12 @@ class e_cut_cube():
         self.speed = 2
         self.step = 0
 
+    #strings for GUI
+    def return_values(self):
+        return [b'cut_cube', b'speed', b'', b'', b'']
+
     def control(self, speed, blub0, blub1):
         self.speed = int(speed*10)+1
-
-    def label(self):
-        return ['speed',self.speed,'empty', 'empty','empty','empty']
 
     def generate(self, step, world):
         num = randint(0,7)

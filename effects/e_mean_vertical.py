@@ -9,12 +9,12 @@ class e_mean_vertical():
         self.mean = np.zeros([5,5,5])
         self.mean[:, 2, 2] = 1/10.0
 
+    #strings for GUI
+    def return_values(self):
+        return [b'mean_vertical', b'amount', b'', b'', b'']
 
     def control(self, amount, blub0, blub1):
         self.amount = amount
-
-    def label(self):
-        return ['blur amount', np.round(self.amount, 2),'empty', 'empty','empty','empty']
 
     def generate(self, step, world):
 

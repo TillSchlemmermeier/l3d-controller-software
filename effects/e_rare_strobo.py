@@ -24,10 +24,9 @@ class e_rare_strobo():
         self.strobo_frames = int(strobo_frames*20)+2
         self.disp_prop = disp_prop*0.5
 
-    def label(self):
-        return ['Waiting Frames', self.waiting_frames,
-                'Strobo Frames', self.strobo_frames,
-                'Displacment Probabilty', round(self.disp_prop,2)]
+    #strings for GUI
+    def return_values(self):
+        return [b'rare_strobo', b'Waiting Frames', b'Strobo Frames', b'Displacement Probability', b'']
 
     def generate(self, step, world):
 
@@ -59,5 +58,5 @@ class e_rare_strobo():
                 self.state = 'wait'
 
             self.step +=1
-            
+
         return np.clip(world, 0, 1)

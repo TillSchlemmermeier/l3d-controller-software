@@ -9,12 +9,12 @@ class e_mean():
         self.mean = np.zeros([3,3,3])
         self.mean[:, :, :] = 1/18.0
 
+    #strings for GUI
+    def return_values(self):
+        return [b'mean', b'amount', b'', b'', b'']
 
     def control(self, amount, blub0, blub1):
         self.amount = amount
-
-    def label(self):
-        return ['blur amount', np.round(self.amount, 2),'empty', 'empty','empty','empty']
 
     def generate(self, step, world):
 

@@ -175,10 +175,9 @@ class e_palettes:
         self.green = 0
         print(' initialize e_palettes')
 
+    #strings for GUI
     def return_values(self):
-        return [['', ''],
-				['', ''],
-				['', '']]
+        return [b'palettes', b'Palette ID', b'', b'', b'']
 
     def __call__(self, world, args):
         # parsing input and check for new palette
