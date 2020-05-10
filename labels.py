@@ -17,7 +17,7 @@ for i in range(150):
 
 # create empty numpy aray
 labels = np.full((21, 8, 8), default)
-
+labels[:,:,:]= ''
 # add close labels except for first 'layer'
 labels[1:, 0, 0] = 'close'
 
@@ -104,6 +104,8 @@ for i in [3,4,5, 8,9,10, 13,14,15, 18,19,20]:
     labels[i, 3, 0] = 'cut\ncube'
     labels[i, 3, 1] = 'growing\nsphere'
     labels[i, 3, 2] = 'outer\nshadow'
+    labels[i, 3, 3] = 'zoom'
+
 
     labels[i, 4, 0] = 'prod\nhue'
     labels[i, 4, 1] = 'prod\nsaturation'

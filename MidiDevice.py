@@ -136,24 +136,24 @@ class class_launchpad_mk3:
         # if idle state, we can open the selection menu
         if self.state == 0:
             for i in range(4):
-                self.midiout.send_message([144, 81+i, 10])
-                self.midiout.send_message([144, 71+i, 20])
-                self.midiout.send_message([144, 61+i, 30])
-                self.midiout.send_message([144, 51+i, 40])
-                self.midiout.send_message([144, 41+i, 50])
+                self.midiout.send_message([144, 81+i,  5])
+                self.midiout.send_message([144, 71+i, 61])
+                self.midiout.send_message([144, 61+i, 13])
+                self.midiout.send_message([144, 51+i, 21])
+                self.midiout.send_message([144, 41+i, 37])
 
         else:
             # select color
             if self.state[0] == 1:
-                color = 10
+                color = 5
             elif self.state[0] == 2:
-                color = 20
+                color = 61
             elif self.state[0] == 3:
-                color = 30
+                color = 13
             elif self.state[0] == 4:
-                color = 40
+                color = 21
             elif self.state[0] == 5:
-                color = 50
+                color = 37
             else:
                 color = 0
 
@@ -200,6 +200,16 @@ class class_akai:
             self.global_parameter[102] = message[2]/127.0
         elif message[1] == 31:
             self.global_parameter[132] = message[2]/127.0
+        # channel strobo
+        elif message[1] == 18:
+            self.global_parameter[43] = message[2]/127.0
+        elif message[1] == 22:
+            self.global_parameter[73] = message[2]/127.0
+        elif message[1] == 26:
+            self.global_parameter[103] = message[2]/127.0
+        elif message[1] == 30:
+            self.global_parameter[133] = message[2]/127.0
+
 
 class class_launchpad:
     def __init__(self,array):

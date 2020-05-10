@@ -31,7 +31,7 @@ class rendering_engine:
 
 
         # initialise variables
-        self.framecounter = 0
+        self.framecounter = 1
         self.logging = log
         self.debug = False          # debugging mode, switches  on if no
                                     # arduino is found
@@ -144,8 +144,11 @@ class rendering_engine:
                     # pass channel settings
                     channel.set_settings(self.global_parameter[index_settings:index_settings+5])
 
-                # calculate frame
-                new_world = channel.render_frame(self.framecounter, self.global_parameter[index_parameters:index_parameters+30])
+                # calculate frame according to strobo
+                if self.framecounter % int(1+20*self.global_parameter[index_parameters+3]) == 0:
+                    new_world = channel.render_frame(self.framecounter, self.global_parameter[index_parameters:index_parameters+30])
+                else:
+                    new_world = np.zeros([3, 10, 10, 10])
 
             else:
                 new_world = np.zeros([3, 10, 10, 10])

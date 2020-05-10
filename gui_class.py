@@ -23,7 +23,7 @@ class MainWindow(QtWidgets.QMainWindow):
         # initialize layout
         # creating main container-frame, parent it to QWindow
         self.main_CF = QtWidgets.QFrame(self)
-        self.main_CF.setStyleSheet('background-color: rgba(150, 0, 0, 1)')
+        self.main_CF.setStyleSheet('background-color: rgba(50, 50, 50, 1)')
         self.setCentralWidget(self.main_CF)
         # creating layout and parent it to main container
         # is it correct, that main_CL now manages children of main_CF ?
@@ -32,7 +32,7 @@ class MainWindow(QtWidgets.QMainWindow):
         # creating the first subcontainer + layout, parenting it
         control_CGF = QtWidgets.QFrame(self.main_CF)
         self.main_CL.addWidget(control_CGF)
-        control_CGF.setStyleSheet('background-color: rgba(150, 150, 0, 1);')
+        control_CGF.setStyleSheet('background-color: rgba(50, 50, 50, 1);')
         control_CGL = QtWidgets.QVBoxLayout(control_CGF)
         control_CGF.setFixedWidth(100)
 
@@ -43,13 +43,40 @@ class MainWindow(QtWidgets.QMainWindow):
         for x in range(8):
             temp = []
             for y in range(8):
-                temp.append(QtWidgets.QLabel('init'))
+                label = QtWidgets.QLabel('init')
+                label.setStyleSheet("background-color: rgba("+str(x*10)+","+str(y*10)+", 0, 0.5);")
+                temp.append(label)
 
             self.padlabels.append(temp)
 
+        # define colors for different label layers
+        self.colors = [[ '50', '50', '50', '1.0'], # closed
+                       ['200',  '0',  '0', '0.8'], # channel 1
+                       ['200','200',  '0', '0.8'], # gen
+                       ['200','200',  '0', '0.8'], # e 1
+                       [  '0','200',  '0', '0.8'], # e 2
+                       [  '0','200','200', '0.8'], # e 3
+                       ['200',  '0',  '0', '0.8'], # channel 1
+                       ['200','200',  '0', '0.8'], # gen
+                       ['200','200',  '0', '0.8'], # e 1
+                       [  '0','200',  '0', '0.8'], # e 2
+                       [  '0','200','200', '0.8'], # e 3
+                       ['200',  '0',  '0', '0.8'], # channel 1
+                       ['200','200',  '0', '0.8'], # gen
+                       ['200','200',  '0', '0.8'], # e 1
+                       [  '0','200',  '0', '0.8'], # e 2
+                       [  '0','200','200', '0.8'], # e 3
+                       ['200',  '0',  '0', '0.8'], # channel 1
+                       ['200','200',  '0', '0.8'], # gen
+                       ['200','200',  '0', '0.8'], # e 1
+                       [  '0','200',  '0', '0.8'], # e 2
+                       [  '0','200','200', '0.8']] # e 3
+
+
         launchpad_CGF = QtWidgets.QFrame(self.main_CF)
         self.main_CL.addWidget(launchpad_CGF)
-        launchpad_CGF.setStyleSheet('background-color: rgba(0, 150, 0, 1);')
+        self.padlabels[x][y].setStyleSheet('background-color: rgba('+', '.join(self.colors[0])+');')
+
         launchpad_CGL = QtWidgets.QGridLayout(launchpad_CGF)
 
         for x in range(8):
@@ -306,6 +333,7 @@ class MainWindow(QtWidgets.QMainWindow):
         for x in range(8):
             for y in range(8):
                 self.padlabels[x][y].setText(current_labels[x, y])
+                self.padlabels[x][y].setStyleSheet('background-color: rgba('+', '.join(self.colors[int(self.global_parameter[200])])+');')
 
 
     def update_fighter_values(self):

@@ -7,7 +7,7 @@ class e_zoom():
 
     def __init__(self):
         self.amount = 0.5
-        self.degree = 1
+        self.degree = 2
 
     #strings for GUI
     def return_values(self):
@@ -20,8 +20,12 @@ class e_zoom():
 
         zoomworld = np.zeros([3, 10, 10, 10])
 
-        for i in range(self.degree):
-            for c in range(3):
-                zoomworld[c, :, :, :] += zoom(world[c, :, :; :], i, mode = 'constant')[5:-5, 5:-5, 5:-5]
+#        print(np.shape(world[0, :, :, :]))
+#        print(np.shape(zoomworld[0, :, :, :]))
+#        print(np.shape(zoom(world[0, :, :, :], 2, mode = 'constant')))
+#        print(np.shape(zoom(world[0, :, :, :], 2, mode = 'constant')[5:-5, 5:-5, 5:-5]))
+
+        for c in range(3):
+            world[c, :, :, :] = zoom(world[c, :, :, :], 2, mode = 'constant')[5:-5, 5:-5, 5:-5]
 
         return np.clip(world+self.amount*zoomworld, 0, 1)

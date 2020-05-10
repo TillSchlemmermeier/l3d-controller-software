@@ -76,7 +76,7 @@ from effects.e_rotating_blue_orange import *
 #from effects.e_sound_color import *
 from effects.e_squared import *
 from effects.e_violetblue import *
-
+from effects.e_zoom import e_zoom
 
 generators = []
 
@@ -178,7 +178,7 @@ effects.append(e_blank)
 effects.append(e_cut_cube)
 effects.append(e_growing_sphere)
 effects.append(e_outer_shadow)
-
+effects.append(e_zoom)
 
 effects.append(e_prod_hue)
 effects.append(e_prod_saturation)
