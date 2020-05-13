@@ -15,7 +15,7 @@ class e_tremolo():
 
     #strings for GUI
     def return_values(self):
-        return [b'tremolo', b'speed', b'shape (sin/square/up/down)', b'', b'']
+        return [b'tremolo', b'speed', b'shape (sin/square/up/down)', b'amplitude', b'']
 
     def __call__(self, world, args):
 		# parse input
@@ -29,15 +29,17 @@ class e_tremolo():
         else:
             self.shape = 'down'
 
+        self.amplitude = args[2]
+
         # modulate brightness
         if self.shape == 'sin':
-            world[:,:,:,:] *= self.amplitude * np.sin(self.step*np.pi*self.speed*0.1)
+            world[:,:,:,:] *= (1-self.amplitude) + self.amplitude * np.sin(self.step*np.pi*self.speed*0.1)
         elif self.shape == 'square':
-            world[:,:,:,:] *= self.amplitude * square(self.step*np.pi*self.speed*0.1)
+            world[:,:,:,:] *= (1-self.amplitude) + self.amplitude * square(self.step*np.pi*self.speed*0.1)
         elif self.shape == 'up':
-            world[:,:,:,:] *= self.amplitude * sawtooth(self.step*np.pi*self.speed*0.1, width = 1)
+            world[:,:,:,:] *= (1-self.amplitude) + self.amplitude * sawtooth(self.step*np.pi*self.speed*0.1, width = 1)
         else:
-            world[:,:,:,:] *= self.amplitude * sawtooth(self.step*np.pi*self.speed*0.1, width = 0)
+            world[:,:,:,:] *= (1-self.amplitude) + self.amplitude * sawtooth(self.step*np.pi*self.speed*0.1, width = 0)
 
         self.step += 1
         return np.clip(world, 0, 1)
