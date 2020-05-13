@@ -23,6 +23,16 @@ class class_launchpad_mk3:
         self.state = 0	 # this is the idle state
         self.sendstate() # send the current state to launchpad
 
+        # assemble list of parameters for presets, so that each channel
+        # knows what belongs to him:
+        # generator, effect1, effect2, effect3, effect, *parameters
+        self.indices = []
+        self.indices.append([20, 21, 22, 23] + [x for x in range( 40, 70)])
+        self.indices.append([25, 26, 27, 28] + [x for x in range( 70,100)])
+        self.indices.append([30, 31, 32, 33] + [x for x in range(100,130)])
+        self.indices.append([35, 36, 37, 38] + [x for x in range(130,160)])
+
+
     def event(self, event, data=None):
         """Call gets midi message and calls the mapping routine"""
         # gets message from midi input
@@ -51,8 +61,9 @@ class class_launchpad_mk3:
                 # if in idle state, state can be switched
                 # and menu is openend
                 key = [9-int(message[1]*0.1), message[1]%10]
+                # key[1] defines the channel, starting at 1
 
-                # check whether button is in range
+                # check whether button is in range for menus
                 if key[0] <= 5 and key[1] <= 4:
                     self.state = key
 
@@ -71,11 +82,19 @@ class class_launchpad_mk3:
                     elif key[1]-1 == 3:
                         self.global_parameter[200] = key[0]+15
 
+                elif key[0] == 8:
+                    print('saving preset for channel', key[1])
+                    try:
+                        self.save_preset(key[0])
+                    except:
+                        print('error saving preset!')
+
             else:
                 # if not idle, we can go back to idle
                 # this is to close the selection matrix
                 # self.state[0] ist reihe
                 # self.state[1] ist spalte
+                # why is this mixed with key?!
                 if message[1] == 81:
                     # print('close menu')
                     self.state = 0
@@ -84,7 +103,18 @@ class class_launchpad_mk3:
                 else:
                     # check for presets
                     if self.state[0] == 1:
-                        print('no stored presets...')
+                        print('trying to load preset')
+                        # figure out the state
+                        index = 18 + (self.state[1]-1)*5 + self.state[0]
+
+                        # addition
+                        add = -82 + (8-int(message[1]*0.1))*18
+
+                        try:
+                            self.load_preset(preset_id = message[1]+add, channel = self.state[1])
+                        except:
+                            print('error loading preset')
+#                        self.global_parameter[index] = message[1]+add
 
                     else:
                         # figure out the state
@@ -99,6 +129,48 @@ class class_launchpad_mk3:
         # send colors and state at the end
         self.sendstate()
         #print('state after', self.state)
+
+
+    def save_preset(self, channel):
+        '''appends the current values of a channel to a file
+        channel goes from 1 to 4
+        '''
+
+        # assemble list of parameters
+        list = []
+        list.append('name')
+
+        for i in self.indices[channel-1]:
+            list.append(str(round(self.global_parameter[i], 2)))
+
+        # save preset
+        with open('presets.dat', 'a+') as file:
+            file.write(' '.join(list)+'\n')
+
+
+    def load_preset(self, preset_id, channel):
+        '''loads preset from file and writes to global array'''
+
+        print(' preset id : ', preset id)
+        print(' channel   : ', channel)
+
+        with open('presets.dat', 'r') as file
+            presets = file.readlines().split()
+
+        try:
+            preset = presets[preset_id]
+            print('loading preset', preset[0])
+
+            # write values into global parameter array
+            # hopefully on the right place
+            for i, value in zip(self.indices[channel-1], preset[1:]):
+                print(i, value)
+                self.global_parameter[i] = value
+
+        except:
+            print('preset not available')
+
+
 
     def convert(self, number):
         """
@@ -142,6 +214,8 @@ class class_launchpad_mk3:
                 self.midiout.send_message([144, 51+i, 21])
                 self.midiout.send_message([144, 41+i, 37])
 
+                # "save preset" button
+                self.midiout.send_message([144, 11+i, 2])
         else:
             # select color
             if self.state[0] == 1:
