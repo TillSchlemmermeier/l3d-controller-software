@@ -85,7 +85,7 @@ class class_launchpad_mk3:
                 elif key[0] == 8:
                     print('saving preset for channel', key[1])
                     try:
-                        self.save_preset(key[0])
+                        self.save_preset(key[1])
                     except:
                         print('error saving preset!')
 
@@ -151,21 +151,21 @@ class class_launchpad_mk3:
     def load_preset(self, preset_id, channel):
         '''loads preset from file and writes to global array'''
 
-        print(' preset id : ', preset id)
-        print(' channel   : ', channel)
+        # print(' preset id : ', preset_id)
+        # print(' channel   : ', channel)
 
-        with open('presets.dat', 'r') as file
-            presets = file.readlines().split()
+        with open('presets.dat', 'r') as file:
+            presets = file.readlines()
 
         try:
-            preset = presets[preset_id]
+            preset = presets[preset_id].strip('\n').split()
             print('loading preset', preset[0])
 
             # write values into global parameter array
             # hopefully on the right place
             for i, value in zip(self.indices[channel-1], preset[1:]):
-                print(i, value)
-                self.global_parameter[i] = value
+                #print(i, value)
+                self.global_parameter[i] = float(value)
 
         except:
             print('preset not available')

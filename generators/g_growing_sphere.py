@@ -26,12 +26,12 @@ class g_growing_sphere():
 
     #Strings for GUI
     def return_values(self):
-        return [b'growing_sphere', b'maxsize', b'growspeed', b'oscillate (sin/sawtooth)', b'']
+        return [b'growing_sphere', b'maxsize', b'growspeed', b'oscillate (sin/grow/shrink)', b'']
 
     #def control(self, maxsize, growspeed, oscillate):
     def __call__(self, args):
         self.maxsize = args[0]*10
-        self.growspeed = args[1]
+        self.growspeed = 1-args[1]
         self.oscillate = args[2]
 
 #def generate(self, step, dumpworld):

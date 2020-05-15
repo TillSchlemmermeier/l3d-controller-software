@@ -37,7 +37,7 @@ class g_sound_sphere():
 
     #Strings for GUI
     def return_values(self):
-        return [b'sound_sphere', b'amount', b'threshold', b'oscillate', b'']
+        return [b'sound_sphere', b'amount', b'threshold', b'', b'']
 
     def __call__(self, args):
         self.amount = args[0]*10
@@ -49,7 +49,7 @@ class g_sound_sphere():
         size = self.update_line()**2*self.amount
 
         # creates hollow sphere with parameters
-        world[0, :, :, :] = gen_hsphere(size, 5.5,5.5,5.5)
+        world[0, :, :, :] = gen_hsphere(size, 4.5, 4.5, 4.5)
         world[1:, :, :, :] = world[0, :, :, :]
         world[2:, :, :, :] = world[0, :, :, :]
 

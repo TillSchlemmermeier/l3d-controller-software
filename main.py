@@ -16,7 +16,8 @@ from ctypes import c_char, c_char_p
 
 from MidiDevice import class_fighter, class_akai, class_launchpad_mk3
 from gui_class import MainWindow
-
+from artnet_interface import class_artnet
+from time import sleep
 import multiprocessing as mp
 
 #from PyQt5.QtCore import QObject,QThread, pyqtSigna
@@ -36,6 +37,14 @@ def midi_devices(array):
     while True:
         time.sleep(1)
         pass
+
+def artnet_process(array):
+    a = class_artnet(array)
+
+    while True:
+        a.run()
+        sleep(0.01)
+
 
 def rendering(array, label, pause_time = 0.03, log = False):
     '''
@@ -76,16 +85,19 @@ if __name__ == '__main__':
     proc_midi = mp.Process(target=midi_devices, args = [global_parameter])
     proc_renderer = mp.Process(target=rendering, args = [global_parameter, global_label])
     proc_gui = mp.Process(target=gui, args = [global_parameter,global_label])
+    # proc_artnet = mp.Process(target=artnet_process, args = [global_parameter])
 
     # starting processes
-    print('start');
-    proc_midi.start();
+    print('start')
+    proc_midi.start()
     proc_renderer.start()
     proc_gui.start()
+    # proc_artnet.start()
 
 #    time.sleep(1)
-    proc_midi.join();
-    proc_renderer.join();
-    proc_gui.join();
+    proc_midi.join()
+    proc_renderer.join()
+    proc_gui.join()
+#    proc_artnet.join()
 
     print('done')

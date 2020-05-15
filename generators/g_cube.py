@@ -21,7 +21,7 @@ class g_cube():
 
     def __call__(self, args):
         self.size = round(args[0]*4)
-        if args[1] > 0.5:
+        if args[1] < 0.5:
             self.sides = False
         else:
             self.sides = True

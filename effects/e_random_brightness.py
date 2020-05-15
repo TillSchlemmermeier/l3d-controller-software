@@ -23,4 +23,4 @@ class e_random_brightness():
 
         self.step += 1
 
-        return np.clip(world*self.brightness)
+        return np.clip(world*self.brightness, 0, 1)

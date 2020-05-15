@@ -35,9 +35,8 @@ class g_growing_corner():
     #def generate(self, step, dumpworld):
     def __call__(self, args):
         self.maxsize = args[0]*18
-        self.growspeed = args[1]*50+ 10.0001
+        self.growspeed = 60 - (args[1]*50+9.999)
         self.steps = int(self.maxsize/self.growspeed)
-
 
         world = np.zeros([3, 10, 10, 10])
 

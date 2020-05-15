@@ -139,6 +139,9 @@ class rendering_engine:
             # check whether cannel is active, otherwise overrides channel world
             # with zeros
             if int(self.global_parameter[index_parameters]) == 1:
+
+                #print(self.global_parameter[0], self.global_parameter[1], self.global_parameter[20], self.global_parameter[40], self.global_parameter[41], self.global_parameter[45], self.global_parameter[46])
+
                 # check for changes
                 if channel.get_settings() != self.global_parameter[index_settings:index_settings+5]:
                     # pass channel settings

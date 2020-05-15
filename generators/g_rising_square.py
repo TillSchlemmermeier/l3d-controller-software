@@ -26,7 +26,7 @@ class g_rising_square():
         return [b'rising_square', b'speed', b'random', b'pause', b'']
 
     def __call__(self, args):
-        self.speed = int((args[0]*6)+1)
+        self.speed = 7-int((args[0]*6))
         self.random = int(round(args[1]))
         self.pause = int(round(args[2]*40)+1)
 

@@ -14,7 +14,7 @@ class g_random():
         return [b'g_random', b'Number of LEDs', b'', b'',b'']
 
     def __call__(self, args):
-        self.number_of_leds = int((args[0])*10)
+        self.number_of_leds = int((args[0])*20)
 
         world = np.zeros([3, 10, 10, 10])
 

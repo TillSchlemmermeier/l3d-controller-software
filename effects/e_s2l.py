@@ -10,7 +10,7 @@ class e_s2l():
     def __init__(self):
         # initialize pyaudio
         self.sample_rate = 44100
-        self.buffer_size = 2940
+        self.buffer_size = int(2940)
         p = pyaudio.PyAudio()
 
         self.stream = p.open(
@@ -50,9 +50,11 @@ class e_s2l():
 
         # detect change at normalize parameter or channel
         if self.norm_trigger_value != args[3]:
+            print('clearing buffer')
             # clear buffer and reset normalized switch
             self.buffer = []
             self.normalized = False
+            self.norm_trigger_value = args[3]
 
 
         if not self.normalized :
@@ -64,11 +66,17 @@ class e_s2l():
             self.norm[0] = min(self.buffer)
             self.norm[1] = max(self.buffer)
 
-            if len(self.buffer) > 200:
+            if len(self.buffer) > 50:
                 self.normalized = True
+                print('normalized:', self.norm)
 
         # apply normalization
-        current_volume = (total_volume[self.channel]-self.norm[0])/(self.norm[1]-self.norm[0])
+        if self.norm[1] > self.norm[0]:
+            # the ()**4 is important! otherwise, this is just bright or dark
+            current_volume = ((total_volume[self.channel]-self.norm[0]) /(self.norm[1]-self.norm[0]))**4
+            #print(current_volume, total_volume[self.channel], self.norm[0], self.norm[1])
+        else:
+            current_volume = total_volume[self.channel]
 
         # apply threshold
         if current_volume < self.threshold:
@@ -76,7 +84,7 @@ class e_s2l():
 
         # apply manipulation
         for i in range(3):
-            world[i, :, :, :] *= (1-self.amount) + current_volume*self.amount
+            world[i, :, :, :] *= (1-self.amount) + np.clip(current_volume,0,1)*self.amount
 
         return np.clip(world, 0, 1)
 
@@ -100,17 +108,18 @@ class e_s2l():
         freqs, y = self.get_fft(data)
 
         # Average into chunks of N
-        # N = 10
-        # yy = [scipy.average(y[n:n+N]) for n in range(0, len(y), N)]
-        # yy = yy[:int(len(yy)/2)] # Discard half of the samples, as they are mirrored
+        #N = 10
+        #yy = [scipy.average(y[n:n+N]) for n in range(0, len(y), N)]
+        #yy = yy[:int(len(yy)/2)] # Discard half of the samples, as they are mirrored
 
         yy = y
+        #print(yy)
 
         # now do some threshold detection
         # for i in range(len(yy)):
         #     yy[i] = self.control_threshold(yy[i], self.threshold)
 
-        return np.round(np.clip(yy, 0, 1), 4)
+        return np.round(yy, 2)
 
 
 '''

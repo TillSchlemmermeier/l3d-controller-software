@@ -31,7 +31,7 @@ class g_snake():
         return [b'snake', b'turn probability', b'', b'', b'']
 
     def __call__(self, args):
-        self.turnprop = args[0]
+        self.turnprop = 1-args[0]
 
 
 

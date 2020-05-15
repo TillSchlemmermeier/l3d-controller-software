@@ -26,7 +26,7 @@ class g_trees():
     #def generate(self, step, dumpworld):
     def __call__(self, args):
         self.nled = int(round(args[0]*4)+1)
-        self.speed = int((args[1]*4)+1)
+        self.speed = 5-int((args[1]*4))
 
 
     #def generate(self, step, dumpworld):
