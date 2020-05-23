@@ -71,7 +71,7 @@ for i in [2, 7, 12, 17]:
     labels[i, 5, 1] = 'a_multi\ncube_edges'
     labels[i, 5, 2] = 'a_pulsating'
     labels[i, 5, 3] = 'a_orbot'
-    labels[i, 5, 4] = 'empty'
+    labels[i, 5, 4] = 'torus'
     labels[i, 5, 5] = 'empty'
     labels[i, 5, 6] = 'empty'
     labels[i, 5, 7] = 'empty'
