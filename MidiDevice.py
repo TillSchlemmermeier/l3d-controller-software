@@ -39,6 +39,7 @@ class class_launchpad_mk3:
         message, deltatime = event
         #print(message)
 
+
         # switch channels on
         # this are the round buttons at the top
         if message[0] == 176:
@@ -62,6 +63,13 @@ class class_launchpad_mk3:
                 # and menu is openend
                 key = [9-int(message[1]*0.1), message[1]%10]
                 # key[1] defines the channel, starting at 1
+
+                # start/stop cube
+                if message[1] == 88:
+                    if self.global_parameter[0] == 1:
+                        self.global_parameter[0] 1
+                    else:
+                        self.global_parameter[0] = 0
 
                 # check whether button is in range for menus
                 if key[0] <= 5 and key[1] <= 4:
@@ -216,6 +224,9 @@ class class_launchpad_mk3:
 
                 # "save preset" button
                 self.midiout.send_message([144, 11+i, 2])
+
+                # on/off button
+                self.midiout.send_message([144, 88, 2])
         else:
             # select color
             if self.state[0] == 1:
