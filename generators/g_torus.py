@@ -37,8 +37,6 @@ class g_torus():
         x = (self.radius + self.thickness*np.cos(theta)) * np.cos(phi)
         y = (self.radius + self.thickness*np.cos(theta)) * np.sin(phi)
         z = self.thickness * np.sin(theta)
-        world[:,x,:,:] = 1.0
-        world[:,:,y,:] = 1.0
-        world[:,:,:,z] = 1.0
+        world[:,x,y,z] = 1.0
 
         return np.round(np.clip(world, 0, 1), 3)
