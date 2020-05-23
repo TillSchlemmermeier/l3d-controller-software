@@ -30,13 +30,18 @@ class g_torus():
         world = np.zeros([3, 10, 10, 10])
 
         # create torus
-        n = 100
+        n = 10
         theta = np.linspace(0, 2.*np.pi, n)
-        phi = np.linspace(0, 2.*np.pi, n)
-        theta, phi = np.meshgrid(theta, phi)
-        x = (self.radius + self.thickness*np.cos(theta)) * np.cos(phi)
-        y = (self.radius + self.thickness*np.cos(theta)) * np.sin(phi)
-        z = self.thickness * np.sin(theta)
-        world[:,x,y,z] = 1.0
+        px = (self.radius * np.cos(theta))
+        py = [4.5 for x in range(n)]
+        pz = (self.radius * np.sin(theta))
 
-        return np.round(np.clip(world, 0, 1), 3)
+        for i in range(10):
+            for x in range(10):
+                for y in range(10):
+                    for z in range(10):
+                        dist = np.sqrt((px[i]-x)**2 + (py[i]-y)**2 + (pz[i]-z)**2)
+                        if dist < 1:
+                            world[:,x,y,z] = 1.0
+
+        return np.clip(world, 0, 1)
