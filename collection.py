@@ -38,6 +38,7 @@ from generators.g_corner_grow import *
 from generators.g_columns import *
 from generators.g_circles import *
 from generators.g_grow import *
+from generators.g_torus import *
 #from generators.g_centralglow import *
 from generators.a_lines import *
 from generators.a_multi_cube_edges import *
