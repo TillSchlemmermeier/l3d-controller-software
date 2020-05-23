@@ -1,5 +1,17 @@
 import numpy as np
 
+
+# load presets
+preset_labels = []
+
+with open('presets.dat', 'r') as file:
+    presets = file.readlines()
+
+for p in presets:
+    preset_labels.append(p.split()[0])
+
+
+
 # variable for launchpad text labels
 
 # number from global array defines 'layer':
@@ -20,6 +32,20 @@ labels = np.full((21, 8, 8), default)
 labels[:,:,:]= ''
 # add close labels except for first 'layer'
 labels[1:, 0, 0] = 'close'
+
+# add presets
+
+print(len(preset_labels), preset_labels)
+for i in [1, 6, 11, 16]:
+    counter = 0
+    for j in range(1, 8):
+        if counter < len(preset_labels):
+            print(j, counter)
+            labels[i, 0, j] = preset_labels[counter]
+
+        counter += 1
+
+
 
 # add generators
 for i in [2, 7, 12, 17]:
@@ -93,7 +119,7 @@ for i in [3,4,5, 8,9,10, 13,14,15, 18,19,20]:
     labels[i, 1, 4] = 'mean'
     labels[i, 1, 5] = 'mean\n(vertical)'
     labels[i, 1, 6] = 'random\nbrightness'
-    labels[i, 1, 7] = 'empty'
+    labels[i, 1, 7] = 'squared'
 
     labels[i, 2, 0] = 'rotate\nblack/color'
     labels[i, 2, 1] = 'rotate\nblack/white'
