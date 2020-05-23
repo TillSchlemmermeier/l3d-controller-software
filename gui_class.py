@@ -20,6 +20,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
         self.global_parameter = array
         self.global_label = label
+
         # initialize layout
         # creating main container-frame, parent it to QWindow
         self.main_CF = QtWidgets.QFrame(self)
@@ -30,11 +31,11 @@ class MainWindow(QtWidgets.QMainWindow):
         self.main_CL = QtWidgets.QHBoxLayout(self.main_CF)
 
         # creating the first subcontainer + layout, parenting it
-        control_CGF = QtWidgets.QFrame(self.main_CF)
-        self.main_CL.addWidget(control_CGF)
-        control_CGF.setStyleSheet('background-color: rgba(50, 50, 50, 1);')
-        control_CGL = QtWidgets.QVBoxLayout(control_CGF)
-        control_CGF.setFixedWidth(100)
+        #control_CGF = QtWidgets.QFrame(self.main_CF)
+        #self.main_CL.addWidget(control_CGF)
+        #control_CGF.setStyleSheet('background-color: rgba(50, 50, 50, 1);')
+        #control_CGL = QtWidgets.QVBoxLayout(control_CGF)
+        #control_CGF.setFixedWidth(100)
 
         # Creatin subcontaiver for
         # creating the second subcontainer + layout, parenting it(LAUNCHPAD)
@@ -91,41 +92,41 @@ class MainWindow(QtWidgets.QMainWindow):
         # SUB containers for fighter channels 1-4
         fi_ch1_CGF = QtWidgets.QFrame(fighter_CGF)
         self.fighter_CGL.addWidget(fi_ch1_CGF)
-        fi_ch1_CGF.setStyleSheet('background-color: rgba(200, 200, 200, 1);')
+        fi_ch1_CGF.setStyleSheet('background-color: rgba(175, 175, 175, 1);')
         fi_ch1_CGL = QtWidgets.QVBoxLayout(fi_ch1_CGF)
 
         fi_ch2_CGF = QtWidgets.QFrame(fighter_CGF)
         self.fighter_CGL.addWidget(fi_ch2_CGF)
-        fi_ch2_CGF.setStyleSheet('background-color: rgba(200, 200, 200, 1);')
+        fi_ch2_CGF.setStyleSheet('background-color: rgba(175, 175, 175, 1);')
         fi_ch2_CGL = QtWidgets.QVBoxLayout(fi_ch2_CGF)
 
         fi_ch3_CGF = QtWidgets.QFrame(fighter_CGF)
         self.fighter_CGL.addWidget(fi_ch3_CGF)
-        fi_ch3_CGF.setStyleSheet('background-color: rgba(200, 200, 200, 1);')
+        fi_ch3_CGF.setStyleSheet('background-color: rgba(175, 175, 175, 1);')
         fi_ch3_CGL = QtWidgets.QVBoxLayout(fi_ch3_CGF)
 
         fi_ch4_CGF = QtWidgets.QFrame(fighter_CGF)
         self.fighter_CGL.addWidget(fi_ch4_CGF)
-        fi_ch4_CGF.setStyleSheet('background-color: rgba(200, 200, 200, 1);')
+        fi_ch4_CGF.setStyleSheet('background-color: rgba(175, 175, 175, 1);')
         fi_ch4_CGL = QtWidgets.QVBoxLayout(fi_ch4_CGF)
 ####
-        self.button_StartR = QtWidgets.QPushButton("Start")
-        self.button_StopR = QtWidgets.QPushButton("Stop")
-        self.button_StartR.clicked.connect(self.start_Renderer)
-        self.button_StopR.clicked.connect(self.stop_Renderer)
-        self.string_GlobalBrightness = QtWidgets.QLabel("GB : ")
+        #self.button_StartR = QtWidgets.QPushButton("Start")
+        #self.button_StopR = QtWidgets.QPushButton("Stop")
+        #self.button_StartR.clicked.connect(self.start_Renderer)
+        #self.button_StopR.clicked.connect(self.stop_Renderer)
+        #self.string_GlobalBrightness = QtWidgets.QLabel("GB : ")
 
-        control_CGL.addWidget(self.button_StartR)
-        control_CGL.addWidget(self.button_StopR)
-        control_CGL.addWidget(self.string_GlobalBrightness)
+        #control_CGL.addWidget(self.button_StartR)
+        #control_CGL.addWidget(self.button_StopR)
+        #control_CGL.addWidget(self.string_GlobalBrightness)
 ###
 
         self.stringArray_ch1 = []
         self.stringArray_ch1.append(QtWidgets.QLabel("Channel 1"))
-        self.stringArray_ch1.append(QtWidgets.QLabel("Generator : "))
         self.stringArray_ch1.append(QtWidgets.QLabel("Brightness : 127"))
         self.stringArray_ch1.append(QtWidgets.QLabel("Fade : 0"))
         self.stringArray_ch1.append(QtWidgets.QLabel("Shutter : 0"))
+        self.stringArray_ch1.append(QtWidgets.QLabel("Generator : "))
         self.stringArray_ch1.append(QtWidgets.QLabel("Parameter 1 : 89"))
         self.stringArray_ch1.append(QtWidgets.QLabel("Parameter 2 : 54"))
         self.stringArray_ch1.append(QtWidgets.QLabel("Parameter 3 : 110"))
@@ -148,15 +149,18 @@ class MainWindow(QtWidgets.QMainWindow):
 
 
         for item in self.stringArray_ch1:
-            item.setStyleSheet("color: black; font: 9px;");
+            if "Generator" in item.text() or "Effekt" in item.text():
+                item.setStyleSheet("color: black; font: 18px; font-weight: bold");
+            else:
+                item.setStyleSheet("color: black; font: 14px;");
             fi_ch1_CGL.addWidget(item)
 #
         self.stringArray_ch2 = []
         self.stringArray_ch2.append(QtWidgets.QLabel("Channel 2"))
-        self.stringArray_ch2.append(QtWidgets.QLabel("Generator : DUMMY"))
         self.stringArray_ch2.append(QtWidgets.QLabel("Brightness : 127"))
         self.stringArray_ch2.append(QtWidgets.QLabel("Fade : 0"))
         self.stringArray_ch2.append(QtWidgets.QLabel("Shutter : 0"))
+        self.stringArray_ch2.append(QtWidgets.QLabel("Generator : DUMMY"))
         self.stringArray_ch2.append(QtWidgets.QLabel("Parameter 1 : 89"))
         self.stringArray_ch2.append(QtWidgets.QLabel("Parameter 2 : 54"))
         self.stringArray_ch2.append(QtWidgets.QLabel("Parameter 3 : 110"))
@@ -179,15 +183,18 @@ class MainWindow(QtWidgets.QMainWindow):
 
 
         for item in self.stringArray_ch2:
-            item.setStyleSheet("color: black; font: 9px;");
+            if "Generator" in item.text() or "Effekt" in item.text():
+                item.setStyleSheet("color: black; font: 18px; font-weight: bold");
+            else:
+                item.setStyleSheet("color: black; font: 14px;");
             fi_ch2_CGL.addWidget(item)
 #
         self.stringArray_ch3 = []
         self.stringArray_ch3.append(QtWidgets.QLabel("Channel 3"))
-        self.stringArray_ch3.append(QtWidgets.QLabel("Generator : DUMMY"))
         self.stringArray_ch3.append(QtWidgets.QLabel("Brightness : 127"))
         self.stringArray_ch3.append(QtWidgets.QLabel("Fade : 0"))
         self.stringArray_ch3.append(QtWidgets.QLabel("Shutter : 0"))
+        self.stringArray_ch3.append(QtWidgets.QLabel("Generator : DUMMY"))
         self.stringArray_ch3.append(QtWidgets.QLabel("Parameter 1 : 89"))
         self.stringArray_ch3.append(QtWidgets.QLabel("Parameter 2 : 54"))
         self.stringArray_ch3.append(QtWidgets.QLabel("Parameter 3 : 110"))
@@ -209,15 +216,18 @@ class MainWindow(QtWidgets.QMainWindow):
         self.stringArray_ch3.append(QtWidgets.QLabel("Parameter 4 : 110"))
 
         for item in self.stringArray_ch3:
-            item.setStyleSheet("color: black; font: 9px;");
+            if "Generator" in item.text() or "Effekt" in item.text():
+                item.setStyleSheet("color: black; font: 18px; font-weight: bold");
+            else:
+                item.setStyleSheet("color: black; font: 14px;");
             fi_ch3_CGL.addWidget(item)
 #
         self.stringArray_ch4 = []
         self.stringArray_ch4.append(QtWidgets.QLabel("Channel 4"))
-        self.stringArray_ch4.append(QtWidgets.QLabel("Generator : DUMMY"))
         self.stringArray_ch4.append(QtWidgets.QLabel("Brightness : 127"))
         self.stringArray_ch4.append(QtWidgets.QLabel("Fade : 0"))
         self.stringArray_ch4.append(QtWidgets.QLabel("Shutter : 0"))
+        self.stringArray_ch4.append(QtWidgets.QLabel("Generator : DUMMY"))
         self.stringArray_ch4.append(QtWidgets.QLabel("Parameter 1 : 89"))
         self.stringArray_ch4.append(QtWidgets.QLabel("Parameter 2 : 54"))
         self.stringArray_ch4.append(QtWidgets.QLabel("Parameter 3 : 110"))
@@ -239,7 +249,10 @@ class MainWindow(QtWidgets.QMainWindow):
         self.stringArray_ch4.append(QtWidgets.QLabel("Parameter 4 : 110"))
 
         for item in self.stringArray_ch4:
-            item.setStyleSheet("color: black; font: 9px;");
+            if "Generator" in item.text() or "Effekt" in item.text():
+                item.setStyleSheet("color: black; font: 18px; font-weight: bold");
+            else:
+                item.setStyleSheet("color: black; font: 14px;");
             fi_ch4_CGL.addWidget(item)
 
         #  copy params to check for changes
@@ -296,7 +309,7 @@ class MainWindow(QtWidgets.QMainWindow):
         # what do we need the timer for? -> to execute functions periodically in the GUI e.g. updating Strings
         timer = QtCore.QTimer(self)
         timer.timeout.connect(self.update_fighter_values)
-        timer.timeout.connect(self.update_global_values)
+        #timer.timeout.connect(self.update_global_values)
         timer.timeout.connect(self.update_launchpad_values)
         timer.setInterval(10)
         timer.start()
@@ -325,22 +338,66 @@ class MainWindow(QtWidgets.QMainWindow):
     def stop_Renderer(self):
         self.global_parameter[0] = 0
 
-    def update_global_values(self):
-        self.string_GlobalBrightness.setText("An : "+str(round(self.global_parameter[1],2)))
+    #def update_global_values(self):
+        #self.string_GlobalBrightness.setText("An : "+str(round(self.global_parameter[1],2)))
 
     def update_launchpad_values(self):
         current_labels = labels[int(self.global_parameter[200]), :, :]
+        ind=-1
+        # get current generator/effect
+        if self.global_parameter[200] == 2:
+            ind = self.global_parameter[20]
+        elif self.global_parameter[200] == 3:
+            ind = self.global_parameter[21]
+        elif self.global_parameter[200] == 4:
+            ind = self.global_parameter[22]
+        elif self.global_parameter[200] == 5:
+            ind = self.global_parameter[23]
+
+        if self.global_parameter[200] == 7:
+            ind = self.global_parameter[25]
+        elif self.global_parameter[200] == 8:
+            ind = self.global_parameter[26]
+        elif self.global_parameter[200] == 9:
+            ind = self.global_parameter[27]
+        elif self.global_parameter[200] == 10:
+            ind = self.global_parameter[28]
+
+        if self.global_parameter[200] == 12:
+            ind = self.global_parameter[30]
+        elif self.global_parameter[200] == 13:
+            ind = self.global_parameter[31]
+        elif self.global_parameter[200] == 14:
+            ind = self.global_parameter[32]
+        elif self.global_parameter[200] == 15:
+            ind = self.global_parameter[33]
+
+        if self.global_parameter[200] == 17:
+            ind = self.global_parameter[35]
+        elif self.global_parameter[200] == 18:
+            ind = self.global_parameter[36]
+        elif self.global_parameter[200] == 19:
+            ind = self.global_parameter[37]
+        elif self.global_parameter[200] == 20:
+            ind = self.global_parameter[38]
+
+        counter =0
         for x in range(8):
             for y in range(8):
                 self.padlabels[x][y].setText(current_labels[x, y])
-                self.padlabels[x][y].setStyleSheet('background-color: rgba('+', '.join(self.colors[int(self.global_parameter[200])])+');')
+                self.padlabels[x][y].setAlignment(QtCore.Qt.AlignCenter)
+                if counter == ind+1:
+                    self.padlabels[x][y].setStyleSheet('Background-color: rgba('+', '.join(self.colors[int(self.global_parameter[200])])+'); color: red; border-style: dashed; border-width: 4px; border-color: red; text-align: center;')
+                else:
+                    self.padlabels[x][y].setStyleSheet('background-color: rgba('+', '.join(self.colors[int(self.global_parameter[200])])+'); text-align: center;')
+                counter+=1
 
 
     def update_fighter_values(self):
-        self.stringArray_ch1[1].setText("Generator : "+str(self.global_label[0],'utf-8'))
-        self.stringArray_ch1[2].setText("Brightness : "+str(round(self.global_parameter[41],2)))
-        self.stringArray_ch1[3].setText("Fade : "+str(round(self.global_parameter[42],2)))
-        self.stringArray_ch1[4].setText("Shutter : "+str(round(self.global_parameter[43],2)))
+        self.stringArray_ch1[1].setText("Brightness : "+str(round(self.global_parameter[41],2)))
+        self.stringArray_ch1[2].setText("Fade : "+str(round(self.global_parameter[42],2)))
+        self.stringArray_ch1[3].setText("Shutter : "+str(round(self.global_parameter[43],2)))
+        self.stringArray_ch1[4].setText("Generator : "+str(self.global_label[0],'utf-8'))
         self.stringArray_ch1[5].setText(str(self.global_label[1],'utf-8')+" : "+str(round(self.global_parameter[45],2)))
         self.stringArray_ch1[6].setText(str(self.global_label[2],'utf-8')+" : "+str(round(self.global_parameter[46],2)))
         self.stringArray_ch1[7].setText(str(self.global_label[3],'utf-8')+" : "+str(round(self.global_parameter[47],2)))
@@ -361,10 +418,11 @@ class MainWindow(QtWidgets.QMainWindow):
         self.stringArray_ch1[22].setText(str(self.global_label[18],'utf-8')+" : "+str(round(self.global_parameter[62],2)))
         self.stringArray_ch1[23].setText(str(self.global_label[19],'utf-8')+" : "+str(round(self.global_parameter[63],2)))
 
-        self.stringArray_ch2[1].setText("Generator : "+str(self.global_label[20],'utf-8'))
-        self.stringArray_ch2[2].setText("Brightness : "+str(round(self.global_parameter[71],2)))
-        self.stringArray_ch2[3].setText("Fade : "+str(round(self.global_parameter[72],2)))
-        self.stringArray_ch2[4].setText("Shutter : "+str(round(self.global_parameter[73],2)))
+
+        self.stringArray_ch2[1].setText("Brightness : "+str(round(self.global_parameter[71],2)))
+        self.stringArray_ch2[2].setText("Fade : "+str(round(self.global_parameter[72],2)))
+        self.stringArray_ch2[3].setText("Shutter : "+str(round(self.global_parameter[73],2)))
+        self.stringArray_ch2[4].setText("Generator : "+str(self.global_label[20],'utf-8'))
         self.stringArray_ch2[5].setText(str(self.global_label[21],'utf-8')+" : "+str(round(self.global_parameter[75],2)))
         self.stringArray_ch2[6].setText(str(self.global_label[22],'utf-8')+" : "+str(round(self.global_parameter[76],2)))
         self.stringArray_ch2[7].setText(str(self.global_label[23],'utf-8')+" : "+str(round(self.global_parameter[77],2)))
@@ -385,10 +443,11 @@ class MainWindow(QtWidgets.QMainWindow):
         self.stringArray_ch2[22].setText(str(self.global_label[38],'utf-8')+" : "+str(round(self.global_parameter[92],2)))
         self.stringArray_ch2[23].setText(str(self.global_label[39],'utf-8')+" : "+str(round(self.global_parameter[93],2)))
 
-        self.stringArray_ch3[1].setText("Generator : "+str(self.global_label[40],'utf-8'))
-        self.stringArray_ch3[2].setText("Brightness : "+str(round(self.global_parameter[101],2)))
-        self.stringArray_ch3[3].setText("Fade : "+str(round(self.global_parameter[102],2)))
-        self.stringArray_ch3[4].setText("Shutter : "+str(round(self.global_parameter[103],2)))
+
+        self.stringArray_ch3[1].setText("Brightness : "+str(round(self.global_parameter[101],2)))
+        self.stringArray_ch3[2].setText("Fade : "+str(round(self.global_parameter[102],2)))
+        self.stringArray_ch3[3].setText("Shutter : "+str(round(self.global_parameter[103],2)))
+        self.stringArray_ch3[4].setText("Generator : "+str(self.global_label[40],'utf-8'))
         self.stringArray_ch3[5].setText(str(self.global_label[41],'utf-8')+" : "+str(round(self.global_parameter[105],2)))
         self.stringArray_ch3[6].setText(str(self.global_label[42],'utf-8')+" : "+str(round(self.global_parameter[106],2)))
         self.stringArray_ch3[7].setText(str(self.global_label[43],'utf-8')+" : "+str(round(self.global_parameter[107],2)))
@@ -409,10 +468,11 @@ class MainWindow(QtWidgets.QMainWindow):
         self.stringArray_ch3[22].setText(str(self.global_label[58],'utf-8')+" : "+str(round(self.global_parameter[122],2)))
         self.stringArray_ch3[23].setText(str(self.global_label[59],'utf-8')+" : "+str(round(self.global_parameter[123],2)))
 
-        self.stringArray_ch4[1].setText("Generator : "+str(self.global_label[60],'utf-8'))
-        self.stringArray_ch4[2].setText("Brightness : "+str(round(self.global_parameter[131],2)))
-        self.stringArray_ch4[3].setText("Fade : "+str(round(self.global_parameter[132],2)))
-        self.stringArray_ch4[4].setText("Shutter : "+str(round(self.global_parameter[133],2)))
+
+        self.stringArray_ch4[1].setText("Brightness : "+str(round(self.global_parameter[131],2)))
+        self.stringArray_ch4[2].setText("Fade : "+str(round(self.global_parameter[132],2)))
+        self.stringArray_ch4[3].setText("Shutter : "+str(round(self.global_parameter[133],2)))
+        self.stringArray_ch4[4].setText("Generator : "+str(self.global_label[60],'utf-8'))
         self.stringArray_ch4[5].setText(str(self.global_label[61],'utf-8')+" : "+str(round(self.global_parameter[135],2)))
         self.stringArray_ch4[6].setText(str(self.global_label[62],'utf-8')+" : "+str(round(self.global_parameter[136],2)))
         self.stringArray_ch4[7].setText(str(self.global_label[63],'utf-8')+" : "+str(round(self.global_parameter[137],2)))
@@ -459,22 +519,35 @@ class MainWindow(QtWidgets.QMainWindow):
 
         if index_changed in range(40,64):
             for item in self.stringArray_ch1:
-                item.setStyleSheet("color: black; font: 9px;")
+                if "Generator" in item.text() or "Effekt" in item.text():
+                    item.setStyleSheet("color: black; font: 18px;font-weight: bold");
+                else:
+                    item.setStyleSheet("color: black; font: 18px;");
 
         if index_changed in range(70,94):
             for item in self.stringArray_ch2:
-                item.setStyleSheet("color: black; font: 9px;")
+                if "Generator" in item.text() or "Effekt" in item.text():
+                    item.setStyleSheet("color: black; font: 18px;font-weight: bold");
+                else:
+                    item.setStyleSheet("color: black; font: 18px;");
 
         if index_changed in range(100,124):
             for item in self.stringArray_ch3:
-                item.setStyleSheet("color: black; font: 9px;")
+                if "Generator" in item.text() or "Effekt" in item.text():
+                    item.setStyleSheet("color: black; font: 18px;font-weight: bold");
+                else:
+                    item.setStyleSheet("color: black; font: 18px;");
 
         if index_changed in range(130,154):
             for item in self.stringArray_ch4:
-                item.setStyleSheet("color: black; font: 9px;")
+                if "Generator" in item.text() or "Effekt" in item.text():
+                    item.setStyleSheet("color: black; font: 18px;font-weight: bold");
+                else:
+                    item.setStyleSheet("color: black; font: 18px;");
 
         # colors for each area
-        color = ['#0066cc', '#00cc00', '#ff9933', '#ff0066']
+        oncolor = ['#ffa500', '#ffff00', '#00cc00', '#00dcff']
+        offcolor = ['#ffe4b2', '#ffffb2', '#b2efb2', '#b2f4ff']
 
         # areas for generators, effect1, ...
         area = [[ 5, 6, 7, 8],
@@ -484,25 +557,41 @@ class MainWindow(QtWidgets.QMainWindow):
         # loop through all fields and set colors
 
         if self.active_param != -1:
-            for ar,c in zip(area,color):
+            for ar,onc,offc in zip(area,oncolor,offcolor):
                 if self.active_param[0] in ar:
                     for a in ar:
                         if index_changed in range(40,64):
-                            self.stringArray_ch1[a].setStyleSheet("color: black; font: 15px; background-color: "+c)
+                            self.stringArray_ch1[a].setStyleSheet("color: black; font: 20px; background-color: "+onc)
+                else:
+                    for a in ar:
+                        if index_changed in range(40,64):
+                            self.stringArray_ch1[a].setStyleSheet("color: black; font: 20px; background-color: "+offc)
 
                 if self.active_param[1] in ar:
                     for a in ar:
                         if index_changed in range(70,94):
-                            self.stringArray_ch2[a].setStyleSheet("color: black; font: 15px; background-color: "+c)
+                            self.stringArray_ch2[a].setStyleSheet("color: black; font: 20px; background-color: "+onc)
+                else:
+                    for a in ar:
+                        if index_changed in range(70,94):
+                            self.stringArray_ch2[a].setStyleSheet("color: black; font: 20px; background-color: "+offc)
 
                 if self.active_param[2] in ar:
                     for a in ar:
                         if index_changed in range(100,124):
-                            self.stringArray_ch3[a].setStyleSheet("color: black; font: 15px; background-color: "+c)
+                            self.stringArray_ch3[a].setStyleSheet("color: black; font: 20px; background-color: "+onc)
+                else:
+                    for a in ar:
+                        if index_changed in range(100,124):
+                            self.stringArray_ch3[a].setStyleSheet("color: black; font: 20px; background-color: "+offc)
 
                 if self.active_param[3] in ar:
                     for a in ar:
                         if index_changed in range(130,154):
-                            self.stringArray_ch4[a].setStyleSheet("color: black; font: 15px; background-color: "+c)
+                            self.stringArray_ch4[a].setStyleSheet("color: black; font: 20px; background-color: "+onc)
+                else:
+                    for a in ar:
+                        if index_changed in range(130,154):
+                            self.stringArray_ch4[a].setStyleSheet("color: black; font: 20px; background-color: "+offc)
 
         self.copied_params = self.global_parameter[:]

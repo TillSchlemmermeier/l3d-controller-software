@@ -64,12 +64,26 @@ class class_launchpad_mk3:
                 key = [9-int(message[1]*0.1), message[1]%10]
                 # key[1] defines the channel, starting at 1
 
+                print(message)
+
                 # start/stop cube
                 if message[1] == 88:
                     if self.global_parameter[0] == 1:
-                        self.global_parameter[0] 1
-                    else:
                         self.global_parameter[0] = 0
+                    else:
+                        self.global_parameter[0] = 1
+                        self.global_parameter[1] = 1
+                        self.global_parameter[2] = 0.0
+                        self.global_parameter[3] = 1.0
+                        self.global_parameter[20] = 1
+                        # activate channel 1
+                        self.global_parameter[40] = 1
+                        self.global_parameter[41] = 1
+                        # activate channel 2
+                        self.global_parameter[70] = 1
+
+
+                    print(self.global_parameter[0])
 
                 # check whether button is in range for menus
                 if key[0] <= 5 and key[1] <= 4:

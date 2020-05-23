@@ -69,8 +69,8 @@ def gui(array,label):
     '''main routine'''
     app = QtWidgets.QApplication(sys.argv)
     window = MainWindow(array,label)
-    window.resize(640, 480)
-    window.show()
+    #window.resize(640, 480)
+    window.showFullScreen()
     sys.exit(app.exec_())
 
 if __name__ == '__main__':

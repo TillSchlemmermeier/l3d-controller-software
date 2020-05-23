@@ -181,7 +181,7 @@ effects.append(e_bright_osci)
 effects.append(e_mean)
 effects.append(e_mean_vertical)
 effects.append(e_random_brightness)
-effects.append(e_blank)
+effects.append(e_squared)
 
 #row 4: rotation
 effects.append(e_rotating_black_color)
