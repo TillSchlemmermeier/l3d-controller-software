@@ -8,8 +8,8 @@ import numpy as np
 class class_launchpad_mk3:
     def __init__(self, array):
         # open midi input
-        self.midiin, self.portname_in = open_midiinput(port= '32:1')
-        self.midiout, self.portname_out = open_midioutput(port = '32:1')
+        self.midiin, self.portname_in = open_midiinput(port= '24:1')
+        self.midiout, self.portname_out = open_midioutput(port = '24:1')
         self.global_parameter = array
         # turn leds off
         for i, c in zip(range(11,88), range(0,88-11)):
@@ -459,7 +459,7 @@ class class_fighter:
         # effect 1  : color 40
         # effect 2  : color 80
         # effect 3  : color 120
-        color_dict = {0:10, 1:50, 2:70, 3:100}
+        color_dict = {0:70, 1:61, 2:50, 3:20}
 
         # now we want to send the current values back!
         # colors as well as current values!
