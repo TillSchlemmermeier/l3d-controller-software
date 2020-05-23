@@ -45,6 +45,7 @@ class MainWindow(QtWidgets.QMainWindow):
             temp = []
             for y in range(8):
                 label = QtWidgets.QLabel('init')
+                label.setWordWrap(True)
                 label.setStyleSheet("background-color: rgba("+str(x*10)+","+str(y*10)+", 0, 0.5);")
                 temp.append(label)
 
@@ -75,6 +76,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
 
         launchpad_CGF = QtWidgets.QFrame(self.main_CF)
+        launchpad_CGF.setFixedWidth(683)
         self.main_CL.addWidget(launchpad_CGF)
         self.padlabels[x][y].setStyleSheet('background-color: rgba('+', '.join(self.colors[0])+');')
 
@@ -91,21 +93,25 @@ class MainWindow(QtWidgets.QMainWindow):
         self.fighter_CGL = QtWidgets.QHBoxLayout(fighter_CGF)
         # SUB containers for fighter channels 1-4
         fi_ch1_CGF = QtWidgets.QFrame(fighter_CGF)
+        fi_ch1_CGF.setFixedWidth(155)
         self.fighter_CGL.addWidget(fi_ch1_CGF)
         fi_ch1_CGF.setStyleSheet('background-color: rgba(175, 175, 175, 1);')
         fi_ch1_CGL = QtWidgets.QVBoxLayout(fi_ch1_CGF)
 
         fi_ch2_CGF = QtWidgets.QFrame(fighter_CGF)
+        fi_ch2_CGF.setFixedWidth(155)
         self.fighter_CGL.addWidget(fi_ch2_CGF)
         fi_ch2_CGF.setStyleSheet('background-color: rgba(175, 175, 175, 1);')
         fi_ch2_CGL = QtWidgets.QVBoxLayout(fi_ch2_CGF)
 
         fi_ch3_CGF = QtWidgets.QFrame(fighter_CGF)
+        fi_ch3_CGF.setFixedWidth(155)
         self.fighter_CGL.addWidget(fi_ch3_CGF)
         fi_ch3_CGF.setStyleSheet('background-color: rgba(175, 175, 175, 1);')
         fi_ch3_CGL = QtWidgets.QVBoxLayout(fi_ch3_CGF)
 
         fi_ch4_CGF = QtWidgets.QFrame(fighter_CGF)
+        fi_ch4_CGF.setFixedWidth(155)
         self.fighter_CGL.addWidget(fi_ch4_CGF)
         fi_ch4_CGF.setStyleSheet('background-color: rgba(175, 175, 175, 1);')
         fi_ch4_CGL = QtWidgets.QVBoxLayout(fi_ch4_CGF)
@@ -386,6 +392,7 @@ class MainWindow(QtWidgets.QMainWindow):
             for y in range(8):
                 self.padlabels[x][y].setText(current_labels[x, y])
                 self.padlabels[x][y].setAlignment(QtCore.Qt.AlignCenter)
+                #self.padlabels[x][y].setWordWrap(True)
                 if counter == ind+1:
                     self.padlabels[x][y].setStyleSheet('Background-color: rgba('+', '.join(self.colors[int(self.global_parameter[200])])+'); color: red; border-style: dashed; border-width: 4px; border-color: red; text-align: center;')
                 else:

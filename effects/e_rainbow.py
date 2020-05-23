@@ -18,7 +18,7 @@ class e_rainbow:
 
     def __call__(self, world, args):
         # parsing input
-        self.speed = args[0]
+        self.speed = args[0]*0.8
 
         # calculate color
         if self.red>0.99 and self.blue<0.99 and self.green<0.01:
