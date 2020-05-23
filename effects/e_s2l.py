@@ -4,13 +4,14 @@ import pyaudio
 from scipy.fftpack import fft, fftfreq
 import scipy
 import struct
+from time import sleep
 
 
 class e_s2l():
     def __init__(self):
         # initialize pyaudio
         self.sample_rate = 44100
-        self.buffer_size = int(2940)
+        self.buffer_size = int(44100/20)
         p = pyaudio.PyAudio()
 
         self.stream = p.open(
@@ -19,7 +20,8 @@ class e_s2l():
             rate = self.sample_rate,
             input = True,
             output = False,
-            frames_per_buffer = self.buffer_size
+            frames_per_buffer = self.buffer_size,
+#            timeout = 0.001
             )
 
         # parameters for normalization
@@ -102,10 +104,23 @@ class e_s2l():
 
 
     def update_line(self):
-        # read buffer and calculate spectrum
-        buf = self.stream.read(self.buffer_size)
+
+        temp_buf = self.stream.read(100)
+
+        while True:
+            # read buffer and calculate spectrum
+            temp_buf += self.stream.read(self.stream.get_read_available())
+            if len(temp_buf) > self.buffer_size*2:
+                break
+
+        buf = temp_buf[-self.buffer_size*2:]
+#        print(self.buffer_size, len(temp_buf), len(buf))
+
         data = scipy.array(struct.unpack("%dh"%(self.buffer_size), buf))
+
         freqs, y = self.get_fft(data)
+
+        # print(len(buf))
 
         # Average into chunks of N
         #N = 10
