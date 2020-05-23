@@ -82,7 +82,7 @@ for i in [2, 7, 12, 17]:
     labels[i, 3, 4] = 'drop'
     labels[i, 3, 5] = 'dark\nsphere'
     labels[i, 3, 6] = 'cut'
-    labels[i, 3, 7] = 'empty'
+    labels[i, 3, 7] = 'multicube'
 
     labels[i, 4, 0] = 'cube edges'
     labels[i, 4, 1] = 'corner'

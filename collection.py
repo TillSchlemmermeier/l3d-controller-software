@@ -44,6 +44,7 @@ from generators.a_lines import *
 from generators.a_multi_cube_edges import *
 from generators.a_pulsating import *
 from generators.a_orbbot import *
+from generators.g_multicube import *
 from generators.a_random_cubes import *
 from generators.a_squares_cut import *
 from generators.a_testbot import *
@@ -118,7 +119,7 @@ generators.append(g_falling)
 generators.append(g_drop)
 generators.append(g_darksphere)
 generators.append(g_cut)
-generators.append(g_blank)
+generators.append(g_multicube)
 
 #row 5
 generators.append(g_cube_edges)
