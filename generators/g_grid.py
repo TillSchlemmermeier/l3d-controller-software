@@ -20,9 +20,9 @@ class g_grid():
         return [b'grid', b'stepX', b'stepY', b'stepZ', b'']
 
     def __call__(self, args):
-        self.stepX = round(args[0]*9)
-        self.stepY = round(args[0]*9)
-        self.stepZ = round(args[0]*9)
+        self.stepX = round(args[0]*9)+1
+        self.stepY = round(args[1]*9)+1
+        self.stepZ = round(args[2]*9)+1
 
         # create world
         world = np.zeros([3, 10, 10, 10])
@@ -30,7 +30,7 @@ class g_grid():
         for x in range(9):
             for y in range(9):
                 for z in range(9):
-                    if x%self.stepX == 0 and y%self.stepY == 0 and z%self.stepZ == 0:
+                    if x%self.stepX == 0 or y%self.stepY == 0 or z%self.stepZ == 0:
                         world[:, x, y, z] = 1.0
 
         return np.clip(world, 0, 1)

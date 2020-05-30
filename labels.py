@@ -100,15 +100,15 @@ for i in [2, 7, 12, 17]:
     labels[i, 4, 3] = 'columns'
     labels[i, 4, 4] = 'circles'
     labels[i, 4, 5] = 'grow'
-    labels[i, 4, 6] = 'empty'
-    labels[i, 4, 7] = 'empty'
+    labels[i, 4, 6] = 'sound\nsphere'
+    labels[i, 4, 7] = 'swell'
 
     labels[i, 5, 0] = 'a_lines'
     labels[i, 5, 1] = 'a_multi\ncube_edges'
     labels[i, 5, 2] = 'a_pulsating'
     labels[i, 5, 3] = 'a_orbot'
     labels[i, 5, 4] = 'torus'
-    labels[i, 5, 5] = 'empty'
+    labels[i, 5, 5] = 'grid'
     labels[i, 5, 6] = 'empty'
     labels[i, 5, 7] = 'empty'
 
