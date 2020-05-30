@@ -52,6 +52,8 @@ from generators.g_soundsphere import *
 from generators.g_swell import *
 # from generators.g_grid import *
 from generators.g_pong import *
+from generators.g_edgelines import *
+
 
 from effects.e_blank import *
 from effects.e_rainbow import *
@@ -83,6 +85,7 @@ from effects.e_rotating_blue_orange import *
 from effects.e_squared import *
 from effects.e_violetblue import *
 from effects.e_zoom import e_zoom
+from effects.e_rotating_rainbow import *
 
 generators = []
 
@@ -142,7 +145,7 @@ generators.append(a_pulsating)
 generators.append(a_orbbot)
 generators.append(g_torus)
 generators.append(g_pong)
-generators.append(g_blank)
+generators.append(g_edgelines)
 generators.append(g_blank)
 
 # row 7
@@ -193,7 +196,7 @@ effects.append(e_rotating_black_color)
 effects.append(e_rotating_black_white)
 effects.append(e_rotating_blue_orange)
 effects.append(e_rotation)
-effects.append(e_blank)
+effects.append(e_rotating_rainbow)
 effects.append(e_blank)
 effects.append(e_blank)
 effects.append(e_blank)

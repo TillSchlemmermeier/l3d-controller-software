@@ -21,7 +21,7 @@ class e_rotating_rainbow():
 
     def __call__(self, world, args):
 		# parse input
-        self.speed = args[0]
+        self.speed = args[0]*10
         self.xspeed = args[1]*15+0.01
         self.yspeed = args[2]*15
         self.zspeed = args[3]*15
@@ -34,7 +34,7 @@ class e_rotating_rainbow():
             self.rainbowworld[1, i, :, :] = color_translate(int(round((i*12.7 + self.step * self.speed)%127)))[1]
             self.rainbowworld[2, i, :, :] = color_translate(int(round((i*12.7 + self.step * self.speed)%127)))[2]
 
-'''
+
         # rotate
         newworld = rotate(self.rainbowworld, self.step*self.xspeed,
                           axes = (1,2), order = 1,
@@ -48,20 +48,14 @@ class e_rotating_rainbow():
                           axes = (2,3), order = 1,
                           mode = 'nearest', reshape = False)
 
-        newworld[0, :, :, :] = newworld[0, :, :, :]*self.color['r']
-        newworld[1, :, :, :] = newworld[1, :, :, :]*self.color['g']
-        newworld[2, :, :, :] = newworld[2, :, :, :]*self.color['b']
-
-        world = newworld * world
-'''
-        world = rainbowworld
+        world *= newworld
         self.step += 1
 
         return np.clip(world, 0, 1)
 
 
 def color_translate(value):
-    value *= 127
+    #value *= 127
     #translates values from 0 to 127 to rgb values
     if (value>126):
         value=126
@@ -95,4 +89,4 @@ def color_translate(value):
         g_out=0
         b_out=1-((value-105.0)/21.0)
 
-    return [r_out, g_out, b_out}
+    return [r_out, g_out, b_out]

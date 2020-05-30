@@ -109,7 +109,7 @@ for i in [2, 7, 12, 17]:
     labels[i, 5, 3] = 'a_orbot'
     labels[i, 5, 4] = 'torus'
     labels[i, 5, 5] = 'pong'
-    labels[i, 5, 6] = 'empty'
+    labels[i, 5, 6] = 'edgelines'
     labels[i, 5, 7] = 'empty'
 
 # add effect
@@ -135,6 +135,7 @@ for i in [3,4,5, 8,9,10, 13,14,15, 18,19,20]:
     labels[i, 2, 1] = 'rotate\nblack/white'
     labels[i, 2, 2] = 'rotate\nblack/ornage'
     labels[i, 2, 3] = 'rotation'
+    labels[i, 2, 4] = 'rotating\nrainbow'
 
 #    labels[i, 3, 0] = 'cut\ncube'
 #    labels[i, 3, 1] = 'growing\nsphere'
