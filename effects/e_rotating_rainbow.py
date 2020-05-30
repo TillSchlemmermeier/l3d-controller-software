@@ -11,28 +11,28 @@ class e_rotating_rainbow():
         self.speed = 0
         self.rotate = 0.1
         self.gradient_length = 1.0
-        #self.zspeed = 0.1
+        self.black_length = 0.1
         self.step = 1
 
     #strings for GUI
     def return_values(self):
-        return [b'rotating_rainbow', b'Rainbow Speed', b'Rotation Speed', b'Y speed', b'Z speed']
+        return [b'rotating_rainbow', b'Rainbow Speed', b'Rotation Speed', b'Gradient length', b'Black length']
 
 
     def __call__(self, world, args):
 		# parse input
         self.speed = args[0]*10
         self.Rotation = args[1]*15+0.01
-        self.gradient_length = args[2]*15
-        self.zspeed = args[3]*15
+        self.gradient_length = args[2]*12.7
+        self.black_length = args[3]*10
 
         # create gradient
         self.rainbowworld = np.zeros([3, 10, 10, 10])
 
         for i in range(10):
-            self.rainbowworld[0, i, :, :] = color_translate(int(round((i*12.7 + self.step * self.speed)%127)))[0]
-            self.rainbowworld[1, i, :, :] = color_translate(int(round((i*12.7 + self.step * self.speed)%127)))[1]
-            self.rainbowworld[2, i, :, :] = color_translate(int(round((i*12.7 + self.step * self.speed)%127)))[2]
+            self.rainbowworld[0, i, :, :] = color_translate(int(round((i*self.gradient_length + self.step * self.speed)))[0]
+            self.rainbowworld[1, i, :, :] = color_translate(int(round((i*self.gradient_length + self.step * self.speed)))[1]
+            self.rainbowworld[2, i, :, :] = color_translate(int(round((i*self.gradient_length + self.step * self.speed))))[2]
 
 
         # rotate
@@ -50,6 +50,8 @@ class e_rotating_rainbow():
 
         world *= newworld
         self.step += 1
+        if self.step >= 127 + self.black_length:
+            self.step = 0
 
         return np.clip(world, 0, 1)
 
@@ -84,9 +86,13 @@ def color_translate(value):
         r_out=(value-84.0)/21.0
         g_out=0
         b_out=1
-    elif(value>105):
+    elif(value>105 and value <=127):
         r_out=1
         g_out=0
         b_out=1-((value-105.0)/21.0)
+    elif(value>127):
+        r_out=1-((value-127)/10)
+        g_out=0
+        b_out=0
 
     return [r_out, g_out, b_out]
