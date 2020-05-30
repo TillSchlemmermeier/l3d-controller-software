@@ -9,21 +9,21 @@ class e_rotating_rainbow():
 
         # initial rotating parameters
         self.speed = 0
-        self.xspeed = 0.1
-        self.yspeed = 0.1
-        self.zspeed = 0.1
+        self.rotate = 0.1
+        self.gradient_length = 1.0
+        #self.zspeed = 0.1
         self.step = 1
 
     #strings for GUI
     def return_values(self):
-        return [b'rotating_rainbow', b'Rainbow_speed', b'X speed', b'Y speed', b'Z speed']
+        return [b'rotating_rainbow', b'Rainbow Speed', b'Rotation Speed', b'Y speed', b'Z speed']
 
 
     def __call__(self, world, args):
 		# parse input
         self.speed = args[0]*10
-        self.xspeed = args[1]*15+0.01
-        self.yspeed = args[2]*15
+        self.Rotation = args[1]*15+0.01
+        self.gradient_length = args[2]*15
         self.zspeed = args[3]*15
 
         # create gradient
@@ -36,15 +36,15 @@ class e_rotating_rainbow():
 
 
         # rotate
-        newworld = rotate(self.rainbowworld, self.step*self.xspeed,
+        newworld = rotate(self.rainbowworld, self.step*self.rotation,
                           axes = (1,2), order = 1,
                           mode = 'nearest', reshape = False)
 
-        newworld = rotate(newworld, self.step*self.yspeed,
+        newworld = rotate(newworld, self.step*self.rotation,
                           axes = (1,3), order = 1,
                           mode = 'nearest', reshape = False)
 
-        newworld = rotate(newworld, self.step*self.zspeed,
+        newworld = rotate(newworld, self.step*self.rotation,
                           axes = (2,3), order = 1,
                           mode = 'nearest', reshape = False)
 
