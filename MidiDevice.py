@@ -8,8 +8,8 @@ import numpy as np
 class class_launchpad_mk3:
     def __init__(self, array):
         # open midi input
-        self.midiin, self.portname_in = open_midiinput(port= '24:1')
-        self.midiout, self.portname_out = open_midioutput(port = '24:1')
+        self.midiin, self.portname_in = open_midiinput(port= ':1')
+        self.midiout, self.portname_out = open_midioutput(port = ':1')
         self.global_parameter = array
         # turn leds off
         for i, c in zip(range(11,88), range(0,88-11)):
@@ -246,7 +246,7 @@ class class_launchpad_mk3:
             if self.state[0] == 1:
                 color = 5
             elif self.state[0] == 2:
-                color = 61
+                color = 9
             elif self.state[0] == 3:
                 color = 13
             elif self.state[0] == 4:
@@ -257,8 +257,20 @@ class class_launchpad_mk3:
                 color = 0
 
             # send color
-            for i in range(11,89):
-                self.midiout.send_message([144, i, color])
+            #for i in range(11,89):
+            #    self.midiout.send_message([144, i, color])
+            #    if i%10 == 3 or i%10 == 6
+
+            i = 11
+            for x in range(8):
+                for y in range(8):
+                    if x in [2,5] or y in [2,5]:
+                        self.midiout.send_message([144, i, color+2])
+                    else:
+                        self.midiout.send_message([144, i, color])
+
+                    i += 1
+                i += 2
 
             self.midiout.send_message([144, 81, 1])
 

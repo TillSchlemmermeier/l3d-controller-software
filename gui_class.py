@@ -46,26 +46,26 @@ class MainWindow(QtWidgets.QMainWindow):
 
         # define colors for different label layers
         self.colors = [[ '50', '50', '50', '1.0'], # closed
-                       ['200',  '0',  '0', '0.8'], # channel 1
-                       ['200','200',  '0', '0.8'], # gen
-                       ['200','200',  '0', '0.8'], # e 1
-                       [  '0','200',  '0', '0.8'], # e 2
-                       [  '0','200','200', '0.8'], # e 3
-                       ['200',  '0',  '0', '0.8'], # channel 1
-                       ['200','200',  '0', '0.8'], # gen
-                       ['200','200',  '0', '0.8'], # e 1
-                       [  '0','200',  '0', '0.8'], # e 2
-                       [  '0','200','200', '0.8'], # e 3
-                       ['200',  '0',  '0', '0.8'], # channel 1
-                       ['200','200',  '0', '0.8'], # gen
-                       ['200','200',  '0', '0.8'], # e 1
-                       [  '0','200',  '0', '0.8'], # e 2
-                       [  '0','200','200', '0.8'], # e 3
-                       ['200',  '0',  '0', '0.8'], # channel 1
-                       ['200','200',  '0', '0.8'], # gen
-                       ['200','200',  '0', '0.8'], # e 1
-                       [  '0','200',  '0', '0.8'], # e 2
-                       [  '0','200','200', '0.8']] # e 3
+                       ['255',  '0',  '0', '0.8'], # channel 1 presets
+                       ['255','165',  '0', '0.8'], # gen
+                       ['255','255',  '0', '0.8'], # e 1
+                       [  '0','255',  '0', '0.8'], # e 2
+                       [  '0','255','255', '0.8'], # e 3
+                       ['255',  '0',  '0', '0.8'], # channel 1
+                       ['255','165',  '0', '0.8'], # gen
+                       ['255','255',  '0', '0.8'], # e 1
+                       [  '0','255',  '0', '0.8'], # e 2
+                       [  '0','255','255', '0.8'], # e 3
+                       ['255',  '0',  '0', '0.8'], # channel 1
+                       ['255','165',  '0', '0.8'], # gen
+                       ['255','255',  '0', '0.8'], # e 1
+                       [  '0','255',  '0', '0.8'], # e 2
+                       [  '0','255','255', '0.8'], # e 3
+                       ['255',  '0',  '0', '0.8'], # channel 1
+                       ['255','165',  '0', '0.8'], # gen
+                       ['255','255',  '0', '0.8'], # e 1
+                       [  '0','255',  '0', '0.8'], # e 2
+                       [  '0','255','255', '0.8']] # e 3
 
 
         launchpad_CGF = QtWidgets.QFrame(self.main_CF)
@@ -393,13 +393,13 @@ class MainWindow(QtWidgets.QMainWindow):
                 self.padlabels[x][y].setText(current_labels[x, y])
                 self.padlabels[x][y].setAlignment(QtCore.Qt.AlignCenter)
                 # self.padlabels[x][y].setWordWrap(True)
-                # get color
-                color = self.colors[int(self.global_parameter[200])
+                # get color - don't do a shallow copy here!
+                color = self.colors[int(self.global_parameter[200])][:]
 
                 if x in [2, 5] or y in [2, 5]:
-                    # these rows/columns are a bit darker
                     for i in range(3):
-                        color[i] -= 50
+                        color[i] = str(np.clip(int(color[i]) - 50, 0, 255))
+
 
                 if counter == ind + 1:
                     # active generator/effect gets red border
