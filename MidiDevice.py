@@ -167,7 +167,7 @@ class class_launchpad_mk3:
         #print('state after', self.state)
 
 
-    def save_preset(self, channel, filename = 'preset.dat'):
+    def save_preset(self, channel, filename = 'presets.dat'):
         '''appends the current values of a channel to a file
         channel goes from 1 to 4
         '''
@@ -561,6 +561,7 @@ class class_fighter:
         # check for state switches
         if channel == 177:
             self.setstate(key, value)
+            print(self.global_parameter[200:205])
             return []
         else:
             # write master commands for each channel
@@ -653,3 +654,8 @@ class class_fighter:
                 self.current_state[3] = 2
             elif key == 15 and value == 0:
                 self.current_state[3] = 3
+
+        for i in range(4):
+            self.global_parameter[201+i] = self.current_state[i]
+
+        print(self.global_parameter[200:205])

@@ -513,10 +513,28 @@ class MainWindow(QtWidgets.QMainWindow):
         # check for last changed value
         index_changed = np.where((np.array(self.copied_params) == np.array(self.global_parameter)) == False)[0]
 
+        '''
+        this is a try to get changes from midifighter button press
+        works only for first channel
+        index_changed = [0,0,0,0]
+
+        # we do here a very nasty overwrite of the
+        # last changed id - this can be done better
+        for i in range(4):
+            # print(self.global_parameter[201+i])
+
+            for j in range(4):
+                if int(self.global_parameter[201+i]) == j:
+            #        print(45+5*j+30*i)
+                    index_changed[i] = 45+5*j+30*i
+
+            #print('')
+        '''
+
         if np.shape(index_changed)[0] > 1:
             index_changed = index_changed[0]
 
-        # lets just  do it for the first channel
+        # lets just do it for the first channel
         for item_1, item_2, item_3, item_4 in zip(self.conv_dict1.items(), self.conv_dict2.items(), self.conv_dict3.items(), self.conv_dict4.items()):
             # compare value with last changed key
             if item_1[1] == index_changed:
@@ -533,7 +551,6 @@ class MainWindow(QtWidgets.QMainWindow):
                 self.active_param[3] = item_4[0]
 
         # write all back to normal
-
         if index_changed in range(40,64):
             for item in self.stringArray_ch1:
                 if "G:" in item.text() or "E:" in item.text():
