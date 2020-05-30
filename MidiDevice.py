@@ -111,6 +111,20 @@ class class_launchpad_mk3:
                     except:
                         print('error saving preset!')
 
+                elif key[0] == 7:
+                    print('saving temporary preset for channel', key[1])
+                    try:
+                        self.save_preset(key[1], filename = 'temporary_preset.dat')
+                    except:
+                        print('error saving preset!')
+
+                elif key[0] == 6:
+                    print('loading temporary preset for channel', key[1])
+                    try:
+                        self.load_preset(preset_id = -1, channel = self.state[1], filename = 'temporary_preset.dat')
+                    except:
+                        print('error loading temporary preset!')
+
             else:
                 # if not idle, we can go back to idle
                 # this is to close the selection matrix
@@ -153,7 +167,7 @@ class class_launchpad_mk3:
         #print('state after', self.state)
 
 
-    def save_preset(self, channel):
+    def save_preset(self, channel, filename = 'preset.dat'):
         '''appends the current values of a channel to a file
         channel goes from 1 to 4
         '''
@@ -166,17 +180,17 @@ class class_launchpad_mk3:
             list.append(str(round(self.global_parameter[i], 2)))
 
         # save preset
-        with open('presets.dat', 'a+') as file:
+        with open(filename, 'a+') as file:
             file.write(' '.join(list)+'\n')
 
 
-    def load_preset(self, preset_id, channel):
+    def load_preset(self, preset_id, channel, filename = 'preset.dat'):
         '''loads preset from file and writes to global array'''
 
         # print(' preset id : ', preset_id)
         # print(' channel   : ', channel)
 
-        with open('presets.dat', 'r') as file:
+        with open(filename, 'r') as file:
             presets = file.readlines()
 
         try:
