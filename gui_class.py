@@ -1,13 +1,5 @@
 import time
-# import rendering class
-# from rendering_engine import rendering_engine
-# import global variable
-#from global_parameter_module import global_parameter
-# from copy import deepcopy
 import sys
-# import tempfile     # what is this?
-# import subprocess   # obsolete?
-#import urllib.request
 from PyQt5 import QtWidgets, QtGui, QtCore
 import numpy as np
 from labels import labels
@@ -18,6 +10,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
         super(MainWindow, self).__init__()
 
+        # get global arrays
         self.global_parameter = array
         self.global_label = label
 
@@ -348,8 +341,13 @@ class MainWindow(QtWidgets.QMainWindow):
         #self.string_GlobalBrightness.setText("An : "+str(round(self.global_parameter[1],2)))
 
     def update_launchpad_values(self):
+
+        # get labels of active menu
+        # this is given by self.global_parameter[200]
         current_labels = labels[int(self.global_parameter[200]), :, :]
-        ind=-1
+
+        # we need an index for the active generator/effect
+        ind = -1
         # get current generator/effect
         if self.global_parameter[200] == 2:
             ind = self.global_parameter[20]
@@ -387,16 +385,28 @@ class MainWindow(QtWidgets.QMainWindow):
         elif self.global_parameter[200] == 20:
             ind = self.global_parameter[38]
 
-        counter =0
+        counter = 0
+        # loop over elements in pad panel
         for x in range(8):
             for y in range(8):
+                # add text labels
                 self.padlabels[x][y].setText(current_labels[x, y])
                 self.padlabels[x][y].setAlignment(QtCore.Qt.AlignCenter)
-                #self.padlabels[x][y].setWordWrap(True)
-                if counter == ind+1:
-                    self.padlabels[x][y].setStyleSheet('Background-color: rgba('+', '.join(self.colors[int(self.global_parameter[200])])+'); color: red; border-style: dashed; border-width: 4px; border-color: red; text-align: center;')
+                # self.padlabels[x][y].setWordWrap(True)
+                # get color
+                color = self.colors[int(self.global_parameter[200])
+
+                if x in [2, 5] or y in [2, 5]:
+                    # these rows/columns are a bit darker
+                    for i in range(3):
+                        color[i] -= 50
+
+                if counter == ind + 1:
+                    # active generator/effect gets red border
+                    self.padlabels[x][y].setStyleSheet('Background-color: rgba('+', '.join(color)+'); color: red; border-style: dashed; border-width: 4px; border-color: red; text-align: center;')
                 else:
-                    self.padlabels[x][y].setStyleSheet('background-color: rgba('+', '.join(self.colors[int(self.global_parameter[200])])+'); text-align: center;')
+                    self.padlabels[x][y].setStyleSheet('background-color: rgba('+', '.join(color)+'); text-align: center;')
+
                 counter+=1
 
 
