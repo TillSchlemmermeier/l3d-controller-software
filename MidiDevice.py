@@ -121,7 +121,7 @@ class class_launchpad_mk3:
                 elif key[0] == 6:
                     print('loading temporary preset for channel', key[1])
                     try:
-                        self.load_preset(preset_id = -1, channel = self.state[1], filename = 'temporary_preset.dat')
+                        self.load_preset(-1, key[1], 'temporary_preset.dat')
                     except:
                         print('error loading temporary preset!')
 
@@ -184,11 +184,12 @@ class class_launchpad_mk3:
             file.write(' '.join(list)+'\n')
 
 
-    def load_preset(self, preset_id, channel, filename = 'preset.dat'):
+    def load_preset(self, preset_id, channel, filename = 'presets.dat'):
         '''loads preset from file and writes to global array'''
 
-        # print(' preset id : ', preset_id)
-        # print(' channel   : ', channel)
+        print(' preset id : ', preset_id)
+        print(' channel   : ', channel)
+        print(' file name : ', filename)
 
         with open(filename, 'r') as file:
             presets = file.readlines()
@@ -240,7 +241,6 @@ class class_launchpad_mk3:
         self.midiout.send_message([176, 93, self.global_parameter[100]*127])
         self.midiout.send_message([176, 94, self.global_parameter[130]*127])
 
-
         # if idle state, we can open the selection menu
         if self.state == 0:
             for i in range(4):
@@ -249,6 +249,10 @@ class class_launchpad_mk3:
                 self.midiout.send_message([144, 61+i, 13])
                 self.midiout.send_message([144, 51+i, 21])
                 self.midiout.send_message([144, 41+i, 37])
+
+                # "copy" buttons
+                self.midiout.send_message([144, 31+i, 45])
+                self.midiout.send_message([144, 21+i, 54])
 
                 # "save preset" button
                 self.midiout.send_message([144, 11+i, 2])

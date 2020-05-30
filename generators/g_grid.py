@@ -27,10 +27,14 @@ class g_grid():
         # create world
         world = np.zeros([3, 10, 10, 10])
 
-        for x in range(9):
-            for y in range(9):
-                for z in range(9):
-                    if x%self.stepX == 0 or y%self.stepY == 0 or z%self.stepZ == 0:
-                        world[:, x, y, z] = 1.0
+        for x in range(10):
+            for y in range(10):
+                for z in range(10):
+                    if x%self.stepX == 0 and y%self.stepY == 0:
+                        world[:, x, y, :] = 1.0
+                    if y%self.stepY == 0 and z%self.stepZ == 0:
+                        world[:, :, y, z] = 1.0
+                    if z%self.stepZ == 0 and x%self.stepX == 0:
+                        world[:, x, :, z] = 1.0
 
         return np.clip(world, 0, 1)

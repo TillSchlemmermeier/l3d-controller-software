@@ -125,7 +125,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.stringArray_ch1.append(QtWidgets.QLabel("Brightness : 127"))
         self.stringArray_ch1.append(QtWidgets.QLabel("Fade : 0"))
         self.stringArray_ch1.append(QtWidgets.QLabel("Shutter : 0"))
-        self.stringArray_ch1.append(QtWidgets.QLabel("Generator : "))
+        self.stringArray_ch1.append(QtWidgets.QLabel("Generator: "))
         self.stringArray_ch1.append(QtWidgets.QLabel("Parameter 1 : 89"))
         self.stringArray_ch1.append(QtWidgets.QLabel("Parameter 2 : 54"))
         self.stringArray_ch1.append(QtWidgets.QLabel("Parameter 3 : 110"))
@@ -148,7 +148,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
 
         for item in self.stringArray_ch1:
-            if "Generator" in item.text() or "Effekt" in item.text():
+            if "Generator" in item.text() or "Effect" in item.text():
                 item.setStyleSheet("color: black; font: 18px; font-weight: bold");
             else:
                 item.setStyleSheet("color: black; font: 14px;");
@@ -182,7 +182,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
 
         for item in self.stringArray_ch2:
-            if "Generator" in item.text() or "Effekt" in item.text():
+            if "Generator" in item.text() or "Effect" in item.text():
                 item.setStyleSheet("color: black; font: 18px; font-weight: bold");
             else:
                 item.setStyleSheet("color: black; font: 14px;");
@@ -215,7 +215,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.stringArray_ch3.append(QtWidgets.QLabel("Parameter 4 : 110"))
 
         for item in self.stringArray_ch3:
-            if "Generator" in item.text() or "Effekt" in item.text():
+            if "Generator" in item.text() or "Effect" in item.text():
                 item.setStyleSheet("color: black; font: 18px; font-weight: bold");
             else:
                 item.setStyleSheet("color: black; font: 14px;");
@@ -248,7 +248,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.stringArray_ch4.append(QtWidgets.QLabel("Parameter 4 : 110"))
 
         for item in self.stringArray_ch4:
-            if "Generator" in item.text() or "Effekt" in item.text():
+            if "Generator" in item.text() or "Effect" in item.text():
                 item.setStyleSheet("color: black; font: 18px; font-weight: bold");
             else:
                 item.setStyleSheet("color: black; font: 14px;");
@@ -414,22 +414,22 @@ class MainWindow(QtWidgets.QMainWindow):
         self.stringArray_ch1[1].setText("Brightness : "+str(round(self.global_parameter[41],2)))
         self.stringArray_ch1[2].setText("Fade : "+str(round(self.global_parameter[42],2)))
         self.stringArray_ch1[3].setText("Shutter : "+str(round(self.global_parameter[43],2)))
-        self.stringArray_ch1[4].setText("Generator : "+str(self.global_label[0],'utf-8'))
+        self.stringArray_ch1[4].setText("G: "+str(self.global_label[0],'utf-8'))
         self.stringArray_ch1[5].setText(str(self.global_label[1],'utf-8')+" : "+str(round(self.global_parameter[45],2)))
         self.stringArray_ch1[6].setText(str(self.global_label[2],'utf-8')+" : "+str(round(self.global_parameter[46],2)))
         self.stringArray_ch1[7].setText(str(self.global_label[3],'utf-8')+" : "+str(round(self.global_parameter[47],2)))
         self.stringArray_ch1[8].setText(str(self.global_label[4],'utf-8')+" : "+str(round(self.global_parameter[48],2)))
-        self.stringArray_ch1[9].setText("Effekt : "+str(self.global_label[5],'utf-8'))
+        self.stringArray_ch1[9].setText("E: "+str(self.global_label[5],'utf-8'))
         self.stringArray_ch1[10].setText(str(self.global_label[6],'utf-8')+" : "+str(round(self.global_parameter[50],2)))
         self.stringArray_ch1[11].setText(str(self.global_label[7],'utf-8')+" : "+str(round(self.global_parameter[51],2)))
         self.stringArray_ch1[12].setText(str(self.global_label[8],'utf-8')+" : "+str(round(self.global_parameter[52],2)))
         self.stringArray_ch1[13].setText(str(self.global_label[9],'utf-8')+" : "+str(round(self.global_parameter[53],2)))
-        self.stringArray_ch1[14].setText("Effekt : "+str(self.global_label[10],'utf-8'))
+        self.stringArray_ch1[14].setText("E: "+str(self.global_label[10],'utf-8'))
         self.stringArray_ch1[15].setText(str(self.global_label[11],'utf-8')+" : "+str(round(self.global_parameter[55],2)))
         self.stringArray_ch1[16].setText(str(self.global_label[12],'utf-8')+" : "+str(round(self.global_parameter[56],2)))
         self.stringArray_ch1[17].setText(str(self.global_label[13],'utf-8')+" : "+str(round(self.global_parameter[57],2)))
         self.stringArray_ch1[18].setText(str(self.global_label[14],'utf-8')+" : "+str(round(self.global_parameter[58],2)))
-        self.stringArray_ch1[19].setText("Effekt : "+str(self.global_label[15],'utf-8'))
+        self.stringArray_ch1[19].setText("E: "+str(self.global_label[15],'utf-8'))
         self.stringArray_ch1[20].setText(str(self.global_label[16],'utf-8')+" : "+str(round(self.global_parameter[60],2)))
         self.stringArray_ch1[21].setText(str(self.global_label[17],'utf-8')+" : "+str(round(self.global_parameter[61],2)))
         self.stringArray_ch1[22].setText(str(self.global_label[18],'utf-8')+" : "+str(round(self.global_parameter[62],2)))
@@ -439,22 +439,22 @@ class MainWindow(QtWidgets.QMainWindow):
         self.stringArray_ch2[1].setText("Brightness : "+str(round(self.global_parameter[71],2)))
         self.stringArray_ch2[2].setText("Fade : "+str(round(self.global_parameter[72],2)))
         self.stringArray_ch2[3].setText("Shutter : "+str(round(self.global_parameter[73],2)))
-        self.stringArray_ch2[4].setText("Generator : "+str(self.global_label[20],'utf-8'))
+        self.stringArray_ch2[4].setText("G: "+str(self.global_label[20],'utf-8'))
         self.stringArray_ch2[5].setText(str(self.global_label[21],'utf-8')+" : "+str(round(self.global_parameter[75],2)))
         self.stringArray_ch2[6].setText(str(self.global_label[22],'utf-8')+" : "+str(round(self.global_parameter[76],2)))
         self.stringArray_ch2[7].setText(str(self.global_label[23],'utf-8')+" : "+str(round(self.global_parameter[77],2)))
         self.stringArray_ch2[8].setText(str(self.global_label[24],'utf-8')+" : "+str(round(self.global_parameter[78],2)))
-        self.stringArray_ch2[9].setText("Effekt : "+str(self.global_label[25],'utf-8'))
+        self.stringArray_ch2[9].setText("E: "+str(self.global_label[25],'utf-8'))
         self.stringArray_ch2[10].setText(str(self.global_label[26],'utf-8')+" : "+str(round(self.global_parameter[80],2)))
         self.stringArray_ch2[11].setText(str(self.global_label[27],'utf-8')+" : "+str(round(self.global_parameter[81],2)))
         self.stringArray_ch2[12].setText(str(self.global_label[28],'utf-8')+" : "+str(round(self.global_parameter[82],2)))
         self.stringArray_ch2[13].setText(str(self.global_label[29],'utf-8')+" : "+str(round(self.global_parameter[83],2)))
-        self.stringArray_ch2[14].setText("Effekt : "+str(self.global_label[30],'utf-8'))
+        self.stringArray_ch2[14].setText("E: "+str(self.global_label[30],'utf-8'))
         self.stringArray_ch2[15].setText(str(self.global_label[31],'utf-8')+" : "+str(round(self.global_parameter[85],2)))
         self.stringArray_ch2[16].setText(str(self.global_label[32],'utf-8')+" : "+str(round(self.global_parameter[86],2)))
         self.stringArray_ch2[17].setText(str(self.global_label[33],'utf-8')+" : "+str(round(self.global_parameter[87],2)))
         self.stringArray_ch2[18].setText(str(self.global_label[34],'utf-8')+" : "+str(round(self.global_parameter[88],2)))
-        self.stringArray_ch2[19].setText("Effekt : "+str(self.global_label[35],'utf-8'))
+        self.stringArray_ch2[19].setText("E: "+str(self.global_label[35],'utf-8'))
         self.stringArray_ch2[20].setText(str(self.global_label[36],'utf-8')+" : "+str(round(self.global_parameter[90],2)))
         self.stringArray_ch2[21].setText(str(self.global_label[37],'utf-8')+" : "+str(round(self.global_parameter[91],2)))
         self.stringArray_ch2[22].setText(str(self.global_label[38],'utf-8')+" : "+str(round(self.global_parameter[92],2)))
@@ -464,22 +464,22 @@ class MainWindow(QtWidgets.QMainWindow):
         self.stringArray_ch3[1].setText("Brightness : "+str(round(self.global_parameter[101],2)))
         self.stringArray_ch3[2].setText("Fade : "+str(round(self.global_parameter[102],2)))
         self.stringArray_ch3[3].setText("Shutter : "+str(round(self.global_parameter[103],2)))
-        self.stringArray_ch3[4].setText("Generator : "+str(self.global_label[40],'utf-8'))
+        self.stringArray_ch3[4].setText("G: "+str(self.global_label[40],'utf-8'))
         self.stringArray_ch3[5].setText(str(self.global_label[41],'utf-8')+" : "+str(round(self.global_parameter[105],2)))
         self.stringArray_ch3[6].setText(str(self.global_label[42],'utf-8')+" : "+str(round(self.global_parameter[106],2)))
         self.stringArray_ch3[7].setText(str(self.global_label[43],'utf-8')+" : "+str(round(self.global_parameter[107],2)))
         self.stringArray_ch3[8].setText(str(self.global_label[44],'utf-8')+" : "+str(round(self.global_parameter[108],2)))
-        self.stringArray_ch3[9].setText("Effekt : "+str(self.global_label[45],'utf-8'))
+        self.stringArray_ch3[9].setText("E: "+str(self.global_label[45],'utf-8'))
         self.stringArray_ch3[10].setText(str(self.global_label[46],'utf-8')+" : "+str(round(self.global_parameter[110],2)))
         self.stringArray_ch3[11].setText(str(self.global_label[47],'utf-8')+" : "+str(round(self.global_parameter[111],2)))
         self.stringArray_ch3[12].setText(str(self.global_label[48],'utf-8')+" : "+str(round(self.global_parameter[112],2)))
         self.stringArray_ch3[13].setText(str(self.global_label[49],'utf-8')+" : "+str(round(self.global_parameter[113],2)))
-        self.stringArray_ch3[14].setText("Effekt : "+str(self.global_label[50],'utf-8'))
+        self.stringArray_ch3[14].setText("E: "+str(self.global_label[50],'utf-8'))
         self.stringArray_ch3[15].setText(str(self.global_label[51],'utf-8')+" : "+str(round(self.global_parameter[115],2)))
         self.stringArray_ch3[16].setText(str(self.global_label[52],'utf-8')+" : "+str(round(self.global_parameter[116],2)))
         self.stringArray_ch3[17].setText(str(self.global_label[53],'utf-8')+" : "+str(round(self.global_parameter[117],2)))
         self.stringArray_ch3[18].setText(str(self.global_label[54],'utf-8')+" : "+str(round(self.global_parameter[118],2)))
-        self.stringArray_ch3[19].setText("Effekt : "+str(self.global_label[55],'utf-8'))
+        self.stringArray_ch3[19].setText("E: "+str(self.global_label[55],'utf-8'))
         self.stringArray_ch3[20].setText(str(self.global_label[56],'utf-8')+" : "+str(round(self.global_parameter[120],2)))
         self.stringArray_ch3[21].setText(str(self.global_label[57],'utf-8')+" : "+str(round(self.global_parameter[121],2)))
         self.stringArray_ch3[22].setText(str(self.global_label[58],'utf-8')+" : "+str(round(self.global_parameter[122],2)))
@@ -489,22 +489,22 @@ class MainWindow(QtWidgets.QMainWindow):
         self.stringArray_ch4[1].setText("Brightness : "+str(round(self.global_parameter[131],2)))
         self.stringArray_ch4[2].setText("Fade : "+str(round(self.global_parameter[132],2)))
         self.stringArray_ch4[3].setText("Shutter : "+str(round(self.global_parameter[133],2)))
-        self.stringArray_ch4[4].setText("Generator : "+str(self.global_label[60],'utf-8'))
+        self.stringArray_ch4[4].setText("G: "+str(self.global_label[60],'utf-8'))
         self.stringArray_ch4[5].setText(str(self.global_label[61],'utf-8')+" : "+str(round(self.global_parameter[135],2)))
         self.stringArray_ch4[6].setText(str(self.global_label[62],'utf-8')+" : "+str(round(self.global_parameter[136],2)))
         self.stringArray_ch4[7].setText(str(self.global_label[63],'utf-8')+" : "+str(round(self.global_parameter[137],2)))
         self.stringArray_ch4[8].setText(str(self.global_label[64],'utf-8')+" : "+str(round(self.global_parameter[138],2)))
-        self.stringArray_ch4[9].setText("Effekt : "+str(self.global_label[65],'utf-8'))
+        self.stringArray_ch4[9].setText("E: "+str(self.global_label[65],'utf-8'))
         self.stringArray_ch4[10].setText(str(self.global_label[66],'utf-8')+" : "+str(round(self.global_parameter[140],2)))
         self.stringArray_ch4[11].setText(str(self.global_label[67],'utf-8')+" : "+str(round(self.global_parameter[141],2)))
         self.stringArray_ch4[12].setText(str(self.global_label[68],'utf-8')+" : "+str(round(self.global_parameter[142],2)))
         self.stringArray_ch4[13].setText(str(self.global_label[69],'utf-8')+" : "+str(round(self.global_parameter[143],2)))
-        self.stringArray_ch4[14].setText("Effekt : "+str(self.global_label[70],'utf-8'))
+        self.stringArray_ch4[14].setText("E: "+str(self.global_label[70],'utf-8'))
         self.stringArray_ch4[15].setText(str(self.global_label[71],'utf-8')+" : "+str(round(self.global_parameter[145],2)))
         self.stringArray_ch4[16].setText(str(self.global_label[72],'utf-8')+" : "+str(round(self.global_parameter[146],2)))
         self.stringArray_ch4[17].setText(str(self.global_label[73],'utf-8')+" : "+str(round(self.global_parameter[147],2)))
         self.stringArray_ch4[18].setText(str(self.global_label[74],'utf-8')+" : "+str(round(self.global_parameter[148],2)))
-        self.stringArray_ch4[19].setText("Effekt : "+str(self.global_label[75],'utf-8'))
+        self.stringArray_ch4[19].setText("E: "+str(self.global_label[75],'utf-8'))
         self.stringArray_ch4[20].setText(str(self.global_label[76],'utf-8')+" : "+str(round(self.global_parameter[150],2)))
         self.stringArray_ch4[21].setText(str(self.global_label[77],'utf-8')+" : "+str(round(self.global_parameter[151],2)))
         self.stringArray_ch4[22].setText(str(self.global_label[78],'utf-8')+" : "+str(round(self.global_parameter[152],2)))
@@ -536,28 +536,28 @@ class MainWindow(QtWidgets.QMainWindow):
 
         if index_changed in range(40,64):
             for item in self.stringArray_ch1:
-                if "Generator" in item.text() or "Effekt" in item.text():
+                if "G:" in item.text() or "E:" in item.text():
                     item.setStyleSheet("color: black; font: 18px;font-weight: bold");
                 else:
                     item.setStyleSheet("color: black; font: 18px;");
 
         if index_changed in range(70,94):
             for item in self.stringArray_ch2:
-                if "Generator" in item.text() or "Effekt" in item.text():
+                if "G:" in item.text() or "E:" in item.text():
                     item.setStyleSheet("color: black; font: 18px;font-weight: bold");
                 else:
                     item.setStyleSheet("color: black; font: 18px;");
 
         if index_changed in range(100,124):
             for item in self.stringArray_ch3:
-                if "Generator" in item.text() or "Effekt" in item.text():
+                if "G:" in item.text() or "E:" in item.text():
                     item.setStyleSheet("color: black; font: 18px;font-weight: bold");
                 else:
                     item.setStyleSheet("color: black; font: 18px;");
 
         if index_changed in range(130,154):
             for item in self.stringArray_ch4:
-                if "Generator" in item.text() or "Effekt" in item.text():
+                if "G:" in item.text() or "E:" in item.text():
                     item.setStyleSheet("color: black; font: 18px;font-weight: bold");
                 else:
                     item.setStyleSheet("color: black; font: 18px;");
