@@ -8,8 +8,8 @@ import numpy as np
 class class_launchpad_mk3:
     def __init__(self, array):
         # open midi input
-        self.midiin, self.portname_in = open_midiinput(port= '24:1')
-        self.midiout, self.portname_out = open_midioutput(port = '24:1')
+        self.midiin, self.portname_in = open_midiinput(port= ':1')
+        self.midiout, self.portname_out = open_midioutput(port = ':1')
         self.global_parameter = array
         # turn leds off
         for i, c in zip(range(11,88), range(0,88-11)):
@@ -111,6 +111,20 @@ class class_launchpad_mk3:
                     except:
                         print('error saving preset!')
 
+                elif key[0] == 7:
+                    print('saving temporary preset for channel', key[1])
+                    try:
+                        self.save_preset(key[1], filename = 'temporary_preset.dat')
+                    except:
+                        print('error saving preset!')
+
+                elif key[0] == 6:
+                    print('loading temporary preset for channel', key[1])
+                    try:
+                        self.load_preset(-1, key[1], 'temporary_preset.dat')
+                    except:
+                        print('error loading temporary preset!')
+
             else:
                 # if not idle, we can go back to idle
                 # this is to close the selection matrix
@@ -153,7 +167,7 @@ class class_launchpad_mk3:
         #print('state after', self.state)
 
 
-    def save_preset(self, channel):
+    def save_preset(self, channel, filename = 'preset.dat'):
         '''appends the current values of a channel to a file
         channel goes from 1 to 4
         '''
@@ -166,17 +180,18 @@ class class_launchpad_mk3:
             list.append(str(round(self.global_parameter[i], 2)))
 
         # save preset
-        with open('presets.dat', 'a+') as file:
+        with open(filename, 'a+') as file:
             file.write(' '.join(list)+'\n')
 
 
-    def load_preset(self, preset_id, channel):
+    def load_preset(self, preset_id, channel, filename = 'presets.dat'):
         '''loads preset from file and writes to global array'''
 
-        # print(' preset id : ', preset_id)
-        # print(' channel   : ', channel)
+        print(' preset id : ', preset_id)
+        print(' channel   : ', channel)
+        print(' file name : ', filename)
 
-        with open('presets.dat', 'r') as file:
+        with open(filename, 'r') as file:
             presets = file.readlines()
 
         try:
@@ -226,7 +241,6 @@ class class_launchpad_mk3:
         self.midiout.send_message([176, 93, self.global_parameter[100]*127])
         self.midiout.send_message([176, 94, self.global_parameter[130]*127])
 
-
         # if idle state, we can open the selection menu
         if self.state == 0:
             for i in range(4):
@@ -235,6 +249,10 @@ class class_launchpad_mk3:
                 self.midiout.send_message([144, 61+i, 13])
                 self.midiout.send_message([144, 51+i, 21])
                 self.midiout.send_message([144, 41+i, 37])
+
+                # "copy" buttons
+                self.midiout.send_message([144, 31+i, 45])
+                self.midiout.send_message([144, 21+i, 54])
 
                 # "save preset" button
                 self.midiout.send_message([144, 11+i, 2])
@@ -246,7 +264,7 @@ class class_launchpad_mk3:
             if self.state[0] == 1:
                 color = 5
             elif self.state[0] == 2:
-                color = 61
+                color = 9
             elif self.state[0] == 3:
                 color = 13
             elif self.state[0] == 4:
@@ -257,8 +275,20 @@ class class_launchpad_mk3:
                 color = 0
 
             # send color
-            for i in range(11,89):
-                self.midiout.send_message([144, i, color])
+            #for i in range(11,89):
+            #    self.midiout.send_message([144, i, color])
+            #    if i%10 == 3 or i%10 == 6
+
+            i = 11
+            for x in range(8):
+                for y in range(8):
+                    if x in [2,5] or y in [2,5]:
+                        self.midiout.send_message([144, i, color+2])
+                    else:
+                        self.midiout.send_message([144, i, color])
+
+                    i += 1
+                i += 2
 
             self.midiout.send_message([144, 81, 1])
 

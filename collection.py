@@ -48,6 +48,10 @@ from generators.g_multicube import *
 from generators.a_random_cubes import *
 from generators.a_squares_cut import *
 from generators.a_testbot import *
+from generators.g_soundsphere import *
+from generators.g_swell import *
+# from generators.g_grid import *
+from generators.g_pong import *
 
 from effects.e_blank import *
 from effects.e_rainbow import *
@@ -128,8 +132,8 @@ generators.append(g_corner_grow)
 generators.append(g_columns)
 generators.append(g_circles)
 generators.append(g_grow)
-generators.append(g_blank)
-generators.append(g_blank)
+generators.append(g_soundsphere)
+generators.append(g_swell)
 
 #row 6
 generators.append(a_lines)
@@ -137,7 +141,7 @@ generators.append(a_multi_cube_edges)
 generators.append(a_pulsating)
 generators.append(a_orbbot)
 generators.append(g_torus)
-generators.append(g_blank)
+generators.append(g_pong)
 generators.append(g_blank)
 generators.append(g_blank)
 

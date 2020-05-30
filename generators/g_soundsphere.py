@@ -35,20 +35,22 @@ class g_soundsphere():
         self.amount = 1.0
         self.channel = 10
         self.maxsize = 5
+        self.smooth = 0.25
 
+        self.last_value = 0
 
     def return_values(self):
         # strings for GUI
-        return [b'SoundSphere', b'maxsize', b'channel', b'', b'normalize switch']
+        return [b'SoundSphere', b'maxsize', b'channel', b'smooth', b'normalize switch']
 
 
-    def __call__(self, world, args):
+    def __call__(self, args):
         # get sound data
         total_volume = self.update_line()
 
         # process parameters
         self.maxsize = args[0]*10
-#        self.threshold = args[1]
+        self.smooth = args[2] * 0.5
         self.channel = int(args[1]*len(total_volume)-1)
 
         # detect change at normalize parameter or channel
@@ -81,7 +83,12 @@ class g_soundsphere():
         else:
             current_volume = total_volume[self.channel]
 
+        # mix with old value
+        current_volume = (1-self.smooth) * current_volume + self.smooth * self.last_value
+
         size = self.maxsize*current_volume
+
+        world = np.zeros([3, 10, 10, 10])
 
         world[0, :, :, :] = gen_hsphere(size, 4.5, 4.5, 4.5)
         world[1:, :, :, :] = world[0, :, :, :]
