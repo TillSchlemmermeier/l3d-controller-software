@@ -11,12 +11,11 @@ class e_rotating_rainbow():
         self.speed = 0
         self.rotation = 0.1
         self.gradient_length = 1.0
-        self.black_length = 1.0
         self.step = 1
 
     #strings for GUI
     def return_values(self):
-        return [b'rotating_rainbow', b'Rainbow Speed', b'Rotation Speed', b'Gradient length', b'Black length']
+        return [b'rotating_rainbow', b'Grad_Speed', b'Rot_Speed', b'Grad_length', b'']
 
 
     def __call__(self, world, args):
@@ -24,7 +23,6 @@ class e_rotating_rainbow():
         self.speed = args[0]*10
         self.rotation = args[1]*15+0.01
         self.gradient_length = args[2]*12.7
-        self.black_length = int(args[3]*10)
 
         # create gradient
         self.rainbowworld = np.zeros([3, 10, 10, 10])
@@ -50,8 +48,8 @@ class e_rotating_rainbow():
 
         world *= newworld
         self.step += 1
-        if self.step >= 127 + self.black_length:
-            self.step = 0
+        #if int(round((i*self.gradient_length + self.step * self.speed))) > 127:
+        #    self.step = 0
 
         return np.clip(world, 0, 1)
 
@@ -59,9 +57,9 @@ class e_rotating_rainbow():
     def color_translate(self, value):
         #value *= 127
         #translates values from 0 to 127 to rgb values
-        if (value>127+self.black_length):
-            value=127+self.black_length
-
+        #if value>127:
+        #    value-=127
+        value = value % 127
         r_out = 0.0
         g_out = 0.0
         b_out = 0.0
@@ -90,9 +88,5 @@ class e_rotating_rainbow():
             r_out=1
             g_out=0
             b_out=1-((value-105.0)/21.0)
-        elif(value>127):
-            r_out=1-((value-127)/self.black_length)
-            g_out=0
-            b_out=0
 
         return [r_out, g_out, b_out]

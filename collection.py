@@ -11,18 +11,15 @@ from generators.g_rising_square import *
 from generators.g_planes_falling import *
 from generators.g_growingface import *
 from generators.g_snake import *
-from generators.g_sound_sphere import *
 from generators.g_soundcube import *
 from generators.g_soundrandom import *
-from generators.g_sphere import *
+#from generators.g_sphere import *
 from generators.g_shooting_star import *
 from generators.g_rotate_plane import *
 from generators.g_randomlines import *
 from generators.g_randomcross import *
 from generators.g_rain import *
 from generators.g_orbiter import *
-from generators.g_orbiter2 import *
-from generators.g_orbiter3 import *
 from generators.g_pyramid import *
 from generators.g_pyramid_upsidedown import *
 from generators.g_inandout import *
@@ -39,6 +36,7 @@ from generators.g_columns import *
 from generators.g_circles import *
 from generators.g_grow import *
 from generators.g_torus import *
+from generators.g_sound_lines import *
 #from generators.g_centralglow import *
 from generators.a_lines import *
 from generators.a_multi_cube_edges import *
@@ -101,11 +99,11 @@ generators.append(g_squares)
 #row 2
 generators.append(g_trees)
 generators.append(g_rising_square)
-generators.append(g_planes_falling)
+generators.append(g_blank)
 generators.append(g_growingface)
 generators.append(g_snake)
-generators.append(g_sound_sphere)
-generators.append(g_sphere)
+generators.append(g_blank)
+generators.append(g_sound_lines)
 generators.append(g_shooting_star)
 
 #row 3
@@ -114,8 +112,8 @@ generators.append(g_randomlines)
 generators.append(g_randomcross)
 generators.append(g_rain)
 generators.append(g_orbiter)
-generators.append(g_orbiter2)
-generators.append(g_orbiter3)
+generators.append(g_blank)
+generators.append(g_blank)
 generators.append(g_pyramid)
 
 #row 4
@@ -146,7 +144,7 @@ generators.append(a_orbbot)
 generators.append(g_torus)
 generators.append(g_pong)
 generators.append(g_edgelines)
-generators.append(g_blank)
+generators.append(g_soundcube)
 
 # row 7
 generators.append(g_blank)

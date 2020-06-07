@@ -19,9 +19,9 @@ class g_rotate_plane():
 
     #def generate(self, step, dumpworld):
     def __call__(self, args):
-        self.xspeed = 10*args[0]+0.01
-        self.yspeed = 10*args[1]
-        self.zspeed = 10*args[2]
+        self.xspeed = 20*args[0]
+        self.yspeed = 20*args[1]
+        self.zspeed = 20*args[2]
 
         # create world
         world = np.zeros([3, 10, 10, 10])

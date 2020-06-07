@@ -43,7 +43,7 @@ class a_multi_cube_edges():
         return [b'a_multi_cube_edges', b'wait_frames', b'speed', b'', b'']
 
     def __call__(self, args):
-        self.wait_frames = int(args[0] * 100)+1
+        self.wait_frames = int(args[0] * 100)+5
         self.speed = args[1]
 
         # create world

@@ -69,20 +69,20 @@ for i in [2, 7, 12, 17]:
 
     labels[i, 1, 0] = 'trees'
     labels[i, 1, 1] = 'rising\nsquare'
-    labels[i, 1, 2] = 'planes\n(falling)'
+    labels[i, 1, 2] = 'blank'
     labels[i, 1, 3] = 'growing\nface'
     labels[i, 1, 4] = 'snake'
-    labels[i, 1, 5] = 'sound\nsphere'
-    labels[i, 1, 6] = 'sphere'
+    labels[i, 1, 5] = 'blank'
+    labels[i, 1, 6] = 'sound_lines'
     labels[i, 1, 7] = 'shooting\nstar'
 
     labels[i, 2, 0] = 'rotating\nplane'
     labels[i, 2, 1] = 'random\nlines'
     labels[i, 2, 2] = 'random\ncross'
     labels[i, 2, 3] = 'rain'
-    labels[i, 2, 4] = 'orbiter (x)'
-    labels[i, 2, 5] = 'orbiter (y)'
-    labels[i, 2, 6] = 'orbiter (z)'
+    labels[i, 2, 4] = 'orbiter'
+    labels[i, 2, 5] = 'blank'
+    labels[i, 2, 6] = 'blank'
     labels[i, 2, 7] = 'pyramid'
 
     labels[i, 3, 0] = 'pyramid\n(upside)'
@@ -110,7 +110,7 @@ for i in [2, 7, 12, 17]:
     labels[i, 5, 4] = 'torus'
     labels[i, 5, 5] = 'pong'
     labels[i, 5, 6] = 'edgelines'
-    labels[i, 5, 7] = 'empty'
+    labels[i, 5, 7] = 'soundcube'
 
 # add effect
 for i in [3,4,5, 8,9,10, 13,14,15, 18,19,20]:

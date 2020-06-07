@@ -148,7 +148,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
 
         for item in self.stringArray_ch1:
-            if "Generator" in item.text() or "Effect" in item.text():
+            if "G:" in item.text() or "E:" in item.text():
                 item.setStyleSheet("color: black; font: 18px; font-weight: bold");
             else:
                 item.setStyleSheet("color: black; font: 14px;");
@@ -182,7 +182,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
 
         for item in self.stringArray_ch2:
-            if "Generator" in item.text() or "Effect" in item.text():
+            if "G:" in item.text() or "E:" in item.text():
                 item.setStyleSheet("color: black; font: 18px; font-weight: bold");
             else:
                 item.setStyleSheet("color: black; font: 14px;");
@@ -215,7 +215,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.stringArray_ch3.append(QtWidgets.QLabel("Parameter 4 : 110"))
 
         for item in self.stringArray_ch3:
-            if "Generator" in item.text() or "Effect" in item.text():
+            if "G:" in item.text() or "E:" in item.text():
                 item.setStyleSheet("color: black; font: 18px; font-weight: bold");
             else:
                 item.setStyleSheet("color: black; font: 14px;");
@@ -248,7 +248,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.stringArray_ch4.append(QtWidgets.QLabel("Parameter 4 : 110"))
 
         for item in self.stringArray_ch4:
-            if "Generator" in item.text() or "Effect" in item.text():
+            if "G:" in item.text() or "E:" in item.text():
                 item.setStyleSheet("color: black; font: 18px; font-weight: bold");
             else:
                 item.setStyleSheet("color: black; font: 14px;");
@@ -275,7 +275,7 @@ class MainWindow(QtWidgets.QMainWindow):
         timer.timeout.connect(self.update_fighter_values)
         #timer.timeout.connect(self.update_global_values)
         timer.timeout.connect(self.update_launchpad_values)
-        timer.setInterval(10)
+        timer.setInterval(50)
         timer.start()
 
         # start threads
@@ -489,22 +489,22 @@ class MainWindow(QtWidgets.QMainWindow):
         for active, channel in zip(active_menu, [self.stringArray_ch1, self.stringArray_ch2, self.stringArray_ch3, self.stringArray_ch4]):
             # reset
             for i ,j, k, l in zip(channel[4:9], channel[9:14], channel[14:19], channel[19:24]):
-                i.setStyleSheet("color: black; font: 20px; background-color: "+offcolor[0])
-                j.setStyleSheet("color: black; font: 20px; background-color: "+offcolor[1])
-                k.setStyleSheet("color: black; font: 20px; background-color: "+offcolor[2])
-                l.setStyleSheet("color: black; font: 20px; background-color: "+offcolor[3])
+                i.setStyleSheet("color: black; font: 18px; background-color: "+offcolor[0])
+                j.setStyleSheet("color: black; font: 18px; background-color: "+offcolor[1])
+                k.setStyleSheet("color: black; font: 18px; background-color: "+offcolor[2])
+                l.setStyleSheet("color: black; font: 18px; background-color: "+offcolor[3])
 
             if active == 0:
                 for i in channel[4:9]:
-                    i.setStyleSheet("color: black; font: 20px; background-color: "+oncolor[0])
+                    i.setStyleSheet("font-weight: bold; color: black; font: 20px; background-color: "+oncolor[0])
             elif active == 1:
                 for i in channel[9:14]:
-                    i.setStyleSheet("color: black; font: 20px; background-color: "+oncolor[1])
+                    i.setStyleSheet("font-weight: bold; color: black; font: 20px; background-color: "+oncolor[1])
             elif active == 2:
                 for i in channel[14:19]:
-                    i.setStyleSheet("color: black; font: 20px; background-color: "+oncolor[2])
+                    i.setStyleSheet("font-weight: bold; color: black; font: 20px; background-color: "+oncolor[2])
             elif active == 3:
                 for i in channel[19:24]:
-                    i.setStyleSheet("color: black; font: 20px; background-color: "+oncolor[3])
+                    i.setStyleSheet("font-weight: bold; color: black; font: 20px; background-color: "+oncolor[3])
 
         self.copied_params = self.global_parameter[:]

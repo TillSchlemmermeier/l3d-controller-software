@@ -16,17 +16,16 @@ class g_sound_lines():
         # get initial random lines
         self.lines = []
         for i in range(10):
-            direction = randint(0, 2)
-            if direction == 0:
-                self.lines.append([slice(0, 10, 1), randint(0, 9), randint(0, 9)])
-            elif direction == 1:
-                self.lines.append([:, randint(0, 9), slice(0, 10, 1), randint(0, 9)])
-            elif direction == 2:
-                self.lines.append([:, randint(0, 9), randint(0, 9), slice(0, 10, 1)])
+            self.lines.append([slice(0, 10, 1), randint(0, 9), randint(0, 9)])
 
-        self.amount = 1.0
         self.counter = 1
         self.reset = 20
+
+        # parameters for normalization
+        self.buffer = []
+        self.normalized = False
+        self.norm = [0, 1]
+        self.norm_trigger_value = 0
 
         # sound2light stuff
         self.sample_rate = 44100
@@ -44,42 +43,64 @@ class g_sound_lines():
             output = False,
             frames_per_buffer = self.buffer_size
             )
-        self.threshold = 0.5
-
 
     def return_values(self):
-        return [b'sound_lines', b'reset', b'threshold', b'', b'']
+        return [b'sound_lines', b'reset', b'channel', b'normalize', b'']
 
 
     def __call__(self, args):
-        self.reset = args[0]*20+1
-        self.threshold = args[1]
-        self.oscillate = args[2]
 
+        total_volume = self.update_line()**2
+
+        self.reset = args[0]*20+1
+        self.channel = int(args[1]*len(total_volume)-1)
+
+        # detect change at normalize parameter or channel
+        if self.norm_trigger_value != args[2]:
+            print('clearing buffer')
+            # clear buffer and reset normalized switch
+            self.buffer = []
+            self.normalized = False
+            self.norm_trigger_value = args[2]
+
+        if not self.normalized :
+            # fill buffer
+            self.buffer.append(total_volume[self.channel])
+            # self.buffer.append(total_volume[self.channel])
+
+            # save min and max
+            self.norm[0] = min(self.buffer)
+            self.norm[1] = max(self.buffer)
+
+            if len(self.buffer) > 50:
+                self.normalized = True
+                print('normalized:', self.norm)
+
+        # apply normalization
+        if self.norm[1] > self.norm[0]:
+            # the ()**4 is important! otherwise, this is just bright or dark
+            current_volume = ((total_volume[self.channel]-self.norm[0]) /(self.norm[1]-self.norm[0]))**4
+            #print(current_volume, total_volume[self.channel], self.norm[0], self.norm[1])
+        else:
+            current_volume = total_volume[self.channel]
+
+        # now we can world with the sound
         world = np.zeros([3, 10, 10, 10])
 
-        brightness = self.update_line()**2*self.amount
-
         # get lines
-        for line, threshold in zip(self.lines, range(len(self.lines))/len(self.lines)):
-            if size > threshold:
-                world[0, line[0], line[1], line[2]] = brightness
+        for line, threshold in zip(self.lines, range(len(self.lines))):
+            if current_volume > threshold/len(self.lines):
+                world[0, line[0], line[1], line[2]] = current_volume
 
         # copy to other colors
         world[1:, :, :, :] = world[0, :, :, :]
         world[2:, :, :, :] = world[0, :, :, :]
 
         if self.counter > self.reset:
-        self.lines = []
+            self.lines = []
             # reset lines
             for i in range(10):
-                direction = randint(0, 2)
-                if direction == 0:
-                    self.lines.append([slice(0, 10, 1), randint(0, 9), randint(0, 9)])
-                elif direction == 1:
-                    self.lines.append([:, randint(0, 9), slice(0, 10, 1), randint(0, 9)])
-                elif direction == 2:
-                    self.lines.append([:, randint(0, 9), randint(0, 9), slice(0, 10, 1)])
+                self.lines.append([slice(0, 10, 1), randint(0, 9), randint(0, 9)])
 
             self.counter = 0
 
@@ -103,8 +124,8 @@ class g_sound_lines():
         yy = yy[:int(len(yy)/2)] # Discard half of the samples, as they are mirrored
 
         # now do some threshold detection
-        for i in range(len(yy)):
-            yy[i] = self.control_threshold(yy[i], self.threshold)
+        # for i in range(len(yy)):
+        #    yy[i] = self.control_threshold(yy[i], self.threshold)
 
         return np.round(np.clip(yy,0,1),2)
 

@@ -24,11 +24,11 @@ class g_planes():
 
     #Strings for GUI
     def return_values(self):
-        return [b'planes', b'speed', b'direction', b'ramp/triangle', b'']
+        return [b'planes', b'speed', b'direction', b'saw/tri', b'']
 
     def __call__(self, args):
         # parsing input
-        self.speed = args[0]*10
+        self.speed = args[0]*10+0.5
         self.dir = int(round(args[1]*3))
         if args[2] > 0.5:
             type = 0.5

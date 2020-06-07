@@ -23,7 +23,7 @@ class e_mean():
         for i in range(3):
             world[i, :, :, :] = (1-self.fade)*world[i, :, :, :] + self.fade*self.fadeworld[i, :, :, :]
             world[i, :, :, :] = (1-self.amount)*world[i, :, :, :] + self.amount*fftconvolve(world[i, :, :, :], self.mean, mode='same')
-            self.fadeworld[i, :, :, :] = np.clip(self.world[i, :, :, :], 0, 1)
+            self.fadeworld[i, :, :, :] = np.clip(world[i, :, :, :], 0, 1)
 
 
         return np.clip(world, 0, 1)

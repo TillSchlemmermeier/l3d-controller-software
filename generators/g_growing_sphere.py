@@ -23,27 +23,23 @@ class g_growing_sphere():
         self.oscillate = 0
         self.step = 0
 
-
-    #Strings for GUI
     def return_values(self):
-        return [b'growing_sphere', b'maxsize', b'growspeed', b'oscillate (sin/grow/shrink)', b'']
+        return [b'growing_sphere', b'maxsize', b'speed', b'sin/ex/im', b'']
 
-    #def control(self, maxsize, growspeed, oscillate):
     def __call__(self, args):
         self.maxsize = args[0]*10
-        self.growspeed = 1-args[1]
+        self.growspeed = args[1]
         self.oscillate = args[2]
 
-#def generate(self, step, dumpworld):
         world = np.zeros([3, 10, 10, 10])
 
         # oscillates between 0 and 1
         if self.oscillate < 0.3:
-            osci = np.sin(self.step*self.growspeed)*0.5 + 1
+            osci = np.sin(self.step*self.growspeed)*0.5 + 0.5
         elif self.oscillate > 0.7:
-            osci = sawtooth(self.step*self.growspeed, 0)*0.5 + 1
+            osci = sawtooth(self.step*self.growspeed, 0)*0.5 + 0.5
         else:
-            osci = sawtooth(self.step*self.growspeed)*0.5 + 1
+            osci = sawtooth(self.step*self.growspeed)*0.5 + 0.5
 
         # scales to maxsize
         size = self.maxsize * osci

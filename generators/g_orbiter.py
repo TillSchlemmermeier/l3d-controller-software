@@ -14,22 +14,23 @@ class g_orbiter():
     - angle z osc
 
     '''
-# zentrum falsch
+
     def __init__(self):
         self.distance = 4
         self.theta = 0.1
         self.rho = 0.1
         self.step = 0
+        self.direction = 0
 
-    #Strings for GUI
     def return_values(self):
-        return [b'orbiter', b'distance', b'theta', b'rho', b'']
+        return [b'orbiter', b'distance', b'theta', b'rho', b'dir']
 
     #def generate(self, step, dumpworld):
     def __call__(self, args):
         self.distance = args[0]*8
         self.theta = args[1]
         self.rho = args[2]
+        self.direction = round(args[3]*2)
 
         # generate empty world
         world = np.zeros([3, 10, 10, 10])
@@ -39,7 +40,12 @@ class g_orbiter():
         temp_theta = sawtooth(self.theta*self.step)*np.pi
         temp_rho = np.sin(self.rho*self.step)
 
-        [sx, sy, sz] = polar2z(temp_d, temp_theta, temp_rho)
+        if self.direction == 0:
+            [sx, sy, sz] = polar2z(temp_d, temp_theta, temp_rho)
+        elif self.direction == 1:
+            [sy, sx, sz] = polar2z(temp_d, temp_theta, temp_rho)
+        else:
+            [sy, sz, sx] = polar2z(temp_d, temp_theta, temp_rho)
 
         # switch on leds depending on distance
         world[0,:,:,:] = gen_shooting_star(sx+4.5,sy+4.5,sz+4.5)

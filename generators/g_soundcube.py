@@ -36,8 +36,8 @@ class g_soundcube():
         self.channel = 10
         self.threshold = 0.5
 
-        self.size = cycle([0,1,2,3,4])
-
+        self.sizes = cycle([0,1,2,3,4])
+        self.size = 1
         self.cube = g_cube()
 
     def return_values(self):
@@ -45,7 +45,7 @@ class g_soundcube():
         return [b's2l', b'threshold', b'channel', b'normalize switch', b'']
 
 
-    def __call__(self, world, args):
+    def __call__(self, args):
         # get sound data
         total_volume = self.update_line()
 
@@ -83,8 +83,11 @@ class g_soundcube():
 
         # apply threshold
         if current_volume > self.threshold:
-            size = next(self.size)
-            world = self.cube(size, 0, 0, 0)
+            self.size = next(self.sizes)
+
+#        print(self.size)
+        world = self.cube([self.size/4.0, 0, 0, 0])
+
 
         return np.clip(world, 0, 1)
 

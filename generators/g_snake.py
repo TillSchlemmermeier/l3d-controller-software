@@ -25,20 +25,15 @@ class g_snake():
 #        self.world[:, randint(0, 9), randint(0, 9), randint(0, 9)] = 1.0
         self.world[:, 4, 4, 4] = 1.0
 
-
-    #Strings for GUI
     def return_values(self):
-        return [b'snake', b'turn probability', b'', b'', b'']
+        return [b'snake', b'turn', b'', b'', b'']
 
     def __call__(self, args):
         self.turnprop = 1-args[0]
 
-
-
         world = np.zeros([3,10,10,10])
 
         # choose direction
-
         if uniform(0, 1) > self.turnprop:
 
             oldaxis = self.axis

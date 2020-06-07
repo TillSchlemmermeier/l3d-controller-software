@@ -15,7 +15,7 @@ class g_inandout:
 
     #def generate(self, step, dumpworld):
     def __call__(self, args):
-        self.number = int(args[0]*6+1)
+        self.number = int(args[0]*10+1)
         self.fadespeed = 0.5*args[1]+0.01
 
         world = np.zeros([3, 10, 10, 10])
@@ -37,7 +37,7 @@ class g_inandout:
         if delete_index != -1:
             del self.leds[delete_index]
 
-        return np.clip(world, 0, 1)
+        return np.clip(world, 0, 1)**2
 
 class led:
     def __init__(self, fadespeed):

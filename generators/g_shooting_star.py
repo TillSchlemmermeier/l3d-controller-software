@@ -34,7 +34,8 @@ class g_shooting_star():
         # return current position of shooting star
         self.step += 1
         # switch on leds depending on distance
-        world[0,:,:,:] = np.rot90(gen_shooting_star(sx,sy,sz), axes = [0,1], k=3)
+#        world[0,:,:,:] = np.rot90(gen_shooting_star(sx,sy,sz), axes = [0,1], k=3)
+        world[0,:,:,:] = gen_shooting_star(sx,sy,sz)
         world[1,:,:,:] = world[0,:,:,:]
         world[2,:,:,:] = world[0,:,:,:]
 

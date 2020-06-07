@@ -9,16 +9,25 @@ class g_random():
     def __init__(self):
         print(' initialize g_random')
         self.number_of_leds = 1
+        self.counter = 1
+        self.reset = 1
+
+        self.safeworld = np.zeros([3, 10, 10, 10])
 
     def return_values(self):
-        return [b'g_random', b'Number of LEDs', b'', b'',b'']
+        return [b'g_random', b'N LED', b'Wait', b'',b'']
 
     def __call__(self, args):
         self.number_of_leds = int((args[0])*20)
+        self.reset = int(args[1]*10+1)
 
         world = np.zeros([3, 10, 10, 10])
+        if self.counter % self.reset == 0:
+            for led in range(self.number_of_leds):
+                world[:, randint(0,9), randint(0,9), randint(0,9)] = 1.0
+        else:
+            world = self.safeworld
 
-        for led in range(self.number_of_leds):
-            world[:, randint(0,9), randint(0,9), randint(0,9)] = 1.0
-
+        self.safeworld = world
+        self.counter += 1
         return world
