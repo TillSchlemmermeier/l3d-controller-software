@@ -39,7 +39,6 @@ class class_launchpad_mk3:
         message, deltatime = event
         #print(message)
 
-
         # switch channels on
         # this are the round buttons at the top
         if message[0] == 176:
@@ -505,7 +504,6 @@ class class_fighter:
             # when a stateswitch is detected, send all values
             # and colors back to midifighter
             self.sendstate()
-            # pass
 
     def sendstate(self):
         """Sends colors and values to MidiFighter"""
@@ -561,7 +559,7 @@ class class_fighter:
         # check for state switches
         if channel == 177:
             self.setstate(key, value)
-            print(self.global_parameter[200:205])
+#            print(self.global_parameter[200:205])
             return []
         else:
             # write master commands for each channel
@@ -657,5 +655,3 @@ class class_fighter:
 
         for i in range(4):
             self.global_parameter[201+i] = self.current_state[i]
-
-        print(self.global_parameter[200:205])

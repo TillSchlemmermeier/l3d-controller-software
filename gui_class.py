@@ -411,6 +411,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
 
     def update_fighter_values(self):
+
         self.stringArray_ch1[1].setText("Brightness : "+str(round(self.global_parameter[41],2)))
         self.stringArray_ch1[2].setText("Fade : "+str(round(self.global_parameter[42],2)))
         self.stringArray_ch1[3].setText("Shutter : "+str(round(self.global_parameter[43],2)))
@@ -513,29 +514,34 @@ class MainWindow(QtWidgets.QMainWindow):
         # check for last changed value
         #index_changed = np.where((np.array(self.copied_params) == np.array(self.global_parameter)) == False)[0]
 
-        active_menu = [*self.global_parameter[202:206]]
-        print('active:', active_menu)
+        active_menu = [*self.global_parameter[201:205]]
+        #print('active:', active_menu)
 
         # colors for each area
         oncolor = ['#ffa500', '#ffff00', '#00cc00', '#00dcff']
         offcolor = ['#ffe4b2', '#ffffb2', '#b2efb2', '#b2f4ff']
 
-        for active, channel in zip(active_menu, [self.stringArray_ch1, self.stringArray_ch2, self.stringArray_ch3, self.stringArray_ch4]:
+        for active, channel in zip(active_menu, [self.stringArray_ch1, self.stringArray_ch2, self.stringArray_ch3, self.stringArray_ch4]):
             # reset
-            channel[4:9].setStyleSheet("color: black; font: 20px; background-color: "+offcolor[0])
-            channel[9:14].setStyleSheet("color: black; font: 20px; background-color: "+offcolor[1])
-            channel[14:19].setStyleSheet("color: black; font: 20px; background-color: "+offcolor[2])
-            channel[19:24].setStyleSheet("color: black; font: 20px; background-color: "+offcolor[3])
+            for i ,j, k, l in zip(channel[4:9], channel[9:14], channel[14:19], channel[19:24]):
+                i.setStyleSheet("color: black; font: 20px; background-color: "+offcolor[0])
+                j.setStyleSheet("color: black; font: 20px; background-color: "+offcolor[1])
+                k.setStyleSheet("color: black; font: 20px; background-color: "+offcolor[2])
+                l.setStyleSheet("color: black; font: 20px; background-color: "+offcolor[3])
 
             # draw generator
             if active == 0:
-                channel[4:9].setStyleSheet("color: black; font: 20px; background-color: "+oncolor[0])
+                for i in channel[4:9]:
+                    i.setStyleSheet("color: black; font: 20px; background-color: "+oncolor[0])
             elif active == 1:
-                channel[9:14].setStyleSheet("color: black; font: 20px; background-color: "+oncolor[1])
+                for i in channel[9:14]:
+                    i.setStyleSheet("color: black; font: 20px; background-color: "+oncolor[1])
             elif active == 1:
-                channel[14:19].setStyleSheet("color: black; font: 20px; background-color: "+oncolor[2])
+                for i in channel[14:19]:
+                    i.setStyleSheet("color: black; font: 20px; background-color: "+oncolor[2])
             elif active == 1:
-                channel[19:24].setStyleSheet("color: black; font: 20px; background-color: "+oncolor[3])                                
+                for i in channel[19:24]:
+                    i.setStyleSheet("color: black; font: 20px; background-color: "+oncolor[3])
 
 
         '''
