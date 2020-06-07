@@ -511,12 +511,56 @@ class MainWindow(QtWidgets.QMainWindow):
         self.stringArray_ch4[23].setText(str(self.global_label[79],'utf-8')+" : "+str(round(self.global_parameter[153],2)))
 
         # check for last changed value
-        index_changed = np.where((np.array(self.copied_params) == np.array(self.global_parameter)) == False)[0]
+        #index_changed = np.where((np.array(self.copied_params) == np.array(self.global_parameter)) == False)[0]
 
-        if np.shape(index_changed)[0] > 1:
-            index_changed = index_changed[0]
+        active_menu = [*self.global_parameter[202:206]]
+        print('active:', active_menu)
 
-        # lets just  do it for the first channel
+        # colors for each area
+        oncolor = ['#ffa500', '#ffff00', '#00cc00', '#00dcff']
+        offcolor = ['#ffe4b2', '#ffffb2', '#b2efb2', '#b2f4ff']
+
+        for active, channel in zip(active_menu, [self.stringArray_ch1, self.stringArray_ch2, self.stringArray_ch3, self.stringArray_ch4]:
+            # reset
+            channel[4:9].setStyleSheet("color: black; font: 20px; background-color: "+offcolor[0])
+            channel[9:14].setStyleSheet("color: black; font: 20px; background-color: "+offcolor[1])
+            channel[14:19].setStyleSheet("color: black; font: 20px; background-color: "+offcolor[2])
+            channel[19:24].setStyleSheet("color: black; font: 20px; background-color: "+offcolor[3])
+
+            # draw generator
+            if active == 0:
+                channel[4:9].setStyleSheet("color: black; font: 20px; background-color: "+oncolor[0])
+            elif active == 1:
+                channel[9:14].setStyleSheet("color: black; font: 20px; background-color: "+oncolor[1])
+            elif active == 1:
+                channel[14:19].setStyleSheet("color: black; font: 20px; background-color: "+oncolor[2])
+            elif active == 1:
+                channel[19:24].setStyleSheet("color: black; font: 20px; background-color: "+oncolor[3])                                
+
+
+        '''
+        # this is a try to get changes from midifighter button press
+        # works only for first channel
+        index_changed = [0,0,0,0]
+
+        # we do here a very nasty overwrite of the
+        # last changed id - this can be done better
+        for i in range(4):
+            print(self.global_parameter[201+i])
+
+            for j in range(4):
+                if int(self.global_parameter[201+i]) == j:
+            #        print(45+5*j+30*i)
+                    index_changed[i] = 45+5*j+30*i
+
+            #print('')
+        '''
+
+        #if np.shape(index_changed)[0] > 1:
+        #    index_changed = index_changed[0]
+
+        '''
+        # lets just do it for the first channel
         for item_1, item_2, item_3, item_4 in zip(self.conv_dict1.items(), self.conv_dict2.items(), self.conv_dict3.items(), self.conv_dict4.items()):
             # compare value with last changed key
             if item_1[1] == index_changed:
@@ -533,7 +577,6 @@ class MainWindow(QtWidgets.QMainWindow):
                 self.active_param[3] = item_4[0]
 
         # write all back to normal
-
         if index_changed in range(40,64):
             for item in self.stringArray_ch1:
                 if "G:" in item.text() or "E:" in item.text():
@@ -611,4 +654,5 @@ class MainWindow(QtWidgets.QMainWindow):
                         if index_changed in range(130,154):
                             self.stringArray_ch4[a].setStyleSheet("color: black; font: 20px; background-color: "+offc)
 
+        '''
         self.copied_params = self.global_parameter[:]

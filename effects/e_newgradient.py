@@ -20,7 +20,7 @@ class e_newgradient():
 
     def __call__(self, world, args):
         # parsing input
-        self.speed = args[0]*0.01
+        self.speed = args[0]*0.1
         self.c1 = color_translate(args[1])
         self.c2 = color_translate(args[2])
 
