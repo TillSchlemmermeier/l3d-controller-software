@@ -200,8 +200,9 @@ class class_launchpad_mk3:
             # write values into global parameter array
             # hopefully on the right place
             for i, value in zip(self.indices[channel-1], preset[1:]):
-                #print(i, value)
-                self.global_parameter[i] = float(value)
+                # dont set channel on/off
+                if i not in [40, 70, 100, 130]:
+                    self.global_parameter[i] = float(value)
 
         except:
             print('preset not available')
