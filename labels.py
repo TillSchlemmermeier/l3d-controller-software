@@ -90,7 +90,7 @@ for i in [2, 7, 12, 17]:
     labels[i, 3, 2] = 'growing\ncorner'
     labels[i, 3, 3] = 'falling '
     labels[i, 3, 4] = 'drop'
-    labels[i, 3, 5] = 'dark\nsphere'
+    labels[i, 3, 5] = 'blank'
     labels[i, 3, 6] = 'cut'
     labels[i, 3, 7] = 'multicube'
 
@@ -103,9 +103,9 @@ for i in [2, 7, 12, 17]:
     labels[i, 4, 6] = 'sound\nsphere'
     labels[i, 4, 7] = 'swell'
 
-    labels[i, 5, 0] = 'a_lines'
+    labels[i, 5, 0] = 'blank'
     labels[i, 5, 1] = 'a_multi\ncube_edges'
-    labels[i, 5, 2] = 'a_pulsating'
+    labels[i, 5, 2] = 'blank'
     labels[i, 5, 3] = 'a_orbot'
     labels[i, 5, 4] = 'torus'
     labels[i, 5, 5] = 'pong'
@@ -115,7 +115,7 @@ for i in [2, 7, 12, 17]:
 # add effect
 for i in [3,4,5, 8,9,10, 13,14,15, 18,19,20]:
     labels[i, 0, 1] = 'blank'
-    labels[i, 0, 2] = 'raindbow'
+    labels[i, 0, 2] = 'rainbow'
     labels[i, 0, 3] = 'static\ncolor'
     labels[i, 0, 4] = 'gradient'
     labels[i, 0, 5] = 'new\ngradient'
@@ -133,7 +133,7 @@ for i in [3,4,5, 8,9,10, 13,14,15, 18,19,20]:
 
     labels[i, 2, 0] = 'rotate\nblack/color'
     labels[i, 2, 1] = 'rotate\nblack/white'
-    labels[i, 2, 2] = 'rotate\nblack/ornage'
+    labels[i, 2, 2] = 'rotate\nblack/orange'
     labels[i, 2, 3] = 'rotation'
     labels[i, 2, 4] = 'rotating\nrainbow'
 

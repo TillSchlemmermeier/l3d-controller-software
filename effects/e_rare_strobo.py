@@ -22,7 +22,7 @@ class e_rare_strobo():
 
     #strings for GUI
     def return_values(self):
-        return [b'rare_strobo', b'Waiting Frames', b'Strobo Frames', b'Displacement Probability', b'']
+        return [b'rare_strobo', b'Wait #', b'Strobo #', b'Move Prob', b'']
 
     def __call__(self, world, args):
         # parsing input

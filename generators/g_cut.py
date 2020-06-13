@@ -36,7 +36,7 @@ class g_cut():
         return [b'cut', b'speed', b'', b'', b'']
 
     def __call__(self, args):
-        self.speed = args[0]*0.5 + 0.001
+        self.speed = args[0]*0.5 + 0.1
 
         # create world
         world = np.zeros([3, 10, 10, 10])

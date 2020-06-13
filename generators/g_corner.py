@@ -14,7 +14,7 @@ class g_corner():
         return [b'corner', b'size', b'', b'', b'']
 
     def __call__(self, args):
-        self.size = int(args[0]*5)
+        self.size = int(args[0]*2 + 1)
 
         # create world
         world = np.zeros([3, 10, 10, 10])

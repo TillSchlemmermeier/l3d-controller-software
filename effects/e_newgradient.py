@@ -20,14 +20,14 @@ class e_newgradient():
 
     def __call__(self, world, args):
         # parsing input
-        self.speed = args[0]*0.1
-        self.c1 = color_translate(args[1])
-        self.c2 = color_translate(args[2])
+        self.speed = args[0]*0.5
+        self.c1 = color_translate(args[1]*126)
+        self.c2 = color_translate(args[2]*126)
 
 
 #        corr_red = 0.5*(np.mean(self.c1['r'] - self.c2['r']))
         corr_red = abs(self.c1['r'] - self.c2['r'])
-        red = corr_red *(np.sin(self.speed*self.step))-(min([self.c1['r'], self.c2['r']])+1)
+        red = corr_red *(np.sin(self.speed*self.step) + 1)#-(min([self.c1['r'], self.c2['r']])+1)
 
         corr_green = 0.5*(np.mean(self.c1['g'] - self.c2['g']))
         green = corr_green *(np.sin(self.speed*self.step) + 1)
@@ -44,7 +44,7 @@ class e_newgradient():
         return np.clip(world, 0, 1)
 
 def color_translate(value):
-    value *= 127
+    #value *= 127
     #translates values from 0 to 127 to rgb values
     if (value>126):
         value=126

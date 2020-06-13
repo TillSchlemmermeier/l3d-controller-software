@@ -15,14 +15,15 @@ class e_rotating_rainbow():
 
     #strings for GUI
     def return_values(self):
-        return [b'rotating_rainbow', b'Grad_Speed', b'Rot_Speed', b'Grad_length', b'']
+        return [b'rotating_rainbow', b'Grad_length', b'Grad_Speed', b'Rot_X', b'Rot_YZ']
 
 
     def __call__(self, world, args):
 		# parse input
         self.speed = args[0]*10
-        self.rotation = args[1]*15+0.01
-        self.gradient_length = args[2]*12.7
+        self.gradient_length = args[1]*12.7
+        self.rotX = args[2]*15+0.01
+        self.rotYZ = args[3]*15+0.01
 
         # create gradient
         self.rainbowworld = np.zeros([3, 10, 10, 10])
@@ -34,15 +35,15 @@ class e_rotating_rainbow():
 
 
         # rotate
-        newworld = rotate(self.rainbowworld, self.step*self.rotation,
+        newworld = rotate(self.rainbowworld, self.step*self.rotX,
                           axes = (1,2), order = 1,
                           mode = 'nearest', reshape = False)
 
-        newworld = rotate(newworld, self.step*self.rotation,
+        newworld = rotate(newworld, self.step*self.rotYZ,
                           axes = (1,3), order = 1,
                           mode = 'nearest', reshape = False)
 
-        newworld = rotate(newworld, self.step*self.rotation,
+        newworld = rotate(newworld, self.step*self.rotYZ,
                           axes = (2,3), order = 1,
                           mode = 'nearest', reshape = False)
 

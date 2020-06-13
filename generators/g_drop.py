@@ -57,7 +57,7 @@ class g_drop():
 
     #def generate(self, step, dumpworld):
     def __call__(self, args):
-        self.speed = int(args[0]*10 + 1)
+        self.speed = 12-int(args[0]*10 + 1)
 
         # create world
         world = np.zeros([3, 10, 10, 10])

@@ -26,7 +26,6 @@ from generators.g_inandout import *
 from generators.g_growing_corner import *
 from generators.g_falling import *
 from generators.g_drop import *
-from generators.g_darksphere import *
 from generators.g_cut import *
 from generators.g_cube import *
 from generators.g_cube_edges import *
@@ -38,9 +37,7 @@ from generators.g_grow import *
 from generators.g_torus import *
 from generators.g_sound_lines import *
 #from generators.g_centralglow import *
-from generators.a_lines import *
 from generators.a_multi_cube_edges import *
-from generators.a_pulsating import *
 from generators.a_orbbot import *
 from generators.g_multicube import *
 from generators.a_random_cubes import *
@@ -122,7 +119,7 @@ generators.append(g_inandout)
 generators.append(g_growing_corner)
 generators.append(g_falling)
 generators.append(g_drop)
-generators.append(g_darksphere)
+generators.append(g_blank)
 generators.append(g_cut)
 generators.append(g_multicube)
 
@@ -137,9 +134,9 @@ generators.append(g_soundsphere)
 generators.append(g_swell)
 
 #row 6
-generators.append(a_lines)
+generators.append(g_blank)
 generators.append(a_multi_cube_edges)
-generators.append(a_pulsating)
+generators.append(g_blank)
 generators.append(a_orbbot)
 generators.append(g_torus)
 generators.append(g_pong)

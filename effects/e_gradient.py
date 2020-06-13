@@ -14,14 +14,14 @@ class e_gradient():
 
     #strings for GUI
     def return_values(self):
-        return [b'gradient', b'Color 1', b'Color 2', b'', b'']
+        return [b'gradient', b'Color 1', b'Color 2', b'balance', b'']
 
 
     def __call__(self, world, args):
         # parsing input
         self.c1 = args[0] # hsv_to_rgb(c1,1,1)
         self.c2 = args[1] # hsv_to_rgb(c2,1,1)
-        self.balance = args[2]*2
+        self.balance = 1 - (2 * args[2])
 
         if self.c2 > self.c1:
             temp = self.c1

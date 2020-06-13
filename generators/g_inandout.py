@@ -11,7 +11,7 @@ class g_inandout:
 
     #Strings for GUI
     def return_values(self):
-        return [b'inandout', b'number', b'fadespeed', b'', b'']
+        return [b'inandout', b'number', b'fade in', b'', b'']
 
     #def generate(self, step, dumpworld):
     def __call__(self, args):

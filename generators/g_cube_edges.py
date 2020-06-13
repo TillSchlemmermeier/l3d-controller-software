@@ -58,7 +58,7 @@ class g_cube_edges():
         return [b'cube_edges', b'speed', b'number', b'', b'']
 
     def __call__(self, args):
-        self.speed = args[0]*2
+        self.speed = args[0]*2 + 0.4
         self.number = int(3*args[1])
         if self.number == 0:
             self.number = 1
