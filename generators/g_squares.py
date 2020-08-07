@@ -11,7 +11,7 @@ class g_squares():
 
     #Strings for GUI
     def return_values(self):
-        return [b'squares', b'speed', b'dir', b'type', b'']
+        return [b'squares', b'speed', b'dir', b'sin/up/down', b'']
 
     #def generate(self, step, dumpworld):
     def __call__(self, args):

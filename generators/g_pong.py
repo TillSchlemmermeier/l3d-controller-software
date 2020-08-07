@@ -26,8 +26,8 @@ class g_pong():
 
     def __call__(self, args):
         self.speed = (args[0]+0.01)*2
-        self.size = (args[1]+0.01)*10
-        self.side_size = (args[2]+0.01)*6
+        self.size = 10.2 - (args[1]+0.01)*10
+        self.side_size = 6.12 - (args[2]+0.01)*6
         self.reset_frame = (args[3]+10)*10
 
         world = np.zeros([3, 10, 10, 10])
@@ -70,5 +70,5 @@ class g_pong():
             self.counter = 0
 
         self.counter += 1
-        
+
         return np.clip(world, 0, 1)

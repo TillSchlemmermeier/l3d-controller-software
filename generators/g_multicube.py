@@ -22,12 +22,12 @@ class g_multicube():
 
     #Strings for GUI
     def return_values(self):
-        return [b'g_multicubes', b'', b'', b'', b'']
+        return [b'g_multicubes', b'speed', b'strobo', b'', b'']
 
     def __call__(self, args):
         # create world
         world = np.zeros([3, 10, 10, 10])
-        self.strobo_frames = int(args[0]*10)
+        self.strobo_frames = 10-int(args[0]*10)
         self.strobo = int(round(args[1]+1))
 
         if self.counter % self.strobo == 0:

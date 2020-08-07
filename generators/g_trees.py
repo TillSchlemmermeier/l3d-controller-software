@@ -18,23 +18,23 @@ class g_trees():
         self.speed = 2
         self.flatworld = np.zeros([4,10,10])
         self.step = 0
+        self.reset = 1
 
     #Strings for GUI
     def return_values(self):
-        return [b'trees', b'number of LEDs', b'speed', b'', b'']
+        return [b'trees', b'N LEDs', b'speed', b'wait', b'']
 
     #def generate(self, step, dumpworld):
     def __call__(self, args):
         self.nled = int(round(args[0]*4)+1)
         self.speed = 5-int((args[1]*4))
-
-
-    #def generate(self, step, dumpworld):
+        self.reset = int(args[2]*5+1)
         world = np.zeros([3,10,10,10])
 
+        if self.step % self.reset == 0:
+            for i in range(self.nled):
+                self.flatworld[randint(0,3), 9, randint(0,9)] = 1.0
 
-        for i in range(self.nled):
-            self.flatworld[randint(0,3), 9, randint(0,9)] = 1.0
 
         world[0, :, :, 0] = self.flatworld[0, :, :]
         world[0, :, 9, :] = self.flatworld[1, :, :]

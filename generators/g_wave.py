@@ -11,7 +11,7 @@ class g_wave():
         self.counter = 0
         self.direction = 0
         self.position = 1
-        self.maxsize = 30
+        self.maxsize = 35
 
     #Strings for GUI
     def return_values(self):

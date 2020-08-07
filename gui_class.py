@@ -148,7 +148,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
 
         for item in self.stringArray_ch1:
-            if "Generator" in item.text() or "Effect" in item.text():
+            if "G:" in item.text() or "E:" in item.text():
                 item.setStyleSheet("color: black; font: 18px; font-weight: bold");
             else:
                 item.setStyleSheet("color: black; font: 14px;");
@@ -182,7 +182,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
 
         for item in self.stringArray_ch2:
-            if "Generator" in item.text() or "Effect" in item.text():
+            if "G:" in item.text() or "E:" in item.text():
                 item.setStyleSheet("color: black; font: 18px; font-weight: bold");
             else:
                 item.setStyleSheet("color: black; font: 14px;");
@@ -215,7 +215,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.stringArray_ch3.append(QtWidgets.QLabel("Parameter 4 : 110"))
 
         for item in self.stringArray_ch3:
-            if "Generator" in item.text() or "Effect" in item.text():
+            if "G:" in item.text() or "E:" in item.text():
                 item.setStyleSheet("color: black; font: 18px; font-weight: bold");
             else:
                 item.setStyleSheet("color: black; font: 14px;");
@@ -248,7 +248,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.stringArray_ch4.append(QtWidgets.QLabel("Parameter 4 : 110"))
 
         for item in self.stringArray_ch4:
-            if "Generator" in item.text() or "Effect" in item.text():
+            if "G:" in item.text() or "E:" in item.text():
                 item.setStyleSheet("color: black; font: 18px; font-weight: bold");
             else:
                 item.setStyleSheet("color: black; font: 14px;");
@@ -259,41 +259,6 @@ class MainWindow(QtWidgets.QMainWindow):
         self.copied_params = self.global_parameter[:]
         self.active_param = [-1, -1, -1, -1]
 
-        # dict for converting global parameter to button
-        self.conv_dict1 = {1:40, 2: 41, 3: 42, 4: 43,
-                          5: 45, 6: 46, 7: 47,
-                          8: 48, 10: 50,
-                          11: 51, 12: 52, 13: 53,
-                          15: 55, 16: 56,
-                          17: 57, 18: 58,
-                          20: 60, 21: 61, 22: 62,
-                          23: 63}
-
-        self.conv_dict2 = {1:70, 2: 71, 3: 72, 4: 73,
-                          5: 75, 6: 76, 7: 77,
-                          8: 78, 10: 80,
-                          11: 81, 12: 82, 13: 83,
-                          15: 85, 16: 86,
-                          17: 87, 18: 88,
-                          20: 90, 21: 91, 22: 92,
-                          23: 93}
-        self.conv_dict3 = {1: 100, 2: 101, 3: 102, 4: 103,
-                          5: 105, 6: 106, 7: 107,
-                          8: 108, 10: 110,
-                          11: 111, 12: 112, 13: 113,
-                          15: 115, 16: 116,
-                          17: 117, 18: 118,
-                          20: 120, 21: 121, 22: 122,
-                          23: 123}
-
-        self.conv_dict4 = {1: 130, 2: 131, 3: 132, 4: 133,
-                          5: 135, 6: 136, 7: 137,
-                          8: 138, 10: 140,
-                          11: 141, 12: 142, 13: 143,
-                          15: 145, 16: 146,
-                          17: 147, 18: 148,
-                          20: 150, 21: 151, 22: 152,
-                          23: 153}
 
         self.widget = QtWidgets.QWidget(self)
         self.setCentralWidget(self.widget)
@@ -310,7 +275,7 @@ class MainWindow(QtWidgets.QMainWindow):
         timer.timeout.connect(self.update_fighter_values)
         #timer.timeout.connect(self.update_global_values)
         timer.timeout.connect(self.update_launchpad_values)
-        timer.setInterval(10)
+        timer.setInterval(50)
         timer.start()
 
         # start threads
@@ -411,6 +376,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
 
     def update_fighter_values(self):
+
         self.stringArray_ch1[1].setText("Brightness : "+str(round(self.global_parameter[41],2)))
         self.stringArray_ch1[2].setText("Fade : "+str(round(self.global_parameter[42],2)))
         self.stringArray_ch1[3].setText("Shutter : "+str(round(self.global_parameter[43],2)))
@@ -511,104 +477,34 @@ class MainWindow(QtWidgets.QMainWindow):
         self.stringArray_ch4[23].setText(str(self.global_label[79],'utf-8')+" : "+str(round(self.global_parameter[153],2)))
 
         # check for last changed value
-        index_changed = np.where((np.array(self.copied_params) == np.array(self.global_parameter)) == False)[0]
+        #index_changed = np.where((np.array(self.copied_params) == np.array(self.global_parameter)) == False)[0]
 
-        if np.shape(index_changed)[0] > 1:
-            index_changed = index_changed[0]
-
-        # lets just  do it for the first channel
-        for item_1, item_2, item_3, item_4 in zip(self.conv_dict1.items(), self.conv_dict2.items(), self.conv_dict3.items(), self.conv_dict4.items()):
-            # compare value with last changed key
-            if item_1[1] == index_changed:
-                # save key of last changed value:question
-                self.active_param[0] = item_1[0]
-
-            if item_2[1] == index_changed:
-                self.active_param[1] = item_2[0]
-
-            if item_3[1] == index_changed:
-                self.active_param[2] = item_3[0]
-
-            if item_4[1] == index_changed:
-                self.active_param[3] = item_4[0]
-
-        # write all back to normal
-
-        if index_changed in range(40,64):
-            for item in self.stringArray_ch1:
-                if "G:" in item.text() or "E:" in item.text():
-                    item.setStyleSheet("color: black; font: 18px;font-weight: bold");
-                else:
-                    item.setStyleSheet("color: black; font: 18px;");
-
-        if index_changed in range(70,94):
-            for item in self.stringArray_ch2:
-                if "G:" in item.text() or "E:" in item.text():
-                    item.setStyleSheet("color: black; font: 18px;font-weight: bold");
-                else:
-                    item.setStyleSheet("color: black; font: 18px;");
-
-        if index_changed in range(100,124):
-            for item in self.stringArray_ch3:
-                if "G:" in item.text() or "E:" in item.text():
-                    item.setStyleSheet("color: black; font: 18px;font-weight: bold");
-                else:
-                    item.setStyleSheet("color: black; font: 18px;");
-
-        if index_changed in range(130,154):
-            for item in self.stringArray_ch4:
-                if "G:" in item.text() or "E:" in item.text():
-                    item.setStyleSheet("color: black; font: 18px;font-weight: bold");
-                else:
-                    item.setStyleSheet("color: black; font: 18px;");
+        active_menu = [*self.global_parameter[201:205]]
+        #print('active:', active_menu)
 
         # colors for each area
         oncolor = ['#ffa500', '#ffff00', '#00cc00', '#00dcff']
         offcolor = ['#ffe4b2', '#ffffb2', '#b2efb2', '#b2f4ff']
 
-        # areas for generators, effect1, ...
-        area = [[ 5, 6, 7, 8],
-                [10,11,12,13],
-                [15,16,17,18],
-                [20,21,22,23]]
-        # loop through all fields and set colors
+        for active, channel in zip(active_menu, [self.stringArray_ch1, self.stringArray_ch2, self.stringArray_ch3, self.stringArray_ch4]):
+            # reset
+            for i ,j, k, l in zip(channel[4:9], channel[9:14], channel[14:19], channel[19:24]):
+                i.setStyleSheet("color: black; font: 18px; background-color: "+offcolor[0])
+                j.setStyleSheet("color: black; font: 18px; background-color: "+offcolor[1])
+                k.setStyleSheet("color: black; font: 18px; background-color: "+offcolor[2])
+                l.setStyleSheet("color: black; font: 18px; background-color: "+offcolor[3])
 
-        if self.active_param != -1:
-            for ar,onc,offc in zip(area,oncolor,offcolor):
-                if self.active_param[0] in ar:
-                    for a in ar:
-                        if index_changed in range(40,64):
-                            self.stringArray_ch1[a].setStyleSheet("color: black; font: 20px; background-color: "+onc)
-                else:
-                    for a in ar:
-                        if index_changed in range(40,64):
-                            self.stringArray_ch1[a].setStyleSheet("color: black; font: 20px; background-color: "+offc)
-
-                if self.active_param[1] in ar:
-                    for a in ar:
-                        if index_changed in range(70,94):
-                            self.stringArray_ch2[a].setStyleSheet("color: black; font: 20px; background-color: "+onc)
-                else:
-                    for a in ar:
-                        if index_changed in range(70,94):
-                            self.stringArray_ch2[a].setStyleSheet("color: black; font: 20px; background-color: "+offc)
-
-                if self.active_param[2] in ar:
-                    for a in ar:
-                        if index_changed in range(100,124):
-                            self.stringArray_ch3[a].setStyleSheet("color: black; font: 20px; background-color: "+onc)
-                else:
-                    for a in ar:
-                        if index_changed in range(100,124):
-                            self.stringArray_ch3[a].setStyleSheet("color: black; font: 20px; background-color: "+offc)
-
-                if self.active_param[3] in ar:
-                    for a in ar:
-                        if index_changed in range(130,154):
-                            self.stringArray_ch4[a].setStyleSheet("color: black; font: 20px; background-color: "+onc)
-                else:
-                    for a in ar:
-                        if index_changed in range(130,154):
-                            self.stringArray_ch4[a].setStyleSheet("color: black; font: 20px; background-color: "+offc)
+            if active == 0:
+                for i in channel[4:9]:
+                    i.setStyleSheet("font-weight: bold; color: black; font: 20px; background-color: "+oncolor[0])
+            elif active == 1:
+                for i in channel[9:14]:
+                    i.setStyleSheet("font-weight: bold; color: black; font: 20px; background-color: "+oncolor[1])
+            elif active == 2:
+                for i in channel[14:19]:
+                    i.setStyleSheet("font-weight: bold; color: black; font: 20px; background-color: "+oncolor[2])
+            elif active == 3:
+                for i in channel[19:24]:
+                    i.setStyleSheet("font-weight: bold; color: black; font: 20px; background-color: "+oncolor[3])
 
         self.copied_params = self.global_parameter[:]

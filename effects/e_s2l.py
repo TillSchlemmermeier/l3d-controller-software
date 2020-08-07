@@ -48,7 +48,7 @@ class e_s2l():
         # process parameters
         self.amount = args[0]
         self.threshold = args[1]
-        self.channel = int(args[1]*len(total_volume)-1)
+        self.channel = int(args[2]*len(total_volume)-1)
 
         # detect change at normalize parameter or channel
         if self.norm_trigger_value != args[3]:

@@ -4,7 +4,7 @@ subroutine gen_torus(world, n, thickness, xpos, ypos, zpos)
   implicit none
 
 ! Now comes the variables declaration
-! compile with f2py3 -c -m g_genhsphere g_growing_sphere_f.f90
+! compile with f2py3 -c -m test g_torus.f90
   real*8 :: thickness, distance
   real*8, dimension(25) :: xpos, ypos, zpos
   real*8, dimension(10,10,10) :: world

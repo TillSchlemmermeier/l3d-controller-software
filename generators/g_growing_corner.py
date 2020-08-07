@@ -30,12 +30,12 @@ class g_growing_corner():
 
     #Strings for GUI
     def return_values(self):
-        return [b'growing_corner', b'maxsize', b'growspeed', b'steps', b'']
+        return [b'growing_corner', b'maxsize', b'speed', b'', b'']
 
     #def generate(self, step, dumpworld):
     def __call__(self, args):
         self.maxsize = args[0]*18
-        self.growspeed = 60 - (args[1]*50+9.999)
+        self.growspeed = 60 - (args[1]*50+5)
         self.steps = int(self.maxsize/self.growspeed)
 
         world = np.zeros([3, 10, 10, 10])

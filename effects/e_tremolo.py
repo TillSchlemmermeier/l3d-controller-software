@@ -15,7 +15,7 @@ class e_tremolo():
 
     #strings for GUI
     def return_values(self):
-        return [b'tremolo', b'speed', b'shape (sin/square/up/down)', b'amplitude', b'']
+        return [b'tremolo', b'speed', b'shape', b'ampli', b'']
 
     def __call__(self, world, args):
 		# parse input

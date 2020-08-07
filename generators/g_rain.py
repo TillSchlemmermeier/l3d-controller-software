@@ -17,26 +17,35 @@ class g_rain():
         self.numbers = 1
         self.fade = 0.5
         self.lastworld = np.zeros([10, 10, 10])
+        self.direction = 0
 
     #Strings for GUI
     def return_values(self):
-        return [b'rain', b'numbers', b'fade', b'', b'']
+        return [b'rain', b'numbers', b'fade', b'down/up', b'']
 
     #def generate(self, step, dumpworld):
     def __call__(self, args):
         self.numbers = int(args[0]*10 + 1)
         self.fade = args[1]
+        self.direction = round(args[2])
 
         # create world
         world = np.zeros([3, 10, 10, 10])
 
         # move last world 1 step down
-        self.lastworld = np.roll(self.lastworld, axis = 0, shift=1)
-        self.lastworld[ 0, :, :] = 0.0
+        if self.direction == 0:
+            self.lastworld = np.roll(self.lastworld, axis = 0, shift=1)
+            self.lastworld[ 0, :, :] = 0.0
+            # turn on random leds in upper level
+            for i in range(self.numbers):
+                world[0,0,randint(0, 9),randint(0, 9)] = 1.0
 
-        # turn on random leds in upper level
-        for i in range(self.numbers):
-            world[0,0,randint(0, 9),randint(0, 9)] = 1.0
+        else:
+            self.lastworld = np.roll(self.lastworld, axis = 0, shift=-1)
+            self.lastworld[ 9, :, :] = 0.0
+            # turn on random leds in lower level
+            for i in range(self.numbers):
+                world[0,9,randint(0, 9),randint(0, 9)] = 1.0
 
         # add last frame
         world[0,:,:,:] += self.lastworld *self.fade

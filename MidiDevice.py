@@ -41,7 +41,6 @@ class class_launchpad_mk3:
         message, deltatime = event
         #print(message)
 
-
         # switch channels on
         # this are the round buttons at the top
         if message[0] == 176:
@@ -169,7 +168,7 @@ class class_launchpad_mk3:
         #print('state after', self.state)
 
 
-    def save_preset(self, channel, filename = 'preset.dat'):
+    def save_preset(self, channel, filename = 'presets.dat'):
         '''appends the current values of a channel to a file
         channel goes from 1 to 4
         '''
@@ -203,8 +202,9 @@ class class_launchpad_mk3:
             # write values into global parameter array
             # hopefully on the right place
             for i, value in zip(self.indices[channel-1], preset[1:]):
-                #print(i, value)
-                self.global_parameter[i] = float(value)
+                # dont set channel on/off
+                if i not in [40, 70, 100, 130]:
+                    self.global_parameter[i] = float(value)
 
         except:
             print('preset not available')
@@ -507,7 +507,6 @@ class class_fighter:
             # when a stateswitch is detected, send all values
             # and colors back to midifighter
             self.sendstate()
-            # pass
 
     def sendstate(self):
         """Sends colors and values to MidiFighter"""
@@ -563,6 +562,7 @@ class class_fighter:
         # check for state switches
         if channel == 177:
             self.setstate(key, value)
+#            print(self.global_parameter[200:205])
             return []
         else:
             # write master commands for each channel
@@ -655,3 +655,6 @@ class class_fighter:
                 self.current_state[3] = 2
             elif key == 15 and value == 0:
                 self.current_state[3] = 3
+
+        for i in range(4):
+            self.global_parameter[201+i] = self.current_state[i]

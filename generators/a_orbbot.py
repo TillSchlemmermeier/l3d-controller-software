@@ -9,6 +9,7 @@ class a_orbbot():
 
     def __init__(self):
         self.counter = 1
+        self.generator = g_orbiter()
 
     #Strings for GUI
     def return_values(self):
@@ -19,11 +20,8 @@ class a_orbbot():
         # create world
         world = np.zeros([3, 10, 10, 10])
 
-        generator = g_orbiter()
 
-#        generator.control(0.5*(np.sin(self.counter * 0.01)*0.5+0.5),0.4,0.05)
-
-        world[:, :, :, :] = generator([0.5*(np.sin(self.counter * 0.01)*0.5+0.5), 1, 0.05])
+        world[:, :, :, :] = self.generator([0.5*(np.sin(self.counter * 0.01)*0.5+0.5), 0.65, 0.05, 0])
 
         self.counter += 1
 

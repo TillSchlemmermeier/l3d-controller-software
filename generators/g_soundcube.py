@@ -1,25 +1,18 @@
+
 import numpy as np
 import pyaudio
 from scipy.fftpack import fft, fftfreq
 import scipy
 import struct
+from time import sleep
+from generators.g_cube import g_cube
+from itertools import cycle
 
 class g_soundcube():
     def __init__(self):
-        self.amount = 1.0
-        # sound2light stuff
+        # initialize pyaudio
         self.sample_rate = 44100
-        self.buffer_size = 2**11
-        self.thres_factor = 0
-        self.channel = 1
-
-        pa = pyaudio.PyAudio()
-        chosen_device_index = -1
-        for x in range(0,pa.get_device_count()):
-            info = pa.get_device_info_by_index(x)
-            if info["name"] == "pulse":
-                chosen_device_index = info["index"]
-
+        self.buffer_size = int(44100/20)
         p = pyaudio.PyAudio()
 
         self.stream = p.open(
@@ -28,74 +21,128 @@ class g_soundcube():
             rate = self.sample_rate,
             input = True,
             output = False,
-            frames_per_buffer = self.buffer_size
+            frames_per_buffer = self.buffer_size,
+#            timeout = 0.001
             )
 
+        # parameters for normalization
+        self.buffer = []
+        self.normalized = False
+        self.norm = [0, 1]
+        self.norm_trigger_value = 0
+
+        # parameters
+        self.amount = 1.0
+        self.channel = 10
         self.threshold = 0.5
 
+        self.sizes = cycle([0,1,2,3,4])
         self.size = 1
+        self.cube = g_cube()
 
-    #Strings for GUI
     def return_values(self):
-        return [b'soundcube', b'amount', b'threshold', b'channel', b'']
+        # strings for GUI
+        return [b's2l', b'threshold', b'channel', b'normalize switch', b'']
+
 
     def __call__(self, args):
-        self.amount = args[0]*6
-        self.threshold = args[1]
-        self.channel = int(args[2]*4)
+        # get sound data
+        total_volume = self.update_line()
 
-        tempworld = np.zeros([10, 10, 10])
-        tempworld[:, :, :] = -1.0
+        # process parameters
+        self.threshold = args[0]
+        self.channel = int(args[1]*len(total_volume)-1)
 
-        size = int(self.amount*(self.update_line()[self.channel]-self.threshold))
-        size = np.clip(size, 0, 4)
+        # detect change at normalize parameter or channel
+        if self.norm_trigger_value != args[2]:
+            print('clearing buffer')
+            # clear buffer and reset normalized switch
+            self.buffer = []
+            self.normalized = False
+            self.norm_trigger_value = args[2]
 
-        # x slices
-        tempworld[4-size, 4-size:6+size, 4-size:6+size] += 1
-        tempworld[5+size, 4-size:6+size, 4-size:6+size] += 1
-        # y slices
-        tempworld[4-size:6+size, 4-size, 4-size:6+size] += 1
-        tempworld[4-size:6+size, 5+size, 4-size:6+size] += 1
-        # z slices
-        tempworld[4-size:6+size, 4-size:6+size, 4-size] += 1
-        tempworld[4-size:6+size, 4-size:6+size, 5+size] += 1
+        if not self.normalized :
+            # fill buffer
+            self.buffer.append(total_volume[self.channel])
+            # self.buffer.append(total_volume[self.channel])
 
-        world[0, :, :, :] = tempworld[:, :, :]
-        world[1, :, :, :] = tempworld[:, :, :]
-        world[2, :, :, :] = tempworld[:, :, :]
+            # save min and max
+            self.norm[0] = min(self.buffer)
+            self.norm[1] = max(self.buffer)
+
+            if len(self.buffer) > 50:
+                self.normalized = True
+
+        # apply normalization
+        if self.norm[1] > self.norm[0]:
+            # the ()**4 is important! otherwise, this is just bright or dark
+            current_volume = ((total_volume[self.channel]-self.norm[0]) /(self.norm[1]-self.norm[0]))**4
+            #print(current_volume, total_volume[self.channel], self.norm[0], self.norm[1])
+        else:
+            current_volume = total_volume[self.channel]
+
+        # apply threshold
+        if current_volume > self.threshold:
+            self.size = next(self.sizes)
+
+#        print(self.size)
+        world = self.cube([self.size/4.0, 0, 0, 0])
+
+
         return np.clip(world, 0, 1)
 
-    def get_fft(self, data):
-        FFT = fft(data)                                # Returns an array of complex numbers
-        freqs = fftfreq(self.buffer_size, 1.0/self.sample_rate)  # Returns an array containing the frequency values
 
-        y = abs(FFT[0:int(len(FFT)/2)])/1000                # Get amplitude and scale
-        y = scipy.log(y) - 2                           # Subtract noise floor (empirically determined)
+    def get_fft(self, data):
+        FFT = fft(data)
+        # Returns an array of complex numbers
+        freqs = fftfreq(self.buffer_size, 1.0/self.sample_rate)
+
+        # Get amplitude and scale
+        y = abs(FFT[0:int(len(FFT)/2)])/1000
+        y = scipy.log(y) - 2
+        # Subtract noise floor (empirically determined)
         return (freqs, y)
 
+
+    def update_line(self):
+
+        temp_buf = self.stream.read(100)
+
+        while True:
+            # read buffer and calculate spectrum
+            temp_buf += self.stream.read(self.stream.get_read_available())
+            if len(temp_buf) > self.buffer_size*2:
+                break
+
+        buf = temp_buf[-self.buffer_size*2:]
+#        print(self.buffer_size, len(temp_buf), len(buf))
+
+        data = scipy.array(struct.unpack("%dh"%(self.buffer_size), buf))
+
+        freqs, y = self.get_fft(data)
+
+        # print(len(buf))
+
+        # Average into chunks of N
+        #N = 10
+        #yy = [scipy.average(y[n:n+N]) for n in range(0, len(y), N)]
+        #yy = yy[:int(len(yy)/2)] # Discard half of the samples, as they are mirrored
+
+        yy = y
+        #print(yy)
+
+        # now do some threshold detection
+        # for i in range(len(yy)):
+        #     yy[i] = self.control_threshold(yy[i], self.threshold)
+
+        return np.round(yy, 2)
+
+
+'''
     def control_threshold(self, dat, thres):
         if dat < thres:
             return 0.0
         else:
             return dat
 
-    def update_line(self):
-        buf = self.stream.read(self.buffer_size)
-        data = scipy.array(struct.unpack("%dh"%(self.buffer_size), buf))
-
-        freqs, y = self.get_fft(data)
-
-        # Normalize
-        y = y / 5.0
-
-        # Average into chunks of N
-        N = 100
-
-        yy = [scipy.average(y[n:n+N]) for n in range(0, len(y), N)]
-        yy = yy[:int(len(yy)/2)] # Discard half of the samples, as they are mirrored
-
-        # now do some threshold detection
-        # for i in range(len(yy)):
-        #    yy[i] = self.control_threshold(yy[i], self.threshold)
-
-        return np.round(np.clip(yy,0,1),2)
+'''

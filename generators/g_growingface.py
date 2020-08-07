@@ -31,11 +31,11 @@ class g_growingface():
 
     #Strings for GUI
     def return_values(self):
-        return [b'growingface', b'maxsize', b'growspeed', b'', b'']
+        return [b'growingface', b'maxsize', b'speed', b'', b'']
 
     def __call__(self, args):
-        self.maxsize = args[0]*18
-        self.growspeed = 60 - (args[1]*50+9.999)
+        self.maxsize = args[0]*17
+        self.growspeed = 55 - (args[1]*45+9)
         self.steps = int(self.maxsize/self.growspeed)
 
     #def generate(self, step, dumpworld):
