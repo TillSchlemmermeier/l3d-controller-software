@@ -11,6 +11,8 @@ class class_launchpad_mk3:
         self.midiin, self.portname_in = open_midiinput(port= ':1')
         self.midiout, self.portname_out = open_midioutput(port = ':1')
         self.global_parameter = array
+        #SysEx message for Programmer mode select
+        self.midiout.send_message([240, 0, 32, 41, 2, 13, 14, 1, 247])
         # turn leds off
         for i, c in zip(range(11,88), range(0,88-11)):
             self.midiout.send_message([144, i, c/1])
