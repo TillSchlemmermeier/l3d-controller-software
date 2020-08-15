@@ -55,6 +55,10 @@ class g_drop():
     def return_values(self):
         return [b'drop', b'speed', b'', b'', b'']
 
+    def return_gui_values(self):
+        return bytearray('{0:<8s}{1:<8s}{2:<8s}{3:<8s}'.format(str(round(self.speed,2)), '', '', ''),'utf-8')
+
+
     #def generate(self, step, dumpworld):
     def __call__(self, args):
         self.speed = 12-int(args[0]*10 + 1)

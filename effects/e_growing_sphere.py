@@ -16,6 +16,14 @@ class e_growing_sphere():
     def return_values(self):
         return [b'growing_sphere', b'amount', b'growspeed', b'oscillate (sin/sawtooth)', b'']
 
+    def return_gui_values(self):
+        if self.oscillate < 0.5:
+            temp = 'osci'
+        else:
+            temp = 'grow'
+            
+        return bytearray('{0:<8s}{1:<8s}{2:<8s}{3:<8s}'.format(str(round(self.amount,1)), str(round(self.growspeed,1)), temp, ''), 'utf-8')
+
 
     def __call__(self, world, args):
         # parsing input
