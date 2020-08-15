@@ -14,9 +14,12 @@ class e_blur():
     def return_values(self):
         return [b'blur', b'blur intensity', b'', b'', b'']
 
+    def return_gui_values(self):
+        return bytearray('{0:<8s}{1:<8s}{2:<8s}{3:<8s}'.format(str(self.blur), '', '', ''), 'utf-8')
+
     def __call__(self, world, args):
         # parsing input
-        self.blur = args[0]
+        self.blur = round(args[0],3)
 
         # create gaussian window
         dim = 5
