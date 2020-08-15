@@ -14,7 +14,7 @@ class e_blank():
         return [b'blank', b'', b'', b'', b'']
 
     def return_gui_values(self):
-        return bytearray('{0:<8s}{1:<8s}{2:<8s}{3:<8s}'.format('', '', '', ''), 'utf-8')
+        return bytearray('{0:<8s}{1:<8s}{2:<8s}{3:<8s}'.format('', '', '', ''),'utf-8')
 
     def __call__(self, world, args):
         return world
