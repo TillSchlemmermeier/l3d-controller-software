@@ -18,6 +18,10 @@ class e_violetblue():
     def return_values(self):
         return [b'violetblue', b'speed', b'', b'', b'']
 
+    def return_gui_values(self):
+        return bytearray('{0:<8s}{1:<8s}{2:<8s}{3:<8s}'.format(str(round(self.speed,1), '', '', '',) 'utf-8')
+
+
 
     def __call__(self, world, args):
         # parsing input

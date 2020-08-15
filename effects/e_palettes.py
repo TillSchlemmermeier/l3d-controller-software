@@ -179,6 +179,10 @@ class e_palettes:
     def return_values(self):
         return [b'palettes', b'Palette ID', b'', b'', b'']
 
+    def return_gui_values(self):
+        return bytearray('{0:<8s}{1:<8s}{2:<8s}{3:<8s}'.format(self.palettes[self.palette_id] '', '', ''), 'utf-8')
+
+
     def __call__(self, world, args):
         # parsing input and check for new palette
         if int((args[0]-0.001)*len(self.palettes)) != self.palette_id:

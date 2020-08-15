@@ -19,10 +19,13 @@ class e_rare_strobo():
         self.state = 'wait'
         self.step = 0
 
-
     #strings for GUI
     def return_values(self):
         return [b'rare_strobo', b'Wait #', b'Strobo #', b'Move Prob', b'']
+
+    def return_gui_values(self):
+        return bytearray('{0:<8s}{1:<8s}{2:<8s}{3:<8s}'.format(str(waiting_frames), str(strobo_frames), str(round(self.disp_prop,1)), ''), 'utf-8')
+
 
     def __call__(self, world, args):
         # parsing input

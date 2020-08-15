@@ -16,6 +16,8 @@ class e_gradient():
     def return_values(self):
         return [b'gradient', b'Color 1', b'Color 2', b'balance', b'']
 
+    def return_gui_values(self):
+        return bytearray('{0:<8s}{1:<8s}{2:<8s}{3:<8s}'.format(str(round(self.c1,1)), str(round(self.c2,1)), str(round(self.balance,1)), ''), 'utf-8')
 
     def __call__(self, world, args):
         # parsing input
