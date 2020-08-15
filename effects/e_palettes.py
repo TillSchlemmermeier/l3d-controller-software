@@ -180,7 +180,7 @@ class e_palettes:
         return [b'palettes', b'Palette ID', b'', b'', b'']
 
     def return_gui_values(self):
-        return bytearray('{0:<8s}{1:<8s}{2:<8s}{3:<8s}'.format(self.palettes[self.palette_id] '', '', ''), 'utf-8')
+        return bytearray('{0:<8s}{1:<8s}{2:<8s}{3:<8s}'.format(str(self.palette_id), '', '', ''), 'utf-8')
 
 
     def __call__(self, world, args):

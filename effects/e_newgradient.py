@@ -13,20 +13,23 @@ class e_newgradient():
         self.c1 = {'r':1.0, 'g':0.0, 'b':0.0}
         self.c2 = {'r':0.0, 'g':0.0, 'b':1.0}
         self.step = 0
+        self.c1_temp = 0
+        self.c2_temp = 0
 
     #strings for GUI
     def return_values(self):
         return [b'newgradient', b'speed', b'Color 1', b'Color 2', b'']
 
     def return_gui_values(self):
-        return bytearray('{0:<8s}{1:<8s}{2:<8s}{3:<8s}'.format(str(round(self.speed,1)), str(round(self.c1,1)), str(round(self.c2,1)), ''), 'utf-8')
+        return bytearray('{0:<8s}{1:<8s}{2:<8s}{3:<8s}'.format(str(round(self.speed,1)), str(round(self.c1_temp,1)), str(round(self.c2_temp,1)), ''), 'utf-8')
 
     def __call__(self, world, args):
         # parsing input
         self.speed = args[0]*0.5
         self.c1 = color_translate(args[1]*126)
         self.c2 = color_translate(args[2]*126)
-
+        self.c1_temp = args[1]
+        self.c2_temp = args[2]
 
 #        corr_red = 0.5*(np.mean(self.c1['r'] - self.c2['r']))
         corr_red = abs(self.c1['r'] - self.c2['r'])

@@ -15,7 +15,7 @@ class e_rotation():
         return [b'rotation', b'X speed', b'Y speed', b'Z speed', b'']
 
     def return_gui_values(self):
-        return bytearray('{0:<8s}{1:<8s}{2:<8s}{3:<8s}'.format(str(round(self.xspeed,1)), str(round(self.yspeed,1)), str(round(self.zspeed,1)), '', 'utf-8')
+        return bytearray('{0:<8s}{1:<8s}{2:<8s}{3:<8s}'.format(str(round(self.xspeed,1)), str(round(self.yspeed,1)), str(round(self.zspeed,1)), ''), 'utf-8')
 
     def __call__(self, world, args):
         self.xspeed = 10*args[0]

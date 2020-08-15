@@ -18,7 +18,7 @@ class e_tremolo():
         return [b'tremolo', b'speed', b'shape', b'ampli', b'']
 
     def return_gui_values(self):
-        return bytearray('{0:<8s}{1:<8s}{2:<8s}{3:<8s}'.format(str(round(self.speed,1)), self.shape, str(round(self.amplitude,1)), '', 'utf-8')
+        return bytearray('{0:<8s}{1:<8s}{2:<8s}{3:<8s}'.format(str(round(self.speed,1)), self.shape, str(round(self.amplitude,1)), ''), 'utf-8')
 
 
     def __call__(self, world, args):
