@@ -18,7 +18,8 @@ class g_random():
         return [b'g_random', b'N LED', b'Wait', b'',b'']
 
     def return_gui_values(self):
-        return bytearray('{0:<8s}{1:<8s}{2:<8s}{3:<8s}'.format('bf', 'we', 'fg', 'sdf'),'utf-8')
+        return bytearray('{0:<8s}{1:<8s}{2:<8s}{3:<8s}'.format(str(round(self.number_of_leds,2)), str(round(self.reset,2)), '', ''),'utf-8')
+
 
     def __call__(self, args):
         self.number_of_leds = int((args[0])*20)

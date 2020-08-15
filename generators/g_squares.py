@@ -11,7 +11,26 @@ class g_squares():
 
     #Strings for GUI
     def return_values(self):
-        return [b'squares', b'speed', b'dir', b'sin/up/down', b'']
+        return [b'squares', b'speed', b'dir', b'type', b'']
+
+    def return_gui_values(self):
+        if self.direction == 0:
+            dir = 'X'
+        elif self.direction == 1:
+            dir ='Y'
+        else:
+            dir = 'Z'
+
+        if self.type < 0.33:
+            type = 'sin'
+        elif self.type >= 0.33 and self.type < 0.66:
+            type = 'up'
+        else:
+            type = 'down'
+
+        return bytearray('{0:<8s}{1:<8s}{2:<8s}{3:<8s}'.format(str(round(self.speed,2)), dir, type, ''),'utf-8')
+
+
 
     #def generate(self, step, dumpworld):
     def __call__(self, args):

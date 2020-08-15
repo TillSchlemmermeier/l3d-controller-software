@@ -17,6 +17,11 @@ class g_rotate_plane():
     def return_values(self):
         return [b'rotate_plane', b'xspeed', b'yspeed', b'zspeed', b'']
 
+
+    def return_gui_values(self):
+        return bytearray('{0:<8s}{1:<8s}{2:<8s}{3:<8s}'.format(str(round(self.xspeed,2)), str(round(self.yspeed,2)), str(round(self.zspeed,2)), ''),'utf-8')
+
+
     #def generate(self, step, dumpworld):
     def __call__(self, args):
         self.xspeed = 20*args[0]

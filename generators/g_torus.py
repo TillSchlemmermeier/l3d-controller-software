@@ -22,6 +22,9 @@ class g_torus():
     def return_values(self):
         return [b'torus', b'radius', b'thickness', b'', b'']
 
+    def return_gui_values(self):
+        return bytearray('{0:<8s}{1:<8s}{2:<8s}{3:<8s}'.format(str(round(self.radius,2)), str(round(self.thickness,2)), '', ''),'utf-8')
+
     #def control(self, maxsize, growspeed, oscillate):
     def __call__(self, args):
         self.radius     = args[0]*10

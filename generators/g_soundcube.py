@@ -44,6 +44,10 @@ class g_soundcube():
         # strings for GUI
         return [b's2l', b'threshold', b'channel', b'normalize switch', b'']
 
+    def return_gui_values(self):
+        return bytearray('{0:<8s}{1:<8s}{2:<8s}{3:<8s}'.format(str(round(self.threshold,2)), str(round(self.channel,2)), str(round(self.norm_trigger_value,2)), ''),'utf-8')
+
+
 
     def __call__(self, args):
         # get sound data

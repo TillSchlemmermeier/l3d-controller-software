@@ -24,6 +24,10 @@ class g_multicube():
     def return_values(self):
         return [b'g_multicubes', b'speed', b'strobo', b'', b'']
 
+    def return_gui_values(self):
+        return bytearray('{0:<8s}{1:<8s}{2:<8s}{3:<8s}'.format(str(round(self.strobo_frames,2)), str(round(self.strobo,2)), '', ''),'utf-8')
+
+
     def __call__(self, args):
         # create world
         world = np.zeros([3, 10, 10, 10])

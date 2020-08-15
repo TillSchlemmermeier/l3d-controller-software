@@ -21,7 +21,15 @@ class g_rain():
 
     #Strings for GUI
     def return_values(self):
-        return [b'rain', b'numbers', b'fade', b'down/up', b'']
+        return [b'rain', b'number', b'fade', b'direction', b'']
+
+    def return_gui_values(self):
+        if self.direction == 0:
+            dir = 'down'
+        else:
+            dir = "up"
+        return bytearray('{0:<8s}{1:<8s}{2:<8s}{3:<8s}'.format(str(round(self.numbers,2)), str(round(self.fade,2)), dir, ''),'utf-8')
+
 
     #def generate(self, step, dumpworld):
     def __call__(self, args):
