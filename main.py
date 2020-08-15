@@ -76,7 +76,9 @@ def gui(array,label):
 if __name__ == '__main__':
     # define global variables
     global_parameter = mp.Array('d', [0 for x in range(255)])
-    global_label =     mp.Array(c_char_p, 100)
+    global_label     = mp.Array(c_char_p, 100)
+    global_memory   = mp.shared_memory.SharedMemory(create = True,name = "GuiValues1", size = 512)
+
 
     for i in range(100):
         global_label[i] = b'init'

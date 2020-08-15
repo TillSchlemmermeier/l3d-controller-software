@@ -26,19 +26,23 @@ class g_planes():
     def return_values(self):
         return [b'planes', b'speed', b'direction', b'saw/tri', b'']
 
+    def return_gui_values(self):
+        return bytearray('{0:<8s}{1:<8s}{2:<8s}{3:<8s}'.format(str(round(self.speed,2)), str(self.dir), str(self.type), ''),'utf-8')
+
+
     def __call__(self, args):
         # parsing input
         self.speed = args[0]*10+0.5
         self.dir = int(round(args[1]*3))
         if args[2] > 0.5:
-            type = 0.5
+            self.type = 0.5
         else:
-            type = 1.0
+            self.type = 1.0
 
         # calculate frame
         world = np.zeros([3, 10, 10, 10])
 
-        position = int(round((sawtooth(0.1*self.step*self.speed, type)+1)*4.51))
+        position = int(round((sawtooth(0.1*self.step*self.speed, self.type)+1)*4.51))
 
         if self.dir == 0:
             world[:, position,:,:] = 1.0

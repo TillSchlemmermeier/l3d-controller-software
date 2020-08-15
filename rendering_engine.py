@@ -6,6 +6,8 @@ from world2vox_fortran import world2vox_f as world2vox
 #from global_parameter_module import global_parameter
 from channel import class_channel
 #from convert_dict import converting_dict
+from multiprocessing import shared_memory
+
 
 class rendering_engine:
     """
@@ -52,6 +54,9 @@ class rendering_engine:
         self.global_parameter = array
         # self.global_labels = labels
         self.test_list = [64 for i in range(3000)]
+
+        # shared memory for current values
+        self.shared_mem_gui_vals = shared_memory.SharedMemory(name = "GuiValues1")
 
         # take care of logging
         if self.logging:
@@ -134,6 +139,8 @@ class rendering_engine:
 
         index_label = 0
 
+        current_values = []
+
         for i in range(4):      # loop through channels
             channel = self.channels[i]
             # check whether cannel is active, otherwise overrides channel world
@@ -157,9 +164,10 @@ class rendering_engine:
                 new_world = np.zeros([3, 10, 10, 10])
 
 			# get current values
-            temp = channel.get_labels()
+            temp, values = channel.get_labels()
             for j in range(19):
                 #print(temp[j])
+                current_values.append(values)
                 self.label[j+index_label] = temp[j]
 
             # apply fade
@@ -195,6 +203,10 @@ class rendering_engine:
         # adjust global brightness
         self.cubeworld *= self.global_parameter[1]
         #print(self.framecounter)
+
+        # now we send the current values
+        self.shared_mem_gui_vals.buf[0:8] = current_values[0][0:8]
+
 
     def get_cubedata(self):
         """get vox format from the internal stored world"""

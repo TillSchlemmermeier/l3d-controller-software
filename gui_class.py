@@ -3,16 +3,19 @@ import sys
 from PyQt5 import QtWidgets, QtGui, QtCore
 import numpy as np
 from labels import labels
+from multiprocessing import shared_memory
 
 class MainWindow(QtWidgets.QMainWindow):
 
-    def __init__(self, array, label,parent=None):
+    def __init__(self, array, label ,parent=None):
 
         super(MainWindow, self).__init__()
 
         # get global arrays
         self.global_parameter = array
         self.global_label = label
+        self.shared_mem_gui_vals = shared_memory.SharedMemory(name = "GuiValues1")
+
 
         # initialize layout
         # creating main container-frame, parent it to QWindow
@@ -375,16 +378,15 @@ class MainWindow(QtWidgets.QMainWindow):
                 counter+=1
 
 
-    def update_fighter_values(self):
-
+    def update_fighter_values(self):        
         self.stringArray_ch1[1].setText("Brightness : "+str(round(self.global_parameter[41],2)))
         self.stringArray_ch1[2].setText("Fade : "+str(round(self.global_parameter[42],2)))
         self.stringArray_ch1[3].setText("Shutter : "+str(round(self.global_parameter[43],2)))
         self.stringArray_ch1[4].setText("G: "+str(self.global_label[0],'utf-8'))
-        self.stringArray_ch1[5].setText(str(self.global_label[1],'utf-8')+" : "+str(round(self.global_parameter[45],2)))
-        self.stringArray_ch1[6].setText(str(self.global_label[2],'utf-8')+" : "+str(round(self.global_parameter[46],2)))
-        self.stringArray_ch1[7].setText(str(self.global_label[3],'utf-8')+" : "+str(round(self.global_parameter[47],2)))
-        self.stringArray_ch1[8].setText(str(self.global_label[4],'utf-8')+" : "+str(round(self.global_parameter[48],2)))
+        self.stringArray_ch1[5].setText(str(self.global_label[1],'utf-8')+" : "+str(self.shared_mem_gui_vals.buf[0:8],'utf-8'))
+        self.stringArray_ch1[6].setText(str(self.global_label[2],'utf-8')+" : "+str(self.shared_mem_gui_vals.buf[8:16],'utf-8'))
+        self.stringArray_ch1[7].setText(str(self.global_label[3],'utf-8')+" : "+str(self.shared_mem_gui_vals.buf[16:24],'utf-8'))
+        self.stringArray_ch1[8].setText(str(self.global_label[4],'utf-8')+" : "+str(self.shared_mem_gui_vals.buf[24:32],'utf-8'))
         self.stringArray_ch1[9].setText("E: "+str(self.global_label[5],'utf-8'))
         self.stringArray_ch1[10].setText(str(self.global_label[6],'utf-8')+" : "+str(round(self.global_parameter[50],2)))
         self.stringArray_ch1[11].setText(str(self.global_label[7],'utf-8')+" : "+str(round(self.global_parameter[51],2)))
