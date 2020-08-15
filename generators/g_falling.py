@@ -36,6 +36,10 @@ class g_falling():
     def return_values(self):
         return [b'falling', b'wait', b'', b'', b'']
 
+    def return_gui_values(self):
+        return bytearray('{0:<8s}{1:<8s}{2:<8s}{3:<8s}'.format(str(round(self.wait,2)), '', '', ''),'utf-8')
+
+
     #def generate(self, step, dumpworld):
     def __call__(self, args):
         self.wait = int(args[0]*10)+1

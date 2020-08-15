@@ -19,6 +19,10 @@ class g_grid():
     def return_values(self):
         return [b'grid', b'stepX', b'stepY', b'stepZ', b'']
 
+    def return_gui_values(self):
+        return bytearray('{0:<8s}{1:<8s}{2:<8s}{3:<8s}'.format(str(round(self.stepX,2)), str(round(self.stepY,2)), str(round(self.stepZ,2)), ''),'utf-8')
+
+
     def __call__(self, args):
         self.stepX = round(args[0]*9)+1
         self.stepY = round(args[1]*9)+1

@@ -20,6 +20,10 @@ class g_grow():
     def return_values(self):
         return [b'grow', b'branch', b'probecolor', b'age', b'']
 
+    def return_gui_values(self):
+        return bytearray('{0:<8s}{1:<8s}{2:<8s}{3:<8s}'.format(str(round(self.branch,2)), str(round(self.probecolor,2)), str(round(self.age,2)), ''),'utf-8')
+
+
     def __call__(self, args):
         # parse arguments
         self.branch = args[0]*0.5
