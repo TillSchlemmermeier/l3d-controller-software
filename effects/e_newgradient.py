@@ -18,6 +18,9 @@ class e_newgradient():
     def return_values(self):
         return [b'newgradient', b'speed', b'Color 1', b'Color 2', b'']
 
+    def return_gui_values(self):
+        return bytearray('{0:<8s}{1:<8s}{2:<8s}{3:<8s}'.format(str(round(self.speed,1)), str(round(self.c1,1)), str(round(self.c2,1)), ''), 'utf-8')
+
     def __call__(self, world, args):
         # parsing input
         self.speed = args[0]*0.5

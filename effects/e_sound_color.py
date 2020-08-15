@@ -45,6 +45,9 @@ class e_sound_color():
     def return_values(self):
         return [b'sound_color', b'amount', b'threshold', b'color', b'']
 
+    def return_gui_values(self):
+        return bytearray('{0:<8s}{1:<8s}{2:<8s}{3:<8s}'.format(str(round(self.amount,1)), str(round(self.threshold,1)), str(round(self.base_color,1)), '', 'utf-8')
+
 
     def __call__(self, world, args):
         # parsing input
