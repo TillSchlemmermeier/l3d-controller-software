@@ -15,25 +15,29 @@ class g_planes():
         self.type = 0
         self.step = 0
 
-        self.dict = {0: 'x, oscillating',
-                     2: 'y, oscillating',
-                     4: 'z, oscillating',
-                     1: 'x, one-way',
-                     3: 'y, one-way',
-                     5: 'z, one-way'}
+        #dict for dir
+        self.dict = {0: 'X',
+                     1: 'Y',
+                     2: 'Z'}
 
     #Strings for GUI
     def return_values(self):
-        return [b'planes', b'speed', b'direction', b'saw/tri', b'']
+        return [b'planes', b'speed', b'direction', b'type', b'']
 
     def return_gui_values(self):
-        return bytearray('{0:<8s}{1:<8s}{2:<8s}{3:<8s}'.format(str(round(self.speed,2)), str(self.dir), str(self.type), ''),'utf-8')
+        direction = self.dict[self.dir]
+        if self.type == 0.5:
+            type = 'saw'
+        else:
+            type = 'triangle'
+
+        return bytearray('{0:<8s}{1:<8s}{2:<8s}{3:<8s}'.format(str(round(self.speed,2)), direction, type, ''),'utf-8')
 
 
     def __call__(self, args):
         # parsing input
         self.speed = args[0]*10+0.5
-        self.dir = int(round(args[1]*3))
+        self.dir = int(round(args[1]*2))
         if args[2] > 0.5:
             self.type = 0.5
         else:

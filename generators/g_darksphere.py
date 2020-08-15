@@ -28,7 +28,11 @@ class g_darksphere():
 
     #Strings for GUI
     def return_values(self):
-        return [b'darksphere', b'maxsize', b'growspeed', b'number of LEDs', b'']
+        return [b'darksphere', b'maxsize', b'growspeed', b'# LEDs', b'']
+
+    def return_gui_values(self):
+        return bytearray('{0:<8s}{1:<8s}{2:<8s}{3:<8s}'.format(str(round(self.maxsize,2)), str(round(self.growspeed,2)), str(round(self.nled,2)), ''),'utf-8')
+
 
     def __call__(self, args):
         self.maxsize = args[0]*10

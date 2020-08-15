@@ -13,6 +13,10 @@ class g_corner():
     def return_values(self):
         return [b'corner', b'size', b'', b'', b'']
 
+    def return_gui_values(self):
+        return bytearray('{0:<8s}{1:<8s}{2:<8s}{3:<8s}'.format(str(round(self.size,2)), '', '', ''),'utf-8')
+
+
     def __call__(self, args):
         self.size = int(args[0]*2 + 1)
 

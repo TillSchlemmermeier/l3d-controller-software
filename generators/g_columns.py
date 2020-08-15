@@ -21,7 +21,11 @@ class g_columns():
 
     #Strings for GUI
     def return_values(self):
-        return [b'columns', b'blur', b'reset', b'osc_speed', b'']
+        return [b'columns', b'blur', b'reset', b'OscSpeed', b'']
+
+    def return_gui_values(self):
+        return bytearray('{0:<8s}{1:<8s}{2:<8s}{3:<8s}'.format(str(round(self.blur,2)), str(round(self.reset,2)), str(round(self.osc_speed,2)), ''),'utf-8')
+
 
     def __call__(self, args):
         self.blur = round(args[0]*4)

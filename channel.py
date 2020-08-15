@@ -55,8 +55,11 @@ class class_channel:
             list.append(t)
 
         # print('lenght in channel', len(list))
-        values = self.generator.return_gui_values()[0:8]
-        return list, values
+        valuesG  = self.generator.return_gui_values()
+        valuesE1 = self.effect_1.return_gui_values()
+        valuesE2 = self.effect_2.return_gui_values()
+        valuesE3 = self.effect_3.return_gui_values()
+        return list, valuesG, valuesE1, valuesE2, valuesE3
 
     def render_frame(self, framecounter, parameters):
         '''

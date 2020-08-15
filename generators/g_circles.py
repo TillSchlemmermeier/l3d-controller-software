@@ -66,10 +66,14 @@ class g_circles():
         self.size2[4:6,3] = 1.0
         self.size2[4:6,6] = 1.0
 
-        
+
     #Strings for GUI
     def return_values(self):
         return [b'circles', b'number', b'', b'', b'']
+
+    def return_gui_values(self):
+        return bytearray('{0:<8s}{1:<8s}{2:<8s}{3:<8s}'.format(str(round(self.number,2)), '', '', ''),'utf-8')
+
 
     def __call__(self, args):
         self.number = int(args[0]*10)

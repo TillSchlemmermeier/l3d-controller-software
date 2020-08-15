@@ -32,6 +32,10 @@ class g_growing_corner():
     def return_values(self):
         return [b'growing_corner', b'maxsize', b'speed', b'', b'']
 
+    def return_gui_values(self):
+        return bytearray('{0:<8s}{1:<8s}{2:<8s}{3:<8s}'.format(str(round(self.maxsize,2)), str(round(self.speed,2)), '', ''),'utf-8')
+
+
     #def generate(self, step, dumpworld):
     def __call__(self, args):
         self.maxsize = args[0]*18

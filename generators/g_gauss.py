@@ -17,6 +17,10 @@ class g_gauss():
     def return_values(self):
         return [b'gauss', b'sigma', b'amplitude', b'speed', b'']
 
+    def return_gui_values(self):
+        return bytearray('{0:<8s}{1:<8s}{2:<8s}{3:<8s}'.format(str(round(self.sigma,2)), str(round(self.amplitude,2)), str(round(self.speed,2)), ''),'utf-8')
+
+
     def __call__(self, args):
         self.sigma = args[0]*5+1
         self.amplitude = args[1]*50

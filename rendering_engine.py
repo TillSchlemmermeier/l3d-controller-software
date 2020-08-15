@@ -139,6 +139,7 @@ class rendering_engine:
 
         index_label = 0
 
+
         current_values = []
 
         for i in range(4):      # loop through channels
@@ -164,10 +165,12 @@ class rendering_engine:
                 new_world = np.zeros([3, 10, 10, 10])
 
 			# get current values
-            temp, values = channel.get_labels()
+            temp, valuesG, valuesE1, valuesE2, valuesE3 = channel.get_labels()
+            # current_values.append([valuesG,valuesE1,valuesE2,valuesE3])
+            current_values.append(valuesG + valuesE1 + valuesE2 + valuesE3)
+
             for j in range(19):
                 #print(temp[j])
-                current_values.append(values)
                 self.label[j+index_label] = temp[j]
 
             # apply fade
@@ -205,7 +208,10 @@ class rendering_engine:
         #print(self.framecounter)
 
         # now we send the current values
-        self.shared_mem_gui_vals.buf[0:8] = current_values[0][0:8]
+        self.shared_mem_gui_vals.buf[0:128] = current_values[0][0:128]
+        self.shared_mem_gui_vals.buf[128:256] = current_values[1][0:128]
+        self.shared_mem_gui_vals.buf[256:384] = current_values[2][0:128]
+        self.shared_mem_gui_vals.buf[384:512] = current_values[3][0:128]
 
 
     def get_cubedata(self):
