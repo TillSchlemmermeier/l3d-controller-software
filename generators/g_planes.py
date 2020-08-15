@@ -26,7 +26,7 @@ class g_planes():
 
     def return_gui_values(self):
         direction = self.dict[self.dir]
-        if self.type == 0:
+        if self.type == 0.5:
             type = 'saw'
         else:
             type = 'triangle'
