@@ -15,6 +15,10 @@ class g_randomlines():
     def return_values(self):
         return [b'randomlines', b'wait', b'', b'', b'']
 
+    def return_gui_values(self):
+        return bytearray('{0:<8s}{1:<8s}{2:<8s}{3:<8s}'.format(str(round(self.reset,2)), '', '', ''),'utf-8')
+
+
     #def generate(self, step, dumpworld):
     def __call__(self, args):
         self.reset = int(args[0]*10)+1

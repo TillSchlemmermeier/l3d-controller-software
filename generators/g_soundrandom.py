@@ -39,6 +39,11 @@ class g_soundrandom():
     def return_values(self):
         return [b'soundrandom', b'amount', b'threshold', b'channel', b'']
 
+    def return_gui_values(self):
+        return bytearray('{0:<8s}{1:<8s}{2:<8s}{3:<8s}'.format(str(round(self.amount,2)), str(round(self.threshold,2)), str(round(self.channel,2)), ''),'utf-8')
+
+
+
     def __call__(self, args):
         self.amount = args[0]*6
         self.threshold = args[1]

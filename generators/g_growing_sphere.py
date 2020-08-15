@@ -24,7 +24,17 @@ class g_growing_sphere():
         self.step = 0
 
     def return_values(self):
-        return [b'growing_sphere', b'maxsize', b'speed', b'sin/ex/im', b'']
+        return [b'growing_sphere', b'maxsize', b'speed', b'shape', b'']
+
+    def return_gui_values(self):
+        if self.oscillate < 0.3:
+            osci = 'sin'
+        elif self.oscillate > 0.7:
+            osci = 'explode'
+        else:
+            osci = 'implode'
+        return bytearray('{0:<8s}{1:<8s}{2:<8s}{3:<8s}'.format(str(round(self.maxsize,2)), str(round(self.growspeed,2)), osci, ''),'utf-8')
+
 
     def __call__(self, args):
         self.maxsize = args[0]*10

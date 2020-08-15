@@ -17,6 +17,9 @@ class g_wave():
     def return_values(self):
         return [b'wave', b'sigma', b'speed', b'', b'']
 
+    def return_gui_values(self):
+        return bytearray('{0:<8s}{1:<8s}{2:<8s}{3:<8s}'.format(str(round(self.sigma,2)), str(round(self.speed,2)), '', ''),'utf-8')
+
     #def generate(self, step, dumpworld):
     def __call__(self, args):
         self.sigma = args[0]*1.4+0.2

@@ -25,6 +25,16 @@ class g_orbiter():
     def return_values(self):
         return [b'orbiter', b'distance', b'theta', b'rho', b'dir']
 
+    def return_gui_values(self):
+        if self.direction == 0:
+            dir = 'X'
+        elif self.direction == 1:
+            dir = 'Y'
+        else:
+            dir = 'Z'
+        return bytearray('{0:<8s}{1:<8s}{2:<8s}{3:<8s}'.format(str(round(self.distance,2)), str(round(self.theta,2)), str(round(self.rho,2)), dir),'utf-8')
+
+
     #def generate(self, step, dumpworld):
     def __call__(self, args):
         self.distance = args[0]*8

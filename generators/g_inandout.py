@@ -13,6 +13,10 @@ class g_inandout:
     def return_values(self):
         return [b'inandout', b'number', b'fade in', b'', b'']
 
+    def return_gui_values(self):
+        return bytearray('{0:<8s}{1:<8s}{2:<8s}{3:<8s}'.format(str(round(self.number,2)), str(round(self.fadespeed,2)), '', ''),'utf-8')
+
+
     #def generate(self, step, dumpworld):
     def __call__(self, args):
         self.number = int(args[0]*10+1)

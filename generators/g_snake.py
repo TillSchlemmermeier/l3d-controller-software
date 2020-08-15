@@ -28,6 +28,11 @@ class g_snake():
     def return_values(self):
         return [b'snake', b'turn', b'', b'', b'']
 
+
+    def return_gui_values(self):
+        return bytearray('{0:<8s}{1:<8s}{2:<8s}{3:<8s}'.format(str(round(self.turnprop,2)), '', '', ''),'utf-8')
+
+
     def __call__(self, args):
         self.turnprop = 1-args[0]
 

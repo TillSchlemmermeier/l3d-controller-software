@@ -23,7 +23,16 @@ class g_rising_square():
 
     #Strings for GUI
     def return_values(self):
-        return [b'rising_square', b'speed', b'Col On/Off', b'pause', b'']
+        return [b'rising_square', b'speed', b'color', b'pause', b'']
+
+    def return_gui_values(self):
+        if self.random == 0:
+            color = 'on'
+        else:
+            color = 'off'
+
+        return bytearray('{0:<8s}{1:<8s}{2:<8s}{3:<8s}'.format(str(round(self.speed,2)), color, str(round(self.speed,2)), ''),'utf-8')
+
 
     def __call__(self, args):
         self.speed = 7-int((args[0]*6))

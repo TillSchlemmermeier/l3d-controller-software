@@ -20,9 +20,15 @@ class g_pong():
         self.vec = np.array([uniform(-1, 1), uniform(-1, 1), uniform(-1, 1)])
         #self.vec = np.array([0,0,0.5])
         #self.pos = np.array([4,4,4])
+
     #Strings for GUI
     def return_values(self):
         return [b'sphere', b'speed', b'size', b'side size', b'reset']
+
+    def return_gui_values(self):
+        return bytearray('{0:<8s}{1:<8s}{2:<8s}{3:<8s}'.format(str(round(self.speed,2)), str(round(self.size,2)), str(round(self.side_size,2)), str(round(self.reset_frame,2))),'utf-8')
+
+
 
     def __call__(self, args):
         self.speed = (args[0]+0.01)*2

@@ -16,6 +16,10 @@ class g_pyramid():
     def return_values(self):
         return [b'pyramid', b'size', b'speed', b'', b'']
 
+    def return_gui_values(self):
+        return bytearray('{0:<8s}{1:<8s}{2:<8s}{3:<8s}'.format(str(round(self.size,2)), str(round(self.speed,2)), '', ''),'utf-8')
+
+
     #def generate(self, step, dumpworld):
     def __call__(self, args):
         self.size = int(args[0]+1.5)

@@ -16,6 +16,9 @@ class g_wavepattern():
     def return_values(self):
         return [b'wavepattern', b'freq', b'speed', b'', b'']
 
+    def return_gui_values(self):
+        return bytearray('{0:<8s}{1:<8s}{2:<8s}{3:<8s}'.format(str(round(self.freq,2)), str(round(self.speed,2)), '', ''),'utf-8')
+
     #def control(self, freq, speed, blub1):
     def __call__(self, args):
         self.freq = int(args[0]*10)
