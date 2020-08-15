@@ -12,6 +12,7 @@ class e_blank():
     #strings for GUI
     def return_values(self):
         return [b'blank', b'', b'', b'', b'']
+
     def return_gui_values(self):
         return bytearray('{0:<8s}{1:<8s}{2:<8s}{3:<8s}'.format('', '', '', ''),'utf-8')
 
