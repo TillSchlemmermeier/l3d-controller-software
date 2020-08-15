@@ -57,6 +57,10 @@ class g_cube_edges():
     def return_values(self):
         return [b'cube_edges', b'speed', b'number', b'', b'']
 
+    def return_gui_values(self):
+        return bytearray('{0:<8s}{1:<8s}{2:<8s}{3:<8s}'.format(str(round(self.speed,2)), str(round(self.number,2)), '', ''),'utf-8')
+
+
     def __call__(self, args):
         self.speed = args[0]*2 + 0.4
         self.number = int(3*args[1])

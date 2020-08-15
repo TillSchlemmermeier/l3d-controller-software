@@ -18,6 +18,10 @@ class g_corner_grow():
     def return_values(self):
         return [b'corner_grow', b'waiting', b'', b'', b'']
 
+    def return_gui_values(self):
+        return bytearray('{0:<8s}{1:<8s}{2:<8s}{3:<8s}'.format(str(round(self.waiting,2)), '', '', ''),'utf-8')
+
+
     def __call__(self, args):
         self.waiting = int(args[0]*50)
 

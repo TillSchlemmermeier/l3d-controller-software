@@ -17,7 +17,16 @@ class g_cube():
 
     #Strings for GUI
     def return_values(self):
-        return [b'cube', b'size', b'sides (Off / On)', b'', b'']
+        return [b'cube', b'size', b'surface', b'', b'']
+
+    def return_gui_values(self):
+        if self.sides == False:
+            sides = 'Off'
+        else:
+            sides = 'On'
+            
+        return bytearray('{0:<8s}{1:<8s}{2:<8s}{3:<8s}'.format(str(round(self.size,2)), sides, '', ''),'utf-8')
+
 
     def __call__(self, args):
         self.size = round(args[0]*4)
