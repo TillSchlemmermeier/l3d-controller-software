@@ -27,9 +27,9 @@ class g_rising_square():
 
     def return_gui_values(self):
         if self.random == 0:
-            color = 'on'
-        else:
             color = 'off'
+        else:
+            color = 'on'
 
         return bytearray('{0:<8s}{1:<8s}{2:<8s}{3:<8s}'.format(str(round(self.speed,2)), color, str(round(self.speed,2)), ''),'utf-8')
 

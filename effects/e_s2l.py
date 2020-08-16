@@ -11,7 +11,7 @@ class e_s2l():
     def __init__(self):
         # initialize pyaudio
         self.sample_rate = 44100
-        self.buffer_size = int(44100/20)
+        self.buffer_size = int(44100/20) # 20 is best
         p = pyaudio.PyAudio()
 
         self.stream = p.open(
@@ -88,6 +88,7 @@ class e_s2l():
 
         # apply manipulation
         for i in range(3):
+            #print(current_volume)
             world[i, :, :, :] *= (1-self.amount) + np.clip(current_volume,0,1)*self.amount
 
         return np.clip(world, 0, 1)
@@ -107,9 +108,13 @@ class e_s2l():
 
     def update_line(self):
 
-        temp_buf = self.stream.read(100)
+        #print(self.stream.get_read_available())
+
+        temp_buf = self.stream.read(100,exception_on_overflow = False)
+#        print('-')
 
         while True:
+#            print('')
             # read buffer and calculate spectrum
             temp_buf += self.stream.read(self.stream.get_read_available())
             if len(temp_buf) > self.buffer_size*2:

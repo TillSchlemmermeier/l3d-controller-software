@@ -23,7 +23,7 @@ class g_pong():
 
     #Strings for GUI
     def return_values(self):
-        return [b'sphere', b'speed', b'size', b'side size', b'reset']
+        return [b'pong', b'speed', b'size', b'side size', b'reset']
 
     def return_gui_values(self):
         return bytearray('{0:<8s}{1:<8s}{2:<8s}{3:<8s}'.format(str(round(self.speed,2)), str(round(self.size,2)), str(round(self.side_size,2)), str(round(self.reset_frame,2))),'utf-8')

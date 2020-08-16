@@ -8,7 +8,7 @@ from generators.g_squares import *
 from generators.g_trees import *
 from generators.g_wave import *
 from generators.g_rising_square import *
-from generators.g_planes_falling import *
+#from generators.g_planes_falling import *
 from generators.g_growingface import *
 from generators.g_snake import *
 from generators.g_soundcube import *
@@ -45,9 +45,12 @@ from generators.a_squares_cut import *
 from generators.a_testbot import *
 from generators.g_soundsphere import *
 from generators.g_swell import *
+from generators.g_sides import *
 # from generators.g_grid import *
 from generators.g_pong import *
 from generators.g_edgelines import *
+from generators.g_obliqueplaneXYZ import *
+from generators.g_growing_sphere_rand import *
 
 
 from effects.e_blank import *
@@ -96,10 +99,10 @@ generators.append(g_squares)
 #row 2
 generators.append(g_trees)
 generators.append(g_rising_square)
-generators.append(g_blank)
+generators.append(g_obliqueplaneXYZ)
 generators.append(g_growingface)
 generators.append(g_snake)
-generators.append(g_blank)
+generators.append(g_sides)
 generators.append(g_sound_lines)
 generators.append(g_shooting_star)
 
@@ -109,7 +112,7 @@ generators.append(g_randomlines)
 generators.append(g_randomcross)
 generators.append(g_rain)
 generators.append(g_orbiter)
-generators.append(g_blank)
+generators.append(g_growing_sphere_rand)
 generators.append(g_blank)
 generators.append(g_pyramid)
 
@@ -138,7 +141,7 @@ generators.append(g_blank)
 generators.append(a_multi_cube_edges)
 generators.append(g_blank)
 generators.append(a_orbbot)
-#generators.append(g_torus)
+generators.append(g_blank)
 generators.append(g_pong)
 generators.append(g_edgelines)
 generators.append(g_soundcube)

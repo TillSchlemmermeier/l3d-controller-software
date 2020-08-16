@@ -69,10 +69,10 @@ for i in [2, 7, 12, 17]:
 
     labels[i, 1, 0] = 'trees'
     labels[i, 1, 1] = 'rising\nsquare'
-    labels[i, 1, 2] = 'blank'
+    labels[i, 1, 2] = 'oblique\nplaneXYZ'
     labels[i, 1, 3] = 'growing\nface'
     labels[i, 1, 4] = 'snake'
-    labels[i, 1, 5] = 'blank'
+    labels[i, 1, 5] = 'sides'
     labels[i, 1, 6] = 'sound_lines'
     labels[i, 1, 7] = 'shooting\nstar'
 
@@ -81,7 +81,7 @@ for i in [2, 7, 12, 17]:
     labels[i, 2, 2] = 'random\ncross'
     labels[i, 2, 3] = 'rain'
     labels[i, 2, 4] = 'orbiter'
-    labels[i, 2, 5] = 'blank'
+    labels[i, 2, 5] = 'growing_sphere_rand'
     labels[i, 2, 6] = 'blank'
     labels[i, 2, 7] = 'pyramid'
 

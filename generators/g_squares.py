@@ -14,9 +14,9 @@ class g_squares():
         return [b'squares', b'speed', b'dir', b'type', b'']
 
     def return_gui_values(self):
-        if self.direction == 0:
+        if self.dir == 0:
             dir = 'X'
-        elif self.direction == 1:
+        elif self.dir == 1:
             dir ='Y'
         else:
             dir = 'Z'

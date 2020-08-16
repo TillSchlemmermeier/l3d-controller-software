@@ -12,6 +12,8 @@ class e_rotating_rainbow():
         self.rotation = 0.1
         self.gradient_length = 1.0
         self.step = 1
+        self.rotX = 1
+        self.rotYZ = 1
 
     #strings for GUI
     def return_values(self):
