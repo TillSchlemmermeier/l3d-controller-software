@@ -51,7 +51,7 @@ from generators.g_pong import *
 from generators.g_edgelines import *
 from generators.g_obliqueplaneXYZ import *
 from generators.g_growing_sphere_rand import *
-
+from generators.g_text import *
 
 from effects.e_blank import *
 from effects.e_rainbow import *
@@ -84,6 +84,8 @@ from effects.e_squared import *
 from effects.e_violetblue import *
 from effects.e_zoom import e_zoom
 from effects.e_rotating_rainbow import *
+from effects.e_radial_gradient import *
+from effects.e_sound_color import *
 
 generators = []
 
@@ -113,7 +115,7 @@ generators.append(g_randomcross)
 generators.append(g_rain)
 generators.append(g_orbiter)
 generators.append(g_growing_sphere_rand)
-generators.append(g_blank)
+generators.append(g_text)
 generators.append(g_pyramid)
 
 #row 4
@@ -195,8 +197,8 @@ effects.append(e_rotating_black_white)
 effects.append(e_rotating_blue_orange)
 effects.append(e_rotation)
 effects.append(e_rotating_rainbow)
-effects.append(e_blank)
-effects.append(e_blank)
+effects.append(e_radial_gradient)
+effects.append(e_sound_color)
 effects.append(e_blank)
 
 #row 3: empty

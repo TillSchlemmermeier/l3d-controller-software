@@ -3,72 +3,102 @@ from random import uniform
 from generators.g_shooting_star_f import gen_shooting_star
 
 class g_shooting_star():
-    '''
-    Generator: shooting star
-
-    a shooting star from somewhere through the cube
-    '''
 
     def __init__(self):
-        self.refresh = 16   # number of frames after creating a new shooting star
-        self.speed = 1.0    # moving speed
-        self.s0, self.v = gen_line(self.speed)
-        self.step = 0
+        # default parameter
+        self.counter = 1
+        self.steps = 4
+        self.mode = 'in'
+        self.add_wait = 4
 
-    #Strings for GUI
+        self.dot_list = []
+        self.dot_list.append(gen_line_2(self.steps, self.mode))
+
     def return_values(self):
-        return [b'shooting_star', b'refresh', b'speed', b'', b'']
+        return [b'shooting star', b'wait frames', b'speed', b'mode', b'']
 
     def return_gui_values(self):
-        return bytearray('{0:<8s}{1:<8s}{2:<8s}{3:<8s}'.format(str(round(self.refresh,2)), str(round(self.speed,2)), '', ''),'utf-8')
+        return bytearray('{0:<8s}{1:<8s}{2:<8s}{3:<8s}'.format(str(self.add_wait), str(19-self.steps), self.mode, ''),'utf-8')
 
-
-    #def generate(self, step, dumpworld):
     def __call__(self, args):
-        self.refresh = int(round(args[0]*20)+1)
-        self.speed = 0.5*(args[1]+0.1)
+        self.add_wait = int(args[0]*10+1)
+        self.steps = 20-int(args[1]*18)
+        if args[2] < 0.25:
+            self.mode = 'in'
+        elif args[2] > 0.25 and args[2] < 0.5:
+            self.mode = 'out'
+        elif args[2] > 0.5 and args[2] < 0.75:
+            self.mode = 'through'
+        else:
+            self.mode = 'top'
 
         world = np.zeros([3, 10, 10, 10])
 
-        # every <refresh> frames: generate new vector
-        if self.step == 1 or self.step % self.refresh == 0:
-            self.s0, self.v = gen_line(self.speed)
+        # add new dot
+        if self.counter % self.add_wait == 0:
+            self.dot_list.insert(0, gen_line_2(self.steps, self.mode))
 
-        [sx, sy, sz] = s(self.s0, self.v, self.step % self.refresh)
-        # return current position of shooting star
-        self.step += 1
-        # switch on leds depending on distance
-#        world[0,:,:,:] = np.rot90(gen_shooting_star(sx,sy,sz), axes = [0,1], k=3)
-        world[0,:,:,:] = gen_shooting_star(sx,sy,sz)
+
+        delete_last = False
+        # print('-', len(self.dot_list))
+        for i in range(len(self.dot_list)):
+            # print(i, len(self.dot_list[i]))
+            try:
+                tempworld = np.zeros([10, 10, 10])
+                tempworld = gen_shooting_star(self.dot_list[i][0][0],
+                                              self.dot_list[i][0][1],
+                                              self.dot_list[i][0][2])
+                world[0, :, :, :] += tempworld
+                del self.dot_list[i][0]
+
+                if len(self.dot_list[i]) < 1:
+                    # print('delete', i)
+                    delete_last = True
+
+            except:
+                pass
+
+        if delete_last:
+            del(self.dot_list[-1])
+
+
         world[1,:,:,:] = world[0,:,:,:]
         world[2,:,:,:] = world[0,:,:,:]
 
+        self.counter += 1
 
         return np.clip(world, 0, 1)
 
-def gen_line(speed):
-    # generate outside point
-    # adjust angles for falling down shooting stars!
-    #p1 = polar2z(10, uniform(-2, 2), uniform(0, np.pi))
-    p2 = [10, uniform(-1, 10),uniform(-1, 10)]
 
-    # generate a point somewhere in the middle
-    p1 = [-1, uniform(4, 5),uniform(4, 5)]
+def gen_line_2(steps, mode):
+    if mode == 'out':
+        p1 = [4.5, 4.5 ,4.5]
+        p2 = polar2z(10, uniform(0, np.pi), uniform(0, 2*np.pi))
+        p2[0] += 4.5
+        p2[1] += 4.5
+        p2[2] += 4.5
 
-    v = []
-    # calculate vector
-    v.append(speed*(p2[0] - p1[0]))
-    v.append(speed*(p2[1] - p1[1]))
-    v.append(speed*(p2[2] - p1[2]))
+    elif mode == 'top':
+        p2 = [10, uniform(-1, 10),uniform(-1, 10)]
+        p1 = [-1, uniform(4, 5),uniform(4, 5)]
 
-    return p1, v
+    else:
+        p2 = [4.5, 4.5 ,4.5]
+        p1 = polar2z(10, uniform(0, np.pi), uniform(0, 2*np.pi))
+        p1[0] += 4.5
+        p1[1] += 4.5
+        p1[2] += 4.5
 
-def s(s0, v, t):
-    # cartesian coordinates of a point on the line
-    x = s0[0] + v[0]*t
-    y = s0[1] + v[1]*t
-    z = s0[2] + v[2]*t
-    return [x, y, z]
+    if mode == 'through':
+        v = [2*(p2[0] - p1[0]), 2*(p2[1] - p1[1]), 2*(p2[2] - p1[2])]
+    else:
+        v = [p2[0] - p1[0], p2[1] - p1[1], p2[2] - p1[2]]
+
+    coords = []
+    for i in range(steps):
+        coords.append([p1[0]+i*v[0]/steps, p1[1]+i*v[1]/steps, p1[2]+i*v[2]/steps])
+
+    return coords
 
 def polar2z(r, theta, phi):
     # polar coordinates to cartesian

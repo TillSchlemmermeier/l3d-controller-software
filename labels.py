@@ -82,7 +82,7 @@ for i in [2, 7, 12, 17]:
     labels[i, 2, 3] = 'rain'
     labels[i, 2, 4] = 'orbiter'
     labels[i, 2, 5] = 'growing_sphere_rand'
-    labels[i, 2, 6] = 'blank'
+    labels[i, 2, 6] = 'text'
     labels[i, 2, 7] = 'pyramid'
 
     labels[i, 3, 0] = 'pyramid\n(upside)'
@@ -136,7 +136,8 @@ for i in [3,4,5, 8,9,10, 13,14,15, 18,19,20]:
     labels[i, 2, 2] = 'rotate\nblack/orange'
     labels[i, 2, 3] = 'rotation'
     labels[i, 2, 4] = 'rotating\nrainbow'
-
+    labels[i, 2, 5] = 'radial\ngradient'
+    labels[i, 2, 6] = 'sound\ncolor'
 #    labels[i, 3, 0] = 'cut\ncube'
 #    labels[i, 3, 1] = 'growing\nsphere'
 #    labels[i, 3, 2] = 'outer\nshadow'

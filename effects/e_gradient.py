@@ -8,8 +8,8 @@ class e_gradient():
 
     def __init__(self):
 
-        self.c1 = [0.1,0.0,0.0]
-        self.c2 = [0.4,0.4,0.0]
+        self.c1 = 0.1 # [0.1,0.0,0.0]
+        self.c2 = 0.4 # [0.4,0.4,0.0]
         self.balance = 1.0
 
     #strings for GUI
