@@ -341,6 +341,15 @@ class class_akai:
         elif message[1] == 30:
             self.global_parameter[133] = message[2]/127.0
 
+        # s2l
+        elif message[1] == 16:
+            self.global_parameter[10] = message[2]/127.0
+        elif message[1] == 20:
+            self.global_parameter[10] = message[2]/127.0
+        elif message[1] == 24:
+            self.global_parameter[10] = message[2]/127.0
+        elif message[1] == 28:
+            self.global_parameter[10] = message[2]/127.0
 
 class class_launchpad:
     def __init__(self,array):
