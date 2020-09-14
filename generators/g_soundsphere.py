@@ -31,8 +31,6 @@ class g_soundsphere():
 
 
     def __call__(self, args):
-        # get sound data
-        total_volume = self.update_line()
 
         # process parameters
         self.maxsize = args[0]*10
