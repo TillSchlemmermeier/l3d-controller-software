@@ -19,6 +19,7 @@ from gui_class import MainWindow
 from artnet_interface import class_artnet
 from time import sleep
 import multiprocessing as mp
+from s2l_engine import sound_process
 
 #from PyQt5.QtCore import QObject,QThread, pyqtSigna
 #from mainwindow import Ui_MainWindow
@@ -78,6 +79,7 @@ if __name__ == '__main__':
     global_parameter = mp.Array('d', [0 for x in range(255)])
     global_label     = mp.Array(c_char_p, 100)
     global_memory   = mp.shared_memory.SharedMemory(create = True,name = "GuiValues1", size = 512)
+    global_memory_s2l   = mp.shared_memory.SharedMemory(create = True,name = "global_s2l_memory", size = 512)
 
 
     for i in range(100):
@@ -88,18 +90,27 @@ if __name__ == '__main__':
     proc_renderer = mp.Process(target=rendering, args = [global_parameter, global_label])
     proc_gui = mp.Process(target=gui, args = [global_parameter,global_label])
     # proc_artnet = mp.Process(target=artnet_process, args = [global_parameter])
+    proc_sound = mp.Process(target = sound_process, args = [global_parameter])
 
     # starting processes
     print('start')
     proc_midi.start()
     proc_renderer.start()
     proc_gui.start()
+    proc_sound.start()
     # proc_artnet.start()
 
 #    time.sleep(1)
     proc_midi.join()
     proc_renderer.join()
     proc_gui.join()
+    proc_sound.join()
 #    proc_artnet.join()
 
+    global_memory.close()
+    global_memory_s2l.close()
+    global_memory.unlink()
+    global_memory_s2l.unlink()
+
     print('done')
+s

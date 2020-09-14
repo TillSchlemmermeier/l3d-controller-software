@@ -345,11 +345,11 @@ class class_akai:
         elif message[1] == 16:
             self.global_parameter[10] = message[2]/127.0
         elif message[1] == 20:
-            self.global_parameter[10] = message[2]/127.0
+            self.global_parameter[11] = message[2]/127.0
         elif message[1] == 24:
-            self.global_parameter[10] = message[2]/127.0
+            self.global_parameter[12] = message[2]/127.0
         elif message[1] == 28:
-            self.global_parameter[10] = message[2]/127.0
+            self.global_parameter[13] = message[2]/127.0
 
 class class_launchpad:
     def __init__(self,array):
