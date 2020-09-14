@@ -108,7 +108,7 @@ def sound_process(array):
         if not normalized[0]:
             buffer.append(final_data)
 
-            if len(buffer) > 50:
+            if len(buffer) > 100:
                 print('normalized')
                 normalized[0] = True
                 min[0] = np.min(np.array(buffer), axis = 0)
@@ -135,6 +135,7 @@ def sound_process(array):
             # get data
             freq_ind = np.argmin(abs(freq_axis - selectors[i]))
             current_volume = round(final_data[freq_ind],4)
+
 
             # apply threshold
             if current_volume < thresholds[0]:

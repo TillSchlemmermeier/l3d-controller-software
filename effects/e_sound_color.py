@@ -29,7 +29,7 @@ class e_sound_color():
     def __call__(self, world, args):
 
         # process parameters
-        self.colorstep = args[0]+0.001
+        self.colorstep = 0.1*args[0]+0.001
         self.channel = int(args[1]*3)
 
         current_volume = float(str(self.sound_values.buf[self.channel*8:self.channel*8+8],'utf-8'))

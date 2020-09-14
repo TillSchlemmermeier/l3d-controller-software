@@ -362,7 +362,7 @@ class class_akai:
             self.global_parameter[17] = message[2]/127.0
 
         # s2l normlizing trigger
-        elif message[1] == 32:
+        elif message[1] == 46:
             self.global_parameter[18] = message[2]/127.0
 
 

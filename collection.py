@@ -34,7 +34,7 @@ from generators.g_corner_grow import *
 from generators.g_columns import *
 from generators.g_circles import *
 from generators.g_grow import *
-#from generators.g_torus import *
+from generators.g_torus import *
 from generators.g_sound_lines import *
 #from generators.g_centralglow import *
 from generators.a_multi_cube_edges import *
@@ -144,7 +144,7 @@ generators.append(g_blank)
 generators.append(a_multi_cube_edges)
 generators.append(g_blank)
 generators.append(a_orbbot)
-generators.append(g_blank)
+generators.append(g_torus)
 generators.append(g_pong)
 generators.append(g_edgelines)
 generators.append(g_soundcube)

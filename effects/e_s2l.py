@@ -14,7 +14,6 @@ class e_s2l():
         # parameters
         self.amount = 1.0
         self.channel = 1.0
-
         self.sound_values = shared_memory.SharedMemory(name = "global_s2l_memory")
 
     def return_values(self):
@@ -32,7 +31,7 @@ class e_s2l():
         # print('-')
         # print(str(self.sound_values.buf[self.channel*8:self.channel*8+8],'utf-8'))
         # print(float(str(self.sound_values.buf[self.channel*8:self.channel*8+8],'utf-8')))
-        current_volume = float(str(self.sound_values.buf[self.channel*8:self.channel*8+8],'utf-8'))
+        current_volume = float(str(self.sound_values.buf[self.channel*8:self.channel*8+8],'utf-8'))**4
 
         # apply manipulation
         for i in range(3):
