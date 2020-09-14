@@ -353,13 +353,13 @@ class class_akai:
 
         # s2l threshold
         elif message[1] == 17:
-            self.global_parameter[15] = message[2]/127.0
+            self.global_parameter[14] = message[2]/127.0
         elif message[1] == 21:
-            self.global_parameter[16] = message[2]/127.0
+            self.global_parameter[15] = message[2]/127.0
         elif message[1] == 25:
-            self.global_parameter[17] = message[2]/127.0
+            self.global_parameter[16] = message[2]/127.0
         elif message[1] == 29:
-            self.global_parameter[18] = message[2]/127.0
+            self.global_parameter[17] = message[2]/127.0
 
         # s2l normlizing trigger
         elif message[1] == 32:

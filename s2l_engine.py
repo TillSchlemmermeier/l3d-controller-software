@@ -66,8 +66,8 @@ def sound_process(array):
     # normalization
     normalized = [False]
     buffer = []
-    min = [np.zeros(40)]
-    max = [np.ones(40)]
+    min = [np.zeros(60)]
+    max = [np.ones(60)]
 
     def update_line(frame, normalized, buffer, min, max):
         # update selectors
@@ -116,10 +116,10 @@ def sound_process(array):
         select3.set_data([selectors[2], selectors[2]], [-10,10])
         select4.set_data([selectors[3], selectors[3]], [-10,10])
 
-        thres1.set_data([selectors[0]-10, selectors[0]+10], [threshold[0],threshold[0]])
-        thres2.set_data([selectors[1]-10, selectors[1]+10], [threshold[1],threshold[1]])
-        thres3.set_data([selectors[2]-10, selectors[2]+10], [threshold[2],threshold[2]])
-        thres4.set_data([selectors[3]-10, selectors[3]+10], [threshold[3],threshold[3]])
+        thres1.set_data([selectors[0]-0.1*selectors[0], selectors[0]+0.1*selectors[0]], [thresholds[0],thresholds[0]])
+        thres2.set_data([selectors[1]-0.1*selectors[1], selectors[1]+0.1*selectors[1]], [thresholds[1],thresholds[1]])
+        thres3.set_data([selectors[2]-0.1*selectors[2], selectors[2]+0.1*selectors[2]], [thresholds[2],thresholds[2]])
+        thres4.set_data([selectors[3]-0.1*selectors[3], selectors[3]+0.1*selectors[3]], [thresholds[3],thresholds[3]])
 
         # write data
         for i in range(len(selectors)):
@@ -128,7 +128,7 @@ def sound_process(array):
             current_volume = round(final_data[freq_ind],4)
 
             # apply threshold
-            if s < threshold[0]:
+            if current_volume < thresholds[0]:
                 current_volume = 0.0
 
             string = '{:8}'.format(current_volume)
