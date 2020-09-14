@@ -28,10 +28,12 @@ def sound_process(array):
         output = False,
         frames_per_buffer = buffer_size)
 
-    freq_axis = 10000*np.linspace(0, 1, 40)**2
+    freq_axis = 10000*np.linspace(0, 1, 60)**2
 
     # initialize selector
     selectors = [1000, 3000, 7000, 9000]
+    thresholds = [0.0, 0.0, 0.0, 0.0]
+
     # inital read
     dump = stream.read(1024)
     data = struct.unpack("%dh"%(1024), dump)
@@ -49,6 +51,12 @@ def sound_process(array):
     select2 = ax.plot([100,500], [-10,10], label = '2', color = 'green')[0]
     select3 = ax.plot([100,1000], [-10,10], label = '3', color = 'blue')[0]
     select4 = ax.plot([100,2000], [-10,10], label = '4', color = 'orange')[0]
+
+    thres1 = ax.plot([100-10,100+10], [0,0],  color = 'red')[0]
+    thres2 = ax.plot([100-10,100+10], [0,0],  color = 'green')[0]
+    thres3 = ax.plot([100-10,100+10], [0,0],  color = 'blue')[0]
+    thres4 = ax.plot([100-10,100+10], [0,0], color = 'orange')[0]
+
     ax.set_xscale('symlog', linthreshx=0.01)
 
     ax.set_xticks([50, 100, 250, 500, 1000, 2500, 5000, 10000])
@@ -67,6 +75,12 @@ def sound_process(array):
         selectors[1] = (array[11]**2)*10000
         selectors[2] = (array[12]**2)*10000
         selectors[3] = (array[13]**2)*10000
+
+        # update threshold
+        thresholds[0] = array[14]
+        thresholds[1] = array[15]
+        thresholds[2] = array[16]
+        thresholds[3] = array[17]
 
         # read raw data and unpack it
         n_available = stream.get_read_available()
@@ -102,14 +116,26 @@ def sound_process(array):
         select3.set_data([selectors[2], selectors[2]], [-10,10])
         select4.set_data([selectors[3], selectors[3]], [-10,10])
 
+        thres1.set_data([selectors[0]-10, selectors[0]+10], [threshold[0],threshold[0]])
+        thres2.set_data([selectors[1]-10, selectors[1]+10], [threshold[1],threshold[1]])
+        thres3.set_data([selectors[2]-10, selectors[2]+10], [threshold[2],threshold[2]])
+        thres4.set_data([selectors[3]-10, selectors[3]+10], [threshold[3],threshold[3]])
+
         # write data
         for i in range(len(selectors)):
+            # get data
             freq_ind = np.argmin(abs(freq_axis - selectors[i]))
-            string = '{:8}'.format(round(final_data[freq_ind],4))
+            current_volume = round(final_data[freq_ind],4)
+
+            # apply threshold
+            if s < threshold[0]:
+                current_volume = 0.0
+
+            string = '{:8}'.format(current_volume)
             bla = bytearray('{:.8}'.format(string[:8]),'utf-8')
             sound_values.buf[i*8:i*8+8] =  bla
 
-        return line, select1, select2, select3, select4,
+        return line, select1, select2, select3, select4, thres1, thres2, thres3, thres4
 
-    animation = FuncAnimation(fig, func = update_line, interval=0.001, blit=True, fargs = (normalized, buffer, min, max))
+    animation = FuncAnimation(fig, func = update_line, interval=10, blit=True, fargs = (normalized, buffer, min, max))
     plt.show()

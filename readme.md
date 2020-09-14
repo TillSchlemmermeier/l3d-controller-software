@@ -36,6 +36,11 @@ In the following, the global parameters are listed. Default values are given in 
 |       11 | value 2                  | 0-X    | 0
 |       12 | value 3                  | 0-X    | 0
 |       13 | value 4                  | 0-X    | 0
+|       14 | thresh 1                 | 0-X    | 0
+|       15 | thresh 2                 | 0-X    | 0
+|       16 | thresh 3                 | 0-X    | 0
+|       17 | thresh 4                 | 0-X    | 0
+|       18 | normalize                | 0-X    | 0
 | 20 -  39 | **channel settings**
 |       20 | generator channel 1      | 0-255  | 0
 |       21 | effect 1 channel 1       | 0-255  | 0

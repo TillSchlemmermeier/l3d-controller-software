@@ -351,6 +351,21 @@ class class_akai:
         elif message[1] == 28:
             self.global_parameter[13] = message[2]/127.0
 
+        # s2l threshold
+        elif message[1] == 17:
+            self.global_parameter[15] = message[2]/127.0
+        elif message[1] == 21:
+            self.global_parameter[16] = message[2]/127.0
+        elif message[1] == 25:
+            self.global_parameter[17] = message[2]/127.0
+        elif message[1] == 29:
+            self.global_parameter[18] = message[2]/127.0
+
+        # s2l normlizing trigger
+        elif message[1] == 32:
+            self.global_parameter[19] = message[2]/127.0
+
+
 class class_launchpad:
     def __init__(self,array):
         # open midi input
