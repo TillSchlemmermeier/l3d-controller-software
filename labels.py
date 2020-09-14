@@ -111,6 +111,7 @@ for i in [2, 7, 12, 17]:
     labels[i, 5, 5] = 'pong'
     labels[i, 5, 6] = 'edgelines'
     labels[i, 5, 7] = 'soundcube'
+    labels[i, 5, 7] = 'mean\nup-down'
 
 # add effect
 for i in [3,4,5, 8,9,10, 13,14,15, 18,19,20]:

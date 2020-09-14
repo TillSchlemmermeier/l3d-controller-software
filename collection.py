@@ -86,6 +86,7 @@ from effects.e_zoom import e_zoom
 from effects.e_rotating_rainbow import *
 from effects.e_radial_gradient import *
 from effects.e_sound_color import *
+from effects.e_mean_updown import *
 
 generators = []
 
@@ -199,7 +200,7 @@ effects.append(e_rotation)
 effects.append(e_rotating_rainbow)
 effects.append(e_radial_gradient)
 effects.append(e_sound_color)
-effects.append(e_blank)
+effects.append(e_mean_updown)
 
 #row 3: empty
 effects.append(e_blank)
