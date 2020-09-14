@@ -363,7 +363,7 @@ class class_akai:
 
         # s2l normlizing trigger
         elif message[1] == 32:
-            self.global_parameter[19] = message[2]/127.0
+            self.global_parameter[18] = message[2]/127.0
 
 
 class class_launchpad:
