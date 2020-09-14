@@ -69,6 +69,8 @@ def sound_process(array):
     min = [np.zeros(60)]
     max = [np.ones(60)]
 
+    norm_value = [0.0]
+
     def update_line(frame, normalized, buffer, min, max):
         # update selectors
         selectors[0] = (array[10]**2)*10000
@@ -81,6 +83,13 @@ def sound_process(array):
         thresholds[1] = array[15]
         thresholds[2] = array[16]
         thresholds[3] = array[17]
+
+        # check for normalizing
+        if array[18] != norm_value[0]:
+            normalized[0] = False
+            norm_value[0] = array[18]
+            buffer[:] = []
+            print('s2l engine : reseting normalization')
 
         # read raw data and unpack it
         n_available = stream.get_read_available()
