@@ -36,7 +36,7 @@ from generators.g_circles import *
 from generators.g_grow import *
 from generators.g_torus import *
 from generators.g_sound_lines import *
-#from generators.g_centralglow import *
+from generators.g_centralglow import *
 from generators.a_multi_cube_edges import *
 from generators.a_orbbot import *
 from generators.g_multicube import *
@@ -49,9 +49,13 @@ from generators.g_sides import *
 # from generators.g_grid import *
 from generators.g_pong import *
 from generators.g_edgelines import *
+from generators.g_obliqueplane import *
+from generators.g_smiley import *
 from generators.g_obliqueplaneXYZ import *
 from generators.g_growing_sphere_rand import *
 from generators.g_text import *
+from generators.g_sinus import *
+from generators.g_sound_ellipsoid import *
 
 from effects.e_blank import *
 from effects.e_rainbow import *
@@ -61,11 +65,8 @@ from effects.e_staticcolor import *
 from effects.e_palettes import *
 from effects.e_s2l import *
 from effects.e_gradient import *
-from effects.e_blur import *
 from effects.e_bright_osci import *
 from effects.e_cut_cube import *
-from effects.e_fade2blue import *
-from effects.e_growing_sphere import *
 from effects.e_mean import *
 from effects.e_mean_vertical import *
 from effects.e_newgradient import *
@@ -74,8 +75,8 @@ from effects.e_prod_hue import *
 from effects.e_prod_saturation import *
 from effects.e_random_brightness import *
 from effects.e_rare_strobo import *
+from effects.e_outer_shadow import *
 from effects.e_redyellow import *
-from effects.e_remove_random import *
 from effects.e_rotating_black_color import *
 from effects.e_rotating_black_white import *
 from effects.e_rotating_blue_orange import *
@@ -87,6 +88,7 @@ from effects.e_rotating_rainbow import *
 from effects.e_radial_gradient import *
 from effects.e_sound_color import *
 from effects.e_mean_updown import *
+from effects.e_sound_gradient import *
 
 generators = []
 
@@ -125,7 +127,7 @@ generators.append(g_inandout)
 generators.append(g_growing_corner)
 generators.append(g_falling)
 generators.append(g_drop)
-generators.append(g_blank)
+generators.append(g_obliqueplane)
 generators.append(g_cut)
 generators.append(g_multicube)
 
@@ -140,9 +142,9 @@ generators.append(g_soundsphere)
 generators.append(g_swell)
 
 #row 6
-generators.append(g_blank)
+generators.append(g_smiley)
 generators.append(a_multi_cube_edges)
-generators.append(g_blank)
+generators.append(g_centralglow)
 generators.append(a_orbbot)
 generators.append(g_torus)
 generators.append(g_pong)
@@ -150,8 +152,8 @@ generators.append(g_edgelines)
 generators.append(g_soundcube)
 
 # row 7
-generators.append(g_blank)
-generators.append(g_blank)
+generators.append(g_sinus)
+generators.append(g_sound_ellipsoid)
 generators.append(g_blank)
 generators.append(g_blank)
 generators.append(g_blank)
@@ -203,8 +205,8 @@ effects.append(e_sound_color)
 effects.append(e_mean_updown)
 
 #row 3: empty
-effects.append(e_blank)
-effects.append(e_blank)
+effects.append(e_outer_shadow)
+effects.append(e_sound_gradient)
 effects.append(e_blank)
 effects.append(e_blank)
 effects.append(e_blank)

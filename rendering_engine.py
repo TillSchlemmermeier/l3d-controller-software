@@ -30,8 +30,6 @@ class rendering_engine:
               if false, the rendering engine is logging,
               but only errors/warnings
         """
-
-
         # initialise variables
         self.framecounter = 1
         self.logging = log
