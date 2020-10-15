@@ -35,6 +35,7 @@ class g_random():
         self.reset = int(args[1]*10+1)
         self.channel = int(args[2]*4)-1
 
+        # check if s2l is activated
         if self.channel >= 0:
             current_volume = float(str(self.sound_values.buf[self.channel*8:self.channel*8+8],'utf-8'))
             self.number_of_leds += current_volume*30
