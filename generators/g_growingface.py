@@ -17,6 +17,7 @@ class g_growingface():
     - maxsize
     - growspeed
     - oscillate y/n
+    - s2l channel
     '''
 
     def __init__(self):
@@ -29,18 +30,27 @@ class g_growingface():
         self.ypos = 0
         self.zpos = 0
 
+        self.sound_values = shared_memory.SharedMemory(name = "global_s2l_memory")
+        self.channel = 4
+
     #Strings for GUI
     def return_values(self):
-        return [b'growingface', b'maxsize', b'speed', b'', b'']
+        return [b'growingface', b'maxsize', b'speed', b'channel', b'']
 
     def return_gui_values(self):
-        return bytearray('{0:<8s}{1:<8s}{2:<8s}{3:<8s}'.format(str(round(self.maxsize,2)), str(round(self.growspeed,2)), '', ''),'utf-8')
+        if self.channel >= 0:
+            channel = str(self.channel)
+        else:
+            channel = 'noS2L'
+
+        return bytearray('{0:<8s}{1:<8s}{2:<8s}{3:<8s}'.format(str(round(self.maxsize,2)), str(round(self.growspeed,2)), channel, ''),'utf-8')
 
 
     def __call__(self, args):
         self.maxsize = args[0]*17
         self.growspeed = 55 - (args[1]*45+9)
         self.steps = int(self.maxsize/self.growspeed)
+        self.channel = int(args[2]*4)-1
 
     #def generate(self, step, dumpworld):
 
@@ -48,15 +58,21 @@ class g_growingface():
 
         # check for new calculation
         if self.counter > self.growspeed:
-
-            #self.xpos = 4.5*randint(0,2)
-            #self.ypos = 4.5*randint(0,2)
-            #self.zpos = 4.5*randint(0,2)
             list = ([0,4.5,4.5],[9,4.5,4.5],[4.5,0,4.5],[4.5,9,4.5],[4.5,4.5,0],[4.5,4.5,9])
             [self.xpos, self.ypos, self.zpos] = choice(list)
 
-
             self.counter = 0
+
+        elif self.channel >= 0:
+            if self.counter == 0:
+                list = ([0,4.5,4.5],[9,4.5,4.5],[4.5,0,4.5],[4.5,9,4.5],[4.5,4.5,0],[4.5,4.5,9])
+                [self.xpos, self.ypos, self.zpos] = choice(list)
+            current_volume = float(str(self.sound_values.buf[self.channel*8:self.channel*8+8],'utf-8'))
+                if current_volume > 0:
+                    self.counter += int(current_volume*2)
+                    if self.counter > self.maxsize:
+                        self.counter = 0
+
 
         x = self.xpos
         y = self.ypos
