@@ -1,6 +1,7 @@
 # modules
 import numpy as np
 from random import randint
+from multiprocessing import shared_memory
 
 
 class g_randomlines():
@@ -10,10 +11,13 @@ class g_randomlines():
         self.counter = 0
         self.saveworld = np.zeros([3,10,10,10])
 
+        self.sound_values = shared_memory.SharedMemory(name = "global_s2l_memory")
+        self.channel = 0
+
 
     #Strings for GUI
     def return_values(self):
-        return [b'randomlines', b'wait', b'', b'', b'']
+        return [b'randomlines', b'wait', b'channel', b'', b'']
 
     def return_gui_values(self):
         return bytearray('{0:<8s}{1:<8s}{2:<8s}{3:<8s}'.format(str(round(self.reset,2)), '', '', ''),'utf-8')
