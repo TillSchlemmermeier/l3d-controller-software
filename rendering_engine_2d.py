@@ -6,7 +6,7 @@ from world2vox_fortran import world2vox_f as world2vox
 from channel import class_channel
 from multiprocessing import shared_memory
 
-class rendering_engine:
+class rendering_engine_2d:
     """
     L3D Cube 3.0
 
@@ -19,7 +19,7 @@ class rendering_engine:
     - entries ordered as described in
       readme
     """
-    def __init__(self, array, resolution = [20, 10], label, log=False):
+    def __init__(self, array, label, resolution = [20, 10], log=False):
         """
         Initialises the rendering engine
 

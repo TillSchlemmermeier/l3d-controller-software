@@ -3,6 +3,7 @@
 import time
 # import rendering class
 from rendering_engine import rendering_engine
+from rendering_engine_2d import rendering_engine_2d
 # import global variable
 #from global_parameter_module import global_parameter
 from copy import deepcopy
