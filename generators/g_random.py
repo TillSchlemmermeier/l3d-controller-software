@@ -19,7 +19,7 @@ class g_random():
         self.safeworld = np.zeros([3, 10, 10, 10])
 
     def return_values(self):
-        return [b'g_random', b'N LED', b'Wait', b'',b'']
+        return [b'g_random', b'N LED', b'Wait', b'channel',b'']
 
     def return_gui_values(self):
         if self.channel >=0:
