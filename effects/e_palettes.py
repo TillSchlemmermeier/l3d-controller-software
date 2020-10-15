@@ -21,11 +21,11 @@ from itertools import cycle
 # install with pip3 install --user palettable
 from palettable.cartocolors.diverging import Geyser_7
 from palettable.cartocolors.qualitative import Prism_9
-from palettable.cartocolors.diverging import tropic_7
+from palettable.cartocolors.diverging import Tropic_7
 from palettable.cmocean.sequential import Phase_11
 from palettable.mycarta import Cube1_19
-from palettable.sequential import PuBu_7
-from palettable.sequential import YlOrRd_9
+from palettable.colorbrewer.sequential import PuBu_7
+from palettable.colorbrewer.sequential import YlOrRd_9
 
 
 class e_palettes:
@@ -176,7 +176,7 @@ class e_palettes:
                         ,TableauMedium_10
                         ,TrafficLight_9]
         '''
-        self.palettes = [Geyer_7, Prism_9, Tropic_7, Phase_11, Cube1_19, PuBu_7, YlOrRd_9]
+        self.palettes = [Geyser_7, Prism_9, Tropic_7, Phase_11, Cube1_19, PuBu_7, YlOrRd_9]
 
         self.waiting_frames = 1
         self.palette = cycle(self.palettes[0].colors)

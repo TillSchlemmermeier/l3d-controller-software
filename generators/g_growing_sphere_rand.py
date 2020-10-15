@@ -26,7 +26,7 @@ class g_growing_sphere_rand():
         self.wait = 15
 
     def return_values(self):
-        return [b'growing_sphere', b'maxsize', b'speed', b'shape', b'refr_fram']
+        return [b'growing_sphere', b'maxsize', b'speed', b'shape', b'']
 
     def return_gui_values(self):
         if self.oscillate < 0.3:

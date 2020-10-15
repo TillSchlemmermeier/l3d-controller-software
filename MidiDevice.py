@@ -11,7 +11,7 @@ class class_launchpad_mk3:
         self.midiin, self.portname_in = open_midiinput(port= ':1')
         self.midiout, self.portname_out = open_midioutput(port = ':1')
         self.global_parameter = array
-        #activate programming mode
+        # activate programming mode
         self.midiout.send_message([240,0,32,41,2,13,14,1,247])
         # turn leds off
         for i, c in zip(range(11,88), range(0,88-11)):
@@ -65,7 +65,7 @@ class class_launchpad_mk3:
                 key = [9-int(message[1]*0.1), message[1]%10]
                 # key[1] defines the channel, starting at 1
 
-                print(message)
+#                print(message)
 
                 # start/stop cube
                 if message[1] == 88:
@@ -76,7 +76,7 @@ class class_launchpad_mk3:
                         self.global_parameter[1] = 1
                         self.global_parameter[2] = 0.0
                         self.global_parameter[3] = 1.0
-                        self.global_parameter[20] = 1
+                        # self.global_parameter[20] = 1
                         # activate channel 1
                         self.global_parameter[40] = 1
                         self.global_parameter[41] = 1
@@ -151,7 +151,6 @@ class class_launchpad_mk3:
                             self.load_preset(preset_id = message[1]+add, channel = self.state[1])
                         except:
                             print('error loading preset')
-#                        self.global_parameter[index] = message[1]+add
 
                     else:
                         # figure out the state
@@ -165,14 +164,11 @@ class class_launchpad_mk3:
 
         # send colors and state at the end
         self.sendstate()
-        #print('state after', self.state)
-
 
     def save_preset(self, channel, filename = 'presets.dat'):
         '''appends the current values of a channel to a file
         channel goes from 1 to 4
         '''
-
         # assemble list of parameters
         list = []
         list.append('name')
@@ -230,13 +226,11 @@ class class_launchpad_mk3:
         else:
             channel_number = self.state[0]*4
             self.global_parameter[4] = channel_number*self.state[1]
-            # print('launchpad state:', self.state)
 
         # first, turn all leds off
         for i in range(11,89):
             self.midiout.send_message([144, i, 0])
 
-        # print(self.global_parameter[ 40])
         # send the state of the channel switches (on/off)
         self.midiout.send_message([176, 91, self.global_parameter[ 40]*127])
         self.midiout.send_message([176, 92, self.global_parameter[ 70]*127])
@@ -275,11 +269,6 @@ class class_launchpad_mk3:
                 color = 37
             else:
                 color = 0
-
-            # send color
-            #for i in range(11,89):
-            #    self.midiout.send_message([144, i, color])
-            #    if i%10 == 3 or i%10 == 6
 
             i = 11
             for x in range(8):
@@ -362,7 +351,7 @@ class class_akai:
             self.global_parameter[17] = message[2]/127.0
 
         # s2l normlizing trigger
-        elif message[1] == 32:
+        elif message[1] == 46:
             self.global_parameter[18] = message[2]/127.0
 
 

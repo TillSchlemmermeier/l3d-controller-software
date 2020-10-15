@@ -34,13 +34,13 @@ class e_mean_updown():
         self.amount = args[0]
         self.fade = args[1]
 
-        if self.args[2] > 0.5:
+        if args[2] > 0.5:
             self.dir = 'up'
         else:
             self.dir = 'down'
 
 
-        if self.dir == 'up'
+        if self.dir == 'up':
             fade = self.mean_up
         else:
             fade = self.mean_down

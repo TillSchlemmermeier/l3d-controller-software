@@ -21,6 +21,7 @@ class g_sound_lines():
 
         self.counter = 1
         self.reset = 20
+        self.sound_values = shared_memory.SharedMemory(name = "global_s2l_memory")
 
     def return_values(self):
         return [b'sound_lines', b'reset', b'channel', b'', b'']

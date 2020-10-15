@@ -88,29 +88,29 @@ class MainWindow(QtWidgets.QMainWindow):
         fighter_CGF.setStyleSheet('background-color: rgba(150, 150, 150, 1);')
         self.fighter_CGL = QtWidgets.QHBoxLayout(fighter_CGF)
         # SUB containers for fighter channels 1-4
-        fi_ch1_CGF = QtWidgets.QFrame(fighter_CGF)
-        fi_ch1_CGF.setFixedWidth(155)
-        self.fighter_CGL.addWidget(fi_ch1_CGF)
-        fi_ch1_CGF.setStyleSheet('background-color: rgba(175, 175, 175, 1);')
-        fi_ch1_CGL = QtWidgets.QVBoxLayout(fi_ch1_CGF)
+        self.fi_ch1_CGF = QtWidgets.QFrame(fighter_CGF)
+        self.fi_ch1_CGF.setFixedWidth(155)
+        self.fighter_CGL.addWidget(self.fi_ch1_CGF)
+        self.fi_ch1_CGF.setStyleSheet('background-color: rgba(175, 175, 175, 1);')
+        fi_ch1_CGL = QtWidgets.QVBoxLayout(self.fi_ch1_CGF)
 
-        fi_ch2_CGF = QtWidgets.QFrame(fighter_CGF)
-        fi_ch2_CGF.setFixedWidth(155)
-        self.fighter_CGL.addWidget(fi_ch2_CGF)
-        fi_ch2_CGF.setStyleSheet('background-color: rgba(175, 175, 175, 1);')
-        fi_ch2_CGL = QtWidgets.QVBoxLayout(fi_ch2_CGF)
+        self.fi_ch2_CGF = QtWidgets.QFrame(fighter_CGF)
+        self.fi_ch2_CGF.setFixedWidth(155)
+        self.fighter_CGL.addWidget(self.fi_ch2_CGF)
+        self.fi_ch2_CGF.setStyleSheet('background-color: rgba(175, 175, 175, 1);')
+        fi_ch2_CGL = QtWidgets.QVBoxLayout(self.fi_ch2_CGF)
 
-        fi_ch3_CGF = QtWidgets.QFrame(fighter_CGF)
-        fi_ch3_CGF.setFixedWidth(155)
-        self.fighter_CGL.addWidget(fi_ch3_CGF)
-        fi_ch3_CGF.setStyleSheet('background-color: rgba(175, 175, 175, 1);')
-        fi_ch3_CGL = QtWidgets.QVBoxLayout(fi_ch3_CGF)
+        self.fi_ch3_CGF = QtWidgets.QFrame(fighter_CGF)
+        self.fi_ch3_CGF.setFixedWidth(155)
+        self.fighter_CGL.addWidget(self.fi_ch3_CGF)
+        self.fi_ch3_CGF.setStyleSheet('background-color: rgba(175, 175, 175, 1);')
+        fi_ch3_CGL = QtWidgets.QVBoxLayout(self.fi_ch3_CGF)
 
-        fi_ch4_CGF = QtWidgets.QFrame(fighter_CGF)
-        fi_ch4_CGF.setFixedWidth(155)
-        self.fighter_CGL.addWidget(fi_ch4_CGF)
-        fi_ch4_CGF.setStyleSheet('background-color: rgba(175, 175, 175, 1);')
-        fi_ch4_CGL = QtWidgets.QVBoxLayout(fi_ch4_CGF)
+        self.fi_ch4_CGF = QtWidgets.QFrame(fighter_CGF)
+        self.fi_ch4_CGF.setFixedWidth(155)
+        self.fighter_CGL.addWidget(self.fi_ch4_CGF)
+        self.fi_ch4_CGF.setStyleSheet('background-color: rgba(175, 175, 175, 1);')
+        fi_ch4_CGL = QtWidgets.QVBoxLayout(self.fi_ch4_CGF)
 ####
         #self.button_StartR = QtWidgets.QPushButton("Start")
         #self.button_StopR = QtWidgets.QPushButton("Stop")
@@ -508,5 +508,25 @@ class MainWindow(QtWidgets.QMainWindow):
             elif active == 3:
                 for i in channel[19:24]:
                     i.setStyleSheet("font-weight: bold; color: black; font: 20px; background-color: "+oncolor[3])
+
+        if self.global_parameter[40] == 0:
+            self.fi_ch1_CGF.setStyleSheet('background-color: rgba(75, 75, 75, 1);')
+        elif self.global_parameter[40] == 1:
+            self.fi_ch1_CGF.setStyleSheet('background-color: rgba(175, 175, 175, 1);')
+
+        if self.global_parameter[70] == 0:
+            self.fi_ch2_CGF.setStyleSheet('background-color: rgba(75, 75, 75, 1);')
+        elif self.global_parameter[70] == 1:
+            self.fi_ch2_CGF.setStyleSheet('background-color: rgba(175, 175, 175, 1);')
+
+        if self.global_parameter[100] == 0:
+            self.fi_ch3_CGF.setStyleSheet('background-color: rgba(75, 75, 75, 1);')
+        elif self.global_parameter[100] == 1:
+            self.fi_ch3_CGF.setStyleSheet('background-color: rgba(175, 175, 175, 1);')
+
+        if self.global_parameter[130] == 0:
+            self.fi_ch4_CGF.setStyleSheet('background-color: rgba(75, 75, 75, 1);')
+        elif self.global_parameter[130] == 1:
+            self.fi_ch4_CGF.setStyleSheet('background-color: rgba(175, 175, 175, 1);')
 
         self.copied_params = self.global_parameter[:]

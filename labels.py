@@ -90,7 +90,7 @@ for i in [2, 7, 12, 17]:
     labels[i, 3, 2] = 'growing\ncorner'
     labels[i, 3, 3] = 'falling '
     labels[i, 3, 4] = 'drop'
-    labels[i, 3, 5] = 'blank'
+    labels[i, 3, 5] = 'oblique\nplane'
     labels[i, 3, 6] = 'cut'
     labels[i, 3, 7] = 'multicube'
 
@@ -103,16 +103,18 @@ for i in [2, 7, 12, 17]:
     labels[i, 4, 6] = 'sound\nsphere'
     labels[i, 4, 7] = 'swell'
 
-    labels[i, 5, 0] = 'blank'
+    labels[i, 5, 0] = 'smiley'
     labels[i, 5, 1] = 'a_multi\ncube_edges'
-    labels[i, 5, 2] = 'blank'
+    labels[i, 5, 2] = 'centralglow'
     labels[i, 5, 3] = 'a_orbot'
     labels[i, 5, 4] = 'torus'
     labels[i, 5, 5] = 'pong'
     labels[i, 5, 6] = 'edgelines'
     labels[i, 5, 7] = 'soundcube'
-    labels[i, 5, 7] = 'mean\nup-down'
 
+    labels[i, 6, 0] = 'sinus'
+    labels[i, 6, 1] = 'sound\nellipsoid'
+    
 # add effect
 for i in [3,4,5, 8,9,10, 13,14,15, 18,19,20]:
     labels[i, 0, 1] = 'blank'
@@ -139,7 +141,10 @@ for i in [3,4,5, 8,9,10, 13,14,15, 18,19,20]:
     labels[i, 2, 4] = 'rotating\nrainbow'
     labels[i, 2, 5] = 'radial\ngradient'
     labels[i, 2, 6] = 'sound\ncolor'
-#    labels[i, 3, 0] = 'cut\ncube'
+    labels[i, 2, 7] = 'mean\nup-down'
+
+    labels[i, 3, 0] = 'outer\nshadow'
+    labels[i, 3, 1] = 'sound\ngradient'
 #    labels[i, 3, 1] = 'growing\nsphere'
 #    labels[i, 3, 2] = 'outer\nshadow'
 #    labels[i, 3, 3] = 'zoom'

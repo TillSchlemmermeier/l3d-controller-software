@@ -11,7 +11,7 @@ from scipy.interpolate import griddata
 from scipy.ndimage.filters import uniform_filter1d
 import multiprocessing as mp
 from multiprocessing import shared_memory
-
+import matplotlib as mpl
 
 def sound_process(array):
     # initialize pyaudio
@@ -31,7 +31,7 @@ def sound_process(array):
     freq_axis = 10000*np.linspace(0, 1, 60)**2
 
     # initialize selector
-    selectors = [1000, 3000, 7000, 9000]
+    selectors = [200, 1000, 2000, 5000]
     thresholds = [0.0, 0.0, 0.0, 0.0]
 
     # inital read
@@ -42,6 +42,7 @@ def sound_process(array):
 
     print('\nstarting sound loop\n')
 
+    mpl.rcParams['toolbar'] = 'None'
     # initialize figure
     fig, ax = plt.subplots()
     ax.set_xlim(50, 10000)
@@ -108,7 +109,7 @@ def sound_process(array):
         if not normalized[0]:
             buffer.append(final_data)
 
-            if len(buffer) > 50:
+            if len(buffer) > 100:
                 print('normalized')
                 normalized[0] = True
                 min[0] = np.min(np.array(buffer), axis = 0)
@@ -135,6 +136,7 @@ def sound_process(array):
             # get data
             freq_ind = np.argmin(abs(freq_axis - selectors[i]))
             current_volume = round(final_data[freq_ind],4)
+
 
             # apply threshold
             if current_volume < thresholds[0]:

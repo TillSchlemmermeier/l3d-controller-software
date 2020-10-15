@@ -19,7 +19,7 @@ class e_radial_gradient():
                     # print(x*100+10*y+z, np.round(np.sqrt((x-4.5)**2+(y-4.5)**2+(z-4.5)**2),2))
 
     def return_values(self):
-        return [b'gradient', b'Color In', b'ColorOut', b'Balance', b'']
+        return [b'rad grad', b'Color In', b'ColorOut', b'Balance', b'']
 
     def return_gui_values(self):
         return bytearray('{0:<8s}{1:<8s}{2:<8s}{3:<8s}'.format(str(round(self.c1,1)), str(round(self.c2,1)), str(round(self.balance,1)), ''), 'utf-8')
@@ -31,10 +31,10 @@ class e_radial_gradient():
         # self.balance = 1 - (2 * args[2])
         self.balance = 4*args[2]+0.01
 
-        if self.c2 > self.c1:
-            temp = self.c1
-            self.c1 = self.c2
-            self.c2 = temp
+        #if self.c2 > self.c1:
+        #    temp = self.c1
+        #    self.c1 = self.c2
+        #    self.c2 = temp
 
         # generate color list
         # x = np.array([0,1,2,3,4,5,6,7,8,9])

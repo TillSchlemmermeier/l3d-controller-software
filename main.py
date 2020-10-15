@@ -81,9 +81,14 @@ if __name__ == '__main__':
     global_memory   = mp.shared_memory.SharedMemory(create = True,name = "GuiValues1", size = 512)
     global_memory_s2l   = mp.shared_memory.SharedMemory(create = True,name = "global_s2l_memory", size = 512)
 
-
     for i in range(100):
         global_label[i] = b'init'
+
+    # start values for s2l_engine
+    global_parameter[10] = 0.1
+    global_parameter[11] = 0.2
+    global_parameter[12] = 0.45
+    global_parameter[13] = 0.7
 
     # assign processes
     proc_midi = mp.Process(target=midi_devices, args = [global_parameter])
@@ -92,10 +97,35 @@ if __name__ == '__main__':
     # proc_artnet = mp.Process(target=artnet_process, args = [global_parameter])
     proc_sound = mp.Process(target = sound_process, args = [global_parameter])
 
+    # if test modus, load last temporary preset
+    if len(sys.argv) >= 2:
+        if sys.argv[1] == '--test':
+            print(' test mode - loading temporary preset')
+            with open('temporary_preset.dat') as file:
+                presets = file.readlines()
+
+
+            try:
+                indices = []
+                indices.append([20, 21, 22, 23] + [x for x in range( 40, 70)])
+                preset = presets[-1].strip('\n').split()
+                print('loading preset', preset[0])
+
+                # write values into global parameter array
+                # hopefully on the right place
+                for i, value in zip(indices[0], preset[1:]):
+                    # dont set channel on/off
+                    if i not in [40, 70, 100, 130]:
+                        global_parameter[i] = float(value)
+            except:
+                print('error loading temporary preset')
+
     # starting processes
     print('start')
     proc_midi.start()
+
     proc_renderer.start()
+
     proc_gui.start()
     proc_sound.start()
     # proc_artnet.start()
