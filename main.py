@@ -85,10 +85,29 @@ def rendering(array, label, pause_time = 0.03, log = False):
         # render frame
         frame_renderer.run()
 
-def gui(array,label):
+def rendering_2d(array, label, pause_time = 0.03, log = False):
+    '''
+    Rendering Thread
+    '''
+    print('...starting rendering thread')
+
+    if log == True:
+        print('...is logging')
+        # long sleeping time, so logfile is not flooded
+        pause_time = 2
+
+    # start rendering engine
+    frame_renderer = rendering_engine_2d(array, label, [10, 10],log)
+
+    while True:
+        time.sleep(pause_time)
+        # render frame
+        frame_renderer.run()
+
+def gui(array, label, mode):
     '''main routine'''
     app = QtWidgets.QApplication(sys.argv)
-    window = MainWindow(array,label)
+    window = MainWindow(array, label, mode)
     #window.resize(640, 480)
     window.showFullScreen()
     sys.exit(app.exec_())
@@ -109,10 +128,17 @@ if __name__ == '__main__':
     global_parameter[12] = 0.45
     global_parameter[13] = 0.7
 
+    if len(sys.argv) >= 2:
+        if sys.argv[1] == '--2d':
+            proc_renderer = mp.Process(target=rendering_2d, args = [global_parameter, global_label])
+            mode = '2d'
+    else:
+        mode = '3d'
+        proc_renderer = mp.Process(target=rendering, args = [global_parameter, global_label])
+
     # assign processes
     proc_midi = mp.Process(target=midi_devices, args = [global_parameter])
-    proc_renderer = mp.Process(target=rendering, args = [global_parameter, global_label])
-    proc_gui = mp.Process(target=gui, args = [global_parameter,global_label])
+    proc_gui = mp.Process(target=gui, args = [global_parameter, global_label, mode])
     # proc_artnet = mp.Process(target=artnet_process, args = [global_parameter])
     proc_sound = mp.Process(target = sound_process, args = [global_parameter])
 

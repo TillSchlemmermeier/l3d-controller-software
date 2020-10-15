@@ -7,11 +7,13 @@ class class_channel:
     '''
     Class for a channel
     '''
-    def __init__(self, resolution, id = 0):
+    def __init__(self, id = 0, resolution = [10,10]):
         '''
         initialises a channel by calling g_blank
         and e_blank
         '''
+        self.resolution = resolution
+
         self.id = id
         self.generator = generators[0](self.resolution)
         self.effect_1 = effects[0]()
@@ -19,8 +21,7 @@ class class_channel:
         self.effect_3 = effects[0]()
         self.settings_list = [0, 0, 0, 0]
 
-        self.resolution = resolution
-
+        print('->', self.resolution)
         logging.info('Channel '+str(self.id)+' initialised')
 
     def set_settings(self, settings):
