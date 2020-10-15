@@ -1,6 +1,7 @@
 # modules
 from itertools import cycle
 from multiprocessing import shared_memory
+import numpy as np
 
 class g_cube():
     '''
@@ -21,7 +22,6 @@ class g_cube():
         self.channel = 4
 
         self.sizes = cycle([0,1,2,3,4])
-        self.cube = g_cube()
 
         self.sound_values = shared_memory.SharedMemory(name = "global_s2l_memory")
 
@@ -35,7 +35,7 @@ class g_cube():
         else:
             sides = 'On'
 
-        if self.channel < 4:
+        if self.channel >= 0:
             channel = str(self.channel)
         else:
             channel = 'noS2L'
@@ -49,9 +49,7 @@ class g_cube():
             self.sides = False
         else:
             self.sides = True
-        self.channel = int(args[0]*4)
-
-        current_volume = float(str(self.sound_values.buf[self.channel*8:self.channel*8+8],'utf-8'))
+        self.channel = int(args[2]*4)-1
 
         # create world
         world = np.zeros([3, 10, 10, 10])
@@ -62,10 +60,14 @@ class g_cube():
             tempworld[:, :, :] = -1.0
 
         #check if s2l is activated
-        if self.channel < 4:
+        if self.channel >= 0:
+            current_volume = float(str(self.sound_values.buf[self.channel*8:self.channel*8+8],'utf-8'))
+
             # apply threshold
             if current_volume > 0:
-                self.size = next(self.sizes)
+                size = next(self.sizes)
+            else:
+                size = 0
         else:
             size = self.size
 

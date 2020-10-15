@@ -2,12 +2,19 @@ import time
 import sys
 from PyQt5 import QtWidgets, QtGui, QtCore
 import numpy as np
-from labels import labels
+from labels import labels as t_labels
+from labels_2d import labels as t_labels_2d
 from multiprocessing import shared_memory
 
 class MainWindow(QtWidgets.QMainWindow):
 
-    def __init__(self, array, label ,parent=None):
+    def __init__(self, array, label , mode, parent=None):
+
+        if mode == '2d':
+            self.labels = t_labels_2d
+        else:
+            self.labels = t_labels
+
 
         super(MainWindow, self).__init__()
 
@@ -312,7 +319,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
         # get labels of active menu
         # this is given by self.global_parameter[200]
-        current_labels = labels[int(self.global_parameter[200]), :, :]
+        current_labels = self.labels[int(self.global_parameter[200]), :, :]
 
         # we need an index for the active generator/effect
         ind = -1

@@ -3,7 +3,7 @@ import numpy as np
 import logging
 import serial
 from world2vox_fortran import world2vox_f as world2vox
-from channel import class_channel
+from channel_2d import class_channel
 from multiprocessing import shared_memory
 
 class rendering_engine_2d:
@@ -194,8 +194,8 @@ class rendering_engine_2d:
         # sort it from 2d to 3d!
         # this has to be done by hand
         self.world_3d = np.zeros([3, 10, 10, 10])
-        self.world_3d[:, :, :, 0] = self.cubeworld[3, :10, :]
-        self.world_3d[:, :, :, 1] = self.cubeworld[3, 10:20, :]
+        self.world_3d[:, :, :, 0] = self.cubeworld[:, :10, :]
+        #self.world_3d[:, :, :, 1] = self.cubeworld[:, 10:20, :]
 
         # now we send the current values
         self.shared_mem_gui_vals.buf[0:128]   = current_values[0][0:128]
