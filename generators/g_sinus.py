@@ -26,7 +26,12 @@ class g_sinus():
         return [b'g_sinus', b'FreqY', b'FreqZ', b'step',b'channel']
 
     def return_gui_values(self):
-        return bytearray('{0:<8s}{1:<8s}{2:<8s}{3:<8s}'.format(str(round(self.freq1,2)), str(round(self.freq2,2)), str(round(self.stepincrease,2)), str(self.channel)),'utf-8')
+        if self.channel < 4:
+            channel = str(self.channel)
+        else:
+            channel = 'noS2L'
+
+        return bytearray('{0:<8s}{1:<8s}{2:<8s}{3:<8s}'.format(str(round(self.freq1,2)), str(round(self.freq2,2)), str(round(self.stepincrease,2)), channel),'utf-8')
 
 
     def __call__(self, args):

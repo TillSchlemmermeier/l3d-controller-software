@@ -55,7 +55,13 @@ for i in [1, 6, 11, 16]:
 
         counter += 1
 
+    #third grow
+    for j in range(0, 8):
+        if counter < len(preset_labels):
+            print (j, counter)
+            labels[i, 2, j] = preset_labels[counter]
 
+        counter += 1
 
 # add generators
 for i in [2, 7, 12, 17]:
@@ -114,7 +120,7 @@ for i in [2, 7, 12, 17]:
 
     labels[i, 6, 0] = 'sinus'
     labels[i, 6, 1] = 'sound\nellipsoid'
-    
+
 # add effect
 for i in [3,4,5, 8,9,10, 13,14,15, 18,19,20]:
     labels[i, 0, 1] = 'blank'

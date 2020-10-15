@@ -18,6 +18,7 @@ from MidiDevice import class_fighter, class_akai, class_launchpad_mk3
 from gui_class import MainWindow
 from artnet_interface import class_artnet
 from time import sleep
+from time import time as tottime
 import multiprocessing as mp
 from s2l_engine import sound_process
 
@@ -35,8 +36,25 @@ def midi_devices(array):
     launchpad = class_launchpad_mk3(array)
     akai = class_akai(array)
 
+    temptime = tottime()
+    temp_param = [0 for i in range(255)]
+    temp_param[:] = array[:]
     while True:
-        time.sleep(1)
+        time.sleep(0.5)
+
+        # check for changes
+        for i in range(4):
+            if array[20+5*i:25+5*i] != temp_param[20+5*i:25+5*i]:
+                if array[20+5*i] != temp_param[20+5*i]:
+                    midifighter.event(['T', i, 0])
+                elif array[21+5*i] != temp_param[21+5*i]:
+                    midifighter.event(['T', i, 1])
+                elif array[22+5*i] != temp_param[22+5*i]:
+                    midifighter.event(['T', i, 2])
+                elif array[23+5*i] != temp_param[23+5*i]:
+                    midifighter.event(['T', i, 3])
+
+                temp_param[:] = array[:]
         pass
 
 def artnet_process(array):

@@ -1,4 +1,3 @@
-
 import time as time
 from rtmidi.midiutil import open_midiinput,open_midioutput, open_midiport
 #from rtmidi.midiconstants import NOTE_ON, NOTE_OFF,CONTROL_CHANGE
@@ -160,7 +159,7 @@ class class_launchpad_mk3:
                         add = -82 + (8-int(message[1]*0.1))*18
 
                         self.global_parameter[index] = message[1]+add
-                        #print('launchpad sets: ', index, self.global_parameter[index])
+                        print('launchpad sets: ', index, self.global_parameter[index])
 
         # send colors and state at the end
         self.sendstate()
@@ -410,7 +409,7 @@ class class_launchpad:
                     else:
                         index = 19 + self.state[0] + 5* self.state[1]
                         self.global_parameter[index] = int(self.convert(message[1])-1)
-                        print('launchpad sets: ', index, self.global_parameter[index])
+                        # print('launchpad sets: ', index, self.global_parameter[index])
 
         # send colors and state at the end
         self.sendstate()
@@ -506,20 +505,26 @@ class class_fighter:
 
     def event(self, event, data=None):
         """Call gets midi message and calls the mapping routine"""
-        # gets message
-        message, deltatime = event
 
-        # figure out the mapping
-        key = self.setParameters(message[0], message[1], message[2])
-
-        # if there is no state-switch, write the value into
-        # the global variable - all values go from 0 - 1
-        if key != []:
-            self.global_parameter[key[0]] = key[1]/127.0
-        else:
-            # when a stateswitch is detected, send all values
-            # and colors back to midifighter
+        if event[0] == 'T':
+            self.current_state[event[1]] = event[2]
             self.sendstate()
+        else:
+            # gets message
+            message, deltatime = event
+
+            # figure out the mapping
+            key = self.setParameters(message[0], message[1], message[2])
+
+            # if there is no state-switch, write the value into
+            # the global variable - all values go from 0 - 1
+            if key != []:
+                self.global_parameter[key[0]] = key[1]/127.0
+            else:
+                # when a stateswitch is detected, send all values
+                # and colors back to midifighter
+                self.sendstate()
+
 
     def sendstate(self):
         """Sends colors and values to MidiFighter"""
