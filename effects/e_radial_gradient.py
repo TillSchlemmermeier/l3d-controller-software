@@ -43,7 +43,7 @@ class e_radial_gradient():
 
     def __call__(self, world, args):
         # parsing input
-        self.balance = 4 * args[2] + 0.01
+        self.balance = 6 * args[2] + 0.01
         self.channel = int(args[3]*4)-1
 
         # check if s2l is activated

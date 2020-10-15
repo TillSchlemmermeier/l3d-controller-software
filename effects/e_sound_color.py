@@ -21,7 +21,7 @@ class e_sound_color():
 
     def return_values(self):
         # strings for GUI
-        return [b's2l', b'color stp', b'', b'channel', b'']
+        return [b's2l', b'color stp', b'channel', b'', b'']
 
     def return_gui_values(self):
         return bytearray('{0:<8s}{1:<8s}{2:<8s}{3:<8s}'.format(str(round(self.colorstep,2)), str(self.channel), '', '') ,'utf-8')

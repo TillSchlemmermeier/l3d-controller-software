@@ -3,6 +3,7 @@ import numpy as np
 from scipy.signal import sawtooth
 from random import randint, choice
 from generators.g_genhsphere import gen_hsphere
+from multiprocessing import shared_memory
 
 
 # fortran routine is in g_growing_sphere_f.f90
@@ -64,14 +65,14 @@ class g_growingface():
             self.counter = 0
 
         elif self.channel >= 0:
+            current_volume = float(str(self.sound_values.buf[self.channel*8:self.channel*8+8],'utf-8'))
             if self.counter == 0:
                 list = ([0,4.5,4.5],[9,4.5,4.5],[4.5,0,4.5],[4.5,9,4.5],[4.5,4.5,0],[4.5,4.5,9])
                 [self.xpos, self.ypos, self.zpos] = choice(list)
-            current_volume = float(str(self.sound_values.buf[self.channel*8:self.channel*8+8],'utf-8'))
-                if current_volume > 0:
-                    self.counter += int(current_volume*2)
-                    if self.counter > self.maxsize:
-                        self.counter = 0
+            if current_volume > 0:
+                self.counter += 1
+                if self.counter > self.growspeed:
+                    self.counter = 0
 
 
         x = self.xpos
@@ -88,6 +89,7 @@ class g_growingface():
         world[1, :, :, :] = world[0, :, :, :]
         world[2, :, :, :] = world[0, :, :, :]
 
-        self.counter += 1
+        if self.channel < 0:
+            self.counter += 1
 
         return np.round(np.clip(world, 0, 1), 3)

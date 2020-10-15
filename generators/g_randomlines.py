@@ -14,8 +14,6 @@ class g_randomlines():
         self.sound_values = shared_memory.SharedMemory(name = "global_s2l_memory")
         self.channel = 0
 
-
-    #Strings for GUI
     def return_values(self):
         return [b'randomlines', b'wait', b'channel', b'', b'']
 
@@ -27,19 +25,25 @@ class g_randomlines():
 
         return bytearray('{0:<8s}{1:<8s}{2:<8s}{3:<8s}'.format(str(round(self.reset,2)), channel, '', ''),'utf-8')
 
-
-    #def generate(self, step, dumpworld):
     def __call__(self, args):
         self.reset = int(args[0]*10)+1
         self.channel = int(args[1]*4)-1
 
         world = np.zeros([3, 10, 10, 10])
 
-        # check if s2l is activated
-        if self.channel >= 0 or self.counter % self.reset == 0:
+        if self.counter % self.reset == 0:
+            direction = randint(0, 2)
+            if direction == 0:
+                world[:, :, randint(0, 9), randint(0, 9)] = 1
+
+            elif direction == 1:
+                world[:, randint(0, 9), :, randint(0, 9)] = 1
+            elif direction == 2:
+                world[:, randint(0, 9), randint(0, 9), :] = 1
+
+        elif self.channel >= 0:
             current_volume = float(str(self.sound_values.buf[self.channel*8:self.channel*8+8],'utf-8'))
             if current_volume > 0:
-
                 direction = randint(0, 2)
                 if direction == 0:
                     world[:, :, randint(0, 9), randint(0, 9)] = 1

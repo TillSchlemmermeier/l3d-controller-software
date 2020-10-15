@@ -151,6 +151,7 @@ for i in [3,4,5, 8,9,10, 13,14,15, 18,19,20]:
 
     labels[i, 3, 0] = 'outer\nshadow'
     labels[i, 3, 1] = 'sound\ngradient'
+    labels[i, 3, 2] = 'randomizer'
 #    labels[i, 3, 1] = 'growing\nsphere'
 #    labels[i, 3, 2] = 'outer\nshadow'
 #    labels[i, 3, 3] = 'zoom'
