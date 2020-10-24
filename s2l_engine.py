@@ -45,6 +45,7 @@ def sound_process(array):
     mpl.rcParams['toolbar'] = 'None'
     # initialize figure
     fig, ax = plt.subplots()
+    fig.size = [1.6,1.2]
     ax.set_xlim(50, 10000)
     ax.set_ylim(-0.1,2)
     line = ax.plot(freqs, np.abs(FFT))[0]

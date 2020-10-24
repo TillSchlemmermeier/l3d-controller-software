@@ -25,11 +25,12 @@ class e_gradient():
         self.c2 = args[1] # hsv_to_rgb(c2,1,1)
         self.balance = 1 - (2 * args[2])
 
+        '''
         if self.c2 > self.c1:
             temp = self.c1
             self.c1 = self.c2
             self.c2 = temp
-
+        '''
 
         # generate color list
         x = np.array([0,1,2,3,4,5,6,7,8,9])

@@ -26,14 +26,19 @@ class g_sinus():
         return [b'g_sinus', b'FreqY', b'FreqZ', b'step',b'channel']
 
     def return_gui_values(self):
-        return bytearray('{0:<8s}{1:<8s}{2:<8s}{3:<8s}'.format(str(round(self.freq1,2)), str(round(self.freq2,2)), str(round(self.stepincrease,2)), str(self.channel)),'utf-8')
+        if self.channel >=0:
+            channel = str(self.channel)
+        else:
+            channel = 'noS2L'
+
+        return bytearray('{0:<8s}{1:<8s}{2:<8s}{3:<8s}'.format(str(round(self.freq1,2)), str(round(self.freq2,2)), str(round(self.stepincrease,2)), channel),'utf-8')
 
 
     def __call__(self, args):
         self.freq1 = args[0]
         self.freq2 = args[1]
         self.stepincrease = args[2]*0.5
-        self.channel = int(args[3]*4)
+        self.channel = int(args[3]*4)-1
 
         world = np.zeros([3, 10, 10, 10])
 
@@ -45,7 +50,8 @@ class g_sinus():
             for z in range(10):
                 world[:,map[y,z]+5,y,z] = 1.0
 
-        if self.channel < 4:
+        # check if S2L is activated
+        if self.channel >= 0:
             current_volume = float(str(self.sound_values.buf[self.channel*8:self.channel*8+8],'utf-8'))
             self.step += current_volume
         else:

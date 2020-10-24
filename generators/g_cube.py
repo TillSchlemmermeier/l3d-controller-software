@@ -1,6 +1,7 @@
 # modules
+from itertools import cycle
+from multiprocessing import shared_memory
 import numpy as np
-
 
 class g_cube():
     '''
@@ -9,23 +10,37 @@ class g_cube():
     Parameters:
     - size
     - sides y/n : just the edges or also the sides of the cube?
+    - s2l channel
     '''
 
     def __init__(self):
+        # parameters
         self.size = 4
         self.sides = False
 
+        self.amount = 1.0
+        self.channel = 4
+
+        self.sizes = cycle([0,1,2,3,4])
+
+        self.sound_values = shared_memory.SharedMemory(name = "global_s2l_memory")
+
     #Strings for GUI
     def return_values(self):
-        return [b'cube', b'size', b'surface', b'', b'']
+        return [b'cube', b'size', b'surface', b'channel', b'']
 
     def return_gui_values(self):
         if self.sides == False:
             sides = 'Off'
         else:
             sides = 'On'
-            
-        return bytearray('{0:<8s}{1:<8s}{2:<8s}{3:<8s}'.format(str(round(self.size,2)), sides, '', ''),'utf-8')
+
+        if self.channel >= 0:
+            channel = str(self.channel)
+        else:
+            channel = 'noS2L'
+
+        return bytearray('{0:<8s}{1:<8s}{2:<8s}{3:<8s}'.format(str(round(self.size,2)), sides, channel, ''),'utf-8')
 
 
     def __call__(self, args):
@@ -34,6 +49,7 @@ class g_cube():
             self.sides = False
         else:
             self.sides = True
+        self.channel = int(args[2]*4)-1
 
         # create world
         world = np.zeros([3, 10, 10, 10])
@@ -43,7 +59,17 @@ class g_cube():
         if not self.sides:
             tempworld[:, :, :] = -1.0
 
-        size = self.size
+        #check if s2l is activated
+        if self.channel >= 0:
+            current_volume = float(str(self.sound_values.buf[self.channel*8:self.channel*8+8],'utf-8'))
+
+            # apply threshold
+            if current_volume > 0:
+                size = next(self.sizes)
+            else:
+                size = 0
+        else:
+            size = self.size
 
         # write cube
         # x slices

@@ -25,11 +25,11 @@ class g_random():
         self.number_of_leds = int((args[0])*20)
         self.reset = int(args[1]*10+1)
 
-        world = np.zeros([3, resolution[0], resolution[1]])
+        world = np.zeros([3, self.resolution[0], self.resolution[1]])
 
         if self.counter % self.reset == 0:
             for led in range(self.number_of_leds):
-                world[:, randint(0,self.resolution[0]), randint(0,self.resolution[1])] = 1.0
+                world[:, randint(0,self.resolution[0]-1), randint(0,self.resolution[1]-1)] = 1.0
         else:
             world = self.safeworld
 

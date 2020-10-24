@@ -2,8 +2,18 @@
 import numpy as np
 from random import randint
 from scipy.stats import multivariate_normal
+from multiprocessing import shared_memory
 
 class g_wave():
+    '''
+    Generator: wave
+    A 2D wave coming from a random corner
+
+    Parameters:
+    Sigma (width of the wave)
+    Speed
+    Sound2Light channel
+    '''
 
     def __init__(self):
         self.sigma = 1
@@ -12,24 +22,38 @@ class g_wave():
         self.direction = 0
         self.position = 1
         self.maxsize = 35
+        self.sound_values = shared_memory.SharedMemory(name = "global_s2l_memory")
+        self.channel = 0
 
     #Strings for GUI
     def return_values(self):
-        return [b'wave', b'sigma', b'speed', b'', b'']
+        return [b'wave', b'sigma', b'speed', b'', b'channel']
 
     def return_gui_values(self):
-        return bytearray('{0:<8s}{1:<8s}{2:<8s}{3:<8s}'.format(str(round(self.sigma,2)), str(round(self.speed,2)), '', ''),'utf-8')
+        if self.channel >=0:
+            channel = str(self.channel)
+        else:
+            channel = 'noS2L'
+
+        return bytearray('{0:<8s}{1:<8s}{2:<8s}{3:<8s}'.format(str(round(self.sigma,2)), str(round(self.speed,2)), '', channel),'utf-8')
 
     #def generate(self, step, dumpworld):
     def __call__(self, args):
         self.sigma = args[0]*1.4+0.2
         self.speed = args[1]*2.5+0.4
+        self.channel = int(args[3]*4)-1
+
+        # check if S2L is activated
+        if self.channel >= 0:
+            current_volume = float(str(self.sound_values.buf[self.channel*8:self.channel*8+8],'utf-8'))
+            self.sigma = current_volume * 1.4 + 0.2
 
         world = np.zeros([3, 10, 10, 10])
 
         a = np.zeros([10,10])
 
         if self.counter > self.maxsize:
+
             self.direction = randint(1,8)
             self.position = randint(0,9)
             self.counter = 0
@@ -87,5 +111,8 @@ class g_wave():
 
         world[1,:,:,:]=world[0,:,:,:]
         world[2,:,:,:]=world[0,:,:,:]
-        self.counter += 1*self.speed
+
+        self.counter += self.speed
+
+
         return np.clip(world, 0, 1)
