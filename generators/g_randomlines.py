@@ -31,17 +31,7 @@ class g_randomlines():
 
         world = np.zeros([3, 10, 10, 10])
 
-        if self.counter % self.reset == 0:
-            direction = randint(0, 2)
-            if direction == 0:
-                world[:, :, randint(0, 9), randint(0, 9)] = 1
-
-            elif direction == 1:
-                world[:, randint(0, 9), :, randint(0, 9)] = 1
-            elif direction == 2:
-                world[:, randint(0, 9), randint(0, 9), :] = 1
-
-        elif self.channel >= 0:
+        if self.channel >= 0:
             current_volume = float(str(self.sound_values.buf[self.channel*8:self.channel*8+8],'utf-8'))
             if current_volume > 0:
                 direction = randint(0, 2)
@@ -52,6 +42,17 @@ class g_randomlines():
                     world[:, randint(0, 9), :, randint(0, 9)] = 1
                 elif direction == 2:
                     world[:, randint(0, 9), randint(0, 9), :] = 1
+
+        elif self.counter % self.reset == 0:
+            direction = randint(0, 2)
+            if direction == 0:
+                world[:, :, randint(0, 9), randint(0, 9)] = 1
+
+            elif direction == 1:
+                world[:, randint(0, 9), :, randint(0, 9)] = 1
+            elif direction == 2:
+                world[:, randint(0, 9), randint(0, 9), :] = 1
+
         else:
             world = self.saveworld
 
