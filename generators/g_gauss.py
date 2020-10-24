@@ -49,11 +49,11 @@ class g_gauss():
         # check if S2L is activated
         if self.channel >= 0:
             current_volume = float(str(self.sound_values.buf[self.channel*8:self.channel*8+8],'utf-8'))
-            sigma = np.array([current_volume,current_volume])
+            sigma = np.array([5*current_volume+1,5*current_volume+1])
 
         else:
             sigma = np.array([self.sigma,self.sigma])
-            
+
         covariance = np.diag(sigma**2)
 
         gauss = np.sin(self.step*self.speed)*multivariate_normal.pdf(yz, mean=mu, cov=covariance)*self.amplitude*self.sigma**2+5
