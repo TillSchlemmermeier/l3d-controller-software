@@ -68,10 +68,10 @@ class g_growing_corner():
                 list = ([0,4.5,4.5],[9,4.5,4.5],[4.5,0,4.5],[4.5,9,4.5],[4.5,4.5,0],[4.5,4.5,9])
                 [self.xpos, self.ypos, self.zpos] = choice(list)
             current_volume = float(str(self.sound_values.buf[self.channel*8:self.channel*8+8],'utf-8'))
-                if current_volume > 0:
-                    self.counter += int(current_volume*2)
-                    if self.counter > self.maxsize:
-                        self.counter = 0
+            if current_volume > 0:
+                self.counter += int(current_volume*2)
+                if self.counter > self.maxsize:
+                    self.counter = 0
 
         x = self.xpos
         y = self.ypos
