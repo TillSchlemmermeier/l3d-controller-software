@@ -1,6 +1,7 @@
 # modules
 import numpy as np
 from scipy.stats import multivariate_normal
+from multiprocessing import shared_memory
 #from generators.gen_gauss import gen_gauss
 
 # fortran routine is in g_sphere_f.f90
@@ -13,18 +14,28 @@ class g_gauss():
         self.speed = 1
         self.step = 0
 
+        self.sound_values = shared_memory.SharedMemory(name = "global_s2l_memory")
+        self.channel = 0
+
     #Strings for GUI
     def return_values(self):
-        return [b'gauss', b'sigma', b'amplitude', b'speed', b'']
+        return [b'gauss', b'sigma', b'amplitude', b'speed', b'channel']
 
     def return_gui_values(self):
-        return bytearray('{0:<8s}{1:<8s}{2:<8s}{3:<8s}'.format(str(round(self.sigma,2)), str(round(self.amplitude,2)), str(round(self.speed,2)), ''),'utf-8')
+        if self.channel >=0:
+            channel = str(self.channel)
+        else:
+            channel = 'noS2L'
+
+        return bytearray('{0:<8s}{1:<8s}{2:<8s}{3:<8s}'.format(str(round(self.sigma,2)), str(round(self.amplitude,2)), str(round(self.speed,2)), channel),'utf-8')
 
 
     def __call__(self, args):
         self.sigma = args[0]*5+1
         self.amplitude = args[1]*50
         self.speed = args[2]
+        self.channel = int(args[3]*4)-1
+
 
         world = np.zeros([3, 10, 10, 10])
 
@@ -35,7 +46,14 @@ class g_gauss():
 
         mu = np.array([5, 5])
 
-        sigma = np.array([self.sigma,self.sigma])
+        # check if S2L is activated
+        if self.channel >= 0:
+            current_volume = float(str(self.sound_values.buf[self.channel*8:self.channel*8+8],'utf-8'))
+            sigma = np.array([current_volume,current_volume])
+
+        else:
+            sigma = np.array([self.sigma,self.sigma])
+            
         covariance = np.diag(sigma**2)
 
         gauss = np.sin(self.step*self.speed)*multivariate_normal.pdf(yz, mean=mu, cov=covariance)*self.amplitude*self.sigma**2+5
