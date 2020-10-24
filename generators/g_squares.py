@@ -70,19 +70,28 @@ class g_squares():
         if self.channel >= 0:
             current_volume = float(str(self.sound_values.buf[self.channel*8:self.channel*8+8],'utf-8'))
             current_volume *= 4
-        else:
-            current_volume = 0
 
-        if self.dir == 0:
-            world[:, position:position-current_volume,:,:] = 1.0
-            world[:, :, 1:-1, 1:-1] = 0.0
-        elif self.dir == 1:
-            world[:, :, position:position-current_volume,:] = 1.0
-            world[:, 1:-1, :, 1:-1] = 0.0
-        else:
-            world[:, :,:,position:position-current_volume] = 1.0
-            world[:, 1:-1, 1:-1, :] = 0.0
+            if self.dir == 0:
+                world[:, position:position-current_volume,4.5-current_volume:4.5+current_volume,4.5-current_volume:4.5+current_volume] = 1.0
+                world[:, :, 1:-1, 1:-1] = 0.0
+            elif self.dir == 1:
+                world[:, 4.5-current_volume:4.5+current_volume, position:position-current_volume,4.5-current_volume:4.5+current_volume] = 1.0
+                world[:, 1:-1, :, 1:-1] = 0.0
+            else:
+                world[:, 4.5-current_volume:4.5+current_volume,4.5-current_volume:4.5+current_volume,position:position-current_volume] = 1.0
+                world[:, 1:-1, 1:-1, :] = 0.0
 
-            self.step += 1
+        else:
+            if self.dir == 0:
+                world[:, position,:,:] = 1.0
+                world[:, :, 1:-1, 1:-1] = 0.0
+            elif self.dir == 1:
+                world[:, :, position,:] = 1.0
+                world[:, 1:-1, :, 1:-1] = 0.0
+            else:
+                world[:, :,:,position] = 1.0
+                world[:, 1:-1, 1:-1, :] = 0.0
+
+        self.step += 1
 
         return world
