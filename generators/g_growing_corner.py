@@ -3,6 +3,7 @@ import numpy as np
 from scipy.signal import sawtooth
 from random import randint
 from generators.g_genhsphere import gen_hsphere
+from multiprocessing import shared_memory
 
 # fortran routine is in g_growing_sphere_f.f90
 

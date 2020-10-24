@@ -3,6 +3,16 @@ from scipy.signal import sawtooth
 from multiprocessing import shared_memory
 
 class g_squares():
+    '''
+    Generator: squares
+    a square moving up and down the edges
+
+    Parameters:
+    speed
+    direction (x, y or z)
+    type (sinus, up or down)
+    Sound2Light channel
+    '''
 
     def __init__(self):
         self.speed = 10
@@ -38,7 +48,6 @@ class g_squares():
             type = 'down'
 
         return bytearray('{0:<8s}{1:<8s}{2:<8s}{3:<8s}'.format(str(round(self.speed,2)), dir, type, channel),'utf-8')
-
 
 
     #def generate(self, step, dumpworld):
