@@ -10,6 +10,7 @@ from multiprocessing import shared_memory
 from oneshots.s_sides import *
 from oneshots.s_blank import *
 from oneshots.s_fade import *
+from oneshots.s_dark import *
 
 class rendering_engine:
     """
@@ -73,6 +74,11 @@ class rendering_engine:
         # define shot-state
         self.shot_state = 0
         self.shot = s_blank()
+        self.shot_list = []
+        self.shot_list.append(s_blank)
+        self.shot_list.append(s_sides)
+        self.shot_list.append(s_fade)
+        self.shot_list.append(s_dark)
 
         # try to establish connection to arduino
         try:
@@ -207,7 +213,7 @@ class rendering_engine:
         # detect whether a oneshot is fired
         if self.global_parameter[220] > 0:
             self.shot_state = self.global_parameter[220]
-            self.shot = s_sides()
+            self.shot = self.shot_list[self.shot_state]()
             self.global_parameter[220] = 0
 
         if self.shot_state == 1:
