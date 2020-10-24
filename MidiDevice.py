@@ -123,7 +123,7 @@ class class_launchpad_mk3:
                     except:
                         print('error loading temporary preset!')
 
-                elif key[0] == 68:
+                elif message[1] == 68:
                     self.global_parameter[220] = 1.0
 
             else:
@@ -239,7 +239,7 @@ class class_launchpad_mk3:
 
         # if idle state, we can open the selection menu
         if self.state == 0:
-            self.midiout.send_message[144, 68, 5]
+            self.midiout.send_message([144, 68, 5])
             for i in range(4):
                 self.midiout.send_message([144, 81+i,  5])
                 self.midiout.send_message([144, 71+i, 61])
