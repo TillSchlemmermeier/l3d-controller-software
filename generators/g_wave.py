@@ -34,11 +34,17 @@ class g_wave():
         self.speed = args[1]*2.5+0.4
         self.channel = int(args[3]*4)-1
 
+        # check if S2L is activated
+        if self.channel >= 0:
+            current_volume = float(str(self.sound_values.buf[self.channel*8:self.channel*8+8],'utf-8'))
+            self.sigma = current_volume * 1.4 + 0.2
+
         world = np.zeros([3, 10, 10, 10])
 
         a = np.zeros([10,10])
 
         if self.counter > self.maxsize:
+
             self.direction = randint(1,8)
             self.position = randint(0,9)
             self.counter = 0
@@ -97,12 +103,7 @@ class g_wave():
         world[1,:,:,:]=world[0,:,:,:]
         world[2,:,:,:]=world[0,:,:,:]
 
-        # check if S2L is activated
-        if self.channel >= 0:
-            current_volume = float(str(self.sound_values.buf[self.channel*8:self.channel*8+8],'utf-8'))
-            self.counter += current_volume * 2.5 + 0.4
-        else:
-            self.counter += self.speed
+        self.counter += self.speed
 
 
         return np.clip(world, 0, 1)
