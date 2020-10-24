@@ -70,9 +70,9 @@ class g_obliqueplaneXYZ():
         if self.channel >= 0:
             current_volume = float(str(self.sound_values.buf[self.channel*8:self.channel*8+8],'utf-8'))
             current_volume = int(current_volume * 9)
-            if self.step % current_volume == 0:
+            if self.step % 8-current_volume == 0:
                 self.counter += 1
-                
+
         # increase counter
         else:
             if self.step % self.wait == 0:
