@@ -50,6 +50,7 @@ class g_sinus():
             for z in range(10):
                 world[:,map[y,z]+5,y,z] = 1.0
 
+        # check if S2L is activated
         if self.channel >= 0:
             current_volume = float(str(self.sound_values.buf[self.channel*8:self.channel*8+8],'utf-8'))
             self.step += current_volume
