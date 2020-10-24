@@ -362,25 +362,36 @@ class MainWindow(QtWidgets.QMainWindow):
 
         counter = 0
         # loop over elements in pad panel
+
         for x in range(8):
             for y in range(8):
                 # add text labels
                 self.padlabels[x][y].setText(current_labels[x, y])
+
                 self.padlabels[x][y].setAlignment(QtCore.Qt.AlignCenter)
-                # self.padlabels[x][y].setWordWrap(True)
-                # get color - don't do a shallow copy here!
-                color = self.colors[int(self.global_parameter[200])][:]
 
-                if x in [2, 5] or y in [2, 5]:
-                    for i in range(3):
-                        color[i] = str(np.clip(int(color[i]) - 50, 0, 255))
-
-
-                if counter == ind + 1:
-                    # active generator/effect gets red border
-                    self.padlabels[x][y].setStyleSheet('Background-color: rgba('+', '.join(color)+'); color: red; border-style: dashed; border-width: 4px; border-color: red; text-align: center;')
+                # menu is closed
+                if self.global_parameter[200] == 0:
+                    self.padlabels[x][y].setStyleSheet('background-color: rgb(100, 100, 100); text-align: center;')
+                    if y > 3 and x == 2:
+                        self.padlabels[x][y].setStyleSheet('background-color: rgb(255, 0, 0); text-align: center;')
+                    elif y == 7 and x == 3:
+                        self.padlabels[x][y].setStyleSheet('background-color: rgb(255, 0, 0); text-align: center;')
+                    #rgb(224, 0, 0)
                 else:
-                    self.padlabels[x][y].setStyleSheet('background-color: rgba('+', '.join(color)+'); text-align: center;')
+                    # get color - don't do a shallow copy here!
+                    color = self.colors[int(self.global_parameter[200])][:]
+
+                    if x in [2, 5] or y in [2, 5]:
+                        for i in range(3):
+                            color[i] = str(np.clip(int(color[i]) - 50, 0, 255))
+
+
+                    if counter == ind + 1:
+                        # active generator/effect gets red border
+                        self.padlabels[x][y].setStyleSheet('Background-color: rgba('+', '.join(color)+'); color: red; border-style: dashed; border-width: 4px; border-color: red; text-align: center;')
+                    else:
+                        self.padlabels[x][y].setStyleSheet('background-color: rgba('+', '.join(color)+'); text-align: center;')
 
                 counter+=1
 

@@ -12,6 +12,7 @@ from oneshots.s_blank import *
 from oneshots.s_fade import *
 from oneshots.s_dark import *
 from oneshots.s_growing_sphere import *
+from oneshots.s_roll import *
 
 class rendering_engine:
     """
@@ -82,7 +83,7 @@ class rendering_engine:
         self.shot_list.append(s_dark)
         self.shot_list.append(s_growing_sphere)
         self.shot_list.append(s_roll)
-        
+
         # try to establish connection to arduino
         try:
             self.arduino = serial.Serial('/dev/ttyACM0', 230400)

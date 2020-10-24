@@ -82,7 +82,7 @@ class class_launchpad_mk3:
                         self.global_parameter[70] = 1
 
 
-                    print(self.global_parameter[0])
+#                    print(self.global_parameter[0])
 
                 # check whether button is in range for menus
                 if key[0] <= 5 and key[1] <= 4:
@@ -133,7 +133,7 @@ class class_launchpad_mk3:
                     self.global_parameter[220] = 3
                 elif message[1] == 65:
                     self.global_parameter[220] = 4
-                elif key[0] == 58:
+                elif message[1] == 58:
                     self.global_parameter[220] = 5
             else:
                 # if not idle, we can go back to idle

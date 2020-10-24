@@ -11,6 +11,8 @@ class s_roll:
     def __call__(self, world):
 
         if self.counter > 0:
+            #print('roll')
             world = np.roll(world, shift = int(self.direction*(5-self.counter)), axis = self.axis)
             self.counter -= 1
+
         return world, self.counter

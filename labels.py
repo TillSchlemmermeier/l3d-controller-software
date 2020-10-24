@@ -33,6 +33,13 @@ labels[:,:,:]= ''
 # add close labels except for first 'layer'
 labels[1:, 0, 0] = 'close'
 
+# add one shots
+labels[0, 2, 7] = 'sides'
+labels[0, 2, 6] = 'fade'
+labels[0, 2, 5] = 'dark'
+labels[0, 2, 4] = 'sphere'
+labels[0, 3, 7] = 'roll'
+
 # add presets
 
 print(len(preset_labels), preset_labels)
