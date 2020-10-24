@@ -15,7 +15,7 @@ class g_randomlines():
         self.channel = 0
 
     def return_values(self):
-        return [b'randomlines', b'wait', b'channel', b'', b'']
+        return [b'randomlines', b'wait', b'', b'', b'channel']
 
     def return_gui_values(self):
         if self.channel >=0:
@@ -23,11 +23,11 @@ class g_randomlines():
         else:
             channel = 'noS2L'
 
-        return bytearray('{0:<8s}{1:<8s}{2:<8s}{3:<8s}'.format(str(round(self.reset,2)), channel, '', ''),'utf-8')
+        return bytearray('{0:<8s}{1:<8s}{2:<8s}{3:<8s}'.format(str(round(self.reset,2)), '', '', channel),'utf-8')
 
     def __call__(self, args):
         self.reset = int(args[0]*10)+1
-        self.channel = int(args[1]*4)-1
+        self.channel = int(args[3]*4)-1
 
         world = np.zeros([3, 10, 10, 10])
 

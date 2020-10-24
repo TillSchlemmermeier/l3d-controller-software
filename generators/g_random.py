@@ -19,7 +19,7 @@ class g_random():
         self.safeworld = np.zeros([3, 10, 10, 10])
 
     def return_values(self):
-        return [b'g_random', b'N LED', b'Wait', b'channel',b'']
+        return [b'g_random', b'N LED', b'Wait', b'',b'channel']
 
     def return_gui_values(self):
         if self.channel >=0:
@@ -27,13 +27,13 @@ class g_random():
         else:
             channel = 'noS2L'
 
-        return bytearray('{0:<8s}{1:<8s}{2:<8s}{3:<8s}'.format(str(round(self.number_of_leds,2)), str(round(self.reset,2)), channel, ''),'utf-8')
+        return bytearray('{0:<8s}{1:<8s}{2:<8s}{3:<8s}'.format(str(round(self.number_of_leds,2)), str(round(self.reset,2)), '', channel),'utf-8')
 
 
     def __call__(self, args):
         self.number_of_leds = int((args[0])*20)
         self.reset = int(args[1]*10+1)
-        self.channel = int(args[2]*4)-1
+        self.channel = int(args[3]*4)-1
 
         # check if s2l is activated
         if self.channel >= 0:
