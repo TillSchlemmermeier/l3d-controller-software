@@ -38,10 +38,10 @@ class g_growing_corner():
         return [b'growing_corner', b'maxsize', b'speed', b'channel', b'']
 
     def return_gui_values(self):
-                if self.channel >= 0:
-                    channel = str(self.channel)
-                else:
-                    channel = 'noS2L'
+        if self.channel >= 0:
+            channel = str(self.channel)
+        else:
+            channel = 'noS2L'
 
         return bytearray('{0:<8s}{1:<8s}{2:<8s}{3:<8s}'.format(str(round(self.maxsize,2)), str(round(self.growspeed,2)), channel, ''),'utf-8')
 
