@@ -44,15 +44,15 @@ def sound_process(array):
 
     mpl.rcParams['toolbar'] = 'None'
     # initialize figure
-    fig, ax = plt.subplots()
-    fig.size = [1.6,1.2]
+    fig, ax = plt.subplots(figsize=(4, 2))#'''figsize=(4, 1.8)'''50
+    fig.canvas.manager.window.move(290, 550)
     ax.set_xlim(50, 10000)
     ax.set_ylim(-0.1,2)
     line = ax.plot(freqs, np.abs(FFT))[0]
-    select1 = ax.plot([100,100], [-10,10], label = '1', color = 'red')[0]
-    select2 = ax.plot([100,500], [-10,10], label = '2', color = 'green')[0]
-    select3 = ax.plot([100,1000], [-10,10], label = '3', color = 'blue')[0]
-    select4 = ax.plot([100,2000], [-10,10], label = '4', color = 'orange')[0]
+    select1 = ax.plot([100,100], [-10,10], label = '0', color = 'red')[0]
+    select2 = ax.plot([100,500], [-10,10], label = '1', color = 'green')[0]
+    select3 = ax.plot([100,1000], [-10,10], label = '2', color = 'blue')[0]
+    select4 = ax.plot([100,2000], [-10,10], label = '3', color = 'orange')[0]
 
     thres1 = ax.plot([100-10,100+10], [0,0],  color = 'red')[0]
     thres2 = ax.plot([100-10,100+10], [0,0],  color = 'green')[0]
@@ -63,7 +63,7 @@ def sound_process(array):
 
     ax.set_xticks([50, 100, 250, 500, 1000, 2500, 5000, 10000])
     ax.set_xticklabels([50, 100, 250, 500, 1000, 2500, 5000, 10000])
-    plt.legend()
+    plt.legend(loc='upper center',bbox_to_anchor=(0.5,1.2),ncol=4,fancybox=True)
 
     # normalization
     normalized = [False]
