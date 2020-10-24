@@ -1,6 +1,6 @@
 import numpy as np
 from scipy.signal import sawtooth
-from multiprocssing import shared_memory
+from multiprocessing import shared_memory
 
 class g_squares():
 
