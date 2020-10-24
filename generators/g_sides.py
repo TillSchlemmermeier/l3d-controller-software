@@ -4,6 +4,14 @@ from random import randint
 from multiprocessing import shared_memory
 
 class g_sides():
+    '''
+    Generator: sides
+    One side of a cube is on
+
+    Parameters:
+    size of cube
+    Sound2Light channel
+    '''
 
     def __init__(self):
         self.size = 4
