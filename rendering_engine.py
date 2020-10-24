@@ -8,7 +8,8 @@ from multiprocessing import shared_memory
 
 # load shots
 from oneshots.s_sides import *
-
+from oneshots.s_blank import *
+from oneshots.s_fade import *
 
 class rendering_engine:
     """
@@ -70,7 +71,8 @@ class rendering_engine:
         logging.info('Variables initialised')
 
         # define shot-state
-        self.shot = 0
+        self.shot_state = 0
+        self.shot = s_blank()
 
         # try to establish connection to arduino
         try:
@@ -141,7 +143,6 @@ class rendering_engine:
 
         index_label = 0
 
-
         current_values = []
 
         for i in range(4):      # loop through channels
@@ -149,8 +150,6 @@ class rendering_engine:
             # check whether cannel is active, otherwise overrides channel world
             # with zeros
             if int(self.global_parameter[index_parameters]) == 1:
-
-                #print(self.global_parameter[0], self.global_parameter[1], self.global_parameter[20], self.global_parameter[40], self.global_parameter[41], self.global_parameter[45], self.global_parameter[46])
 
                 # check for changes
                 if channel.get_settings() != self.global_parameter[index_settings:index_settings+5]:
@@ -204,15 +203,18 @@ class rendering_engine:
                          channel_brightness[1] * self.channelworld[1, :, :, :] +\
                          channel_brightness[2] * self.channelworld[2, :, :, :] +\
                          channel_brightness[3] * self.channelworld[3, :, :, :]
+
         # detect whether a oneshot is fired
         if self.global_parameter[220] > 0:
-            self.shot = self.global_parameter[220]
+            self.shot_state = self.global_parameter[220]
+            self.shot = s_sides()
             self.global_parameter[220] = 0
 
-        if self.shot == 1:
-            self.cubeworld, counter = s_sides(self.cubeworld)
+        if self.shot_state == 1:
+            self.cubeworld, counter = self.shot(self.cubeworld)
             if counter <= 0:
-                self.shot = 0
+                self.shot_state = 0
+                self.shot = s_blank()
 
         # adjust global brightness
         self.cubeworld *= self.global_parameter[1]
