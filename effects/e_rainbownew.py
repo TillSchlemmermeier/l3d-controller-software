@@ -35,13 +35,13 @@ class e_rainbownew:
         # check if s2l is activated
         if self.channel >= 0:
             current_volume = float(str(self.sound_values.buf[self.channel*8:self.channel*8+8],'utf-8'))
-            self.color[0] += current_volume / 10
+            self.color[0] += current_volume / 20
 
         else:
             self.color[0] += self.speed
 
-        world[0, x, y, z] *= color[0]
-        world[1, x, y, z] *= color[1]
-        world[2, x, y, z] *= color[2]
+        world[0, :, :, :] *= color[0]
+        world[1, :, :, :] *= color[1]
+        world[2, :, :, :] *= color[2]
 
         return np.clip(world, 0, 1)

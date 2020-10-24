@@ -69,9 +69,11 @@ class g_obliqueplaneXYZ():
         # check if S2L is activated
         if self.channel >= 0:
             current_volume = float(str(self.sound_values.buf[self.channel*8:self.channel*8+8],'utf-8'))
-            current_volume = int(current_volume * 9)
-            if self.step % 8-current_volume == 0:
+            if current_volume > 0.1:
                 self.counter += 1
+            #current_volume = int(current_volume * 9)
+            #if self.step % 4-current_volume == 0:
+            #    self.counter += 1
 
         # increase counter
         else:

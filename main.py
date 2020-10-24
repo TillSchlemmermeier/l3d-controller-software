@@ -47,14 +47,18 @@ def midi_devices(array):
         for i in range(4):
             if array[20+5*i:25+5*i] != temp_param[20+5*i:25+5*i]:
                 if array[20+5*i] != temp_param[20+5*i]:
-                    midifighter.event([['T', i, 0], 0])
+                    array[201+i] = 0
+                    midifighter.event(['T', i, 0])
                 elif array[21+5*i] != temp_param[21+5*i]:
-                    midifighter.event([['T', i, 1], 0])
+                    array[201+i] = 1
+                    midifighter.event(['T', i, 1])
                 elif array[22+5*i] != temp_param[22+5*i]:
-                    midifighter.event([['T', i, 2], 0])
+                    array[201+i] = 2
+                    midifighter.event(['T', i, 2])
                 elif array[23+5*i] != temp_param[23+5*i]:
-                    midifighter.event([['T', i, 3], 0])
-
+                    midifighter.event(['T', i, 3])
+                    array[201+i] = 3
+                    
                 temp_param[:] = array[:]
         pass
 
