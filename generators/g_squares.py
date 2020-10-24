@@ -66,22 +66,23 @@ class g_squares():
         else:
             position = int( round((sawtooth(0.1*self.step*self.speed, width=0)+1)*4.5))
 
-        if self.dir == 0:
-            world[:, position,:,:] = 1.0
-            world[:, :, 1:-1, 1:-1] = 0.0
-        elif self.dir == 1:
-            world[:, :, position,:] = 1.0
-            world[:, 1:-1, :, 1:-1] = 0.0
-        else:
-            world[:, :,:,position] = 1.0
-            world[:, 1:-1, 1:-1, :] = 0.0
-
         # check if S2L is activated
         if self.channel >= 0:
             current_volume = float(str(self.sound_values.buf[self.channel*8:self.channel*8+8],'utf-8'))
-            if current_volume > 0:
-                self.step += 1
+            current_volume *= 4
         else:
+            current_volume = 0
+
+        if self.dir == 0:
+            world[:, position:position-current_volume,:,:] = 1.0
+            world[:, :, 1:-1, 1:-1] = 0.0
+        elif self.dir == 1:
+            world[:, :, position:position-current_volume,:] = 1.0
+            world[:, 1:-1, :, 1:-1] = 0.0
+        else:
+            world[:, :,:,position:position-current_volume] = 1.0
+            world[:, 1:-1, 1:-1, :] = 0.0
+
             self.step += 1
 
         return world
