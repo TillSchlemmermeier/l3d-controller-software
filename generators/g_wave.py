@@ -5,6 +5,15 @@ from scipy.stats import multivariate_normal
 from multiprocessing import shared_memory
 
 class g_wave():
+    '''
+    Generator: wave
+    A 2D wave coming from a random corner
+
+    Parameters:
+    Sigma (width of the wave)
+    Speed
+    Sound2Light channel
+    '''
 
     def __init__(self):
         self.sigma = 1
