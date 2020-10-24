@@ -82,12 +82,14 @@ In the following, the global parameters are listed. Default values are given in 
 | 70 -  99 | **parameters channel 2**
 |100 - 129 | **parameters channel 3**
 |130 - 159 | **parameters channel 4**
-|200 - 220 | system parameters
+|200 - 219 | system parameters
 |      200 | selection menu  (pad)    | 0-21   | 0
 |      201 | selection menu  (fighter, ch 1)    | 0-3   | 0
 |      202 | selection menu  (fighter, ch 2)    | 0-3   | 0
 |      203 | selection menu  (fighter, ch 3)    | 0-3   | 0
 |      204 | selection menu  (fighter, ch 4)    | 0-3   | 0
+|220 - 229 | one shots
+|      220 | one shot state
 
 ## Testing for rendering engine
 

@@ -65,8 +65,6 @@ class class_launchpad_mk3:
                 key = [9-int(message[1]*0.1), message[1]%10]
                 # key[1] defines the channel, starting at 1
 
-#                print(message)
-
                 # start/stop cube
                 if message[1] == 88:
                     if self.global_parameter[0] == 1:
@@ -125,6 +123,9 @@ class class_launchpad_mk3:
                         self.load_preset(-1, key[1], 'temporary_preset.dat')
                     except:
                         print('error loading temporary preset!')
+
+                elif key[0] == 68:
+                    self.global_parameter[220] = 1.0
 
             else:
                 # if not idle, we can go back to idle
@@ -239,6 +240,7 @@ class class_launchpad_mk3:
 
         # if idle state, we can open the selection menu
         if self.state == 0:
+            self.midiout.send_message[144, 68, 5]
             for i in range(4):
                 self.midiout.send_message([144, 81+i,  5])
                 self.midiout.send_message([144, 71+i, 61])

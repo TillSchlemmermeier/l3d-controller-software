@@ -3,10 +3,11 @@ import numpy as np
 import logging
 import serial
 from world2vox_fortran import world2vox_f as world2vox
-#from global_parameter_module import global_parameter
 from channel import class_channel
-#from convert_dict import converting_dict
 from multiprocessing import shared_memory
+
+# load shots
+from oneshots.s_sides import *
 
 
 class rendering_engine:
@@ -67,6 +68,9 @@ class rendering_engine:
                                 format="%(asctime)s %(message)s")
 
         logging.info('Variables initialised')
+
+        # define shot-state
+        self.shot = 0
 
         # try to establish connection to arduino
         try:
@@ -200,10 +204,18 @@ class rendering_engine:
                          channel_brightness[1] * self.channelworld[1, :, :, :] +\
                          channel_brightness[2] * self.channelworld[2, :, :, :] +\
                          channel_brightness[3] * self.channelworld[3, :, :, :]
+        # detect whether a oneshot is fired
+        if self.global_parameter[220] > 0:
+            self.shot = self.global_parameter[220]
+            self.global_parameter[220] = 0
+
+        if self.shot == 1:
+            self.cubeworld, counter = s_sides(self.cubeworld)
+            if counter <= 0:
+                self.shot = 0
 
         # adjust global brightness
         self.cubeworld *= self.global_parameter[1]
-        #print(self.framecounter)
 
         # now we send the current values
         self.shared_mem_gui_vals.buf[0:128] = current_values[0][0:128]
