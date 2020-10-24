@@ -1,10 +1,14 @@
 import numpy as np
 import os
+from multiprocessing import shared_memory
 
 class g_obliqueplaneXYZ():
     def __init__(self):
         # create list of all filenames
         self.voxdata = []
+
+        self.sound_values = shared_memory.SharedMemory(name = "global_s2l_memory")
+        self.channel = 0
 
         filelist = []
         for file in os.listdir('./voxFiles/obliqueplaneXYZ/'):
@@ -34,15 +38,21 @@ class g_obliqueplaneXYZ():
 
     #Strings for GUI
     def return_values(self):
-        return [b'obliqueplaneXYZ', b'wait', b'', b'', b'']
+        return [b'obliqueplaneXYZ', b'wait', b'', b'', b'channel']
 
     def return_gui_values(self):
-        return bytearray('{0:<8s}{1:<8s}{2:<8s}{3:<8s}'.format(str(round(self.wait,2)), '', '', ''),'utf-8')
+        if self.channel >=0:
+            channel = str(self.channel)
+        else:
+            channel = 'noS2L'
+
+        return bytearray('{0:<8s}{1:<8s}{2:<8s}{3:<8s}'.format(str(round(self.wait,2)), '', '', channel),'utf-8')
 
 
     #def generate(self, step, dumpworld):
     def __call__(self, args):
         self.wait = int(args[0]*10)+1
+        self.channel = int(args[3]*4)-1
 
         # create empty world
         world = np.zeros([3, 10, 10, 10])
@@ -56,9 +66,17 @@ class g_obliqueplaneXYZ():
         world[1,:,:,:] = world[0,:,:,:]
         world[2,:,:,:] = world[0,:,:,:]
 
+        # check if S2L is activated
+        if self.channel >= 0:
+            current_volume = float(str(self.sound_values.buf[self.channel*8:self.channel*8+8],'utf-8'))
+            current_volume = int(current_volume * 9)
+            if self.step % 8-current_volume == 0:
+                self.counter += 1
+
         # increase counter
-        if self.step % self.wait == 0:
-            self.counter += 1
+        else:
+            if self.step % self.wait == 0:
+                self.counter += 1
 
         self.step += 1
         # return world
