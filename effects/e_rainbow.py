@@ -9,7 +9,7 @@ class e_rainbow:
 
     Parameters:
     speed of color shift
-    Sound2Light channel, volume drives color shift    
+    Sound2Light channel, volume drives color shift
     '''
     def __init__(self):
         self.speed = 0.5
@@ -44,8 +44,8 @@ class e_rainbow:
         else:
             self.color[0] += self.speed
 
-        world[0, x, y, z] *= color[0]
-        world[1, x, y, z] *= color[1]
-        world[2, x, y, z] *= color[2]
+        world[0, :, :, :] *= color[0]
+        world[1, :, :, :] *= color[1]
+        world[2, :, :, :] *= color[2]
 
         return np.clip(world, 0, 1)

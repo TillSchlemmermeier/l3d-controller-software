@@ -104,7 +104,8 @@ class class_launchpad_mk3:
                     #    self.global_parameter[200] = key
 
                 elif message[1] == 85:
-                        self.state = 21
+                    print('open global preset menu trigger')
+                    self.state = key
 
                 elif key[0] == 8 and key[1] < 4:
                     print('saving preset for channel', key[1])
@@ -145,19 +146,31 @@ class class_launchpad_mk3:
                     self.save_global_preset()
             else:
                 # some selection menu is open
-                # if not idle, we can go back to idle
-                # this is to close the selection matrix
+
                 # self.state[0] ist reihe
                 # self.state[1] ist spalte
-                # why is this mixed with key?!
                 if message[1] == 81:
                     # print('close menu')
                     self.state = 0
                     self.global_parameter[200] = 0
 
                 else:
+                    print('-',self.state)
                     # check for presets
-                    if self.state[0] == 1:
+                    if self.state[0] == 1 and self.state[1] == 5:
+                        print('open global preset')
+                        # figure out the state
+                        index = 18 + (self.state[1]-1)*5 + self.state[0]
+
+                        # addition
+                        add = -82 + (8-int(message[1]*0.1))*18
+
+                        try:
+                            self.load_global_preset(preset_id = message[1]+add)
+                        except:
+                            print('error loading preset')
+
+                    elif self.state[0] == 1 and self.state[1] < 5:
                         print('trying to load preset')
                         # figure out the state
                         index = 18 + (self.state[1]-1)*5 + self.state[0]
@@ -169,9 +182,6 @@ class class_launchpad_mk3:
                             self.load_preset(preset_id = message[1]+add, channel = self.state[1])
                         except:
                             print('error loading preset')
-                    elif self.state == 21:
-                        print('open global preset menu')
-
                     else:
                         # figure out the state
                         index = 18 + (self.state[1]-1)*5 + self.state[0]
@@ -236,12 +246,13 @@ class class_launchpad_mk3:
         except:
             print('preset not available')
 
-    def load_global_preset(self, preset_id, channel, filename = 'global_presets.dat'):
+    def load_global_preset(self, preset_id, filename = 'global_presets.dat'):
         '''loads preset from file and writes to global array'''
 
         with open(filename, 'r') as file:
             presets = file.readlines()
 
+        print(presets[preset_id], 'now parse it')
         try:
             preset = presets[preset_id].strip('\n').split()
             print('loading global preset', preset[0])
@@ -249,11 +260,11 @@ class class_launchpad_mk3:
             # write values into global parameter array
             # hopefully on the right place
             for channel in range(1,5):
+#                print(self.indices[channel-1])
                 for i, value in zip(self.indices[channel-1], preset[1:]):
-                    # dont set channel on/off
-                    if i not in [40, 70, 100, 130]:
-                        self.global_parameter[i] = float(value)
+                    self.global_parameter[i] = float(value)
 
+#            print(self.global_parameter[45], )
         except:
             print('global preset not available')
 
