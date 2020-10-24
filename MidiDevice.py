@@ -131,7 +131,7 @@ class class_launchpad_mk3:
                     self.global_parameter[220] = 2
                 elif message[1] == 66:
                     self.global_parameter[220] = 3
-                elif message[1] == 65:
+                #elif message[1] == 65:
 #                    self.global_parameter[220] = 4
 #                    print('shot 4')
             else:

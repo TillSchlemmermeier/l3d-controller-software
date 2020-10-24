@@ -69,16 +69,16 @@ class g_squares():
         # check if S2L is activated
         if self.channel >= 0:
             current_volume = float(str(self.sound_values.buf[self.channel*8:self.channel*8+8],'utf-8'))
-            current_volume *= 4
+            current_volume = int(current_volume*6)
 
             if self.dir == 0:
-                world[:, position:position-current_volume,4.5-current_volume:4.5+current_volume,4.5-current_volume:4.5+current_volume] = 1.0
+                world[:, position-current_volume:position,4-current_volume:4+current_volume,4-current_volume:4+current_volume] = 1.0
                 world[:, :, 1:-1, 1:-1] = 0.0
             elif self.dir == 1:
-                world[:, 4.5-current_volume:4.5+current_volume, position:position-current_volume,4.5-current_volume:4.5+current_volume] = 1.0
+                world[:, 4-current_volume:current_volume, position-current_volume:position,4-current_volume:4+current_volume] = 1.0
                 world[:, 1:-1, :, 1:-1] = 0.0
             else:
-                world[:, 4.5-current_volume:4.5+current_volume,4.5-current_volume:4.5+current_volume,position:position-current_volume] = 1.0
+                world[:, 4-current_volume:4+current_volume,4-current_volume:4+current_volume,position-current_volume:position] = 1.0
                 world[:, 1:-1, 1:-1, :] = 0.0
 
         else:
