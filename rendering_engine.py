@@ -72,7 +72,7 @@ class rendering_engine:
 
         logging.info('Variables initialised')
 
-        # define shot-state
+        # one shots
         self.shot_state = 0
         self.shot = s_blank()
         self.shot_list = []
@@ -81,7 +81,8 @@ class rendering_engine:
         self.shot_list.append(s_fade)
         self.shot_list.append(s_dark)
         self.shot_list.append(s_growing_sphere)
-
+        self.shot_list.append(s_roll)
+        
         # try to establish connection to arduino
         try:
             self.arduino = serial.Serial('/dev/ttyACM0', 230400)

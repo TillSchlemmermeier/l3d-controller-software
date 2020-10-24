@@ -133,7 +133,8 @@ class class_launchpad_mk3:
                     self.global_parameter[220] = 3
                 elif message[1] == 65:
                     self.global_parameter[220] = 4
-#                    print('shot 4')
+                elif key[0] == 58:
+                    self.global_parameter[220] = 5
             else:
                 # if not idle, we can go back to idle
                 # this is to close the selection matrix
@@ -252,6 +253,7 @@ class class_launchpad_mk3:
             self.midiout.send_message([144, 67, 5])
             self.midiout.send_message([144, 66, 5])
             self.midiout.send_message([144, 65, 5])
+            self.midiout.send_message([144, 58, 5])
 
             for i in range(4):
                 self.midiout.send_message([144, 81+i,  5])

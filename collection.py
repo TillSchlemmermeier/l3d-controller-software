@@ -90,7 +90,6 @@ from effects.e_sound_color import *
 from effects.e_mean_updown import *
 from effects.e_sound_gradient import *
 from effects.e_randomizer import *
-from effects.e_rainbownew import *
 
 generators = []
 
@@ -210,7 +209,7 @@ effects.append(e_mean_updown)
 effects.append(e_outer_shadow)
 effects.append(e_sound_gradient)
 effects.append(e_randomizer)
-effects.append(e_rainbownew)
+effects.append(e_blank)
 effects.append(e_blank)
 effects.append(e_blank)
 effects.append(e_blank)
