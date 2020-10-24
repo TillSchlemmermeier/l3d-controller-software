@@ -90,6 +90,7 @@ from effects.e_sound_color import *
 from effects.e_mean_updown import *
 from effects.e_sound_gradient import *
 from effects.e_randomizer import *
+
 generators = []
 
 #row 1

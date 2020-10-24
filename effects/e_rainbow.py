@@ -1,46 +1,51 @@
 # modules
 import numpy as np
-
+from colorsys import rgb_to_hsv, hsv_to_rgb
+from multiprocessing import shared_memory
 
 class e_rainbow:
     '''
-    Effect: Rainbow
+    Effect: Rainbow colors
+
+    Parameters:
+    speed of color shift
+    Sound2Light channel, volume drives color shift    
     '''
     def __init__(self):
         self.speed = 0.5
-        self.red = 1.0
-        self.green = 1.0
-        self.blue = 0.0
+        self.color = [0.1,0.0,0.0]
+        self.sound_values = shared_memory.SharedMemory(name = "global_s2l_memory")
+        self.channel = 4
 
     #strings for GUI
     def return_values(self):
-        return [b'rainbow', b'speed', b'', b'', b'']
+        return [b'rainbow', b'speed', b'', b'', b'channel']
 
     def return_gui_values(self):
-        return bytearray('{0:<8s}{1:<8s}{2:<8s}{3:<8s}'.format(str(round(self.speed,2)), '', '', ''), 'utf-8')
+        if self.channel >= 0:
+            channel = str(self.channel)
+        else:
+            channel = 'noS2L'
+
+        return bytearray('{0:<8s}{1:<8s}{2:<8s}{3:<8s}'.format(str(round(self.speed,2)), '', '', channel), 'utf-8')
 
     def __call__(self, world, args):
         # parsing input
-        self.speed = args[0]*0.6
+        self.speed = args[0]/10
+        self.channel = int(args[3]*4)-1
 
-        # calculate color
-        if self.red>0.99 and self.blue<0.99 and self.green<0.01:
-            self.blue = self.blue+self.speed
-        elif self.blue>0.99 and self.red>0.01 and self.green<0.01:
-            self.red = self.red-self.speed
-        elif self.blue>0.99 and self.green<0.99 and self.red<0.01:
-            self.green = self.green+self.speed
-        elif self.green>0.99 and self.blue>0.01 and self.red<0.01:
-            self.blue = self.blue-self.speed
-        elif self.green>0.99 and self.red<0.99 and self.blue<0.01:
-            self.red = self.red+self.speed
-        elif self.red>0.99 and self.green>0.01 and self.blue<0.01:
-            self.green = self.green-self.speed
+        color = hsv_to_rgb(self.color[0], 1, 1)
 
-        self.red, self.blue, self.green = np.clip([self.red,self.blue,self.green],0,1)
+        # check if s2l is activated
+        if self.channel >= 0:
+            current_volume = float(str(self.sound_values.buf[self.channel*8:self.channel*8+8],'utf-8'))
+            self.color[0] += current_volume / 10
 
-        world[0, :, :, :] = world[0, :, :, :]*self.red
-        world[1, :, :, :] = world[1, :, :, :]*self.green
-        world[2, :, :, :] = world[2, :, :, :]*self.blue
+        else:
+            self.color[0] += self.speed
+
+        world[0, x, y, z] *= color[0]
+        world[1, x, y, z] *= color[1]
+        world[2, x, y, z] *= color[2]
 
         return np.clip(world, 0, 1)
