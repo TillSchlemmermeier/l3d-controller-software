@@ -9,7 +9,6 @@ class s_fade:
     def __call__(self, world):
 
         if self.counter > 0:
-            print('add')
             world += self.lastworld*(1-self.counter)
             self.counter -= 0.1
 

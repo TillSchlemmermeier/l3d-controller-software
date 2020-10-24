@@ -11,6 +11,7 @@ from oneshots.s_sides import *
 from oneshots.s_blank import *
 from oneshots.s_fade import *
 from oneshots.s_dark import *
+from oneshots.s_growing_sphere import *
 
 class rendering_engine:
     """
@@ -79,6 +80,7 @@ class rendering_engine:
         self.shot_list.append(s_sides)
         self.shot_list.append(s_fade)
         self.shot_list.append(s_dark)
+        self.shot_list.append(s_growing_sphere)
 
         # try to establish connection to arduino
         try:

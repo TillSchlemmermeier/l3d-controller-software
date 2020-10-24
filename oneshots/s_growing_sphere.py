@@ -2,7 +2,7 @@ import numpy as np
 from generators.g_genhsphere import gen_hsphere
 
 
-class s_growning_sphere:
+class s_growing_sphere:
 
     def __init__(self):
         self.counter = 8
