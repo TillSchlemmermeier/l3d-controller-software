@@ -22,6 +22,7 @@ class class_launchpad_mk3:
         # array for state switching
         # states are preset, generator, effect1, effect2, effect3 for
         # each channel, which makes 20 states + idle state
+        # state 21 = global preset menu
         self.state = 0	 # this is the idle state
         self.sendstate() # send the current state to launchpad
 
@@ -81,9 +82,6 @@ class class_launchpad_mk3:
                         # activate channel 2
                         self.global_parameter[70] = 1
 
-
-#                    print(self.global_parameter[0])
-
                 # check whether button is in range for menus
                 if key[0] <= 5 and key[1] <= 4:
                     self.state = key
@@ -102,22 +100,27 @@ class class_launchpad_mk3:
                         self.global_parameter[200] = key[0]+10
                     elif key[1]-1 == 3:
                         self.global_parameter[200] = key[0]+15
+                    #elif key[1]-1 == 4:
+                    #    self.global_parameter[200] = key
 
-                elif key[0] == 8:
+                elif message[1] == 85:
+                        self.state = 21
+
+                elif key[0] == 8 and key[1] < 4:
                     print('saving preset for channel', key[1])
                     try:
                         self.save_preset(key[1])
                     except:
                         print('error saving preset!')
 
-                elif key[0] == 7:
+                elif key[0] == 7 and key[1] < 4:
                     print('saving temporary preset for channel', key[1])
                     try:
                         self.save_preset(key[1], filename = 'temporary_preset.dat')
                     except:
                         print('error saving preset!')
 
-                elif key[0] == 6:
+                elif key[0] == 6 and key[1] < 4:
                     print('loading temporary preset for channel', key[1])
                     try:
                         self.load_preset(-1, key[1], 'temporary_preset.dat')
@@ -135,7 +138,13 @@ class class_launchpad_mk3:
                     self.global_parameter[220] = 4
                 elif message[1] == 58:
                     self.global_parameter[220] = 5
+
+                # now global preset
+                elif message[1] == 15:
+                    print('saving global preset')
+                    self.save_global_preset()
             else:
+                # some selection menu is open
                 # if not idle, we can go back to idle
                 # this is to close the selection matrix
                 # self.state[0] ist reihe
@@ -160,6 +169,8 @@ class class_launchpad_mk3:
                             self.load_preset(preset_id = message[1]+add, channel = self.state[1])
                         except:
                             print('error loading preset')
+                    elif self.state == 21:
+                        print('open global preset menu')
 
                     else:
                         # figure out the state
@@ -189,13 +200,24 @@ class class_launchpad_mk3:
         with open(filename, 'a+') as file:
             file.write(' '.join(list)+'\n')
 
+    def save_global_preset(self, filename = 'global_presets.dat'):
+        '''appends the current values of a channel to a file
+        channel goes from 1 to 4
+        '''
+        # assemble list of parameters
+        list = []
+        list.append('name')
+
+        for channel in range(1,5):
+            for i in self.indices[channel-1]:
+                list.append(str(round(self.global_parameter[i], 2)))
+
+        # save global preset
+        with open(filename, 'a+') as file:
+            file.write(' '.join(list)+'\n')
 
     def load_preset(self, preset_id, channel, filename = 'presets.dat'):
         '''loads preset from file and writes to global array'''
-
-        print(' preset id : ', preset_id)
-        print(' channel   : ', channel)
-        print(' file name : ', filename)
 
         with open(filename, 'r') as file:
             presets = file.readlines()
@@ -214,6 +236,26 @@ class class_launchpad_mk3:
         except:
             print('preset not available')
 
+    def load_global_preset(self, preset_id, channel, filename = 'global_presets.dat'):
+        '''loads preset from file and writes to global array'''
+
+        with open(filename, 'r') as file:
+            presets = file.readlines()
+
+        try:
+            preset = presets[preset_id].strip('\n').split()
+            print('loading global preset', preset[0])
+
+            # write values into global parameter array
+            # hopefully on the right place
+            for channel in range(1,5):
+                for i, value in zip(self.indices[channel-1], preset[1:]):
+                    # dont set channel on/off
+                    if i not in [40, 70, 100, 130]:
+                        self.global_parameter[i] = float(value)
+
+        except:
+            print('global preset not available')
 
 
     def convert(self, number):
@@ -254,6 +296,10 @@ class class_launchpad_mk3:
             self.midiout.send_message([144, 66, 5])
             self.midiout.send_message([144, 65, 5])
             self.midiout.send_message([144, 58, 5])
+
+            # send global preset save/load
+            self.midiout.send_message([144, 85, 5])
+            self.midiout.send_message([144, 15, 2])
 
             for i in range(4):
                 self.midiout.send_message([144, 81+i,  5])
