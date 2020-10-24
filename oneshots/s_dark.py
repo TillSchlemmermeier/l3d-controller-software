@@ -10,6 +10,6 @@ class s_dark:
 
         if self.counter > 0:
             world *= (1-self.counter)**4
-            self.counter -= 0.05
+            self.counter -= 0.1
 
         return world, self.counter

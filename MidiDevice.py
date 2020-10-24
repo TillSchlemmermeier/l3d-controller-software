@@ -125,14 +125,15 @@ class class_launchpad_mk3:
                         print('error loading temporary preset!')
 
                 # now the shots
-                elif key[0] == 68:
+                elif message[1] == 68:
                     self.global_parameter[220] = 1
-                elif key[0] == 67:
+                elif message[1] == 67:
                     self.global_parameter[220] = 2
-                elif key[0] == 66:
+                elif message[1] == 66:
                     self.global_parameter[220] = 3
-                elif key[0] == 65:
-                    self.global_parameter[220] = 4
+                elif message[1] == 65:
+#                    self.global_parameter[220] = 4
+#                    print('shot 4')
             else:
                 # if not idle, we can go back to idle
                 # this is to close the selection matrix

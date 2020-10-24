@@ -213,10 +213,10 @@ class rendering_engine:
         # detect whether a oneshot is fired
         if self.global_parameter[220] > 0:
             self.shot_state = self.global_parameter[220]
-            self.shot = self.shot_list[self.shot_state]()
+            self.shot = self.shot_list[int(self.shot_state)]()
             self.global_parameter[220] = 0
 
-        if self.shot_state == 1:
+        if self.shot_state > 0:
             self.cubeworld, counter = self.shot(self.cubeworld)
             if counter <= 0:
                 self.shot_state = 0
