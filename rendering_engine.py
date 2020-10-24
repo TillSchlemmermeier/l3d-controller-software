@@ -11,6 +11,7 @@ from oneshots.s_sides import *
 from oneshots.s_blank import *
 from oneshots.s_fade import *
 from oneshots.s_dark import *
+from oneshots.s_roll import *
 
 class rendering_engine:
     """
@@ -71,7 +72,7 @@ class rendering_engine:
 
         logging.info('Variables initialised')
 
-        # define shot-state
+        # one shots
         self.shot_state = 0
         self.shot = s_blank()
         self.shot_list = []
@@ -79,6 +80,7 @@ class rendering_engine:
         self.shot_list.append(s_sides)
         self.shot_list.append(s_fade)
         self.shot_list.append(s_dark)
+        self.shot_list.append(s_roll)
 
         # try to establish connection to arduino
         try:
