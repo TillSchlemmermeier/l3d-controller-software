@@ -305,6 +305,10 @@ class class_launchpad_mk3:
             self.midiout.send_message([144, 85, 5])
             self.midiout.send_message([144, 15, 2])
 
+            # send autopilot
+            self.midiout.send_message([144, 18, 1])
+
+
             for i in range(4):
                 self.midiout.send_message([144, 81+i,  5])
                 self.midiout.send_message([144, 71+i, 61])
