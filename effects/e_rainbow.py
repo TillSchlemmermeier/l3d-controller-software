@@ -27,11 +27,11 @@ class e_rainbow:
         else:
             channel = 'noS2L'
 
-        return bytearray('{0:<8s}{1:<8s}{2:<8s}{3:<8s}'.format(str(round(self.speed,2)), '', '', channel), 'utf-8')
+        return bytearray('{0:<8s}{1:<8s}{2:<8s}{3:<8s}'.format(str(round(20*self.speed,2)), '', '', channel), 'utf-8')
 
     def __call__(self, world, args):
         # parsing input
-        self.speed = args[0]/10
+        self.speed = args[0]/20
         self.channel = int(args[3]*4)-1
 
         color = hsv_to_rgb(self.color[0], 1, 1)
