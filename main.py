@@ -15,7 +15,9 @@ from PyQt5 import QtWidgets, QtGui, QtCore
 import numpy as np
 from ctypes import c_char, c_char_p
 
-from MidiDevice import class_fighter, class_akai, class_launchpad_mk3
+from midi_akai import class_akai
+from midi_fighter import class_fighter
+from midi_launchpad import class_launchpad_mk3
 from gui_class import MainWindow
 from artnet_interface import class_artnet
 from time import sleep
