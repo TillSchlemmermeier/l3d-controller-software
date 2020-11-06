@@ -34,12 +34,13 @@ class e_bright_osci():
 
         # check if s2l is activated
         if self.channel >= 0:
-            current_volume = float(str(self.sound_values.buf[self.channel*8:self.channel*8+8],'utf-8'))
-            self.speed = current_volume
-
+            current_volume = 3*float(str(self.sound_values.buf[self.channel*8:self.channel*8+8],'utf-8'))
+            #self.speed = current_volume
+        else:
+            current_volume = self.speed
         # modulate brightness
         for x in range(10):
-            world[:,x,:,:] *= np.sin(self.speed*self.step+x)
+            world[:,x,:,:] *= np.sin(current_volume * (x - self.step))
 
         # compressor for SHAPE
         world[:,:,:,:] = np.clip(world[:,:,:,:],0,1)**self.shape

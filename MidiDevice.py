@@ -40,7 +40,6 @@ class class_launchpad_mk3:
         """Call gets midi message and calls the mapping routine"""
         # gets message from midi input
         message, deltatime = event
-        #print(message)
 
         # switch channels on
         # this are the round buttons at the top
@@ -107,21 +106,21 @@ class class_launchpad_mk3:
                     print('open global preset menu trigger')
                     self.state = key
 
-                elif key[0] == 8 and key[1] < 4:
+                elif key[0] == 8 and key[1] <= 4:
                     print('saving preset for channel', key[1])
                     try:
                         self.save_preset(key[1])
                     except:
                         print('error saving preset!')
 
-                elif key[0] == 7 and key[1] < 4:
+                elif key[0] == 7 and key[1] <= 4:
                     print('saving temporary preset for channel', key[1])
                     try:
                         self.save_preset(key[1], filename = 'temporary_preset.dat')
                     except:
                         print('error saving preset!')
 
-                elif key[0] == 6 and key[1] < 4:
+                elif key[0] == 6 and key[1] <= 4:
                     print('loading temporary preset for channel', key[1])
                     try:
                         self.load_preset(-1, key[1], 'temporary_preset.dat')
@@ -150,12 +149,10 @@ class class_launchpad_mk3:
                 # self.state[0] ist reihe
                 # self.state[1] ist spalte
                 if message[1] == 81:
-                    # print('close menu')
                     self.state = 0
                     self.global_parameter[200] = 0
 
                 else:
-                    print('-',self.state)
                     # check for presets
                     if self.state[0] == 1 and self.state[1] == 5:
                         print('open global preset')
@@ -170,7 +167,7 @@ class class_launchpad_mk3:
                         except:
                             print('error loading preset')
 
-                    elif self.state[0] == 1 and self.state[1] < 5:
+                    elif self.state[0] == 1 and self.state[1] < 6:
                         print('trying to load preset')
                         # figure out the state
                         index = 18 + (self.state[1]-1)*5 + self.state[0]
@@ -218,9 +215,8 @@ class class_launchpad_mk3:
         list = []
         list.append('name')
 
-        for channel in range(1,5):
-            for i in self.indices[channel-1]:
-                list.append(str(round(self.global_parameter[i], 2)))
+        for i in range(20,159):
+            list.append(str(round(self.global_parameter[i], 2)))
 
         # save global preset
         with open(filename, 'a+') as file:
@@ -252,19 +248,13 @@ class class_launchpad_mk3:
         with open(filename, 'r') as file:
             presets = file.readlines()
 
-        print(presets[preset_id], 'now parse it')
         try:
             preset = presets[preset_id].strip('\n').split()
             print('loading global preset', preset[0])
 
-            # write values into global parameter array
-            # hopefully on the right place
-            for channel in range(1,5):
-#                print(self.indices[channel-1])
-                for i, value in zip(self.indices[channel-1], preset[1:]):
-                    self.global_parameter[i] = float(value)
+            for i, value in zip(range(20,159), preset[1:]):
+                self.global_parameter[i] = float(value)
 
-#            print(self.global_parameter[45], )
         except:
             print('global preset not available')
 
