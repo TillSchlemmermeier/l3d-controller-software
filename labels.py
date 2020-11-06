@@ -39,6 +39,7 @@ labels[0, 2, 6] = 'fade'
 labels[0, 2, 5] = 'dark'
 labels[0, 2, 4] = 'sphere'
 labels[0, 3, 7] = 'roll'
+labels[3, 3, 6] = 'strobo'
 
 # add presets
 
