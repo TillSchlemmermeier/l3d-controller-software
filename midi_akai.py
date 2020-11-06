@@ -14,7 +14,7 @@ class class_akai:
         """Call gets midi message and calls the mapping routine"""
         message, deltatime = event
 
-        print(message)
+        # print(message)
         # faders are 19, 23, 27, 31, 49, 53, 57, 61,62
 
         # global brightness
@@ -72,5 +72,6 @@ class class_akai:
         elif message[1] == 46:
             self.global_parameter[18] = message[2]/127.0
 
-        elif message[1] == 47:
+        # autopilot time
+        elif message[1] == 58:
             self.global_parameter[6] = message[2]/127.0

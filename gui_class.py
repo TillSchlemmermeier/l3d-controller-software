@@ -375,7 +375,7 @@ class MainWindow(QtWidgets.QMainWindow):
                     self.padlabels[x][y].setStyleSheet('background-color: rgb(100, 100, 100); text-align: center;')
                     if y > 3 and x == 2:
                         self.padlabels[x][y].setStyleSheet('background-color: rgb(255, 0, 0); text-align: center;')
-                    elif y == 7 and x == 3:
+                    elif y > 4 and x == 3:
                         self.padlabels[x][y].setStyleSheet('background-color: rgb(255, 0, 0); text-align: center;')
                     #rgb(224, 0, 0)
                 else:

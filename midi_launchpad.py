@@ -143,6 +143,8 @@ class class_launchpad_mk3:
                     self.global_parameter[220] = 5
                 elif message[1] == 57:
                     self.global_parameter[220] = 6
+                elif message[1] == 56:
+                    self.global_parameter[220] = 7
 
                 # now global preset
                 elif message[1] == 15:
@@ -303,6 +305,7 @@ class class_launchpad_mk3:
             self.midiout.send_message([144, 65, 5])
             self.midiout.send_message([144, 58, 5])
             self.midiout.send_message([144, 57, 5])
+            self.midiout.send_message([144, 56, 5])
 
             # send global preset save/load
             self.midiout.send_message([144, 85, 5])
