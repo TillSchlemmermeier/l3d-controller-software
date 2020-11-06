@@ -77,6 +77,13 @@ class class_launchpad_mk3:
                         # activate channel 2
                         self.global_parameter[70] = 1
 
+                elif message[1] == 18:
+                    print('switch autopilot')
+                    if self.global_parameter[5] == 0:
+                        self.global_parameter[5] = 1
+                    else:
+                        self.global_parameter[5] = 0
+
                 # check whether button is in range for menus
                 if key[0] <= 5 and key[1] <= 4:
                     self.state = key

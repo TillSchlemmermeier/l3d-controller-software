@@ -24,9 +24,38 @@ from time import sleep
 from time import time as tottime
 import multiprocessing as mp
 from s2l_engine import sound_process
+from random import choice
 
 #from PyQt5.QtCore import QObject,QThread, pyqtSigna
 #from mainwindow import Ui_MainWindow
+
+def autopilot(array):
+
+    starttime = tottime()
+    with open('global_presets.dat', 'r') as file:
+        presets = file.readlines()
+
+    preset = choice(presets)
+
+    while True:
+        time.sleep(0.5)
+        if array[5] == 1:
+            print('active autopilot')
+            starttime = tottime()
+            while True:
+                if tottime()-starttime > 5:
+                    print('new preset')
+                    preset = choice(presets).strip('\n').split()
+
+                    for i, value in zip(range(20,159), preset[1:]):
+                        array[i] = float(value)
+
+                    starttime = tottime()
+
+                time.sleep(0.1)
+                if array[5] == 0:
+                    print('stopping autopilot')
+                    break
 
 
 def midi_devices(array):
@@ -150,6 +179,7 @@ if __name__ == '__main__':
     proc_gui = mp.Process(target=gui, args = [global_parameter, global_label, mode])
     # proc_artnet = mp.Process(target=artnet_process, args = [global_parameter])
     proc_sound = mp.Process(target = sound_process, args = [global_parameter])
+    proc_autopilot = mp.Process(target = autopilot, args = [global_parameter])
 
     # if test modus, load last temporary preset
     if len(sys.argv) >= 2:
@@ -178,7 +208,7 @@ if __name__ == '__main__':
     proc_midi.start()
 
     proc_renderer.start()
-
+    proc_autopilot.start()
     proc_gui.start()
     proc_sound.start()
     # proc_artnet.start()
@@ -188,6 +218,7 @@ if __name__ == '__main__':
     proc_renderer.join()
     proc_gui.join()
     proc_sound.join()
+    proc_autopilot.join()
 #    proc_artnet.join()
 
     global_memory.close()

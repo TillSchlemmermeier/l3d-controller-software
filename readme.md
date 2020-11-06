@@ -31,6 +31,7 @@ In the following, the global parameters are listed. Default values are given in 
 |        2 | fade                     | 0-1    | 0.0
 |        3 | brightness limiter       | 0-1    | 0.8
 |        4 | state of launchpad       | 0-19   | 0
+|        5 | autopilot                | 0,1    | 1
 | 10 -  19 | **sound2light**
 |       10 | value 1                  | 0-X    | 0
 |       11 | value 2                  | 0-X    | 0
