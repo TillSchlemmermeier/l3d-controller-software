@@ -58,7 +58,7 @@ def midi_devices(array):
                 elif array[23+5*i] != temp_param[23+5*i]:
                     midifighter.event(['T', i, 3])
                     array[201+i] = 3
-                    
+
                 temp_param[:] = array[:]
         pass
 
@@ -136,6 +136,9 @@ if __name__ == '__main__':
         if sys.argv[1] == '--2d':
             proc_renderer = mp.Process(target=rendering_2d, args = [global_parameter, global_label])
             mode = '2d'
+        else:
+            mode = '3d'
+            proc_renderer = mp.Process(target=rendering, args = [global_parameter, global_label])
     else:
         mode = '3d'
         proc_renderer = mp.Process(target=rendering, args = [global_parameter, global_label])
@@ -152,7 +155,6 @@ if __name__ == '__main__':
             print(' test mode - loading temporary preset')
             with open('temporary_preset.dat') as file:
                 presets = file.readlines()
-
 
             try:
                 indices = []
