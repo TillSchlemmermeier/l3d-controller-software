@@ -1,13 +1,12 @@
 import numpy as np
-from scipy.signal import fftconvolve, gaussian
+from colorsys import rgb_to_hsv, hsv_to_rgb
 
 class s_cubes:
 
     def __init__(self):
         self.counter = 5
-        self.mean = np.zeros([7,7,7])
-        self.mean[:, 2, 2] = 1/10.0
-        self.amount = 0
+        color = uniform(0, 1)
+        self.color = hsv_to_rgb(color, 1, 1)
 
     def __call__(self, world):
 
@@ -34,10 +33,9 @@ class s_cubes:
             tempworld[4-size:6+size, 4-size:6+size, 5+size] += 1
 
             # path world together
-            world[0, :, :, :] += tempworld
-            world[1, :, :, :] += tempworld
-            world[2, :, :, :] += tempworld
-
+            for i in range(3):
+                world[i, :, :, :] += tempworld
+                world[i, :, :, :] *= self.color[i]
 
             self.counter -= 1
 
