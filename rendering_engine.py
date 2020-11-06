@@ -46,12 +46,7 @@ class rendering_engine:
         self.header = [int(66),
                        int(69),
                        int(69),
-                       int(70)]#,
-                       #int(1),      # Speed
-                       #int(200),    # Brightness
-                       #int(116),    # hPal
-                       #int(0),      # hPalMode
-                       #int(1)]      # hRGBMode
+                       int(70)]
 
         # assign global setParameters
         self.global_parameter = array
@@ -150,17 +145,15 @@ class rendering_engine:
         # in order to pass the right midivalues/parameters
         index_settings = 20     # information about choice of generators, ...
         index_parameters = 40   # parameter like brightness, generator settings, ...
-
         index_label = 0
-
         current_values = []
 
-        for i in range(4):      # loop through channels
+        # loop through channels
+        for i in range(4):
             channel = self.channels[i]
             # check whether cannel is active, otherwise overrides channel world
             # with zeros
             if int(self.global_parameter[index_parameters]) == 1:
-
                 # check for changes
                 if channel.get_settings() != self.global_parameter[index_settings:index_settings+5]:
                     # pass channel settings
@@ -171,17 +164,13 @@ class rendering_engine:
                     new_world = channel.render_frame(self.framecounter, self.global_parameter[index_parameters:index_parameters+30])
                 else:
                     new_world = np.zeros([3, 10, 10, 10])
-
             else:
                 new_world = np.zeros([3, 10, 10, 10])
 
 			# get current values
             temp, valuesG, valuesE1, valuesE2, valuesE3 = channel.get_labels()
-            # current_values.append([valuesG,valuesE1,valuesE2,valuesE3])
             current_values.append(valuesG + valuesE1 + valuesE2 + valuesE3)
-
             for j in range(19):
-                #print(temp[j])
                 self.label[j+index_label] = temp[j]
 
             # apply fade
@@ -193,19 +182,10 @@ class rendering_engine:
             index_label += 20
 
         # calculate brightness for channels
-        # we have the problem, that we want the channels to add
-        # up, but only have a limited brightness - so things can
-        # produce an 'overexposure'
-        # as a workaround, i'm inserting a global parameter to control
-        # the maximum brightness of each individual channel, so addings
-        # things can actually incease the brightness a bit more
-
         channel_brightness = [np.clip(self.global_parameter[41], 0, self.global_parameter[3]),
                               np.clip(self.global_parameter[71], 0, self.global_parameter[3]),
                               np.clip(self.global_parameter[101], 0, self.global_parameter[3]),
                               np.clip(self.global_parameter[131], 0, self.global_parameter[3])]
-
-#                                     channel_brightness = [i*1/255.0 for i in channel_brightness]
 
         # copy channels together
         self.cubeworld = self.global_parameter[2] * self.cubeworld +\
@@ -241,11 +221,7 @@ class rendering_engine:
         list1 = world2vox(np.clip(self.cubeworld[0, :, :, :], 0, 1))
         list2 = world2vox(np.clip(self.cubeworld[1, :, :, :], 0, 1))
         list3 = world2vox(np.clip(self.cubeworld[2, :, :, :], 0, 1))
-
-        #print(list1[:3])
-
         # stack this lists for each color, so that we have RGB ordering for
         # each LED
         liste = list(np.stack((list1, list2, list3)).flatten('F'))
-        #print(liste[:10])
         return liste
