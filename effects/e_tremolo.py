@@ -9,9 +9,10 @@ class e_tremolo():
 
     def __init__(self):
         self.speed = 1.0
-        self.shape = 1.0
+        self.shape = 'down'
         self.amplitude = 1.0
         self.step = 0
+
 
     #strings for GUI
     def return_values(self):
