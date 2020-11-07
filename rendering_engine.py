@@ -15,6 +15,7 @@ from oneshots.s_growing_sphere import *
 from oneshots.s_roll import *
 from oneshots.s_strobo import s_strobo
 from oneshots.s_cubes import s_cubes
+from oneshots.s_dark_sphere import s_dark_sphere
 
 class rendering_engine:
     """
@@ -82,6 +83,7 @@ class rendering_engine:
         self.shot_list.append(s_roll)
         self.shot_list.append(s_strobo)
         self.shot_list.append(s_cubes)
+        self.shot_list.append(s_dark_sphere)
 
         # try to establish connection to arduino
         try:

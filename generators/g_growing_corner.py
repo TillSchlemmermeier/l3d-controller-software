@@ -1,7 +1,7 @@
 # modules
 import numpy as np
 from scipy.signal import sawtooth
-from random import randint
+from random import randint, choice
 from generators.g_genhsphere import gen_hsphere
 from multiprocessing import shared_memory
 
@@ -46,7 +46,6 @@ class g_growing_corner():
         return bytearray('{0:<8s}{1:<8s}{2:<8s}{3:<8s}'.format(str(round(self.maxsize,2)), str(round(self.growspeed,2)), channel, ''),'utf-8')
 
 
-    #def generate(self, step, dumpworld):
     def __call__(self, args):
         self.maxsize = args[0]*18
         self.growspeed = 60 - (args[1]*50+5)
@@ -65,7 +64,7 @@ class g_growing_corner():
 
         elif self.channel >= 0:
             if self.counter == 0:
-                list = ([0,4.5,4.5],[9,4.5,4.5],[4.5,0,4.5],[4.5,9,4.5],[4.5,4.5,0],[4.5,4.5,9])
+                list = ([0,0,0],[0,0,9],[0,9,0],[0,9,9],[9,0,0],[9,9,0],[9,0,9], [9,9,9])
                 [self.xpos, self.ypos, self.zpos] = choice(list)
             current_volume = float(str(self.sound_values.buf[self.channel*8:self.channel*8+8],'utf-8'))
             if current_volume > 0:
@@ -87,7 +86,7 @@ class g_growing_corner():
         world[1, :, :, :] = world[0, :, :, :]
         world[2, :, :, :] = world[0, :, :, :]
 
-        if self.channel > 0:
+        if self.channel < 0:
             self.counter += 1
 
         return np.round(np.clip(world, 0, 1), 3)

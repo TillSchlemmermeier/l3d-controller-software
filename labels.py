@@ -41,6 +41,7 @@ labels[0, 2, 4] = 'sphere'
 labels[0, 3, 7] = 'roll'
 labels[0, 3, 6] = 'strobo'
 labels[0, 3, 5] = 'cubes'
+labels[0, 3, 4] = 'dark sphere'
 
 # add presets
 
