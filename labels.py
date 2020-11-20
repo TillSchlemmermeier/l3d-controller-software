@@ -8,8 +8,11 @@ with open('presets.dat', 'r') as file:
     presets = file.readlines()
 
 for p in presets:
-    preset_labels.append(p.split()[0])
-
+    templabel = p.split()[0]
+    if len(templabel) > 8:
+        preset_labels.append(templabel[:8]+'\n'+templabel[8:])
+    else:
+        preset_labels.append(templabel)
 
 
 # variable for launchpad text labels
@@ -78,6 +81,10 @@ for i in [1, 6, 11, 16]:
 file = open("generators.dat", "r")
 generatorFile = file.readlines()
 
+# delete first 2 characters
+for i in range(len(generatorFile)):
+    generatorFile[i] = generatorFile[i][2 : :]
+
 for i in [2, 7, 12, 17]:
     h = 0
     # j is row, k is column
@@ -87,10 +94,11 @@ for i in [2, 7, 12, 17]:
             for k in range(1, 8):
                 # delete first 2 characters
                 try:
-                    generatorFile[h] = generatorFile[h][2 : : ]
-                    if len(generatorFile(h)) > 8:
-                        generatorFile[h][:8] + '\n' + generatorFile[h][8:]
-                    labels[i,j,k] = generatorFile[h]
+#                    generatorFile[h] = generatorFile[h][2 : : ]
+                    if len(generatorFile[h]) > 8:
+                        labels[i,j,k] = generatorFile[h][:8] + '\n' + generatorFile[h][8:]
+                    else:
+                        labels[i,j,k] = generatorFile[h]
                 except:
                     pass
                 h += 1
@@ -100,10 +108,11 @@ for i in [2, 7, 12, 17]:
             for k in range(0, 8):
                 # delete first 2 characters
                 try:
-                    generatorFile[h] = generatorFile[h][2 : : ]
-                    if len(generatorFile(h)) > 8:
-                        generatorFile[h][:8] + '\n' + generatorFile[h][8:]
-                    labels[i,j,k] = generatorFile[h]
+#                    generatorFile[h] = generatorFile[h][2 : : ]
+                    if len(generatorFile[h]) > 8:
+                        labels[i,j,k] = generatorFile[h][:8] + '\n' + generatorFile[h][8:]
+                    else:
+                        labels[i,j,k] = generatorFile[h]
                 except:
                     pass
                 h += 1
@@ -114,6 +123,11 @@ for i in [2, 7, 12, 17]:
 file = open("effects.dat", "r")
 effectsFile = file.readlines()
 
+print(effectsFile[0])
+for i in range(len(effectsFile)):
+    effectsFile[i] = effectsFile[i][2 : :]
+print(effectsFile[0],'\n\n\n')
+
 for i in [3,4,5, 8,9,10, 13,14,15, 18,19,20]:
     h = 0
     # j is row, k is column
@@ -123,10 +137,11 @@ for i in [3,4,5, 8,9,10, 13,14,15, 18,19,20]:
             for k in range(1, 8):
                 # delete first 2 characters
                 try:
-                    effectsFile[h] = effectsFile[h][2 : : ]
-                    if len(effectsFile(h)) > 8:
-                        effectsFile[h][:8] + '\n' + effectsFile[h][8:]
-                    labels[i,j,k] = effectsFile[h]
+                    # effectsFile[h] = effectsFile[h][2 : : ]
+                    if len(effectsFile[h]) > 8:
+                        labels[i,j,k] = effectsFile[h][:8] + '\n' + effectsFile[h][8:]
+                    else:
+                        labels[i,j,k] = effectsFile[h]
                 except:
                     pass
                 h += 1
@@ -136,10 +151,11 @@ for i in [3,4,5, 8,9,10, 13,14,15, 18,19,20]:
             for k in range(0, 8):
                 # delete first 2 characters
                 try:
-                    effectsFile[h] = effectsFile[h][2 : : ]
-                    if len(effectsFile(h)) > 8:
-                        effectsFile[h][:8] + '\n' + effectsFile[h][8:]
-                    labels[i,j,k] = effectsFile[h]
+                    # effectsFile[h] = effectsFile[h][2 : : ]
+                    if len(effectsFile[h]) > 8:
+                        labels[i,j,k] = effectsFile[h][:8] + '\n' + effectsFile[h][8:]
+                    else:
+                        labels[i,j,k] = effectsFile[h]
                 except:
                     pass
                 h += 1
