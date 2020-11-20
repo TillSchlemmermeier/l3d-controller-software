@@ -74,7 +74,28 @@ for i in [1, 6, 11, 16]:
         counter += 1
 
 # add generators
+
+file = open("generators.dat", "r")
+generatorFile = file.readlines()
+
 for i in [2, 7, 12, 17]:
+    h = 0
+    for j in range 8:
+        for k in range 8:
+            # delete first 2 characters
+            try:
+                generatorFile[h] = generatorFile[h][2 : : ]
+                labels[i,j,k] = generatorFile[h]
+            except:
+                pass
+            h += 1
+
+
+
+
+    '''
+for i in [2, 7, 12, 17]:
+
     labels[i, 0, 1] = 'blank'
     labels[i, 0, 2] = 'random'
     labels[i, 0, 3] = 'planes'
@@ -130,6 +151,25 @@ for i in [2, 7, 12, 17]:
 
     labels[i, 6, 0] = 'sinus'
     labels[i, 6, 1] = 'sound\nellipsoid'
+    '''
+
+
+file = open("effects.dat", "r")
+effectsFile = file.readlines()
+
+for i in [2, 7, 12, 17]:
+    h = 0
+    for j in range 8:
+        for k in range 8:
+            # delete first 2 characters
+            try:
+                effectsFile[h] = effectsFile[h][2 : : ]
+                labels[i,j,k] = effectsFile[h]
+            except:
+                pass
+            h += 1
+
+    '''
 
 # add effect
 for i in [3,4,5, 8,9,10, 13,14,15, 18,19,20]:
@@ -170,3 +210,4 @@ for i in [3,4,5, 8,9,10, 13,14,15, 18,19,20]:
 #    labels[i, 4, 0] = 'prod\nhue'
 #    labels[i, 4, 1] = 'prod\nsaturation'
 #    labels[i, 4, 2] = 'fade2blue'
+'''
