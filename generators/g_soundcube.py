@@ -24,7 +24,7 @@ class g_soundcube():
 
     def return_values(self):
         # strings for GUI
-        return [b's2l', b'channel', b'', b'', b'']
+        return [b'soundcube', b'channel', b'', b'', b'']
 
     def return_gui_values(self):
         return bytearray('{0:<8s}{1:<8s}{2:<8s}{3:<8s}'.format(str(round(self.channel,2)), '', '', ''),'utf-8')

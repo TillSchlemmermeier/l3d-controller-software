@@ -15,7 +15,7 @@ class g_sound_ellipsoid():
         return [b'sound_ellipsoid', b'', b'', b'', b'']
 
     def return_gui_values(self):
-        return bytearray('{0:<8s}{1:<8s}{2:<8s}{3:<8s}'.format('', '', '', ''),'utf-8')
+        return bytearray('{0:<8s}{1:<8s}{2:<8s}{3:<8s}'.format(str(round(self.xsize)), str(round(self.ysize)), str(round(self.zsize)), ''),'utf-8')
 
     def __call__(self, args):
         self.xsize = args[0]*7+1.0

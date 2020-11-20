@@ -24,6 +24,14 @@ g_pyramid
 g_pyramid_upsidedown
 g_inandout
 g_growing_corner
+g_falling
+g_drop
+g_obliqueplane
+g_cut
+g_multicube
+g_cube_edges
+g_corner
+g_corner_grow
 g_columns
 g_circles
 g_grow
@@ -39,7 +47,7 @@ g_edgelines
 g_soundcube
 g_sinus
 g_sound_ellipsoid
-g_blank
+g_square_equalizer
 g_blank
 g_blank
 g_blank

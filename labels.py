@@ -80,16 +80,29 @@ generatorFile = file.readlines()
 
 for i in [2, 7, 12, 17]:
     h = 0
-    for j in range 8:
-        for k in range 8:
-            # delete first 2 characters
-            try:
-                generatorFile[h] = generatorFile[h][2 : : ]
-                labels[i,j,k] = generatorFile[h]
-            except:
-                pass
-            h += 1
+    # j is row, k is column
+    print(' -- ')
+    for j in range(8):
+        if j == 0:
+            for k in range(1, 8):
+                # delete first 2 characters
+                try:
+                    generatorFile[h] = generatorFile[h][2 : : ]
+                    labels[i,j,k] = generatorFile[h]
+                except:
+                    pass
+                h += 1
 
+        else:
+
+            for k in range(0, 8):
+                # delete first 2 characters
+                try:
+                    generatorFile[h] = generatorFile[h][2 : : ]
+                    labels[i,j,k] = generatorFile[h]
+                except:
+                    pass
+                h += 1
 
 
 
@@ -157,17 +170,31 @@ for i in [2, 7, 12, 17]:
 file = open("effects.dat", "r")
 effectsFile = file.readlines()
 
-for i in [2, 7, 12, 17]:
+for i in [3,4,5, 8,9,10, 13,14,15, 18,19,20]:
     h = 0
-    for j in range 8:
-        for k in range 8:
-            # delete first 2 characters
-            try:
-                effectsFile[h] = effectsFile[h][2 : : ]
-                labels[i,j,k] = effectsFile[h]
-            except:
-                pass
-            h += 1
+    # j is row, k is column
+    print(' -- ')
+    for j in range(8):
+        if j == 0:
+            for k in range(1, 8):
+                # delete first 2 characters
+                try:
+                    effectsFile[h] = effectsFile[h][2 : : ]
+                    labels[i,j,k] = effectsFile[h]
+                except:
+                    pass
+                h += 1
+
+        else:
+
+            for k in range(0, 8):
+                # delete first 2 characters
+                try:
+                    effectsFile[h] = effectsFile[h][2 : : ]
+                    labels[i,j,k] = effectsFile[h]
+                except:
+                    pass
+                h += 1
 
     '''
 
