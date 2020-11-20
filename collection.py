@@ -1,3 +1,17 @@
+file = open("generators.dat", "r")
+generators = file.read()
+for generator in generators:
+    exec("from generators." + generator + " import *")
+    exec("generators.append(" + generator + ")")
+
+file = open("effects.dat", "r")
+effects = file.read()
+for effect in effects:
+    exec("from effects." + effect + " import *")
+    exec("effects.append(" + effect + ")")
+
+
+'''
 from generators.g_blank import *
 from generators.g_random import *
 from generators.g_planes import *
@@ -264,3 +278,5 @@ effects.append(e_blank)
 effects.append(e_blank)
 effects.append(e_blank)
 effects.append(e_blank)
+
+'''
