@@ -1,14 +1,16 @@
 file = open("generators.dat", "r")
-generators = file.read()
-for generator in generators:
-    exec("from generators." + generator + " import *")
-    exec("generators.append(" + generator + ")")
+generatorFile = file.readlines()
+generators = []
+for generator in generatorFile:
+    exec('from generators.' +str(generator).replace('\n','') + ' import *')
+    exec('generators.append(' + str(generator).replace('\n','') + ')')
 
 file = open("effects.dat", "r")
-effects = file.read()
-for effect in effects:
-    exec("from effects." + effect + " import *")
-    exec("effects.append(" + effect + ")")
+effectsFile = file.readlines()
+effects = []
+for effect in effectsFile:
+    exec('from effects.' + str(effect).replace('\n','') + ' import *')
+    exec('effects.append(' + str(effect).replace('\n','') + ')')
 
 
 '''
