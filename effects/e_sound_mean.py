@@ -29,10 +29,10 @@ class e_sound_mean():
 
         for i in range(3):
             for j in range(10):
-                world[i, j, :, :] = (1-self.fade)*world[i, :, :, :] + self.fade*self.fadeworld[i, :, :, :]
-                world[i, j, :, :] = (1-self.amount)*world[i, :, :, :] + self.amount*fftconvolve(world[i, :, :, :], gaussian, mode='same')
+                world[i, j, :, :] = (1-self.fade)*np.clip(world[i, j, :, :]) + self.fade*self.fadeworld[i, j, :, :]
+                world[i, j, :, :] = (1-self.amount)*world[i, j, :, :] + self.amount*fftconvolve(world[i, j, :, :], gaussian, mode='same')
 
-                self.fadeworld[i, :, :, :] = np.clip(world[i, :, :, :], 0, 1)
+                self.fadeworld[i, j, :, :] = np.clip(world[i, j, :, :], 0, 1)
 
 
         return np.clip(world, 0, 1)
@@ -42,3 +42,4 @@ class e_sound_mean():
         d = np.sqrt(x*x+y*y)
         sigma = width
         g = np.exp(-( d**2 / ( 2.0 * sigma**2 ) ) )
+        return g
