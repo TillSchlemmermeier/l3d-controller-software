@@ -32,6 +32,10 @@ class MainWindow(QtWidgets.QMainWindow):
         # creating layout and parent it to main container
         # is it correct, that main_CL now manages children of main_CF ?
         self.main_CL = QtWidgets.QHBoxLayout(self.main_CF)
+        #crating vertical Layer for launchpad and utility panel
+        self.vert_CF = QtWidgets.QFrame(self)
+        self.vert_CL = QtWidgets.QVBoxLayout(self.vert_CF)
+
 
         # creating the first subcontainer + layout, parenting it
         #control_CGF = QtWidgets.QFrame(self.main_CF)
@@ -80,7 +84,8 @@ class MainWindow(QtWidgets.QMainWindow):
 
         launchpad_CGF = QtWidgets.QFrame(self.main_CF)
         launchpad_CGF.setFixedWidth(683)
-        self.main_CL.addWidget(launchpad_CGF)
+        launchpad_CGF.setFixedHeight(382+165)
+        self.vert_CL.addWidget(launchpad_CGF)
         self.padlabels[x][y].setStyleSheet('background-color: rgba('+', '.join(self.colors[0])+');')
 
         launchpad_CGL = QtWidgets.QGridLayout(launchpad_CGF)
@@ -88,6 +93,21 @@ class MainWindow(QtWidgets.QMainWindow):
         for x in range(8):
             for y in range(8):
                 launchpad_CGL.addWidget(self.padlabels[x][y],x,y)
+
+        #utility area under launchpad
+        utility_CGF = QtWidgets.QFrame(self.main_CF)
+        utility_CGF.setFixedWidth(683)
+        utility_CGF.setFixedHeight(382-165)
+
+
+        self.vert_CL.addWidget(utility_CGF)
+
+        utility_CGL = QtWidgets.QGridLayout(utility_CGF)
+        utility_CGL.addWidget(QtWidgets.QLabel('TESTs'))
+
+        #adding vert_CL
+        self.main_CL.addWidget(self.vert_CF)
+
 
         # doing the same with a third container(MIDIFIGHTER)
         fighter_CGF = QtWidgets.QFrame(self.main_CF)

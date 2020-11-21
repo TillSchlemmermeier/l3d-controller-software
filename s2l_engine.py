@@ -47,9 +47,9 @@ def sound_process(array):
     mpl.rcParams['toolbar'] = 'None'
     # initialize figure
     fig, ax = plt.subplots(figsize=(3.3, 1.9))#'''figsize=(4, 1.8)'''50
-    fig.canvas.manager.window.move(354, 565)
+    fig.canvas.manager.window.move(361, 565)
     fig.canvas.manager.window.setWindowFlags(QtCore.Qt.FramelessWindowHint)
-    fig.canvas.manager.window.setWindowOpacity(1.0) 
+    fig.canvas.manager.window.setWindowOpacity(1.0)
 
     ax.set_xlim(50, 10000)
     ax.set_ylim(-0.1,2)
