@@ -16,9 +16,9 @@ class g_square_equalizer():
     def return_gui_values(self):
 
         return bytearray('{0:<8s}{1:<8s}{2:<8s}{3:<8s}'.format(str(round(self.amount[0],2)),
-                                                               str(round(self.amount[0],2)),
-                                                               str(round(self.amount[0],2)),
-                                                               str(round(self.amount[0],2))),'utf-8')
+                                                               str(round(self.amount[1],2)),
+                                                               str(round(self.amount[2],2)),
+                                                               str(round(self.amount[3],2))),'utf-8')
 
     def __call__(self, args):
         # get arguments

@@ -29,7 +29,7 @@ class e_sound_mean():
 
         for i in range(3):
             for j in range(10):
-                world[i, j, :, :] = (1-self.fade)*np.clip(world[i, j, :, :]) + self.fade*self.fadeworld[i, j, :, :]
+                world[i, j, :, :] = (1-self.fade)*np.clip(world[i, j, :, :],0,1) + self.fade*self.fadeworld[i, j, :, :]
                 world[i, j, :, :] = (1-self.amount)*world[i, j, :, :] + self.amount*fftconvolve(world[i, j, :, :], gaussian, mode='same')
 
                 self.fadeworld[i, j, :, :] = np.clip(world[i, j, :, :], 0, 1)
