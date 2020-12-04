@@ -39,12 +39,12 @@ class e_squared():
         if self.channel >= 0:
             current_volume = float(str(self.sound_values.buf[self.channel*8:self.channel*8+8],'utf-8'))
             current_volume = np.clip(current_volume, 0, 1)
-            self.exponent = 2.5 - current_volume * 2
+            new_exponent = 2.5 - current_volume * 2
 
-            if self.exponent > self.old_exponent:
-                self.old_exponent = self.exponent
-            elif self.old_exponent > 0.6:
-                self.old_exponent -= 0.2
+            if self.old_exponent > new_exponent :
+                self.old_exponent = new_exponent
+            elif self.old_exponent > (0.5 + self.exponent) :
+                self.old_exponent -= self.exponent
 
             world = world**self.old_exponent
 
