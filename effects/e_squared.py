@@ -44,7 +44,7 @@ class e_squared():
             if self.exponent > self.old_exponent:
                 self.old_exponent = self.exponent
             elif self.old_exponent > 0.6:
-                self.old_exponent -= 0.1
+                self.old_exponent -= 0.2
 
             world = world**self.old_exponent
 
