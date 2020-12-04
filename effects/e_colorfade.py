@@ -37,7 +37,7 @@ class e_colorfade():
 
     def __call__(self, world, args):
         # parsing input
-        self.speed = args[0]/20
+        self.speed = args[0]/5
         self.color1 = args[1]
         self.color2 = args[2]
         self.channel = int(args[3]*4)-1
@@ -49,9 +49,9 @@ class e_colorfade():
             self.color2 += current_volume / 20
 
         if self.color1 < self.color2:
-            self.balance = self.color1 + (self.color2 - self.color1) * np.sin(self.speed*self.step)
+            self.balance = self.color1 + (self.color2 - self.color1) * ((np.sin(self.speed*self.step)*0.5)+0.5)
         else:
-            self.balance = self.color2 + (self.color1 - self.color2) * np.sin(self.speed*self.step)
+            self.balance = self.color2 + (self.color1 - self.color2) * ((np.sin(self.speed*self.step)*0.5)+0.5)
 
         color = hsv_to_rgb(self.balance, 1, 1)
 
