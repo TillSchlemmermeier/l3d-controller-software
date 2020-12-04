@@ -79,7 +79,11 @@ class MainWindow(QtWidgets.QMainWindow):
                        ['255','165',  '0', '0.8'], # gen
                        ['255','255',  '0', '0.8'], # e 1
                        [  '0','255',  '0', '0.8'], # e 2
-                       [  '0','255','255', '0.8']] # e 3
+                       [  '0','255','255', '0.8'],
+                       ['255',  '0',  '0', '0.8'], # global presets
+                       ['255','255',  '0', '0.8'], # global effect 1
+                       [  '0','255',  '0', '0.8'], # global effect 2
+                       [  '0','255','255', '0.8']] # global effect 3
 
 
         launchpad_CGF = QtWidgets.QFrame(self.main_CF)
@@ -393,9 +397,12 @@ class MainWindow(QtWidgets.QMainWindow):
                 # menu is closed
                 if self.global_parameter[200] == 0:
                     self.padlabels[x][y].setStyleSheet('background-color: rgb(100, 100, 100); text-align: center;')
-                    if y > 3 and x == 2:
+                    # colored background for oneshots
+                    if y > 4 and x == 2:
                         self.padlabels[x][y].setStyleSheet('background-color: rgb(255, 0, 0); text-align: center;')
-                    elif y > 3 and x == 3:
+                    elif y > 4 and x == 3:
+                        self.padlabels[x][y].setStyleSheet('background-color: rgb(255, 0, 0); text-align: center;')
+                    elif y > 4 and x == 4:
                         self.padlabels[x][y].setStyleSheet('background-color: rgb(255, 0, 0); text-align: center;')
                     #rgb(224, 0, 0)
                 else:

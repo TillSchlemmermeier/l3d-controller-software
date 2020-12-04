@@ -31,7 +31,7 @@ for i in range(150):
     default += ' '
 
 # create empty numpy aray
-labels = np.full((21, 8, 8), default)
+labels = np.full((23, 8, 8), default)
 labels[:,:,:]= ''
 # add close labels except for first 'layer'
 labels[1:, 0, 0] = 'close'
@@ -40,11 +40,11 @@ labels[1:, 0, 0] = 'close'
 labels[0, 2, 7] = 'sides'
 labels[0, 2, 6] = 'fade'
 labels[0, 2, 5] = 'dark'
-labels[0, 2, 4] = 'sphere'
-labels[0, 3, 7] = 'roll'
-labels[0, 3, 6] = 'strobo'
-labels[0, 3, 5] = 'cubes'
-labels[0, 3, 4] = 'dark sphere'
+labels[0, 3, 7] = 'sphere'
+labels[0, 3, 6] = 'roll'
+labels[0, 3, 5] = 'strobo'
+labels[0, 4, 7] = 'cubes'
+labels[0, 4, 6] = 'dark sphere'
 
 # add presets
 
@@ -128,7 +128,9 @@ for i in range(len(effectsFile)):
     effectsFile[i] = effectsFile[i][2 : :]
 print(effectsFile[0],'\n\n\n')
 
-for i in [3,4,5, 8,9,10, 13,14,15, 18,19,20]:
+# 21 should be global presets
+
+for i in [3,4,5, 8,9,10, 13,14,15, 18,19,20, 22]:
     h = 0
     # j is row, k is column
     for j in range(8):

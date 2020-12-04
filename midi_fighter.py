@@ -14,6 +14,7 @@ class class_fighter:
         # 1 - effect 1 state
         # 2 - effect 2 state
         # 3 - effect 3 state
+        # 4 - modifiyng global effect
         self.current_state = [0, 0, 0, 0]
 
         # initialize midi input
@@ -59,7 +60,8 @@ class class_fighter:
         # effect 1  : color 40
         # effect 2  : color 80
         # effect 3  : color 120
-        color_dict = {0:70, 1:61, 2:50, 3:20}
+        color_dict = {0:70, 1:61, 2:50, 3:20, 5: 0}
+        print('state of fighter:', self.current_state)
 
         # now we want to send the current values back!
         # colors as well as current values!

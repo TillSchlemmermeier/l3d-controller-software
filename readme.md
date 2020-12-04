@@ -85,16 +85,17 @@ In the following, the global parameters are listed. Default values are given in 
 |100 - 129 | **parameters channel 3**
 |130 - 159 | **parameters channel 4**
 |200 - 219 | system parameters
-|      200 | selection menu  (pad)    | 0-21   | 0
-|      201 | selection menu  (fighter, ch 1)    | 0-3   | 0
-|      202 | selection menu  (fighter, ch 2)    | 0-3   | 0
-|      203 | selection menu  (fighter, ch 3)    | 0-3   | 0
-|      204 | selection menu  (fighter, ch 4)    | 0-3   | 0
+|      200 | selection menu  (pad)    | 0-21,22,23,24   | 0
+|      201 | selection menu  (fighter, ch 1)    | 0-4   | 0
+|      202 | selection menu  (fighter, ch 2)    | 0-4   | 0
+|      203 | selection menu  (fighter, ch 3)    | 0-4   | 0
+|      204 | selection menu  (fighter, ch 4)    | 0-5   | 0
 |220 - 229 | one shots
 |      220 | one shot state
 |230 - ??? | global effect parameters
-|      230 | global effect
-|231 - 234 | parameters for global effect
+|      230 | if of global effect
+|      231 | global effect controls trigger
+|232 - 235 | parameters for global effect
 
 ## Testing for rendering engine
 

@@ -21,7 +21,7 @@ class e_staticcolor():
         return [b'staticcolor', b'Red', b'Green', b'Blue', b'HSV']
 
     def return_gui_values(self):
-        return bytearray('{0:<8s}{1:<8s}{2:<8s}{3:<8s}'.format(str(round(self.red,1)), str(round(self.green,1)), str(round(self.blue,1)), str(round(self.hsv,1))), 'utf-8')
+        return bytearray('{0:<8s}{1:<8s}{2:<8s}{3:<8s}'.format(str(round(self.red,1)), str(round(self.green,1)), str(round(self.blue,1)), str(round(self.hsv[0],1))), 'utf-8')
 
     def __call__(self, world, args):
 
@@ -31,7 +31,7 @@ class e_staticcolor():
         self.hsv[0]= args[3]
 
         if self.hsv[0] > 0:
-            color = hsv_to_rgb(self.hsv, 1, 1)
+            color = hsv_to_rgb(self.hsv[0], 1, 1)
             self.red   = color[0]
             self.green = color[1]
             self.blue  = color[2]

@@ -84,6 +84,7 @@ class class_launchpad_mk3:
                     else:
                         self.global_parameter[5] = 0
 
+
                 # check whether button is in range for menus
                 if key[0] <= 5 and key[1] <= 4:
                     self.state = key
@@ -94,6 +95,8 @@ class class_launchpad_mk3:
                     # we can hardcode this for testing
 
                     # check for channel
+                    # write menu to be openend to global parameter
+                    # array for gui and so on
                     if key[1]-1 == 0:
                         self.global_parameter[200] = key[0]
                     elif key[1]-1 == 1:
@@ -108,6 +111,20 @@ class class_launchpad_mk3:
                 elif message[1] == 85:
                     print('open global preset menu trigger')
                     self.state = key
+
+                elif message[1] == 65:
+                    print('open global effect menu')
+                    self.state = key
+                    self.global_parameter[200] = 22
+                    #print(self.state)
+
+                elif message[1] == 17:
+                    print('switch fighter controls for global effect')
+                    self.global_parameter[231] = 1
+                    #self.global_parameter[201] = 4
+                    #self.global_parameter[202] = 4
+                    #self.global_parameter[203] = 4
+                    #self.global_parameter[204] = 5
 
                 elif key[0] == 8 and key[1] <= 4:
                     print('saving preset for channel', key[1])
@@ -137,15 +154,17 @@ class class_launchpad_mk3:
                     self.global_parameter[220] = 2
                 elif message[1] == 66:
                     self.global_parameter[220] = 3
-                elif message[1] == 65:
-                    self.global_parameter[220] = 4
+
                 elif message[1] == 58:
-                    self.global_parameter[220] = 5
+                    self.global_parameter[220] = 4
                 elif message[1] == 57:
-                    self.global_parameter[220] = 6
+                    self.global_parameter[220] = 5
                 elif message[1] == 56:
+                    self.global_parameter[220] = 6
+
+                elif message[1] == 48:
                     self.global_parameter[220] = 7
-                elif message[1] == 55:
+                elif message[1] == 47:
                     self.global_parameter[220] = 8
 
                 # now global preset
@@ -192,8 +211,15 @@ class class_launchpad_mk3:
                         # figure out the state
                         index = 18 + (self.state[1]-1)*5 + self.state[0]
 
+                        # capture global effect
+                        if index == 41:
+                            # modify it to 23x
+                            index += 189
+
                         # addition
                         add = -82 + (8-int(message[1]*0.1))*18
+
+                        print('doing something:', index, add, message[1])
 
                         self.global_parameter[index] = message[1]+add
                         #print('launchpad sets: ', index, self.global_parameter[index])
@@ -304,15 +330,19 @@ class class_launchpad_mk3:
             self.midiout.send_message([144, 68, 5])
             self.midiout.send_message([144, 67, 5])
             self.midiout.send_message([144, 66, 5])
-            self.midiout.send_message([144, 65, 5])
             self.midiout.send_message([144, 58, 5])
             self.midiout.send_message([144, 57, 5])
             self.midiout.send_message([144, 56, 5])
-            self.midiout.send_message([144, 55, 5])
+            self.midiout.send_message([144, 48, 5])
+            self.midiout.send_message([144, 47, 5])
 
             # send global preset save/load
             self.midiout.send_message([144, 85, 5])
             self.midiout.send_message([144, 15, 2])
+
+            # send global effect buttons
+            self.midiout.send_message([144, 65, 13])
+            self.midiout.send_message([144, 17, 13])
 
             # send autopilot
             self.midiout.send_message([144, 18, 1])

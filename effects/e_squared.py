@@ -38,14 +38,14 @@ class e_squared():
         # check if s2l is activated
         if self.channel >= 0:
             current_volume = float(str(self.sound_values.buf[self.channel*8:self.channel*8+8],'utf-8'))
-            current_volume = np.clip(current_volume, 0, 1)
+            current_volume = np.clip(current_volume, 0, 1.24)
             new_exponent = 2.5 - current_volume * 2
 
-            if self.old_exponent < self.exponent:
-                self.old_exponent += 0.2
-                self.old_exponent = np.clip(self.old_exponent, 0.5, 2.5)
+#            if self.old_exponent < self.exponent:
+            self.old_exponent += 0.25
+            self.old_exponent = np.clip(self.old_exponent, 0.2, 2.5)
 
-            elif self.old_exponent > new_exponent:
+            if self.old_exponent > new_exponent:
                 self.old_exponent = new_exponent
 
             world = world**self.old_exponent
