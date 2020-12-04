@@ -207,6 +207,9 @@ class rendering_engine:
                          channel_brightness[3] * self.channelworld[3, :, :, :]
 
         # check for changes of global effect
+        if self.global_parameter[230] != self.global_effect_id:
+            self.global_effect_id = int(self.global_parameter[230])
+            self.global_effect = effects[self.global_effect_id]()
 
         # apply global effect
         self.cubeworld = self.global_effect(self.cubeworld, self.global_parameter[231:235])
