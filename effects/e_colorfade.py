@@ -22,6 +22,7 @@ class e_colorfade():
         self.step = 0
         self.sound_values = shared_memory.SharedMemory(name = "global_s2l_memory")
         self.channel = 4
+        self.offset = 0.0
 
     #strings for GUI
     def return_values(self):
@@ -33,27 +34,28 @@ class e_colorfade():
         else:
             channel = 'noS2L'
 
-        return bytearray('{0:<8s}{1:<8s}{2:<8s}{3:<8s}'.format(str(round(self.speed,1)), str(round(self.color1,1)), str(round(self.color2,1)), channel), 'utf-8')
+        return bytearray('{0:<8s}{1:<8s}{2:<8s}{3:<8s}'.format(str(round(self.speed,2)), str(round(self.color1,1)), str(round(self.color2,1)), channel), 'utf-8')
 
     def __call__(self, world, args):
         # parsing input
-        self.speed = args[0]/5
+        self.speed = args[0]
         self.color1 = args[1]
         self.color2 = args[2]
         self.channel = int(args[3]*4)-1
-
-        # check if s2l is activated
-        if self.channel >= 0:
-            current_volume = float(str(self.sound_values.buf[self.channel*8:self.channel*8+8],'utf-8'))
-            self.color1 += current_volume / 20
-            self.color2 += current_volume / 20
 
         if self.color1 < self.color2:
             self.balance = self.color1 + (self.color2 - self.color1) * ((np.sin(self.speed*self.step)*0.5)+0.5)
         else:
             self.balance = self.color2 + (self.color1 - self.color2) * ((np.sin(self.speed*self.step)*0.5)+0.5)
 
-        color = hsv_to_rgb(self.balance, 1, 1)
+        # check if s2l is activated
+        if self.channel >= 0:
+            current_volume = float(str(self.sound_values.buf[self.channel*8:self.channel*8+8],'utf-8'))
+            self.offset += current_volume
+            color = hsv_to_rgb(self.balance + self.offset, 1, 1)
+
+        else:
+            color = hsv_to_rgb(self.balance, 1, 1)
 
         world[0, :, :, :] *= color[0]
         world[1, :, :, :] *= color[1]
