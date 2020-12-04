@@ -12,8 +12,8 @@ class e_squared():
     '''
 
     def __init__(self):
-        self.exponent = 1
-        self.old_exponent = 1
+        self.exponent = 1.0
+        self.old_exponent = 1.0
         self.sound_values = shared_memory.SharedMemory(name = "global_s2l_memory")
         self.channel = 4
 
@@ -41,10 +41,12 @@ class e_squared():
             current_volume = np.clip(current_volume, 0, 1)
             new_exponent = 2.5 - current_volume * 2
 
-            if self.old_exponent > new_exponent :
-                self.old_exponent = new_exponent
-            elif self.old_exponent > (0.5 + self.exponent) :
+            if self.old_exponent >= 0.5:
                 self.old_exponent -= self.exponent
+                np.clip(self.old_exponent, 0.5, 2.5)
+
+            elif self.old_exponent > new_exponent:
+                self.old_exponent = new_exponent
 
             world = world**self.old_exponent
 
