@@ -21,8 +21,7 @@ def sound_process(array):
     buffer_size = int(44100/20)
     p = pyaudio.PyAudio()
     sound_values = mp.shared_memory.SharedMemory(name = "global_s2l_memory")
-    gain = array[19]
-    
+
     stream = p.open(
         format = pyaudio.paInt16,
         channels = 1,
@@ -151,7 +150,7 @@ def sound_process(array):
                 current_volume = 0.0
 
             # apply gain
-            current_volume *= (gain + 1)
+            current_volume *= (array[19] + 1)
 
             string = '{:8}'.format(current_volume)
             bla = bytearray('{:.8}'.format(string[:8]),'utf-8')
