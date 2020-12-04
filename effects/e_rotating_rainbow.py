@@ -1,7 +1,7 @@
 # modules
 import numpy as np
+from colorsys import hsv_to_rgb
 from scipy.ndimage.interpolation import rotate
-
 
 class e_rotating_rainbow():
 
@@ -25,20 +25,19 @@ class e_rotating_rainbow():
 
     def __call__(self, world, args):
 		# parse input
-        self.speed = args[0]*10
-        self.gradient_length = args[1]*12.7
+        self.speed = args[0]
+        self.gradient_length = args[1]
         self.rotX = args[2]*15+0.01
         self.rotYZ = args[3]*15+0.01
 
         # create gradient
         self.rainbowworld = np.zeros([3, 10, 10, 10])
 
-        for i in range(10):
-            self.rainbowworld[0, i, :, :] = self.color_translate(int(round((i*self.gradient_length + self.step * self.speed))))[0]
-            self.rainbowworld[1, i, :, :] = self.color_translate(int(round((i*self.gradient_length + self.step * self.speed))))[1]
-            self.rainbowworld[2, i, :, :] = self.color_translate(int(round((i*self.gradient_length + self.step * self.speed))))[2]
+        for i in range(3):
+            for j in range (10):
+            self.rainbowworld[i, j, :, :] = hsv_to_rgb((j / 10) * self.gradient + self.step * self.speed,, 1, 1)[i]
 
-
+        
         # rotate
         newworld = rotate(self.rainbowworld, self.step*self.rotX,
                           axes = (1,2), order = 1,

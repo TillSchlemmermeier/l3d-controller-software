@@ -1,10 +1,5 @@
 
 import numpy as np
-#import pyaudio
-#from scipy.fftpack import fft, fftfreq
-import scipy
-#import struct
-from time import sleep
 from colorsys import rgb_to_hsv, hsv_to_rgb
 from multiprocessing import shared_memory
 
@@ -12,7 +7,6 @@ class e_sound_color():
     def __init__(self):
 
         # parameters
-        # self.threshold = 0.5
         self.channel = 0
         self.colorstep = 0.1
         self.color = 0.0
