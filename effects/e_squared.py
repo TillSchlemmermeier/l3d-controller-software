@@ -43,7 +43,7 @@ class e_squared():
 
             if self.old_exponent >= 0.5:
                 self.old_exponent -= self.exponent
-                np.clip(self.old_exponent, 0.5, 2.5)
+                self.old_exponent = np.clip(self.old_exponent, 0.5, 2.5)
 
             elif self.old_exponent > new_exponent:
                 self.old_exponent = new_exponent
