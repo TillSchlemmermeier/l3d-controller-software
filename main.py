@@ -92,13 +92,13 @@ def midi_devices(array):
                     array[201+i] = 3
 
         # check whether the glbaol effects menu was openend
-        if array[231] ==  1:
-            array[231] = 0
+        if array[230] ==  1:
+            array[230] = 0
             print('menu was openend!!!')
-            midifighter.event(['T', 0, 5])
+            midifighter.event(['T', 0, 4])
             midifighter.event(['T', 1, 5])
-            midifighter.event(['T', 2, 5])
-            midifighter.event(['T', 3, 5])
+            midifighter.event(['T', 2, 6])
+            midifighter.event(['T', 3, 7])
 
         temp_param[:] = array[:]
 
@@ -173,9 +173,6 @@ if __name__ == '__main__':
     global_parameter[11] = 0.2
     global_parameter[12] = 0.45
     global_parameter[13] = 0.7
-
-    global_parameter[230] = 1
-    global_parameter[231] = 0.2
 
     if len(sys.argv) >= 2:
         if sys.argv[1] == '--2d':

@@ -150,7 +150,9 @@ def sound_process(array):
                 current_volume = 0.0
 
             # apply gain
-            current_volume *= (array[19] + 1)
+            current_volume *= (array[19]*4 + 1)
+            #current_volume = current_volume**(1-array[19]*0.5)
+            #print(array[19])
 
             string = '{:8}'.format(current_volume)
             bla = bytearray('{:.8}'.format(string[:8]),'utf-8')

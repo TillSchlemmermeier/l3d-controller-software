@@ -60,8 +60,11 @@ class class_fighter:
         # effect 1  : color 40
         # effect 2  : color 80
         # effect 3  : color 120
-        color_dict = {0:70, 1:61, 2:50, 3:20, 5: 0}
-        print('state of fighter:', self.current_state)
+        # 0 - 3: channel specific colors
+        # 4 - 6: colors for global effects
+        # 7    : off
+        color_dict = {0:70, 1:61, 2:50, 3:20, 4: 61, 5: 50, 6: 20, 7: 0}
+        # print('state of fighter:', self.current_state)
 
         # now we want to send the current values back!
         # colors as well as current values!
@@ -73,20 +76,24 @@ class class_fighter:
             index = int(45+self.current_state[0]*5+i/4)
             value = int(self.global_parameter[index]*127)
             self.midiout.send_message([176, i, value])
+        # second column
         for i in [1, 5, 9, 13]:
             self.midiout.send_message([177, i, color_dict[self.current_state[1]]])
             index = int(75+self.current_state[1]*5+i/4)
             value = int(self.global_parameter[index]*127)
             self.midiout.send_message([176, i, value])
-        for i in [2, 6,10, 14]:
+
+        for i in [2, 6, 10, 14]:
             self.midiout.send_message([177, i, color_dict[self.current_state[2]]])
             index = int(105+self.current_state[2]*5+i/4)
             value = int(self.global_parameter[index]*127)
             self.midiout.send_message([176, i, value])
-        for i in [3, 7,11, 15]:
+
+        for i in [3, 7, 11, 15]:
             self.midiout.send_message([177, i, color_dict[self.current_state[3]]])
             index = int(135+self.current_state[3]*5+i/4)
             value = int(self.global_parameter[index]*127)
+            # print(i, value, self.current_state[3])
             self.midiout.send_message([176, i, value])
 
 
@@ -127,14 +134,29 @@ class class_fighter:
 
             # get position to write for each channel
             if key in [0, 4, 8, 12]:     # channel 1
-                basic_index = 45
-                state = self.current_state[0]
+                if self.current_state[0] < 4:
+                    state = self.current_state[0]
+                    basic_index = 45
+                else:
+                    state = 0 # self.current_state[0]
+                    basic_index = 234
+
             elif key in [1, 5, 9, 13]:   # channel 2
-                basic_index = 75
-                state = self.current_state[1]
+                if self.current_state[1] < 4:
+                    basic_index = 75
+                    state = self.current_state[1]
+                else:
+                    state = 0 # self.current_state[0]
+                    basic_index = 238
+
             elif key in [2, 6, 10, 14]:  # channel 3
-                basic_index = 105
-                state = self.current_state[2]
+                if self.current_state[1] < 4:
+                    basic_index = 105
+                    state = self.current_state[2]
+                else:
+                    state = 0 # self.current_state[0]
+                    basic_index = 242
+
             elif key in [3, 7, 11, 15]:  # channel 4
                 basic_index = 135
                 state = self.current_state[3]
@@ -157,7 +179,7 @@ class class_fighter:
                 key = 3
 
             # return [position in global variable, key]
-            #print('index: '+str(basic_index + state*5 + key)+'value: '+str(value))
+            # print('index: '+str(basic_index + state*5 + key)+'value: '+str(value))
             return [basic_index + state*5 + key, value]
 
     def setstate(self, key, value):

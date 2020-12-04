@@ -31,7 +31,7 @@ for i in range(150):
     default += ' '
 
 # create empty numpy aray
-labels = np.full((23, 8, 8), default)
+labels = np.full((25, 8, 8), default)
 labels[:,:,:]= ''
 # add close labels except for first 'layer'
 labels[1:, 0, 0] = 'close'
@@ -130,7 +130,7 @@ print(effectsFile[0],'\n\n\n')
 
 # 21 should be global presets
 
-for i in [3,4,5, 8,9,10, 13,14,15, 18,19,20, 22]:
+for i in [3,4,5, 8,9,10, 13,14,15, 18,19,20, 22,23,24]:
     h = 0
     # j is row, k is column
     for j in range(8):

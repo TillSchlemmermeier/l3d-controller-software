@@ -94,9 +94,13 @@ In the following, the global parameters are listed. Default values are given in 
 |220 - 229 | one shots
 |      220 | one shot state
 |230 - ??? | global effect parameters
-|      230 | if of global effect
-|      231 | global effect controls trigger
-|232 - 235 | parameters for global effect
+|      230 | global effects menu trigger
+|      231 | global effect 1
+|      232 | global effect 1
+|      233 | global effect 1
+|234 - 237 | global effect 1 parameters
+|238 - 241 | global effect 1 parameters
+|242 - 245 | global effect 1 parameters
 
 ## Testing for rendering engine
 

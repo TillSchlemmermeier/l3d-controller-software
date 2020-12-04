@@ -73,9 +73,11 @@ class rendering_engine:
 
         logging.info('Variables initialised')
 
-        # initialize global effect
-        self.global_effect_id = 0
-        self.global_effect = effects[self.global_effect_id]()
+        # initialize global effects
+        self.global_effects = []
+        self.global_effect_id = [0,0,0]
+        for id in self.global_effect_id:
+            self.global_effects.append(effects[int(id)]())
 
         # one shots
         self.shot_state = 0
@@ -206,13 +208,15 @@ class rendering_engine:
                          channel_brightness[2] * self.channelworld[2, :, :, :] +\
                          channel_brightness[3] * self.channelworld[3, :, :, :]
 
-        # check for changes of global effect
-        if self.global_parameter[230] != self.global_effect_id:
-            self.global_effect_id = int(self.global_parameter[230])
-            self.global_effect = effects[self.global_effect_id]()
+        # check for changes of global effects
+        for i in range(3):
+            if self.global_parameter[231+i] != self.global_effect_id[i]:
+                self.global_effect_id[i] = int(self.global_parameter[231+i])
+                self.global_effects[i] = effects[self.global_effect_id[i]]()
 
         # apply global effect
-        self.cubeworld = self.global_effect(self.cubeworld, self.global_parameter[231:235])
+        for i in range(3):
+            self.cubeworld = self.global_effects[i](self.cubeworld, self.global_parameter[234+i*4:234+i*4+4])
 
         # detect whether a oneshot is fired
         if self.global_parameter[220] > 0:

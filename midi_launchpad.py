@@ -2,6 +2,7 @@ import time as time
 from rtmidi.midiutil import open_midiinput,open_midioutput, open_midiport
 
 class class_launchpad_mk3:
+
     def __init__(self, array):
         # open midi input
         self.midiin, self.portname_in = open_midiinput(port= ':1')
@@ -113,14 +114,24 @@ class class_launchpad_mk3:
                     self.state = key
 
                 elif message[1] == 65:
-                    print('open global effect menu')
+                    print('open global effect 1 menu')
                     self.state = key
                     self.global_parameter[200] = 22
+
+                elif message[1] == 55:
+                    print('open global effect 2 menu')
+                    self.state = key
+                    self.global_parameter[200] = 23
+
+                elif message[1] == 45:
+                    print('open global effect 3 menu')
+                    self.state = key
+                    self.global_parameter[200] = 24
                     #print(self.state)
 
                 elif message[1] == 17:
                     print('switch fighter controls for global effect')
-                    self.global_parameter[231] = 1
+                    self.global_parameter[230] = 1
                     #self.global_parameter[201] = 4
                     #self.global_parameter[202] = 4
                     #self.global_parameter[203] = 4
@@ -208,18 +219,25 @@ class class_launchpad_mk3:
                         except:
                             print('error loading preset')
                     else:
+                        # index is the place to write in the global array
                         # figure out the state
                         index = 18 + (self.state[1]-1)*5 + self.state[0]
+                        # print('->', self.state, index)
 
                         # capture global effect
                         if index == 41:
                             # modify it to 23x
-                            index += 189
+                            index += 190
+                        elif index == 42:
+                            index += 190
+                        elif index == 43:
+                            index += 190
 
+                        # print('  ', index)
                         # addition
                         add = -82 + (8-int(message[1]*0.1))*18
 
-                        print('doing something:', index, add, message[1])
+                        # print('doing something:', index, add, message[1])
 
                         self.global_parameter[index] = message[1]+add
                         #print('launchpad sets: ', index, self.global_parameter[index])
@@ -342,6 +360,10 @@ class class_launchpad_mk3:
 
             # send global effect buttons
             self.midiout.send_message([144, 65, 13])
+            self.midiout.send_message([144, 55, 21])
+            self.midiout.send_message([144, 45, 37])
+
+            # send global effect control switch for fighter
             self.midiout.send_message([144, 17, 13])
 
             # send autopilot
