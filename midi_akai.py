@@ -72,6 +72,10 @@ class class_akai:
         elif message[1] == 46:
             self.global_parameter[18] = message[2]/127.0
 
+        # s2l gain
+        elif message[1] == 46:
+            self.global_parameter[19] = message[2]/127.0
+
         # autopilot time
         elif message[1] == 58:
             self.global_parameter[6] = message[2]/127.0
