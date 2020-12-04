@@ -536,16 +536,16 @@ class MainWindow(QtWidgets.QMainWindow):
 
             if active == 0:
                 for i in channel[4:9]:
-                    i.setStyleSheet("font-weight: bold; color: black; font: 20px; background-color: "+oncolor[0])
+                    i.setStyleSheet("font-weight: bold; color: black; font: 18px; background-color: "+oncolor[0])
             elif active == 1:
                 for i in channel[9:14]:
-                    i.setStyleSheet("font-weight: bold; color: black; font: 20px; background-color: "+oncolor[1])
+                    i.setStyleSheet("font-weight: bold; color: black; font: 18px; background-color: "+oncolor[1])
             elif active == 2:
                 for i in channel[14:19]:
-                    i.setStyleSheet("font-weight: bold; color: black; font: 20px; background-color: "+oncolor[2])
+                    i.setStyleSheet("font-weight: bold; color: black; font: 18px; background-color: "+oncolor[2])
             elif active == 3:
                 for i in channel[19:24]:
-                    i.setStyleSheet("font-weight: bold; color: black; font: 20px; background-color: "+oncolor[3])
+                    i.setStyleSheet("font-weight: bold; color: black; font: 18px; background-color: "+oncolor[3])
 
         if self.global_parameter[40] == 0:
             self.fi_ch1_CGF.setStyleSheet('background-color: rgba(75, 75, 75, 1);')

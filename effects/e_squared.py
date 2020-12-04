@@ -1,5 +1,6 @@
 # modules
 import numpy as np
+from multiprocessing import shared_memory
 
 class e_squared():
     '''

@@ -5,6 +5,7 @@ import serial
 from world2vox_fortran import world2vox_f as world2vox
 from channel import class_channel
 from multiprocessing import shared_memory
+from collection import effects
 
 # load shots
 from oneshots.s_sides import *
@@ -16,6 +17,7 @@ from oneshots.s_roll import *
 from oneshots.s_strobo import s_strobo
 from oneshots.s_cubes import s_cubes
 from oneshots.s_dark_sphere import s_dark_sphere
+
 
 class rendering_engine:
     """
@@ -70,6 +72,10 @@ class rendering_engine:
                                 format="%(asctime)s %(message)s")
 
         logging.info('Variables initialised')
+
+        # initialize global effect
+        self.global_effect_id = 0
+        self.global_effect = effects[self.global_effect_id]()
 
         # one shots
         self.shot_state = 0
@@ -199,6 +205,11 @@ class rendering_engine:
                          channel_brightness[1] * self.channelworld[1, :, :, :] +\
                          channel_brightness[2] * self.channelworld[2, :, :, :] +\
                          channel_brightness[3] * self.channelworld[3, :, :, :]
+
+        # check for changes of global effect
+
+        # apply global effect
+        self.cubeworld = self.global_effect(self.cubeworld, self.global_parameter[231:235])
 
         # detect whether a oneshot is fired
         if self.global_parameter[220] > 0:

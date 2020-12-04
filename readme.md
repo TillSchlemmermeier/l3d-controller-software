@@ -92,6 +92,9 @@ In the following, the global parameters are listed. Default values are given in 
 |      204 | selection menu  (fighter, ch 4)    | 0-3   | 0
 |220 - 229 | one shots
 |      220 | one shot state
+|230 - ??? | global effect parameters
+|      230 | global effect
+|231 - 234 | parameters for global effect
 
 ## Testing for rendering engine
 
