@@ -25,7 +25,7 @@ class e_rotating_rainbow():
 
     def __call__(self, world, args):
 		# parse input
-        self.speed = args[0]
+        self.speed = args[0]*0.1
         self.gradient_length = args[1]
         self.rotX = args[2]*15+0.01
         self.rotYZ = args[3]*15+0.01
@@ -35,9 +35,8 @@ class e_rotating_rainbow():
 
         for i in range(3):
             for j in range (10):
-            self.rainbowworld[i, j, :, :] = hsv_to_rgb((j / 10) * self.gradient + self.step * self.speed,, 1, 1)[i]
+                self.rainbowworld[i, j, :, :] = hsv_to_rgb((j / 10) * self.gradient_length + self.step * self.speed, 1, 1)[i]
 
-        
         # rotate
         newworld = rotate(self.rainbowworld, self.step*self.rotX,
                           axes = (1,2), order = 1,
