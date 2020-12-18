@@ -72,7 +72,7 @@ class g_edgelines():
         # check if S2L is activated
         if self.channel >= 0:
             current_volume = float(str(self.sound_values.buf[self.channel*8:self.channel*8+8],'utf-8'))
-            if current_volume > 0:
+            if current_volume <= 0:
                 self.counter = (self.counter % 10) + 1
                 self.counter *= 10 
 
