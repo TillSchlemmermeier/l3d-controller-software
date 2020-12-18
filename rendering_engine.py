@@ -215,10 +215,17 @@ class rendering_engine:
 
         # apply global effect and gather labels
         temp_labels = []
+        temp_values = []
         for i in range(3):
             self.cubeworld = self.global_effects[i](self.cubeworld, self.global_parameter[234+i*4:234+i*4+4])
             for label in self.global_effects[i].return_values():
                 temp_labels.append(label)
+
+
+            temp_values.append = self.global_effect[i].return_gui_values()
+
+        current_values.append(temp_values[0] + temp_values[1] + temp_values[2] + temp_values[3])
+
 
         for i in range(len(temp_labels)):
             # print(i+index_label, temp_labels[i])
@@ -244,7 +251,7 @@ class rendering_engine:
         self.shared_mem_gui_vals.buf[128:256] = current_values[1][0:128]
         self.shared_mem_gui_vals.buf[256:384] = current_values[2][0:128]
         self.shared_mem_gui_vals.buf[384:512] = current_values[3][0:128]
-
+        self.shared_mem_gui_vals.buf[512:640] = current_values[4][0:128]
 
     def get_cubedata(self):
         """get vox format from the internal stored world"""
