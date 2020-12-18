@@ -1,6 +1,7 @@
 # modules
 import numpy as np
 from random import randint
+from multiprocessing import shared_memory
 
 class g_drop():
 
@@ -14,6 +15,9 @@ class g_drop():
             self.brightness = 0.0
 
             self.state = 0
+            #s2l
+            self.sound_values = shared_memory.SharedMemory(name = "global_s2l_memory")
+            self.channel = 0
 
         def do_step(self):
 
@@ -53,15 +57,21 @@ class g_drop():
 
     #Strings for GUI
     def return_values(self):
-        return [b'drop', b'speed', b'', b'', b'']
+        return [b'drop', b'speed', b'', b'', b'channel']
 
     def return_gui_values(self):
-        return bytearray('{0:<8s}{1:<8s}{2:<8s}{3:<8s}'.format(str(round(self.speed,2)), '', '', ''),'utf-8')
+        if self.channel >=0:
+            channel = str(self.channel)
+        else:
+            channel = 'noS2L'
+
+        return bytearray('{0:<8s}{1:<8s}{2:<8s}{3:<8s}'.format(str(round(self.speed,2)), '', '', channel),'utf-8')
 
 
     #def generate(self, step, dumpworld):
     def __call__(self, args):
         self.speed = 12-int(args[0]*10 + 1)
+        self.channel = int(args[3]*4)-1
 
         # create world
         world = np.zeros([3, 10, 10, 10])
@@ -78,6 +88,12 @@ class g_drop():
 
         if self.step%self.speed == 0:
             self.drops.append(self.drop())
+
+        # check if S2L is activated
+        elif self.channel >= 0:
+            current_volume = float(str(self.sound_values.buf[self.channel*8:self.channel*8+8],'utf-8'))
+            if current_volume > 0:
+                self.drops.append(self.drop())
 
         self.step += 1
 
