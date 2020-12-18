@@ -74,7 +74,7 @@ class g_edgelines():
             world[:, 0, self.counter-70:, 9] = 1.0
             world[:, 0, 9, self.counter-70:] = 1.0
         else:
-            self.counter = 0
+            self.counter = -1
 
         self.counter += 1
 
