@@ -160,8 +160,8 @@ def gui(array, label, mode):
 if __name__ == '__main__':
     # define global variables
     global_parameter = mp.Array('d', [0 for x in range(255)])
-    global_label     = mp.Array(c_char_p, 100)
-    global_memory   = mp.shared_memory.SharedMemory(create = True,name = "GuiValues1", size = 512)
+    global_label     = mp.Array(c_char_p, 120)
+    global_memory   = mp.shared_memory.SharedMemory(create = True,name = "GuiValues1", size = 640)
     global_memory_s2l   = mp.shared_memory.SharedMemory(create = True,name = "global_s2l_memory", size = 512)
 
     for i in range(100):

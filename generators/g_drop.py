@@ -13,9 +13,6 @@ class g_drop():
             self.z = randint(0,9)
             self.brightness = 0.0
             self.state = 0
-            #s2l
-            self.sound_values = shared_memory.SharedMemory(name = "global_s2l_memory")
-            self.channel = 0
 
         def do_step(self):
             temp = [self.x, self.y, self.z, self.brightness, self.state]
@@ -51,6 +48,9 @@ class g_drop():
         self.drops = []
         self.step = 1
         self.drops.append(self.drop())
+        #s2l
+        self.sound_values = shared_memory.SharedMemory(name = "global_s2l_memory")
+        self.channel = 0
 
     #Strings for GUI
     def return_values(self):

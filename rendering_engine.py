@@ -222,9 +222,9 @@ class rendering_engine:
                 temp_labels.append(label)
 
 
-            temp_values.append = self.global_effect[i].return_gui_values()
+            temp_values.append(self.global_effects[i].return_gui_values())
 
-        current_values.append(temp_values[0] + temp_values[1] + temp_values[2] + temp_values[3])
+        current_values.append(temp_values[0] + temp_values[1] + temp_values[2])
 
 
         for i in range(len(temp_labels)):
@@ -251,7 +251,7 @@ class rendering_engine:
         self.shared_mem_gui_vals.buf[128:256] = current_values[1][0:128]
         self.shared_mem_gui_vals.buf[256:384] = current_values[2][0:128]
         self.shared_mem_gui_vals.buf[384:512] = current_values[3][0:128]
-        self.shared_mem_gui_vals.buf[512:640] = current_values[4][0:128]
+        self.shared_mem_gui_vals.buf[512:640-32] = current_values[4][0:128-32]
 
     def get_cubedata(self):
         """get vox format from the internal stored world"""

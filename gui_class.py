@@ -109,7 +109,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.vert_CL.addWidget(utility_CGF)
 
         self.utilitylabels = []
-        for x in range(9):
+        for x in range(10):
             temp = []
             for y in range(4):
                 label = QtWidgets.QLabel('')
@@ -122,7 +122,7 @@ class MainWindow(QtWidgets.QMainWindow):
         utility_CGL = QtWidgets.QGridLayout(utility_CGF)
         #utility_CGL.setContentsMargins(0,0,0,0)
 
-        for x in range(9):
+        for x in range(10):
             for y in range(4):
                 utility_CGL.addWidget(self.utilitylabels[x][y],x,y)
 
@@ -372,9 +372,22 @@ class MainWindow(QtWidgets.QMainWindow):
         self.utilitylabels[5][1].setText("E3: "+str(self.global_label[90],'utf-8'))
 
         for i in range(4):
-            self.utilitylabels[6+i][0].setText(str(self.global_label[81+i],'utf-8'))
-            self.utilitylabels[1+i][1].setText(str(self.global_label[86+i],'utf-8'))
-            self.utilitylabels[6+i][1].setText(str(self.global_label[91+i],'utf-8'))
+            self.utilitylabels[6+i][0].setText(str(self.global_label[81+i],'utf-8')+" : "+str(self.shared_mem_gui_vals.buf[512:520],'utf-8'))
+            self.utilitylabels[1+i][1].setText(str(self.global_label[86+i],'utf-8')+" : "+str(self.shared_mem_gui_vals.buf[536:544],'utf-8'))
+            self.utilitylabels[6+i][1].setText(str(self.global_label[91+i],'utf-8')+" : "+str(self.shared_mem_gui_vals.buf[560:568],'utf-8'))
+
+
+        512
+        520
+        528
+
+        536
+        544
+        552
+
+        560
+        568
+
 
         #self.stringArray_ch1[5].setText(str(self.global_label[1],'utf-8')+" : "+str(self.shared_mem_gui_vals.buf[0:8],'utf-8'))
 
