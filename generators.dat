@@ -32,7 +32,7 @@ g_multicube
 g_cube_edges
 g_corner
 g_corner_grow
-g_columns
+g_cone
 g_circles
 g_grow
 g_soundsphere

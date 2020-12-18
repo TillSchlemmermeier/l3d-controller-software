@@ -4,7 +4,7 @@ from random import randint, choice
 from multiprocessing import shared_memory
 
 
-class g_cones():
+class g_cone():
 
     def __init__(self):
         self.number = 1
@@ -12,27 +12,29 @@ class g_cones():
         self.soundsize = 1
         self.make_rings = circleworld()
         self.channel = 0
+        self.sizes = np.array([0,0,0,0])
 
     def return_values(self):
         return [b'circles', b'number', b'', b'', b'channel']
 
     def return_gui_values(self):
 
-        return bytearray('{0:<8s}{1:<8s}{2:<8s}{3:<8s}'.format(str(round(self.number,2)), '', '', str(self.channel),'utf-8')
+        return bytearray('{0:<8s}{1:<8s}{2:<8s}{3:<8s}'.format(str(round(self.number,2)), '', '', str(self.channel)),'utf-8')
 
 
     def __call__(self, args):
         self.number = int(args[0]*10)
         self.channel = int(args[3]*3)
 
+
         current_volume = float(str(self.sound_values.buf[self.channel*8:self.channel*8+8],'utf-8'))
+        current_volume = int(np.clip(3 * current_volume, 0, 3)*3)
 
-        for i in range(len(current_volume)):
-            current_volume[i] = int(np.clip(3 * current_volume, 0, 3)*3)
-
-        print(*current_volume)
+        self.sizes = np.roll(self.sizes, 1)
+        self.sizes[0] = current_volume
         world = np.zeros([3, 10, 10, 10])
-        world[0, :, :] = self.make_rings(*current_volume)
+
+        world[0, :, :] = self.make_rings(*self.sizes)
 
         # rotate if necessary
         world[0, :, :, :] = np.rot90(world[0, :, :, :], k = 1)
@@ -44,7 +46,8 @@ class g_cones():
 
 class circleworld:
 
-    def init():
+    def __init__(self):
+        print('ini circleworld')
         # size 5
         self.size5 = np.zeros([10,10])
 
@@ -103,9 +106,9 @@ class circleworld:
 
     def __call__(self, h1, h2, h3, h4):
         world = np.zeros([10, 10, 10])
-        world[0, :, h1, :] += self.size2[:,:]
-        world[0, :, h2, :] += self.size3[:,:]
-        world[0, :, h3, :] += self.size4[:,:]
-        world[0, :, h4, :] += self.size5[:,:]
+        world[:, h1, :] += self.size2[:,:]
+        world[:, h2, :] += self.size3[:,:]
+        world[:, h3, :] += self.size4[:,:]
+        world[:, h4, :] += self.size5[:,:]
 
         return world

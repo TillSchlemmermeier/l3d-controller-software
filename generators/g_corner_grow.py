@@ -27,7 +27,7 @@ class g_corner_grow():
 
 
     def __call__(self, args):
-        self.waiting = int(args[0]*50)
+        self.waiting = int(args[0]*50)+2
         self.channel = int(args[3]*4)-1
 
         # create world
@@ -38,11 +38,6 @@ class g_corner_grow():
             self.waitingcounter = self.waiting
             self.size = 0
 
-            # check if S2L is activated
-            if self.channel >= 0:
-                current_volume = float(str(self.sound_values.buf[self.channel*8:self.channel*8+8],'utf-8'))
-                if current_volume > 0:
-                    self.waitingcounter == 0
 
         elif self.waitingcounter == 0:
         # switch on corners
@@ -58,6 +53,14 @@ class g_corner_grow():
             self.size += 1
 
         else:
+            # check if S2L is activated
+            if self.channel >= 0:
+                current_volume = float(str(self.sound_values.buf[self.channel*8:self.channel*8+8],'utf-8'))
+                if current_volume > 0:
+                    self.waitingcounter = 1
+                else:
+                    self.waitingcounter = 2
+
             # stay in waiting state
             self.waitingcounter -= 1
 

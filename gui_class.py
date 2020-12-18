@@ -28,14 +28,16 @@ class MainWindow(QtWidgets.QMainWindow):
         # creating main container-frame, parent it to QWindow
         self.main_CF = QtWidgets.QFrame(self)
         self.main_CF.setStyleSheet('background-color: rgba(50, 50, 50, 1)')
+        #self.main_CF.setContentsMargins(0,0,0,0)
         self.setCentralWidget(self.main_CF)
         # creating layout and parent it to main container
         # is it correct, that main_CL now manages children of main_CF ?
         self.main_CL = QtWidgets.QHBoxLayout(self.main_CF)
+        #self.main_CL.setContentsMargins(0,0,0,0)
         #crating vertical Layer for launchpad and utility panel
         self.vert_CF = QtWidgets.QFrame(self)
         self.vert_CL = QtWidgets.QVBoxLayout(self.vert_CF)
-
+        #self.vert_CL.setContentsMargins(0,0,0,0)
 
         # creating the first subcontainer + layout, parenting it
         #control_CGF = QtWidgets.QFrame(self.main_CF)
@@ -87,27 +89,44 @@ class MainWindow(QtWidgets.QMainWindow):
 
 
         launchpad_CGF = QtWidgets.QFrame(self.main_CF)
-        launchpad_CGF.setFixedWidth(683)
-        launchpad_CGF.setFixedHeight(382+165)
+        #launchpad_CGF.setFixedWidth(683)
+        #launchpad_CGF.setFixedHeight(382+165)
         self.vert_CL.addWidget(launchpad_CGF)
         self.padlabels[x][y].setStyleSheet('background-color: rgba('+', '.join(self.colors[0])+');')
 
         launchpad_CGL = QtWidgets.QGridLayout(launchpad_CGF)
-
+        launchpad_CGL.setContentsMargins(0,0,0,0)
         for x in range(8):
             for y in range(8):
                 launchpad_CGL.addWidget(self.padlabels[x][y],x,y)
 
         #utility area under launchpad
         utility_CGF = QtWidgets.QFrame(self.main_CF)
-        utility_CGF.setFixedWidth(683)
-        utility_CGF.setFixedHeight(382-165)
+        #utility_CGF.setFixedWidth(683)
+        #utility_CGF.setFixedHeight(382-165)
 
 
         self.vert_CL.addWidget(utility_CGF)
 
+        self.utilitylabels = []
+        for x in range(9):
+            temp = []
+            for y in range(4):
+                label = QtWidgets.QLabel('')
+                label.setWordWrap(True)
+                label.setStyleSheet("background-color: rgba("+str(x*10)+","+str(y*10)+", 0, 0.5);")
+                temp.append(label)
+
+            self.utilitylabels.append(temp)
+
         utility_CGL = QtWidgets.QGridLayout(utility_CGF)
-        utility_CGL.addWidget(QtWidgets.QLabel('TESTs'))
+        #utility_CGL.setContentsMargins(0,0,0,0)
+
+        for x in range(9):
+            for y in range(4):
+                utility_CGL.addWidget(self.utilitylabels[x][y],x,y)
+
+
 
         #adding vert_CL
         self.main_CL.addWidget(self.vert_CF)
@@ -118,30 +137,36 @@ class MainWindow(QtWidgets.QMainWindow):
         self.main_CL.addWidget(fighter_CGF)
         fighter_CGF.setStyleSheet('background-color: rgba(150, 150, 150, 1);')
         self.fighter_CGL = QtWidgets.QHBoxLayout(fighter_CGF)
+        #self.fighter_CGL.setContentsMargins(0,0,0,0)
         # SUB containers for fighter channels 1-4
         self.fi_ch1_CGF = QtWidgets.QFrame(fighter_CGF)
         self.fi_ch1_CGF.setFixedWidth(155)
         self.fighter_CGL.addWidget(self.fi_ch1_CGF)
         self.fi_ch1_CGF.setStyleSheet('background-color: rgba(175, 175, 175, 1);')
         fi_ch1_CGL = QtWidgets.QVBoxLayout(self.fi_ch1_CGF)
+        #fi_ch1_CGL.setContentsMargins(0,0,0,0)
 
         self.fi_ch2_CGF = QtWidgets.QFrame(fighter_CGF)
         self.fi_ch2_CGF.setFixedWidth(155)
         self.fighter_CGL.addWidget(self.fi_ch2_CGF)
         self.fi_ch2_CGF.setStyleSheet('background-color: rgba(175, 175, 175, 1);')
         fi_ch2_CGL = QtWidgets.QVBoxLayout(self.fi_ch2_CGF)
+        #fi_ch2_CGL.setContentsMargins(0,0,0,0)
 
         self.fi_ch3_CGF = QtWidgets.QFrame(fighter_CGF)
         self.fi_ch3_CGF.setFixedWidth(155)
         self.fighter_CGL.addWidget(self.fi_ch3_CGF)
         self.fi_ch3_CGF.setStyleSheet('background-color: rgba(175, 175, 175, 1);')
         fi_ch3_CGL = QtWidgets.QVBoxLayout(self.fi_ch3_CGF)
+        #fi_ch3_CGL.setContentsMargins(0,0,0,0)
 
         self.fi_ch4_CGF = QtWidgets.QFrame(fighter_CGF)
         self.fi_ch4_CGF.setFixedWidth(155)
         self.fighter_CGL.addWidget(self.fi_ch4_CGF)
         self.fi_ch4_CGF.setStyleSheet('background-color: rgba(175, 175, 175, 1);')
         fi_ch4_CGL = QtWidgets.QVBoxLayout(self.fi_ch4_CGF)
+        #fi_ch4_CGL.setContentsMargins(0,0,0,0)
+
 ####
         #self.button_StartR = QtWidgets.QPushButton("Start")
         #self.button_StopR = QtWidgets.QPushButton("Stop")
@@ -307,7 +332,7 @@ class MainWindow(QtWidgets.QMainWindow):
         # what do we need the timer for? -> to execute functions periodically in the GUI e.g. updating Strings
         timer = QtCore.QTimer(self)
         timer.timeout.connect(self.update_fighter_values)
-        #timer.timeout.connect(self.update_global_values)
+        timer.timeout.connect(self.update_global_values)
         timer.timeout.connect(self.update_launchpad_values)
         timer.setInterval(50)
         timer.start()
@@ -336,8 +361,22 @@ class MainWindow(QtWidgets.QMainWindow):
     def stop_Renderer(self):
         self.global_parameter[0] = 0
 
-    #def update_global_values(self):
-        #self.string_GlobalBrightness.setText("An : "+str(round(self.global_parameter[1],2)))
+    def update_global_values(self):
+        self.utilitylabels[0][0].setText("Global Bright: "+str(round(self.global_parameter[1],2)))
+        self.utilitylabels[1][0].setText("Sound Gain: "+str(round(self.global_parameter[19],2)))
+        self.utilitylabels[2][0].setText("Normalize")
+        self.utilitylabels[3][0].setText("AutoPilot Timer: "+str(round(self.global_parameter[6],2)))
+        self.utilitylabels[4][0].setText("AutoPilot On/Off: "+str(round(self.global_parameter[5],2)))
+        self.utilitylabels[5][0].setText("E1: "+str(self.global_label[80],'utf-8'))
+        self.utilitylabels[0][1].setText("E2: "+str(self.global_label[85],'utf-8'))
+        self.utilitylabels[5][1].setText("E3: "+str(self.global_label[90],'utf-8'))
+
+        for i in range(4):
+            self.utilitylabels[6+i][0].setText(str(self.global_label[81+i],'utf-8'))
+            self.utilitylabels[1+i][1].setText(str(self.global_label[86+i],'utf-8'))
+            self.utilitylabels[6+i][1].setText(str(self.global_label[91+i],'utf-8'))
+
+        #self.stringArray_ch1[5].setText(str(self.global_label[1],'utf-8')+" : "+str(self.shared_mem_gui_vals.buf[0:8],'utf-8'))
 
     def update_launchpad_values(self):
 

@@ -20,12 +20,15 @@ class g_sound_circle():
         self.size = args[0]*7+1.0
         self.channel = int(args[1]*3)
 
-        current_volume = self.amount*float(str(self.sound_values.buf[self.channel*8:self.channel*8+8],'utf-8'))**4
+        current_volume = float(str(self.sound_values.buf[self.channel*8:self.channel*8+8],'utf-8'))**4
 
         # create empty world
         world = np.zeros([3, 10, 10, 10])
 
-        world[0, :, :, :] = gen_ellipsoid(5,self.ysize * volume2+0.01,0.01) - gen_ellipsoid(5*0.8,(self.ysize * volume2+0.01)*0.8,0.01)
+        world[0, :, :, :] = gen_ellipsoid(5,(self.size * current_volume)+1, 1) #- gen_ellipsoid(1,(self.size * current_volume)+1,1)
+
+         #-\
+#                            gen_ellipsoid(6*0.8,(self.size * current_volume+0.01)*0.8+1,1)
         world[1, :, :, :] = world[0, :, :, :]
         world[2, :, :, :] = world[0, :, :, :]
 
