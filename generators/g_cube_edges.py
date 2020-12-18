@@ -1,6 +1,7 @@
 # modules
 import numpy as np
 from random import choice, seed
+from multiprocessing import shared_memory
 
 
 class g_cube_edges():
@@ -52,12 +53,20 @@ class g_cube_edges():
         self.corner = self.corner_list[0] # choice(self.corner_list)
         self.direction = choice([-1, 1])
         seed()
+        #s2l
+        self.sound_values = shared_memory.SharedMemory(name = "global_s2l_memory")
+        self.channel = 0
 
     #Strings for GUI
     def return_values(self):
-        return [b'cube_edges', b'speed', b'number', b'', b'']
+        return [b'cube_edges', b'speed', b'number', b'', b'channel']
 
     def return_gui_values(self):
+        if self.channel >=0:
+            channel = str(self.channel)
+        else:
+            channel = 'noS2L'
+
         return bytearray('{0:<8s}{1:<8s}{2:<8s}{3:<8s}'.format(str(round(self.speed,2)), str(round(self.number,2)), '', ''),'utf-8')
 
 
@@ -66,6 +75,8 @@ class g_cube_edges():
         self.number = int(3*args[1])
         if self.number == 0:
             self.number = 1
+        self.channel = int(args[3]*4)-1
+
 
         # create world
         world = np.zeros([3, 10, 10, 10])
@@ -74,6 +85,15 @@ class g_cube_edges():
         if self.counter > 19:
             self.counter = 0
             self.corner = choice(self.corner_list)
+
+        elif:
+        # check if S2L is activated
+        if self.channel >= 0:
+            current_volume = float(str(self.sound_values.buf[self.channel*8:self.channel*8+8],'utf-8'))
+            self.counter = 0
+            self.corner = choice(self.corner_list)
+            self.speed = 2.4
+            self number = 3
 
         # create gaussian profile
         row = np.linspace(0, 19, 20)
