@@ -99,7 +99,7 @@ class g_circles():
         for i in range(self.number):
             # check if S2L is activated
             if self.channel >= 0:
-                j = np.clip(randint(self.soundsize - 1, self.soundsize + 1), 0, 3)
+                j = int(np.clip(randint(self.soundsize - 1, self.soundsize + 1), 0, 3))
             else:
                 j = randint(0,3)
 
