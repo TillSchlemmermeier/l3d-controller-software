@@ -29,8 +29,6 @@ class class_fighter:
         self.midiin.set_callback(self.event)
         self.sendstate()
 
-        print('figher init ist durch!')
-
     def event(self, event, data=None):
         """Call gets midi message and calls the mapping routine"""
 
@@ -93,7 +91,6 @@ class class_fighter:
             self.midiout.send_message([177, i, color_dict[self.current_state[3]]])
             index = int(135+self.current_state[3]*5+i/4)
             value = int(self.global_parameter[index]*127)
-            # print(i, value, self.current_state[3])
             self.midiout.send_message([176, i, value])
 
 
@@ -115,7 +112,6 @@ class class_fighter:
         # check for state switches
         if channel == 177:
             self.setstate(key, value)
-#            print(self.global_parameter[200:205])
             return []
         else:
             # write master commands for each channel
@@ -179,7 +175,6 @@ class class_fighter:
                 key = 3
 
             # return [position in global variable, key]
-            # print('index: '+str(basic_index + state*5 + key)+'value: '+str(value))
             return [basic_index + state*5 + key, value]
 
     def setstate(self, key, value):

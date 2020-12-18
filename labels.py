@@ -48,14 +48,12 @@ labels[0, 4, 6] = 'dark sphere'
 
 # add presets
 
-print(len(preset_labels), preset_labels)
 for i in [1, 6, 11, 16]:
     counter = 0
 
     # first row
     for j in range(1, 8):
         if counter < len(preset_labels):
-            print(j, counter)
             labels[i, 0, j] = preset_labels[counter]
 
         counter += 1
@@ -63,7 +61,6 @@ for i in [1, 6, 11, 16]:
     # second row
     for j in range(0, 8):
         if counter < len(preset_labels):
-            print(j, counter)
             labels[i, 1, j] = preset_labels[counter]
 
         counter += 1
@@ -71,7 +68,6 @@ for i in [1, 6, 11, 16]:
     #third grow
     for j in range(0, 8):
         if counter < len(preset_labels):
-            print (j, counter)
             labels[i, 2, j] = preset_labels[counter]
 
         counter += 1
@@ -123,10 +119,8 @@ for i in [2, 7, 12, 17]:
 file = open("effects.dat", "r")
 effectsFile = file.readlines()
 
-print(effectsFile[0])
 for i in range(len(effectsFile)):
     effectsFile[i] = effectsFile[i][2 : :]
-print(effectsFile[0],'\n\n\n')
 
 # 21 should be global presets
 

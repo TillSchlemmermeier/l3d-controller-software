@@ -59,10 +59,7 @@ class g_gauss():
         gauss = np.sin(self.step*self.speed)*multivariate_normal.pdf(yz, mean=mu, cov=covariance)*self.amplitude*self.sigma**2+5
         gauss = gauss.reshape(10,10)
         self.step += 1
-        #print(gauss)
         world[0,:,:,:] = gen_gauss(gauss)
-
-        #print(world[0,:,0,0])
 
         world[1,:,:,:] = world[0,:,:,:]
         world[2,:,:,:] = world[0,:,:,:]

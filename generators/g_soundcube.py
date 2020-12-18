@@ -41,7 +41,6 @@ class g_soundcube():
         if current_volume > 0:
             self.size = next(self.sizes)
 
-#        print(self.size)
         world = self.cube([self.size/4.0, 0, 0, 0])
 
 

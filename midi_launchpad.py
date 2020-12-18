@@ -79,7 +79,6 @@ class class_launchpad_mk3:
                         self.global_parameter[70] = 1
 
                 elif message[1] == 18:
-                    print('switch autopilot')
                     if self.global_parameter[5] == 0:
                         self.global_parameter[5] = 1
                     else:
@@ -110,27 +109,21 @@ class class_launchpad_mk3:
                     #    self.global_parameter[200] = key
 
                 elif message[1] == 85:
-                    print('open global preset menu trigger')
                     self.state = key
 
                 elif message[1] == 65:
-                    print('open global effect 1 menu')
                     self.state = key
                     self.global_parameter[200] = 22
 
                 elif message[1] == 55:
-                    print('open global effect 2 menu')
                     self.state = key
                     self.global_parameter[200] = 23
 
                 elif message[1] == 45:
-                    print('open global effect 3 menu')
                     self.state = key
                     self.global_parameter[200] = 24
-                    #print(self.state)
 
                 elif message[1] == 17:
-                    print('switch fighter controls for global effect')
                     self.global_parameter[230] = 1
                     #self.global_parameter[201] = 4
                     #self.global_parameter[202] = 4
@@ -194,7 +187,6 @@ class class_launchpad_mk3:
                 else:
                     # check for presets
                     if self.state[0] == 1 and self.state[1] == 5:
-                        print('open global preset')
                         # figure out the state
                         index = 18 + (self.state[1]-1)*5 + self.state[0]
 

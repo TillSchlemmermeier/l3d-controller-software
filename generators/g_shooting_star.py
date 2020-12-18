@@ -40,9 +40,7 @@ class g_shooting_star():
 
 
         delete_last = False
-        # print('-', len(self.dot_list))
         for i in range(len(self.dot_list)):
-            # print(i, len(self.dot_list[i]))
             try:
                 tempworld = np.zeros([10, 10, 10])
                 tempworld = gen_shooting_star(self.dot_list[i][0][0],
@@ -52,7 +50,6 @@ class g_shooting_star():
                 del self.dot_list[i][0]
 
                 if len(self.dot_list[i]) < 1:
-                    # print('delete', i)
                     delete_last = True
 
             except:

@@ -8,7 +8,6 @@ class g_random():
     Generator: random
     '''
     def __init__(self):
-        print(' initialize g_random')
         self.number_of_leds = 1
         self.counter = 1
         self.reset = 1

@@ -29,8 +29,6 @@ class g_sound_ellipsoid():
         # create empty world
         world = np.zeros([3, 10, 10, 10])
 
-        # print(self.xsize, volume1)
-
         world[0, :, :, :] = gen_ellipsoid(self.xsize * volume1+0.01,self.ysize * volume2+0.01,self.zsize * volume3+0.01)
 
         world[1, :, :, :] = world[0, :, :, :]

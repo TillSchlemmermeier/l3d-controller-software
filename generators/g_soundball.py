@@ -45,14 +45,10 @@ class g_soundball():
             # F_ges = -kx + soundforce
             force = - self.spring * (self.pos[i]-4.5) + 0.1*sound_force
 
-#            print(- self.spring * (self.pos[i]-4.5), 10*sound_force )
-
             # v = v_0 + a*t - v*b = v_0 + F/m * t - v*b
             self.speed[i] = round(self.speed[i] + force/self.mass * self.dt - self.speed[i]*0.5,3)
 
             # s = s_0 + v*t
             self.pos[i] = round(self.pos[i] + self.speed[i] * self.dt,3)
-
-#        print(np.round(np.array(self.pos),2))
 
         return np.clip(world, 0, 1)

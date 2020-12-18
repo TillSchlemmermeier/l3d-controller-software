@@ -2,3 +2,4 @@
 *.so
 *.swp
 log_rendering_enginge.log
+output.dump

@@ -25,7 +25,6 @@ class class_channel:
         '''
         sets the settings of a channel
         '''
-        # print(settings)
         try:
             self.generator = generators[int(settings[0])]()
         except:
@@ -73,7 +72,6 @@ class class_channel:
         for t in temp:
             list.append(t)
 
-        # print('lenght in channel', len(list))
         valuesG  = self.generator.return_gui_values()
         valuesE1 = self.effect_1.return_gui_values()
         valuesE2 = self.effect_2.return_gui_values()

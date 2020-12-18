@@ -119,7 +119,6 @@ class rendering_engine:
         self.channels.append(class_channel(4))
 
         logging.warning('Initialisation complete')
-        print('init renderer')
 
     def run(self):
         """generates a frame and sends the package when cube is turned on"""

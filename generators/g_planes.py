@@ -10,7 +10,6 @@ class g_planes():
     Moves planes through the cube
     '''
     def __init__(self):
-        print('initializing g_planes')
         self.speed = 10
         self.dir = 1
         self.type = 0

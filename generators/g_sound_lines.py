@@ -23,12 +23,13 @@ class g_sound_lines():
         self.reset = 20
         self.sound_values = shared_memory.SharedMemory(name = "global_s2l_memory")
 
+
     def return_values(self):
         return [b'sound_lines', b'reset', b'channel', b'', b'']
 
+
     def return_gui_values(self):
         return bytearray('{0:<8s}{1:<8s}{2:<8s}{3:<8s}'.format(str(round(self.reset,2)), str(round(self.channel,2)), '', ''),'utf-8')
-
 
 
     def __call__(self, args):
@@ -36,7 +37,6 @@ class g_sound_lines():
         # process parameters
         self.reset = args[0]*20+1
         self.channel = int(args[1]*3)
-
 
         current_volume = float(str(self.sound_values.buf[self.channel*8:self.channel*8+8],'utf-8'))
         # now we can world with the sound
