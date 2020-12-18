@@ -27,15 +27,10 @@ class e_s2l():
         # process parameters
         self.amount = args[0]
         self.channel = int(args[1]*3)
-
-        # print('-')
-        # print(str(self.sound_values.buf[self.channel*8:self.channel*8+8],'utf-8'))
-        # print(float(str(self.sound_values.buf[self.channel*8:self.channel*8+8],'utf-8')))
         current_volume = float(str(self.sound_values.buf[self.channel*8:self.channel*8+8],'utf-8'))**4
 
         # apply manipulation
         for i in range(3):
-            #print(current_volume)
             world[i, :, :, :] *= (1-self.amount) + np.clip(current_volume,0,1)*self.amount
 
         return np.clip(world, 0, 1)

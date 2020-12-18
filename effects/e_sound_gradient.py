@@ -33,14 +33,7 @@ class e_sound_gradient():
         self.channel = int(args[2]*3)
 
         current_volume = float(str(self.sound_values.buf[self.channel*8:self.channel*8+8],'utf-8'))
-
-        # generate color list
-        # x = np.array([0,1,2,3,4,5,6,7,8,9])
-        # y = self.sigmoid(x-4.5)*(self.c1-self.c2)+self.c2
-
         current_color = self.sigmoid(current_volume*10-4.5)*(self.c1-self.c2)+self.c2
-
-#        print(current_color)
 
         # choose color according to x position
         for x in range(10):

@@ -34,7 +34,6 @@ class e_soundfade():
         current_volume = np.clip(current_volume, 0, 1)
 
         for i in range(3):
-            #print(current_volume)
             world[i, :, :, :] = (1-current_volume) * world[i, :, :, :] + current_volume*self.lastworld[i, :, :, :]
             self.lastworld[i, :, :, :] = world[i, :, :, :]
 
