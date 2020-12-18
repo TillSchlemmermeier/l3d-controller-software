@@ -20,7 +20,7 @@ class e_rotating_rainbow():
         return [b'rotating_rainbow', b'Length', b'Speed', b'Rot_X', b'Rot_YZ']
 
     def return_gui_values(self):
-        return bytearray('{0:<8s}{1:<8s}{2:<8s}{3:<8s}'.format(str(round(self.speed,1)), str(round(self.gradient_length,1)), str(round(self.rotX,1)), str(round(self.rotYZ,1))), 'utf-8')
+        return bytearray('{0:<8s}{1:<8s}{2:<8s}{3:<8s}'.format(str(round(10 * self.speed,2)), str(round(self.gradient_length,1)), str(round(self.rotX,1)), str(round(self.rotYZ,1))), 'utf-8')
 
 
     def __call__(self, world, args):
