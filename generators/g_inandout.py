@@ -1,6 +1,7 @@
 import numpy as np
 import scipy
 from random import randint
+from multiprocessing import shared_memory
 
 class g_inandout:
     def __init__(self):
@@ -8,24 +9,38 @@ class g_inandout:
         self.fadespeed = 0.1
         self.leds = []
 
+        self.sound_values = shared_memory.SharedMemory(name = "global_s2l_memory")
+        self.channel = 0
 
     #Strings for GUI
     def return_values(self):
-        return [b'inandout', b'number', b'fade in', b'', b'']
+        return [b'inandout', b'number', b'fade in', b'', b'channel']
 
     def return_gui_values(self):
-        return bytearray('{0:<8s}{1:<8s}{2:<8s}{3:<8s}'.format(str(round(self.number,2)), str(round(self.fadespeed,2)), '', ''),'utf-8')
+        if self.channel >=0:
+            channel = str(self.channel)
+        else:
+            channel = 'noS2L'
+
+        return bytearray('{0:<8s}{1:<8s}{2:<8s}{3:<8s}'.format(str(round(self.number,2)), str(round(self.fadespeed,2)), '', channel),'utf-8')
 
 
     #def generate(self, step, dumpworld):
     def __call__(self, args):
         self.number = int(args[0]*10+1)
         self.fadespeed = 0.5*args[1]+0.01
+        self.channel = int(args[3]*4)-1
 
         world = np.zeros([3, 10, 10, 10])
 
+        # check if S2L is activated
+        if self.channel >= 0:
+            current_volume = float(str(self.sound_values.buf[self.channel*8:self.channel*8+8],'utf-8'))
+            if current_volume > 0:
+                self.leds.append(led(self.fadespeed))
+
         # check for new leds
-        if len(self.leds) < self.number:
+        elif len(self.leds) < self.number:
             self.leds.append(led(self.fadespeed))
 
         delete_index = -1
