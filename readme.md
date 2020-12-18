@@ -119,3 +119,4 @@ The script 'test_rendering_engine.py' starts the frame renderer in a thread to c
 | 20 - 39 | channel 2
 | 40 - 59 | channel 3
 | 60 - 79 | channel 4
+| 80 - 95 | global effects labels
