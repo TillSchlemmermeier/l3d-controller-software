@@ -52,7 +52,9 @@ class e_radial_gradient():
 
             if current_volume > 0:
                 self.c1[0] += current_volume / 10
+                self.c1[0] = self.c1[0] % 1
                 self.c2[0] += current_volume / 10
+                self.c2[0] = self.c2[0] % 1
 
         else:
             self.c1[0] = args[0] # hsv_to_rgb(c1,1,1)
