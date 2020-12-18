@@ -24,7 +24,6 @@ class g_edgelines():
         return bytearray('{0:<8s}{1:<8s}{2:<8s}{3:<8s}'.format('', '', '', channel),'utf-8')
 
 
-
     def __call__(self, args):
         self.channel = int(args[3]*4)-1
 
