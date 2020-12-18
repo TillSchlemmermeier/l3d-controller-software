@@ -217,10 +217,11 @@ class rendering_engine:
         temp_labels = []
         for i in range(3):
             self.cubeworld = self.global_effects[i](self.cubeworld, self.global_parameter[234+i*4:234+i*4+4])
-            temp_labels.append(self.global_effects[i].return_values())
+            for label in self.global_effects[i].return_values():
+                temp_labels.append(label)
 
         for i in range(len(temp_labels)):
-            print(i+index_label, temp_labels[i])
+            # print(i+index_label, temp_labels[i])
             self.label[i+index_label] = temp_labels[i]
 
         # detect whether a oneshot is fired
