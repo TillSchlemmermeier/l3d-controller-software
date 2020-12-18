@@ -22,7 +22,7 @@ class e_colorfade():
 
     #strings for GUI
     def return_values(self):
-        return [b'newgradient', b'speed', b'Color 1', b'Color 2', b'']
+        return [b'colorfade', b'speed', b'Color 1', b'Color 2', b'']
 
     def return_gui_values(self):
 
