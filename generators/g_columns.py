@@ -1,21 +1,15 @@
 # modules
 import numpy as np
 from random import randint
-from scipy.signal import fftconvolve, gaussian
 from multiprocessing import shared_memory
 
-class g_columns():
+class g_darts():
     '''
     Generator:
     '''
 
     def __init__(self):
-        self.reset = 200
-        self.blur = 0.1
-        self.osc_speed = 0.1
         self.safe_world = np.zeros([10, 10, 10])
-        self.y = 2
-        self.z = 2
         self.counter = 0
         self.step = 0
         #s2l
@@ -24,7 +18,7 @@ class g_columns():
 
     #Strings for GUI
     def return_values(self):
-        return [b'columns', b'blur', b'reset', b'OscSpeed', b'channel']
+        return [b'columns', b'number', b'', b'', b'channel']
 
     def return_gui_values(self):
         if self.channel >=0:
@@ -32,13 +26,11 @@ class g_columns():
         else:
             channel = 'noS2L'
 
-        return bytearray('{0:<8s}{1:<8s}{2:<8s}{3:<8s}'.format(str(round(self.blur,2)), str(round(self.reset,2)), str(round(self.osc_speed,2)), channel),'utf-8')
+        return bytearray('{0:<8s}{1:<8s}{2:<8s}{3:<8s}'.format(str(round(self.number,2)), '', '', channel),'utf-8')
 
 
     def __call__(self, args):
-        self.blur = round(args[0]*4)
-        self.reset = int(args[1] * 200)
-        self.osc_speed = args[2]*0.1
+        self.number = round(args[0]*10)
         self.channel = int(args[3]*4)-1
 
         # create world
