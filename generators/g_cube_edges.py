@@ -92,7 +92,7 @@ class g_cube_edges():
             self.counter = 0
             self.corner = choice(self.corner_list)
             self.speed = 2.4
-            self number = 3
+            self.number = 3
 
         # create gaussian profile
         row = np.linspace(0, 19, 20)
