@@ -22,9 +22,8 @@ class class_artnet:
 
             for i in range(255):
                 self.artnet_universe[i] = data[46+i]
-#                print(self.artnet_universe[0], self.artnet_universe[1], self.artnet_universe[20], self.artnet_universe[40], self.artnet_universe[41])
+
         except:
-#            print('timeout')
             pass
 
         for i in range(0, 5):

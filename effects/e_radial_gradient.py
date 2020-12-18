@@ -77,5 +77,4 @@ class e_radial_gradient():
 
 
     def sigmoid(self, x):
-        # print(x, 1 / (1 + np.exp(-x*self.balance)))
         return 1 / (1 + np.exp(-x*self.balance))

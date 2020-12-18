@@ -46,7 +46,6 @@ class e_rotation():
             current_volume = float(str(self.sound_values.buf[self.channel*8:self.channel*8+8],'utf-8'))
             current_volume = np.clip(current_volume, 0, 10)
             if self.old_volume < current_volume:
-#                print(self.old_volume, current_volume)
                 self.old_volume = current_volume
                 self.step = 0
                 amount = [0,0,0]

@@ -94,7 +94,6 @@ def midi_devices(array):
         # check whether the glbaol effects menu was openend
         if array[230] ==  1:
             array[230] = 0
-            print('menu was openend!!!')
             midifighter.event(['T', 0, 4])
             midifighter.event(['T', 1, 5])
             midifighter.event(['T', 2, 6])

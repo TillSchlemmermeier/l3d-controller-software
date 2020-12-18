@@ -20,11 +20,6 @@ class e_zoom():
 
         zoomworld = np.zeros([3, 10, 10, 10])
 
-#        print(np.shape(world[0, :, :, :]))
-#        print(np.shape(zoomworld[0, :, :, :]))
-#        print(np.shape(zoom(world[0, :, :, :], 2, mode = 'constant')))
-#        print(np.shape(zoom(world[0, :, :, :], 2, mode = 'constant')[5:-5, 5:-5, 5:-5]))
-
         for c in range(3):
             world[c, :, :, :] = zoom(world[c, :, :, :], 2, mode = 'constant')[5:-5, 5:-5, 5:-5]
 
