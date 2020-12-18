@@ -93,7 +93,7 @@ class g_circles():
         # check if S2L is activated
         if self.channel >= 0:
             current_volume = float(str(self.sound_values.buf[self.channel*8:self.channel*8+8],'utf-8'))
-            self.number = 10 * current_volume
+            self.number = int(10 * current_volume)
             self.soundsize = np.clip(3 * current_volume, 0, 3)
 
         for i in range(self.number):
