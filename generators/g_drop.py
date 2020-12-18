@@ -11,16 +11,13 @@ class g_drop():
             self.x = 0
             self.y = randint(0,9)
             self.z = randint(0,9)
-
             self.brightness = 0.0
-
             self.state = 0
             #s2l
             self.sound_values = shared_memory.SharedMemory(name = "global_s2l_memory")
             self.channel = 0
 
         def do_step(self):
-
             temp = [self.x, self.y, self.z, self.brightness, self.state]
 
             # do stuff
@@ -68,7 +65,6 @@ class g_drop():
         return bytearray('{0:<8s}{1:<8s}{2:<8s}{3:<8s}'.format(str(round(self.speed,2)), '', '', channel),'utf-8')
 
 
-    #def generate(self, step, dumpworld):
     def __call__(self, args):
         self.speed = 12-int(args[0]*10 + 1)
         self.channel = int(args[3]*4)-1
@@ -94,6 +90,7 @@ class g_drop():
             current_volume = float(str(self.sound_values.buf[self.channel*8:self.channel*8+8],'utf-8'))
             if current_volume > 0:
                 self.drops.append(self.drop())
+                self.step = 0
 
         self.step += 1
 
