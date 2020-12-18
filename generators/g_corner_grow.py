@@ -33,15 +33,16 @@ class g_corner_grow():
         # create world
         world = np.zeros([3, 10, 10, 10])
 
-        # check if S2L is activated
-        if self.channel >= 0:
-            current_volume = float(str(self.sound_values.buf[self.channel*8:self.channel*8+8],'utf-8'))
-            self.waiting = 25 - int(np.clip(current_volume, 0, 1) * 25)
-
         if self.size > 4.0:
             # switch into waiting state
             self.waitingcounter = self.waiting
             self.size = 0
+
+            # check if S2L is activated
+            if self.channel >= 0:
+                current_volume = float(str(self.sound_values.buf[self.channel*8:self.channel*8+8],'utf-8'))
+                if current_volume > 0:
+                    self.waitingcounter == 0
 
         elif self.waitingcounter == 0:
         # switch on corners
