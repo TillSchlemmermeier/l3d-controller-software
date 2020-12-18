@@ -2,7 +2,7 @@
 import numpy as np
 from random import randint
 from scipy.signal import fftconvolve, gaussian
-
+from multiprocessing import shared_memory
 
 class g_columns():
     '''
@@ -18,19 +18,28 @@ class g_columns():
         self.z = 2
         self.counter = 0
         self.step = 0
+        #s2l
+        self.sound_values = shared_memory.SharedMemory(name = "global_s2l_memory")
+        self.channel = 0
 
     #Strings for GUI
     def return_values(self):
-        return [b'columns', b'blur', b'reset', b'OscSpeed', b'']
+        return [b'columns', b'blur', b'reset', b'OscSpeed', b'channel']
 
     def return_gui_values(self):
-        return bytearray('{0:<8s}{1:<8s}{2:<8s}{3:<8s}'.format(str(round(self.blur,2)), str(round(self.reset,2)), str(round(self.osc_speed,2)), ''),'utf-8')
+        if self.channel >=0:
+            channel = str(self.channel)
+        else:
+            channel = 'noS2L'
+
+        return bytearray('{0:<8s}{1:<8s}{2:<8s}{3:<8s}'.format(str(round(self.blur,2)), str(round(self.reset,2)), str(round(self.osc_speed,2)), channel),'utf-8')
 
 
     def __call__(self, args):
         self.blur = round(args[0]*4)
         self.reset = int(args[1] * 200)
         self.osc_speed = args[2]*0.1
+        self.channel = int(args[3]*4)-1
 
         # create world
         world = np.zeros([3, 10, 10, 10])
@@ -43,6 +52,12 @@ class g_columns():
         # shift old world one down
         self.safe_world = np.roll(self.safe_world, shift=1, axis=0)
         self.safe_world[0,:,:] = 0
+
+
+        # check if S2L is activated
+        if self.channel >= 0:
+            current_volume = float(str(self.sound_values.buf[self.channel*8:self.channel*8+8],'utf-8'))
+            self.blur = 4 * np.clip(current_volume, 0, 1)
 
         # create new spot in the upper most layer and blur it
         world[0, 0, self.y, self.z] = np.sin(self.step*self.osc_speed)**6
