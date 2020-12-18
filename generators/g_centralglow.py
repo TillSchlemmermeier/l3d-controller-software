@@ -11,16 +11,8 @@ from multiprocessing import shared_memory
 class g_centralglow():
     def __init__(self):
         self.amount = 1.0
-        # sound2light stuff
-        self.sample_rate = 44100
-        self.buffer_size = 2**11
-        self.thres_factor = 0
         self.channel = 1
-
         self.sound_values = shared_memory.SharedMemory(name = "global_s2l_memory")
-
-        self.threshold = 0.5
-
         self.size = 1
 
     #Strings for GUI
