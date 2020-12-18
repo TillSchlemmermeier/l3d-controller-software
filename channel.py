@@ -26,10 +26,29 @@ class class_channel:
         sets the settings of a channel
         '''
         # print(settings)
-        self.generator = generators[int(settings[0])]()
-        self.effect_1 = effects[int(settings[1])]()
-        self.effect_2 = effects[int(settings[2])]()
-        self.effect_3 = effects[int(settings[3])]()
+        try:
+            self.generator = generators[int(settings[0])]()
+        except:
+            pass
+            print("generator not found")
+
+        try:
+            self.effect_1 = effects[int(settings[1])]()
+        except:
+            pass
+            print("effect not found")
+
+        try:
+            self.effect_2 = effects[int(settings[2])]()
+        except:
+            pass
+            print("effect not found")
+
+        try:
+            self.effect_3 = effects[int(settings[3])]()
+        except:
+            pass
+            print("effect not found")
 
         self.settings_list = settings
 
