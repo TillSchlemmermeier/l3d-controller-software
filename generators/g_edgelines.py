@@ -1,22 +1,32 @@
 # modules
 import numpy as np
+from multiprocessing import shared_memory
 
 class g_edgelines():
 
     def __init__(self):
         self.counter = 0
+        #s2l
+        self.sound_values = shared_memory.SharedMemory(name = "global_s2l_memory")
+        self.channel = 0
 
 
     def return_values(self):
         # Strings for GUI
-        return [b'edgelines', b'', b'', b'', b'']
+        return [b'edgelines', b'', b'', b'', b'channel']
 
     def return_gui_values(self):
-        return bytearray('{0:<8s}{1:<8s}{2:<8s}{3:<8s}'.format('', '', '', ''),'utf-8')
+        if self.channel >=0:
+            channel = str(self.channel)
+        else:
+            channel = 'noS2L'
+
+        return bytearray('{0:<8s}{1:<8s}{2:<8s}{3:<8s}'.format('', '', '', 'channel'),'utf-8')
 
 
 
     def __call__(self, args):
+        self.channel = int(args[3]*4)-1
 
         world = np.zeros([3, 10, 10, 10])
 
@@ -58,6 +68,13 @@ class g_edgelines():
             world[:, 0, 9, self.counter-70:] = 1.0
         else:
             self.counter = 0
+
+        # check if S2L is activated
+        if self.channel >= 0:
+            current_volume = float(str(self.sound_values.buf[self.channel*8:self.channel*8+8],'utf-8'))
+            if current_volume > 0:
+                self.counter = self.counter % 10
+                self.counter *= 10
 
         self.counter += 1
 
