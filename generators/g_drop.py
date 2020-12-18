@@ -92,7 +92,7 @@ class g_drop():
                 self.drops.append(self.drop())
                 self.step = 0
             else:
-                self.stept -= 1
+                self.step -= 1
 
         self.step += 1
 
