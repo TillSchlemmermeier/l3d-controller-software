@@ -91,6 +91,8 @@ class g_drop():
             if current_volume > 0:
                 self.drops.append(self.drop())
                 self.step = 0
+            else:
+                self.step -= 1
 
         self.step += 1
 
