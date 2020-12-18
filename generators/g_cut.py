@@ -60,9 +60,10 @@ class g_cut():
             current_volume = float(str(self.sound_values.buf[self.channel*8:self.channel*8+8],'utf-8'))
             if current_volume > 0:
                 if self.brightness <=1.0:
+                    world[0, self.edge[0], self.edge[1], self.edge[2]] = self.brightness**2
                     self.brightness += current_volume
                 else:
-                    world[0, self.edge[0], self.edge[1], self.edge[2]] = self.brightness**2
+                    self.edge = choice(self.edge_list)
                     self.brightness = 0
 
         elif self.brightness <= 1.0:
