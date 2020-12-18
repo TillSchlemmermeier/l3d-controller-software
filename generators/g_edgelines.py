@@ -21,7 +21,7 @@ class g_edgelines():
         else:
             channel = 'noS2L'
 
-        return bytearray('{0:<8s}{1:<8s}{2:<8s}{3:<8s}'.format('', '', '', 'channel'),'utf-8')
+        return bytearray('{0:<8s}{1:<8s}{2:<8s}{3:<8s}'.format('', '', '', channel),'utf-8')
 
 
 
@@ -73,8 +73,8 @@ class g_edgelines():
         if self.channel >= 0:
             current_volume = float(str(self.sound_values.buf[self.channel*8:self.channel*8+8],'utf-8'))
             if current_volume > 0:
-                self.counter = self.counter % 10
-                self.counter *= 10
+                self.counter = (self.counter % 10) + 1
+                self.counter *= 10 
 
         self.counter += 1
 
