@@ -60,6 +60,7 @@ class g_rain():
             if self.channel >= 0:
                 current_volume = float(str(self.sound_values.buf[self.channel*8:self.channel*8+8],'utf-8'))
                 self.numbers = int(10 * current_volume)
+                self.fade = 1
 
             # turn on random leds in upper level
             for i in range(self.numbers):
@@ -73,7 +74,8 @@ class g_rain():
             if self.channel >= 0:
                 current_volume = float(str(self.sound_values.buf[self.channel*8:self.channel*8+8],'utf-8'))
                 self.numbers = int(10 * current_volume)
-
+                self.fade = 1
+                
             # turn on random leds in lower level
             for i in range(self.numbers):
                 world[0,9,randint(0, 9),randint(0, 9)] = 1.0
