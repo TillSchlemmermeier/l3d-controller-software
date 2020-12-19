@@ -1,6 +1,7 @@
 # modules
 import numpy as np
 from random import randint, choice
+from multiprocessing import shared_memory
 
 class g_sidesquares():
 
@@ -11,19 +12,35 @@ class g_sidesquares():
         self.axis = 1
         self.dir = 0
         self.inside = 0
+        #s2l
+        self.sound_values = shared_memory.SharedMemory(name = "global_s2l_memory")
+        self.channel = 0
 
     def return_values(self):
-        return [b'sidesquares', b'inside', b'', b'', b'']
+        return [b'sidesquares', b'inside', b'', b'', b'channel']
 
     def return_gui_values(self):
-        return bytearray('{0:<8s}{1:<8s}{2:<8s}{3:<8s}'.format(str(self.inside),'', '', ''),'utf-8')
+        if self.channel >=0:
+            channel = str(self.channel)
+        else:
+            channel = 'noS2L'
+
+        return bytearray('{0:<8s}{1:<8s}{2:<8s}{3:<8s}'.format(str(self.inside),'', '', channel),'utf-8')
 
     def __call__(self, args):
-
         self.inside = int(round(args[0]))
+        self.channel = int(args[3]*4)-1
 
         world = np.zeros([3, 10, 10, 10])
-        world[0, :, :, :] = self.gen_slice(self.axis, self.dir, self.counter)
+
+        # check if S2L is activated
+        if self.channel >= 0:
+            current_volume = float(str(self.sound_values.buf[self.channel*8:self.channel*8+8],'utf-8'))
+            if current_volume > 0:
+                world[0, :, :, :] = self.gen_slice(self.axis, self.dir, self.counter)
+
+        else:
+            world[0, :, :, :] = self.gen_slice(self.axis, self.dir, self.counter)
 
         # copy to other colors
         world[1:, :, :, :] = world[0, :, :, :]

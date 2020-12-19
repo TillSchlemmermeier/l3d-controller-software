@@ -1,6 +1,7 @@
 import numpy as np
 from random import uniform
 from generators.g_shooting_star_f import gen_shooting_star
+from multiprocessing import shared_memory
 
 class g_shooting_star():
 
@@ -13,12 +14,20 @@ class g_shooting_star():
 
         self.dot_list = []
         self.dot_list.append(gen_line_2(self.steps, self.mode))
+        #s2l
+        self.sound_values = shared_memory.SharedMemory(name = "global_s2l_memory")
+        self.channel = 0
 
     def return_values(self):
-        return [b'shooting star', b'wait frames', b'speed', b'mode', b'']
+        return [b'shooting star', b'wait frames', b'speed', b'mode', b'channel']
 
     def return_gui_values(self):
-        return bytearray('{0:<8s}{1:<8s}{2:<8s}{3:<8s}'.format(str(self.add_wait), str(19-self.steps), self.mode, ''),'utf-8')
+        if self.channel >=0:
+            channel = str(self.channel)
+        else:
+            channel = 'noS2L'
+
+        return bytearray('{0:<8s}{1:<8s}{2:<8s}{3:<8s}'.format(str(self.add_wait), str(19-self.steps), self.mode, channel),'utf-8')
 
     def __call__(self, args):
         self.add_wait = int(args[0]*10+1)
@@ -31,11 +40,20 @@ class g_shooting_star():
             self.mode = 'through'
         else:
             self.mode = 'top'
+        self.channel = int(args[3]*4)-1
+
 
         world = np.zeros([3, 10, 10, 10])
 
+        # check if S2L is activated
+        if self.channel >= 0:
+            current_volume = float(str(self.sound_values.buf[self.channel*8:self.channel*8+8],'utf-8'))
+            if current_volume > 0:
+                self.dot_list.insert(0, gen_line_2(self.steps, self.mode))
+                self.counter -= 1
+                
         # add new dot
-        if self.counter % self.add_wait == 0:
+        elif self.counter % self.add_wait == 0:
             self.dot_list.insert(0, gen_line_2(self.steps, self.mode))
 
 

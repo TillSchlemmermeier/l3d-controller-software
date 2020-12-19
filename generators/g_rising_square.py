@@ -41,7 +41,7 @@ class g_rising_square():
         else:
             channel = 'noS2L'
 
-        return bytearray('{0:<8s}{1:<8s}{2:<8s}{3:<8s}'.format(str(round(self.speed,2)), color, str(round(self.speed,2)), channel),'utf-8')
+        return bytearray('{0:<8s}{1:<8s}{2:<8s}{3:<8s}'.format(str(round(self.speed,2)), color, str(round(self.pause,2)), channel),'utf-8')
 
 
     def __call__(self, args):
@@ -77,7 +77,6 @@ class g_rising_square():
         world[:, :, 9, :] = self.flatworld[:, 1, :, :]
         world[:, :, :, 9] = self.flatworld[:, 2, :, :]
         world[:, :, 0, :] = self.flatworld[:, 3, :, :]
-
 
 
         # check if S2L is activated
