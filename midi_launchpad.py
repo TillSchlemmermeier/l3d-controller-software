@@ -110,6 +110,7 @@ class class_launchpad_mk3:
 
                 elif message[1] == 85:
                     self.state = key
+                    self.global_parameter[200] = 21
 
                 elif message[1] == 65:
                     self.state = key

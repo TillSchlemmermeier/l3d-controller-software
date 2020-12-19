@@ -114,7 +114,7 @@ class MainWindow(QtWidgets.QMainWindow):
             for y in range(4):
                 label = QtWidgets.QLabel('')
                 label.setWordWrap(True)
-                label.setStyleSheet("background-color: rgba("+str(x*10)+","+str(y*10)+", 0, 0.5);")
+                label.setStyleSheet("background-color: rgba(0,0,0,0.0);")
                 temp.append(label)
 
             self.utilitylabels.append(temp)
@@ -367,27 +367,25 @@ class MainWindow(QtWidgets.QMainWindow):
         self.utilitylabels[2][0].setText("Normalize")
         self.utilitylabels[3][0].setText("AutoPilot Timer: "+str(round(self.global_parameter[6],2)))
         self.utilitylabels[4][0].setText("AutoPilot On/Off: "+str(round(self.global_parameter[5],2)))
+        if(self.global_parameter[5]>0):
+            self.utilitylabels[4][0].setStyleSheet("background-color: #00cc00;")
+        else:
+            self.utilitylabels[4][0].setStyleSheet("background-color: #ffa500;")
         self.utilitylabels[5][0].setText("E1: "+str(self.global_label[80],'utf-8'))
+        self.utilitylabels[5][0].setStyleSheet("background-color: #ffff00;")
         self.utilitylabels[0][1].setText("E2: "+str(self.global_label[85],'utf-8'))
+        self.utilitylabels[0][1].setStyleSheet("background-color: #00cc00;")
         self.utilitylabels[5][1].setText("E3: "+str(self.global_label[90],'utf-8'))
+        self.utilitylabels[5][1].setStyleSheet("background-color: #00dcff;")
 
+#ffffb2', '#b2efb2', '#b2f4ff #ffff00', '#00cc00', '#00dcff
         for i in range(4):
-            self.utilitylabels[6+i][0].setText(str(self.global_label[81+i],'utf-8')+" : "+str(self.shared_mem_gui_vals.buf[512:520],'utf-8'))
-            self.utilitylabels[1+i][1].setText(str(self.global_label[86+i],'utf-8')+" : "+str(self.shared_mem_gui_vals.buf[536:544],'utf-8'))
-            self.utilitylabels[6+i][1].setText(str(self.global_label[91+i],'utf-8')+" : "+str(self.shared_mem_gui_vals.buf[560:568],'utf-8'))
-
-
-        512
-        520
-        528
-
-        536
-        544
-        552
-
-        560
-        568
-
+            self.utilitylabels[6+i][0].setText(str(self.global_label[81+i],'utf-8')+" : "+str(self.shared_mem_gui_vals.buf[512+i*8:520+i*8],'utf-8'))
+            self.utilitylabels[6+i][0].setStyleSheet("background-color: #ffffb2;")
+            self.utilitylabels[1+i][1].setText(str(self.global_label[86+i],'utf-8')+" : "+str(self.shared_mem_gui_vals.buf[544+i*8:552+i*8],'utf-8'))
+            self.utilitylabels[1+i][1].setStyleSheet("background-color: #b2efb2;")
+            self.utilitylabels[6+i][1].setText(str(self.global_label[91+i],'utf-8')+" : "+str(self.shared_mem_gui_vals.buf[560+i*8:568+i*8],'utf-8'))
+            self.utilitylabels[6+i][1].setStyleSheet("background-color: #b2f4ff;")
 
         #self.stringArray_ch1[5].setText(str(self.global_label[1],'utf-8')+" : "+str(self.shared_mem_gui_vals.buf[0:8],'utf-8'))
 

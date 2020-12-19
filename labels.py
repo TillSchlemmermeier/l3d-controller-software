@@ -59,7 +59,7 @@ for p in presets:
     else:
         global_preset_labels.append(templabel)
 
-for i in [1, 6, 11, 16]:
+for i in [21]:
     counter = 0
 
     # first row

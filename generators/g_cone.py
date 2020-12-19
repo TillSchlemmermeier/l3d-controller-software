@@ -25,12 +25,12 @@ class g_cone():
 
     def __call__(self, args):
         self.number = int(args[0]*10)
-        self.channel = int(args[1]*3)
-        self.mode int(round(args[2]))
+        self.channel = int(args[4]*3)
+        self.mode = int(round(args[1]))
 
         world = np.zeros([3, 10, 10, 10])
 
-        if mode == 0: # 'speaker'
+        if self.mode == 0: # 'speaker'
             current_volume = float(str(self.sound_values.buf[self.channel*8:self.channel*8+8],'utf-8'))
             current_volume = int(np.clip(3 * current_volume, 0, 3)*3)
 
@@ -40,7 +40,7 @@ class g_cone():
             world[0, :, :] = self.make_rings(*self.sizes)
 
         elif self.mode == 1: # 'cone'
-            self.sizes = int(round(2*np.sawtooth(self.counter * 0.1 * [x for x in range(len(self.sizes))], 1))+4)
+            self.sizes = (np.round(2*sawtooth(self.counter * 0.1 * np.linspace(0,3,4), 1))+4).astype('int')
             world[0, :, :] = self.make_rings(*self.sizes)
 
         # rotate if necessary
