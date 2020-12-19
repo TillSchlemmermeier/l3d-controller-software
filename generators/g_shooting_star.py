@@ -1,6 +1,7 @@
 import numpy as np
 from random import uniform
 from generators.g_shooting_star_f import gen_shooting_star
+from multiprocessing import shared_memory
 
 class g_shooting_star():
 
@@ -13,9 +14,12 @@ class g_shooting_star():
 
         self.dot_list = []
         self.dot_list.append(gen_line_2(self.steps, self.mode))
+        #s2l
+        self.sound_values = shared_memory.SharedMemory(name = "global_s2l_memory")
+        self.channel = 0
 
     def return_values(self):
-        return [b'shooting star', b'wait frames', b'speed', b'mode', b'']
+        return [b'shooting star', b'wait frames', b'speed', b'mode', b'channel']
 
     def return_gui_values(self):
         return bytearray('{0:<8s}{1:<8s}{2:<8s}{3:<8s}'.format(str(self.add_wait), str(19-self.steps), self.mode, ''),'utf-8')
