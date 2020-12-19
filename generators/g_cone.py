@@ -2,7 +2,7 @@
 import numpy as np
 from random import randint, choice
 from multiprocessing import shared_memory
-
+from scipy.signal import sawtooth
 
 class g_cone():
 
@@ -13,33 +13,42 @@ class g_cone():
         self.make_rings = circleworld()
         self.channel = 0
         self.sizes = np.array([0,0,0,0])
+        self.counter = 1
+        self.mode = 0
 
     def return_values(self):
-        return [b'circles', b'number', b'', b'', b'channel']
+        return [b'circles', b'number', b'mode', b'', b'channel']
 
     def return_gui_values(self):
-
-        return bytearray('{0:<8s}{1:<8s}{2:<8s}{3:<8s}'.format(str(round(self.number,2)), '', '', str(self.channel)),'utf-8')
+        return bytearray('{0:<8s}{1:<8s}{2:<8s}{3:<8s}'.format(str(round(self.number,2)), str(self.mode), '', str(self.channel)),'utf-8')
 
 
     def __call__(self, args):
         self.number = int(args[0]*10)
-        self.channel = int(args[3]*3)
+        self.channel = int(args[1]*3)
+        self.mode int(round(args[2]))
 
-
-        current_volume = float(str(self.sound_values.buf[self.channel*8:self.channel*8+8],'utf-8'))
-        current_volume = int(np.clip(3 * current_volume, 0, 3)*3)
-
-        self.sizes = np.roll(self.sizes, 1)
-        self.sizes[0] = current_volume
         world = np.zeros([3, 10, 10, 10])
 
-        world[0, :, :] = self.make_rings(*self.sizes)
+        if mode == 0: # 'speaker'
+            current_volume = float(str(self.sound_values.buf[self.channel*8:self.channel*8+8],'utf-8'))
+            current_volume = int(np.clip(3 * current_volume, 0, 3)*3)
+
+            self.sizes = np.roll(self.sizes, 1)
+            self.sizes[0] = current_volume
+
+            world[0, :, :] = self.make_rings(*self.sizes)
+
+        elif self.mode == 1: # 'cone'
+            self.sizes = int(round(2*np.sawtooth(self.counter * 0.1 * [x for x in range(len(self.sizes))], 1))+4)
+            world[0, :, :] = self.make_rings(*self.sizes)
 
         # rotate if necessary
         world[0, :, :, :] = np.rot90(world[0, :, :, :], k = 1)
         world[1,:,:,:] = world[0, :, : , :]
         world[2,:,:,:] = world[0, :, : , :]
+
+        self.counter += 1
         return np.clip(world, 0, 1)
 
 
