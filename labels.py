@@ -31,7 +31,7 @@ for i in range(150):
     default += ' '
 
 # create empty numpy aray
-labels = np.full((25, 8, 8), default)
+labels = np.full((26, 8, 8), default)
 labels[:,:,:]= ''
 # add close labels except for first 'layer'
 labels[1:, 0, 0] = 'close'
@@ -45,6 +45,43 @@ labels[0, 3, 6] = 'roll'
 labels[0, 3, 5] = 'strobo'
 labels[0, 4, 7] = 'cubes'
 labels[0, 4, 6] = 'dark sphere'
+
+# add global presets
+global_preset_labels = []
+
+with open('global_presets.dat', 'r') as file:
+    presets = file.readlines()
+
+for p in presets:
+    templabel = p.split()[0]
+    if len(templabel) > 8:
+        global_preset_labels.append(templabel[:8]+'\n'+templabel[8:])
+    else:
+        global_preset_labels.append(templabel)
+
+for i in [1, 6, 11, 16]:
+    counter = 0
+
+    # first row
+    for j in range(1, 8):
+        if counter < len(global_preset_labels):
+            labels[i, 0, j] = global_preset_labels[counter]
+
+        counter += 1
+
+    # second row
+    for j in range(0, 8):
+        if counter < len(global_preset_labels):
+            labels[i, 1, j] = global_preset_labels[counter]
+
+        counter += 1
+
+    #third grow
+    for j in range(0, 8):
+        if counter < len(global_preset_labels):
+            labels[i, 2, j] = global_preset_labels[counter]
+
+        counter += 1
 
 # add presets
 
