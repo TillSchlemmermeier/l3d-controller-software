@@ -1,12 +1,6 @@
 # modules
 import numpy as np
-from scipy.signal import sawtooth
-from generators.g_genhsphere import gen_hsphere
-import pyaudio
-import scipy
-import struct
 from random import randint
-from scipy.fftpack import fft, fftfreq
 from multiprocessing import shared_memory
 
 
@@ -25,18 +19,18 @@ class g_sound_lines():
 
 
     def return_values(self):
-        return [b'sound_lines', b'reset', b'channel', b'', b'']
+        return [b'sound_lines', b'reset', b'', b'', b'channel']
 
 
     def return_gui_values(self):
-        return bytearray('{0:<8s}{1:<8s}{2:<8s}{3:<8s}'.format(str(round(self.reset,2)), str(round(self.channel,2)), '', ''),'utf-8')
+        return bytearray('{0:<8s}{1:<8s}{2:<8s}{3:<8s}'.format(str(round(self.reset,2)), '', '', str(round(self.channel,2))),'utf-8')
 
 
     def __call__(self, args):
 
         # process parameters
         self.reset = args[0]*20+1
-        self.channel = int(args[1]*3)
+        self.channel = int(args[3]*3)
 
         current_volume = float(str(self.sound_values.buf[self.channel*8:self.channel*8+8],'utf-8'))
         # now we can world with the sound
