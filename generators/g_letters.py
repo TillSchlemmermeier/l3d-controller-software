@@ -8,15 +8,19 @@ class g_letters():
         self.frame = []
         font = ImageFont.truetype("/usr/share/fonts/truetype/ubuntu/UbuntuMono-R.ttf", 13)
 
-    def control(self, letter, blub1, blub2):
-        self.char = chr(int(letter*127))
+    def return_values(self):
+        return [b'Letters', b'char', b'', b'', b'']
 
-    def label(self):
-        return ['char',self.char,'empty','empty','empty','empty', 'empty']
+    def return_gui_values(self):
+        return bytearray('{0:<8s}{1:<8s}{2:<8s}{3:<8s}'.format(self.char, '', '', ''),'utf-8')
 
-    def generate(self, step, dumpworld):
+
+    def __call__(self, args):
+        # parsing input
+        self.char = chr(int(args[0]*127))
+
         # create empty world
-        world = np.zeros([3, 10, 10, 10
+        world = np.zeros([3, 10, 10, 10])
 
         img = Image.new(mode = 'L', size = (self.size, self.size), color = (0))
         d = ImageDraw.Draw(img)
