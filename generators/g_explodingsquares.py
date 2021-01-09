@@ -13,6 +13,7 @@ class g_explodingsquares():
         self.zpos = 1
         self.size = 1
         self.counter = 0
+        self.dir = 0
         '''
         self.axis = 1
         self.dir = 0
@@ -22,7 +23,7 @@ class g_explodingsquares():
         self.channel = 0
         '''
     def return_values(self):
-        return [b'sidesquares', b'inside', b'', b'', b'channel']
+        return [b'explodingsquares', b'direction', b'', b'', b'channel']
 
     def return_gui_values(self):
         if self.channel >=0:
@@ -30,10 +31,17 @@ class g_explodingsquares():
         else:
             channel = 'noS2L'
 
-        return bytearray('{0:<8s}{1:<8s}{2:<8s}{3:<8s}'.format(str(self.inside),'', '', channel),'utf-8')
+        if self.dir == 0:
+            direction = 'X'
+        elif self.dir == 1:
+            direction = 'Y'
+        else:
+            direction ='Z'
+
+        return bytearray('{0:<8s}{1:<8s}{2:<8s}{3:<8s}'.format(direction,'', '', channel),'utf-8')
 
     def __call__(self, args):
-        #slf.inside = int(round(args[0]))
+        self.direction = int(args[0]*3)
         self.channel = int(args[3]*4)-1
 
         world = np.zeros([3, 10, 10, 10])
@@ -56,9 +64,17 @@ class g_explodingsquares():
         self.zpos = randint(0,9)
 
         if self.counter < 10:
+            if self.direction == 0:
+                world[:, self.xpos, self.ypos - self.counter : self.ypos + self.counter, self.zpos - self.counter : self.zpos + self.counter] = 1
+                world[:, self.xpos, self.ypos - self.counter + 1 : self.ypos + self.counter - 1, self.zpos - self.counter +1 : self.zpos + self.counter - 1] = 0
 
-            world[:, self.xpos, self.ypos - self.counter : self.ypos + self.counter, self.zpos - self.counter : self.zpos + self.counter] = 1
-            world[:, self.xpos, self.ypos - self.counter + 1 : self.ypos + self.counter - 1, self.zpos - self.counter +1 : self.zpos + self.counter - 1] = 0
+            elif self.direction == 1:
+                world[:, self.xpos - self.counter : self.xpos + self.counter, self.ypos , self.zpos - self.counter : self.zpos + self.counter] = 1
+                world[:, self.xpos - self.counter + 1: self.xpos + self.counter - 1, self.ypos , self.zpos - self.counter + 1: self.zpos + self.counter - 1] = 0
+
+            else:
+                world[:, self.xpos - self.counter : self.xpos + self.counter, self.ypos - self.counter : self.ypos + self.counter, self.zpos] = 1
+                world[:, self.xpos - self.counter + 1: self.xpos + self.counter - 1, self.ypos - self.counter + 1: self.ypos + self.counter - 1, self.zpos] = 0
 
             self.counter += 1
 
