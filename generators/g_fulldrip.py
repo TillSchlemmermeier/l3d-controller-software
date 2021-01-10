@@ -7,16 +7,16 @@ class g_fulldrip():
 
     def __init__(self):
         self.drops = []
-        self.n = 20
+        self.n = 10
         self.sound_values = shared_memory.SharedMemory(name = "global_s2l_memory")
         self.channel = 0
 
-        for i in range(self.n):
+        for i in range(50):
             self.drops.append(led())
 
 
     def return_values(self):
-        return [b'fulldrip', b'number', b'fade in', b'', b'channel']
+        return [b'fulldrip', b'number', b'stop pos', b'', b'channel']
 
 
     def return_gui_values(self):
@@ -25,29 +25,31 @@ class g_fulldrip():
         else:
             channel = 'noS2L'
 
-        return bytearray('{0:<8s}{1:<8s}{2:<8s}{3:<8s}'.format('', '', '', ''),'utf-8')
+        return bytearray('{0:<8s}{1:<8s}{2:<8s}{3:<8s}'.format(str(self.n), '', '', ''),'utf-8')
 
 
     def __call__(self, args):
-        self.n = int(args[0]*50)+1
+        self.n = int(args[0]*40)+1
+        self.stop_pos = int(round(args[1]*10,0))
 
         world = np.zeros([3, 10, 10, 10])
 
-        for i in range(len(self.drops)):
+        for i in range(self.n):
             temp = self.drops[i].run(self.drops)
             if len(temp) == 3:
                 world[:, temp[0], temp[1], temp[2]] = 1.0
             else:
-                self.drops[i] = led()
+                self.drops[i] = led(self.stop_pos)
 
         return np.clip(world, 0, 1)**2
 
 
 class led:
-    def __init__(self):
-        print('HALLO')
+    def __init__(self, stop_pos = 9):
         self.x, self.y, self.z = 0, randint(0,9), randint(0,9)
-        self.stop_x = 9# randint(4, 6)
+        self.stop_x = np.clip(stop_pos + randint(0, 1),0,9)
+        if stop_pos >= 9:
+            self.stop_x = 9
         self.stop_t = randint(10, 40)
         self.state = 'run'
 
@@ -58,8 +60,7 @@ class led:
         if self.state == 'run':
             output = [self.x, self.y, self.z]
             # check for collisions:
-            ind = np.where(self.y == np.array([l.x for l in leds]))[0]
-            print(ind)
+            # ind = np.where(self.y == np.array([l.x for l in leds]))[0]
             self.x += 1
         elif self.state == 'wait':
             output = [self.x, self.y, self.z]
