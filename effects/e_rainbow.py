@@ -23,8 +23,10 @@ class e_rainbow:
         return [b'rainbow', b'speed', b'', b'', b'channel']
 
     def return_gui_values(self):
-        if self.channel >= 0:
+        if 4 > self.channel >= 0:
             channel = str(self.channel)
+        elif self.channel == 4:
+                channel = "Trigger"
         else:
             channel = 'noS2L'
 

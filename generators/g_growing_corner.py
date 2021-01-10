@@ -32,25 +32,28 @@ class g_growing_corner():
 
         self.sound_values = shared_memory.SharedMemory(name = "global_s2l_memory")
         self.channel = 4
+        self.lastvalue = 0
 
     #Strings for GUI
     def return_values(self):
-        return [b'growing_corner', b'maxsize', b'speed', b'channel', b'']
+        return [b'growing_corner', b'maxsize', b'speed', b'', b'channel']
 
     def return_gui_values(self):
-        if self.channel >= 0:
+        if 4 > self.channel >= 0:
             channel = str(self.channel)
+        elif self.channel == 4:
+            channel = "Trigger"
         else:
             channel = 'noS2L'
 
-        return bytearray('{0:<8s}{1:<8s}{2:<8s}{3:<8s}'.format(str(round(self.maxsize,2)), str(round(self.growspeed,2)), channel, ''),'utf-8')
+        return bytearray('{0:<8s}{1:<8s}{2:<8s}{3:<8s}'.format(str(round(self.maxsize,2)), str(round(self.growspeed,2)), '', channel),'utf-8')
 
 
     def __call__(self, args):
         self.maxsize = args[0]*18
         self.growspeed = 60 - (args[1]*50+5)
         self.steps = int(self.maxsize/self.growspeed)
-        self.channel = int(args[2]*4)-1
+        self.channel = int(args[3]*5)-1
 
         world = np.zeros([3, 10, 10, 10])
 
@@ -62,7 +65,8 @@ class g_growing_corner():
 
             self.counter = 0
 
-        elif self.channel >= 0:
+        # check if s2l is activated
+        elif 4 > self.channel >= 0:
             if self.counter == 0:
                 list = ([0,0,0],[0,0,9],[0,9,0],[0,9,9],[9,0,0],[9,9,0],[9,0,9], [9,9,9])
                 [self.xpos, self.ypos, self.zpos] = choice(list)
@@ -71,6 +75,19 @@ class g_growing_corner():
                 self.counter += int(current_volume*2)
                 if self.counter > self.maxsize:
                     self.counter = 0
+        #check for trigger
+        elif self.channel == 4:
+            if self.counter == 0:
+                list = ([0,0,0],[0,0,9],[0,9,0],[0,9,9],[9,0,0],[9,9,0],[9,0,9], [9,9,9])
+                [self.xpos, self.ypos, self.zpos] = choice(list)
+            current_volume = int(float(str(self.sound_values.buf[self.channel*8:self.channel*8+8],'utf-8')))
+            if current_volume > self.lastvalue:
+                self.lastvalue = current_volume
+                self.counter = 0
+            else:
+                self.counter += 1
+                #if self.counter > self.maxsize:
+                #    self.counter = 0
 
         x = self.xpos
         y = self.ypos
