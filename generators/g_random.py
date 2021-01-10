@@ -11,6 +11,7 @@ class g_random():
         self.number_of_leds = 1
         self.counter = 1
         self.reset = 1
+        self.lastvalue = 0
 
         self.sound_values = shared_memory.SharedMemory(name = "global_s2l_memory")
         self.channel = 0
@@ -32,13 +33,18 @@ class g_random():
     def __call__(self, args):
         self.number_of_leds = int((args[0])*20)
         self.reset = int(args[1]*10+1)
-        self.channel = int(args[3]*4)-1
+        self.channel = int(args[3]*5)-1
 
         # check if s2l is activated
-        if self.channel >= 0:
+        if 4 > self.channel >= 0:
             current_volume = float(str(self.sound_values.buf[self.channel*8:self.channel*8+8],'utf-8'))
             self.number_of_leds += int(current_volume*30)
-
+        elif self.channel > 3 :
+            current_volume = int(float(str(self.sound_values.buf[self.channel*8:self.channel*8+8],'utf-8')))
+            if current_volume > self.lastvalue:
+                self.lastvalue = current_volume
+            else:
+                self.number_of_leds = 0
 
         world = np.zeros([3, 10, 10, 10])
         if self.counter % self.reset == 0:

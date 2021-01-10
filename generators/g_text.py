@@ -17,6 +17,7 @@ class g_text():
         self.strings.append('FLORABLEIBT')
         self.strings.append('Subspace')
         self.strings.append('HAPPY BIRTHDAY TIM! ')
+        self.strings.append('ANNIKA ')
         self.strings_img = []
         for string in self.strings:
             frames = []

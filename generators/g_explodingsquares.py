@@ -13,7 +13,9 @@ class g_explodingsquares():
         self.zpos = 1
         self.size = 1
         self.counter = 0
-        self.dir = 0
+        self.direction = 0
+        self.nframes = 6
+        self.borders = 0
         '''
         self.axis = 1
         self.dir = 0
@@ -23,7 +25,7 @@ class g_explodingsquares():
         self.channel = 0
         '''
     def return_values(self):
-        return [b'explodingsquares', b'direction', b'', b'', b'channel']
+        return [b'explodingsquares', b'borders', b'', b'', b'channel']
 
     def return_gui_values(self):
         if self.channel >=0:
@@ -31,18 +33,22 @@ class g_explodingsquares():
         else:
             channel = 'noS2L'
 
-        if self.dir == 0:
-            direction = 'X'
-        elif self.dir == 1:
-            direction = 'Y'
+        if self.borders <= 0.5:
+            borders = 'off'
         else:
-            direction ='Z'
+            borders = 'on'
 
-        return bytearray('{0:<8s}{1:<8s}{2:<8s}{3:<8s}'.format(direction,'', '', channel),'utf-8')
+
+        return bytearray('{0:<8s}{1:<8s}{2:<8s}{3:<8s}'.format(borders,'', '', channel),'utf-8')
 
     def __call__(self, args):
-        self.direction = int(args[0]*3)
+        self.borders = args[0]
         self.channel = int(args[3]*4)-1
+
+        if args[0] <= 0.5:
+            borders = [0,10]
+        else:
+            borders = [1,9]
 
         world = np.zeros([3, 10, 10, 10])
         '''
@@ -59,27 +65,45 @@ class g_explodingsquares():
         world[1:, :, :, :] = world[0, :, :, :]
         world[2:, :, :, :] = world[0, :, :, :]
         '''
-        self.xpos = randint(0,9)
-        self.ypos = randint(0,9)
-        self.zpos = randint(0,9)
 
-        if self.counter < 10:
-            if self.direction == 0:
-                world[:, self.xpos, self.ypos - self.counter : self.ypos + self.counter, self.zpos - self.counter : self.zpos + self.counter] = 1
-                world[:, self.xpos, self.ypos - self.counter + 1 : self.ypos + self.counter - 1, self.zpos - self.counter +1 : self.zpos + self.counter - 1] = 0
 
-            elif self.direction == 1:
-                world[:, self.xpos - self.counter : self.xpos + self.counter, self.ypos , self.zpos - self.counter : self.zpos + self.counter] = 1
-                world[:, self.xpos - self.counter + 1: self.xpos + self.counter - 1, self.ypos , self.zpos - self.counter + 1: self.zpos + self.counter - 1] = 0
 
-            else:
-                world[:, self.xpos - self.counter : self.xpos + self.counter, self.ypos - self.counter : self.ypos + self.counter, self.zpos] = 1
-                world[:, self.xpos - self.counter + 1: self.xpos + self.counter - 1, self.ypos - self.counter + 1: self.ypos + self.counter - 1, self.zpos] = 0
+        if self.counter <= self.nframes:
+            world[:, self.xpos, np.clip(self.ypos - self.counter,0,9) : self.ypos + self.counter, np.clip(self.zpos - self.counter,0,9) : self.zpos + self.counter] = 1
+            world[:, self.xpos, np.clip(self.ypos - self.counter + 1,borders[0],9) : np.clip(self.ypos + self.counter - 1,-2,borders[1]), np.clip(self.zpos - self.counter + 1,borders[0],9) : np.clip(self.zpos + self.counter - 1,-2, borders[1])] = 0
+
+            if self.direction == 1:
+                world[0, :, :, :] = np.rot90(world[0, :, :, :], 1, axes = (0, 1))
+            elif self.direction == 2:
+                world[0, :, :, :] = np.rot90(world[0, :, :, :], 1, axes = (0, 2))
 
             self.counter += 1
+            world[1, :, :, :] = world[0, :, :, :]
+            world[2, :, :, :] = world[0, :, :, :]
 
         else:
             self.counter = 0
+            self.xpos = randint(3,6)
+            self.ypos = randint(3,6)
+            self.zpos = randint(3,6)
+            self.direction = randint(0,3)
+
+            if self.direction == 0:
+                if 4 < self.zpos < 7 and 4 < self.ypos < 7:
+                    self.nframes = 7
+                else:
+                    self.nframes = 7
+            elif self.direction == 1:
+                if 4 < self.xpos < 7 and 4 < self.zpos < 7:
+                    self.nframes = 7
+                else:
+                    self.nframes = 7
+            else:
+                if 4 < self.zpos < 7 and 4 < self.ypos < 7:
+                    self.nframes = 7
+                else:
+                    self.nframes = 7
+
 
         return np.round(np.clip(world, 0, 1), 3)
 

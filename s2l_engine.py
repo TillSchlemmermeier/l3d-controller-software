@@ -3,7 +3,7 @@ import pyaudio
 from scipy.fftpack import fft, fftfreq
 import scipy
 import struct
-from time import sleep
+from time import sleep, time
 
 import matplotlib.pyplot as plt
 from matplotlib.animation import FuncAnimation
@@ -77,6 +77,9 @@ def sound_process(array):
     max = [np.ones(60)]
 
     norm_value = [0.0]
+    last_value = [0.0]
+    armed = [True]
+    starttime = [time()]
 
     def update_line(frame, normalized, buffer, min, max):
         # update selectors
@@ -144,7 +147,6 @@ def sound_process(array):
             freq_ind = np.argmin(abs(freq_axis - selectors[i]))
             current_volume = round(final_data[freq_ind],4)
 
-
             # apply threshold
             if current_volume < thresholds[0]:
                 current_volume = 0.0
@@ -156,6 +158,19 @@ def sound_process(array):
             string = '{:8}'.format(current_volume)
             bla = bytearray('{:.8}'.format(string[:8]),'utf-8')
             sound_values.buf[i*8:i*8+8] =  bla
+
+            if i == 0:
+                if current_volume > 0.5 and armed[0]:
+                    last_value[0] += 1
+                    string = '{:8}'.format(last_value[0])
+                    bla = bytearray('{:.8}'.format(string[:8]),'utf-8')
+                    sound_values.buf[32:40] = bla
+                    armed[0] = False
+                    starttime[0] = time()
+                elif current_volume < 0.5 and not armed[0] and time()-starttime[0] > 0.3:
+                    armed[0] = True
+                else:
+                    pass
 
         return line, select1, select2, select3, select4, thres1, thres2, thres3, thres4
 
