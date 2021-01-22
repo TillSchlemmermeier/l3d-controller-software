@@ -120,3 +120,31 @@ The script 'test_rendering_engine.py' starts the frame renderer in a thread to c
 | 40 - 59 | channel 3
 | 60 - 79 | channel 4
 | 80 - 95 | global effects labels
+
+## Installation
+sudo apt-get install python3-pip
+sudo apt install gfortran
+sudo apt install ipython3
+apt-get install python3-pyserial
+apt-get install python3-PyAudio
+apt-get install PyQt5
+apt-get install python-rtmidi
+apt-get install libasound-dev
+pip3 install numpy
+pip3 install scipy
+pip3 install matplotlib
+
+git clone https://github.com/TillSchlemmermeier/l3d-controller-software
+cd l3d-controller-software/
+git checkout dev_3.0
+
+make
+cd generators
+make
+cd ./effects
+f2py3 -c -m gen_outer_shadow_f e_outer_shadow_f.f90
+
+cd /dev
+sudo chown xxxUSERxxx ttyACM0
+
+python3.8 main.py
