@@ -144,7 +144,7 @@ make
 cd ./effects
 f2py3 -c -m gen_outer_shadow_f e_outer_shadow_f.f90
 
-cd /dev
-sudo chown xxxUSERxxx ttyACM0
+sudo usermod -a -G dialout $USER
+reboot
 
 python3.8 main.py
