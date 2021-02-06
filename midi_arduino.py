@@ -12,9 +12,11 @@ class class_arduino_midi:
 
         # find correct arduino by serial number
         ports = list(serial.tools.list_ports.comports())
+
         for p in ports:
             if p.serial_number == '55731323536351C012B2':
-                self.arduino = serial.Serial('/dev/ttyACM0', 9600)
+                print('found arduino')
+                self.arduino = serial.Serial(p.device, 9600)
 
         self.controller_ids = ['00', '01', '10', '11', '20', '21']
         # old values:
@@ -39,23 +41,25 @@ class class_arduino_midi:
 
 
     def load_preset(self, preset_id, channel, filename = 'presets.dat'):
+
         '''loads preset from file and writes to global array
         this is copied from midi_launchpad!'''
 
+
+        print(preset_id, channel)
         with open(filename, 'r') as file:
             presets = file.readlines()
 
         try:
             preset = presets[preset_id].strip('\n').split()
-            print('loading preset', preset[0])
-
             # write values into global parameter array
             # hopefully on the right place
-            for i, value in zip(self.indices[channel-1], preset[1:]):
+            for i, value in zip(self.indices[channel], preset[1:]):
                 # dont set channel on/off
                 if i not in [40, 70, 100, 130]:
                     self.global_parameter[i] = float(value)
         except:
+            print('ERROR:', preset_id, channel)
             pass
 
 
@@ -63,35 +67,52 @@ class class_arduino_midi:
 
         while True:
             message = self.arduino.read_until(bytearray('\n', 'utf8'))
+
             try:
                 # parse raw message
                 message = message.decode("utf-8")
-
                 message = message.split(':')
                 value = int(message[1])
 
                 # first, preset encoders
                 if message[0] == '00':
-                    if value > self.values[0, 0]:
-                        print('next preset channel 1')
+                    if value < self.values[0, 0]:
                         self.values[0, 0] = value
                         self.values[0, 1] += 1
+                        keys = list(self.presets.keys())
 
-                        load_preset(self, self.values[0, 0]%len(self.presets.keys(), 1)
+                        # get preset number
+                        id = keys[int(self.values[0, 1]%len(self.presets.keys()))]
 
+                        self.load_preset(id, 0)
 
-                    elif value < self.values[0, 0]:
-                        print('previous preset channel 1')
-                        self.values[0, 0] = values
+                    elif value > self.values[0, 0]:
+                        self.values[0, 0] = value
                         self.values[0, 1] -= 1
 
-                        load_preset(self, self.values[0, 0]%len(self.presets.keys(), 1)
+                        # get preset number
+                        id = keys[int(self.values[0, 1]%len(self.presets.keys()))]
 
+                        self.load_preset(id, 0)
                 # the, values
                 elif message[0] == '01':
+                    #print('value triggered')
                     value = np.round(np.clip(value/1000, 0, 1),1)
+
                     if value != self.values[0, 2]:
-                        print('new value mod channel 1')
+
+                        keys = list(self.presets.keys())
+
+                        # get preset number
+                        id = keys[int(self.values[0, 1]%len(self.presets.keys()))]
+
+                        mod_destination = self.presets[id]
+                        # get correct indice
+#                        mod_destination = self.presets[self.values[0, 1]%len(self.presets.keys())]
+
+                        for mod in mod_destination:
+                            self.global_parameter[mod[0]+35] = value
+#
                         self.values[0, 2] = value
 
             except:

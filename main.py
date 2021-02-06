@@ -18,6 +18,7 @@ from ctypes import c_char, c_char_p
 from midi_akai import class_akai
 from midi_fighter import class_fighter
 from midi_launchpad import class_launchpad_mk3
+from midi_arduino import class_arduino_midi
 from gui_class import MainWindow
 from artnet_interface import class_artnet
 from time import sleep
@@ -57,6 +58,10 @@ def autopilot(array):
                     print('stopping autopilot')
                     break
 
+def midi_arduino(array):
+    print('...starting arduino midi')
+    arduino = class_arduino_midi(array)
+    arduino.run()
 
 def midi_devices(array):
     '''
@@ -186,6 +191,7 @@ if __name__ == '__main__':
 
     # assign processes
     proc_midi = mp.Process(target=midi_devices, args = [global_parameter])
+    proc_arduino = mp.Process(target=midi_arduino, args = [global_parameter])
     proc_gui = mp.Process(target=gui, args = [global_parameter, global_label, mode])
     # proc_artnet = mp.Process(target=artnet_process, args = [global_parameter])
     proc_sound = mp.Process(target = sound_process, args = [global_parameter])
@@ -216,7 +222,7 @@ if __name__ == '__main__':
     # starting processes
     print('start')
     proc_midi.start()
-
+    proc_arduino.start()
     proc_renderer.start()
     proc_autopilot.start()
     proc_gui.start()
@@ -225,6 +231,7 @@ if __name__ == '__main__':
 
 #    time.sleep(1)
     proc_midi.join()
+    proc_arduino.join()
     proc_renderer.join()
     proc_gui.join()
     proc_sound.join()
