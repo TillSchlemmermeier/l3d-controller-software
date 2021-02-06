@@ -14,6 +14,7 @@ class g_centralglow():
         self.channel = 1
         self.sound_values = shared_memory.SharedMemory(name = "global_s2l_memory")
         self.size = 1
+        self.exponent = 1
 
     #Strings for GUI
     def return_values(self):
@@ -28,7 +29,7 @@ class g_centralglow():
 
         world = np.zeros([3, 10, 10, 10])
 
-        current_volume = np.clip(float(str(self.sound_values.buf[self.channel*8:self.channel*8+8],'utf-8')),0,5)
+        current_volume = np.clip(float(str(self.sound_values.buf[self.channel*8:self.channel*8+8],'utf-8')),0,3)
 
         bla = gen_central_glow(6-self.exponent*current_volume, 5.5, 5.5, 5.5)
         world[0, :, :, :] = bla

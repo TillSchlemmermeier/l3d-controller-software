@@ -264,6 +264,8 @@ class class_launchpad_mk3:
         for i in range(20,159):
             list.append(str(round(self.global_parameter[i], 2)))
 
+        for i in range(231,246):
+            list.append(str(round(self.global_parameter[i], 2)))
         # save global preset
         with open(filename, 'a+') as file:
             file.write(' '.join(list)+'\n')
@@ -301,6 +303,8 @@ class class_launchpad_mk3:
             for i, value in zip(range(20,159), preset[1:]):
                 self.global_parameter[i] = float(value)
 
+            for i, value in zip(range(231,246), preset[140:]):
+                self.global_parameter[i] = float(value)
         except:
             print('global preset not available')
 
