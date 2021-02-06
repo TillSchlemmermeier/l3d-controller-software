@@ -74,33 +74,28 @@ class class_arduino_midi:
                 if message[0] == '00':
                     if value > self.values[0, 0]:
                         print('next preset channel 1')
-                        self.values[0, 0] += 1
+                        self.values[0, 0] = value
+                        self.values[0, 1] += 1
 
                         load_preset(self, self.values[0, 0]%len(self.presets.keys(), 1)
 
 
                     elif value < self.values[0, 0]:
                         print('previous preset channel 1')
-                        self.values[0, 0] -= 1
+                        self.values[0, 0] = values
+                        self.values[0, 1] -= 1
 
                         load_preset(self, self.values[0, 0]%len(self.presets.keys(), 1)
 
                 # the, values
                 elif message[0] == '01':
                     value = np.round(np.clip(value/1000, 0, 1),1)
-                    if value != self.values[0, 1]:
+                    if value != self.values[0, 2]:
                         print('new value mod channel 1')
-                        self.values[0, 1] = value
+                        self.values[0, 2] = value
 
             except:
                 pass
-
-            # sanitize values
-            for i in range(3):
-                # cut preset id
-                #print('self.values: ', self.values[i, 0])
-                self.values[i, 0] = self.values[i, 0] % len(self.presets.keys())
-                #print('to ', self.values[i, 0])
 
             time.sleep(0.01)
 
