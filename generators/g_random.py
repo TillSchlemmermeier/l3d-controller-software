@@ -22,10 +22,12 @@ class g_random():
         return [b'g_random', b'N LED', b'Wait', b'',b'channel']
 
     def return_gui_values(self):
-        if self.channel >=0:
+        if 4 > self.channel >=0:
             channel = str(self.channel)
-        else:
+        elif self.channel < 0:
             channel = 'noS2L'
+        else:
+            channel = 'Trigger'
 
         return bytearray('{0:<8s}{1:<8s}{2:<8s}{3:<8s}'.format(str(round(self.number_of_leds,2)), str(round(self.reset,2)), '', channel),'utf-8')
 
@@ -35,18 +37,21 @@ class g_random():
         self.reset = int(args[1]*10+1)
         self.channel = int(args[3]*5)-1
 
+        world = np.zeros([3, 10, 10, 10])
+
         # check if s2l is activated
         if 4 > self.channel >= 0:
             current_volume = float(str(self.sound_values.buf[self.channel*8:self.channel*8+8],'utf-8'))
-            self.number_of_leds += int(current_volume*30)
+            self.number_of_leds = int(current_volume*30)
         elif self.channel > 3 :
             current_volume = int(float(str(self.sound_values.buf[self.channel*8:self.channel*8+8],'utf-8')))
             if current_volume > self.lastvalue:
                 self.lastvalue = current_volume
+                self.counter = self.reset
             else:
                 self.number_of_leds = 0
 
-        world = np.zeros([3, 10, 10, 10])
+
         if self.counter % self.reset == 0:
             for led in range(self.number_of_leds):
                 world[:, randint(0,9), randint(0,9), randint(0,9)] = 1.0
@@ -54,5 +59,10 @@ class g_random():
             world = self.safeworld
 
         self.safeworld = world
-        self.counter += 1
+
+        if self.channel < 4:
+            self.counter += 1
+        else:
+            self.counter = 0
+
         return world
