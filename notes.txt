@@ -1,1 +1,3 @@
 e_sound_color kann gelöscht werden (Funktionalität in rainbow enthalten)
+e_soundstrobo korrigiert
+e_colorfade fade korrigiert, Trigger hinzugefügt

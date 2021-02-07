@@ -6,17 +6,15 @@ class e_soundstrobo():
 
     def __init__(self):
         # parameters
-        self.amount = 1.0
-        self.channel = 1.0
+        self.channel = 1
         self.sound_values = shared_memory.SharedMemory(name = "global_s2l_memory")
         self.counter = 0
-        self.channel = 4
         self.lastvalue = 0
-        self.steps = 1
+        self.amount = 1
 
     def return_values(self):
         # strings for GUI
-        return [b'soundstrobo', b'amount', b'channel', b'strobesteps', b'']
+        return [b'soundstrobo', b'amount', b'', b'', b'channel']
 
     def return_gui_values(self):
         if self.channel < 4:
@@ -24,13 +22,12 @@ class e_soundstrobo():
         else:
             channel = "Trigger"
 
-        return bytearray('{0:<8s}{1:<8s}{2:<8s}{3:<8s}'.format(str(round(self.amount,1)), channel, str(round(self.steps,1)),'') ,'utf-8')
+        return bytearray('{0:<8s}{1:<8s}{2:<8s}{3:<8s}'.format(        return bytearray('{0:<8s}{1:<8s}{2:<8s}{3:<8s}'.format(str(round(self.amount,1)), '', '', channel) ,'utf-8')
 
     def __call__(self, world, args):
         # process parameters
-        self.amount = args[0]
-        self.channel = int(args[1]*4)
-        self.steps = int(args[2]*10)
+        self.amount = int(args[0]*12)
+        self.channel = int(args[3]*4)
 
         # apply manipulation
         if self.channel < 4:
@@ -46,7 +43,7 @@ class e_soundstrobo():
             if current_volume > self.lastvalue:
                 self.counter = 0
 
-            if self.counter < self.steps:
+            if self.counter < self.amount:
                 if self.counter % 2 == 0:
                     world[:, :, :, :] = 0
                 self.counter += 1
