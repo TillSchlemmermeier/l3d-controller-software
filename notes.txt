@@ -1,0 +1,1 @@
+e_sound_color kann gelöscht werden (Funktionalität in rainbow enthalten)
