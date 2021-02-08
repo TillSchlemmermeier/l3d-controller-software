@@ -3,21 +3,19 @@ import numpy as np
 from colorsys import rgb_to_hsv, hsv_to_rgb
 from multiprocessing import shared_memory
 
-
 class e_gradient():
     '''
     '''
 
     def __init__(self):
 
-        self.c1 = 0.1 # [0.1,0.0,0.0]
-        self.c2 = 0.4 # [0.4,0.4,0.0]
+        self.c1 = 0.1
+        self.c2 = 0.4
         self.old_c1 = 0.1
         self.old_c2 = 0.4
 
         self.balance = 1.0
         self.sound_values = shared_memory.SharedMemory(name = "global_s2l_memory")
-#        self.oldy = [0,1,2,3,4,5,6,7,8,9]
 
     #strings for GUI
     def return_values(self):

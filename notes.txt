@@ -1,3 +1,6 @@
 e_sound_color kann gelöscht werden (Funktionalität in rainbow enthalten)
 e_soundstrobo korrigiert
-e_colorfade fade korrigiert, Trigger hinzugefügt
+e_colorfade fade korrigiert, s2l hinzugefügt, trigger hinzugefügt
+e_staticcolor: wenns funktioniert, Kommentare entfernen
+difference gradient - colorfade?
+e_mirror mit s2l trigger

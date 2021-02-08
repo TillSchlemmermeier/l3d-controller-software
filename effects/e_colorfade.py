@@ -21,34 +21,37 @@ class e_colorfade():
         self.balance = 0.1
         self.step = 0
         self.sound_values = shared_memory.SharedMemory(name = "global_s2l_memory")
-        self.trigger = False
         self.lastvalue = 0
+        self.channel = 0
 
     #strings for GUI
     def return_values(self):
-        return [b'colorfade', b'speed', b'Color 1', b'Color 2', b's2l trigger']
+        return [b'colorfade', b'speed', b'Color 1', b'Color 2', b'channel']
 
     def return_gui_values(self):
-        if self.trigger:
-            trigger ='On'
+        if 4 > self.channel >=0:
+            channel = str(self.channel)
+        elif self.channel < 0:
+            channel = 'noS2L'
         else:
-            trigger ='Off'
+            channel = 'Trigger'
 
-        return bytearray('{0:<8s}{1:<8s}{2:<8s}{3:<8s}'.format(str(round(self.speed,2)), str(round(self.color1,1)), str(round(self.color2,1)), trigger), 'utf-8')
+        return bytearray('{0:<8s}{1:<8s}{2:<8s}{3:<8s}'.format(str(round(self.speed,2)), str(round(self.color1,1)), str(round(self.color2,1)), channel), 'utf-8')
 
     def __call__(self, world, args):
         # parsing input
         self.speed = args[0]
         self.color1 = args[1]
         self.color2 = args[2]
-
-        if args[3] > 0.5:
-            self.trigger = True
-        else:
-            self.trigger = False
+        self.channel = int(args[3]*5)-1
 
         #check if s2l is activated
-        if self.trigger:
+        if 4 > self.channel >= 0:
+            current_volume = np.clip(float(str(self.sound_values.buf[self.channel*8:self.channel*8+8],'utf-8')), 0, 1)
+            self.step = (current_volume * np.pi) / self.speed
+
+        #check if trigger is activated
+        elif self.channel > 3 :
             current_volume = float(str(self.sound_values.buf[self.channel*8:self.channel*8+8],'utf-8'))
             #check if trigger has been activated
             if current_volume > self.lastvalue:

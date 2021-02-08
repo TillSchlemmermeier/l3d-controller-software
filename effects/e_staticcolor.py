@@ -1,6 +1,6 @@
 # modules
 import numpy as np
-from colorsys import rgb_to_hsv, hsv_to_rgb
+from colorsys import hsv_to_rgb
 
 class e_staticcolor():
     '''
@@ -9,12 +9,14 @@ class e_staticcolor():
     - red
     - green
     - blue
+    - HSV Hue value
     '''
     def __init__(self):
         self.red = 1.0
         self.green = 1.0
         self.blue = 1.0
-        self.hsv = [0.0,0.0,0.0]
+        self.hsv = 0
+        #self.hsv = [0.0,0.0,0.0]
 
     #strings for GUI
     def return_values(self):
@@ -28,10 +30,13 @@ class e_staticcolor():
         self.red   = args[0]
         self.green = args[1]
         self.blue  = args[2]
-        self.hsv[0]= args[3]
+        self.hsv = args[3]
+        #self.hsv[0]= args[3]
 
-        if self.hsv[0] > 0:
-            color = hsv_to_rgb(self.hsv[0], 1, 1)
+        if self.hsv > 0:
+        #if self.hsv[0] > 0:
+            color = hsv_to_rgb(self.hsv, 1, 1)
+            #color = hsv_to_rgb(self.hsv[0], 1, 1)
             self.red   = color[0]
             self.green = color[1]
             self.blue  = color[2]
