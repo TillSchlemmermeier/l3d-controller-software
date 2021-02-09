@@ -22,7 +22,7 @@ class e_soundstrobo():
         else:
             channel = "Trigger"
 
-        return bytearray('{0:<8s}{1:<8s}{2:<8s}{3:<8s}'.format(        return bytearray('{0:<8s}{1:<8s}{2:<8s}{3:<8s}'.format(str(round(self.amount,1)), '', '', channel) ,'utf-8')
+        return bytearray('{0:<8s}{1:<8s}{2:<8s}{3:<8s}'.format(str(round(self.amount,1)), '', '', channel) ,'utf-8')
 
     def __call__(self, world, args):
         # process parameters
