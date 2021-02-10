@@ -5,3 +5,4 @@ e_staticcolor: wenns funktioniert, Kommentare entfernen
 difference gradient - colorfade?
 e_mirror mit s2l trigger
 e_s2l   Kommentare löschen wenn es geht, Trigger hinzugefügt
+g_randomlines added Trigger

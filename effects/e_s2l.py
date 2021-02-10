@@ -43,6 +43,7 @@ class e_s2l():
         else:
             current_volume = int(float(str(self.sound_values.buf[self.channel*8:self.channel*8+8],'utf-8')))
             if current_volume > self.lastvalue:
+                self.lastvalue = current_volume
                 self.counter = 0
 
             # maybe more than 8:
