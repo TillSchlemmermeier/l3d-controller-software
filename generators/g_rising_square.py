@@ -6,13 +6,15 @@ from multiprocessing import shared_memory
 
 class g_rising_square():
     '''
-    Generator: cube
+    Generator: rising_square
 
-    a cube in the cube
+    a square going from bottom to top
 
     Parameters:
-    - size
-    - sides y/n : just the edges or also the sides of the cube?
+    - speed
+    - random color for each square on / Off
+    - Pause duration between new squares
+    - s2l channel, channel 4 = Trigger mode
     '''
 
     def __init__(self):
@@ -25,6 +27,8 @@ class g_rising_square():
         #s2l
         self.sound_values = shared_memory.SharedMemory(name = "global_s2l_memory")
         self.channel = 0
+        self.lastvalue = 0
+        self.counter = 0
 
     #Strings for GUI
     def return_values(self):
@@ -36,8 +40,10 @@ class g_rising_square():
         else:
             color = 'on'
 
-        if self.channel >=0:
+        if 4 > self.channel >=0:
             channel = str(self.channel)
+        elif self.channel == 4:
+            channel = 'Trigger'
         else:
             channel = 'noS2L'
 
@@ -48,12 +54,12 @@ class g_rising_square():
         self.speed = 7-int((args[0]*6))
         self.random = int(round(args[1]))
         self.pause = int(round((args[2]+0.06)*40)+1)
-        self.channel = int(args[3]*4)-1
+        self.channel = int(args[3]*5)-1
 
         world = np.zeros([3,10,10,10])
 
         # check if S2L is activated
-        if self.channel >= 0:
+        if 4 > self.channel >= 0:
             current_volume = float(str(self.sound_values.buf[self.channel*8:self.channel*8+8],'utf-8'))
             if current_volume > 0:
                 if self.random == 0:
@@ -61,13 +67,32 @@ class g_rising_square():
                         self.flatworld[:, :, 9, :] = 1.0
 
                 else:
-    #                print('x')
                     for i in range(self.nled):
                         color = hsv_to_rgb(uniform(0, 1), 1, 1)
 
                         self.flatworld[0, :, 9, :] = color[0]
                         self.flatworld[1, :, 9, :] = color[1]
                         self.flatworld[2, :, 9, :] = color[2]
+
+        #check if s2l trigger is activated
+        elif self.channel == 4:
+            current_volume = int(float(str(self.sound_values.buf[32:40],'utf-8')))
+            if current_volume > self.lastvalue:
+                self.lastvalue = current_volume
+                self.counter = 0
+
+            if self.counter < 6 and self.counter % 2 == 0:
+                if self.random == 0:
+                    for i in range(self.nled):
+                        self.flatworld[:, :, 9, :] = 1.0
+
+                else:
+                    for i in range(self.nled):
+                        color = hsv_to_rgb(uniform(0, 1), 1, 1)
+                        for i in range(3):
+                            self.flatworld[i, :, 9, :] = color[i]
+
+                self.counter += 1
 
 
         elif self.step % self.pause == 0:
@@ -76,7 +101,6 @@ class g_rising_square():
                     self.flatworld[:, :, 9, :] = 1.0
 
             else:
-#                print('x')
                 for i in range(self.nled):
                     color = hsv_to_rgb(uniform(0, 1), 1, 1)
 
@@ -90,14 +114,6 @@ class g_rising_square():
         world[:, :, 0, :] = self.flatworld[:, 3, :, :]
 
 
-        # check if S2L is activated
-        '''
-        if self.channel >= 0:
-            current_volume = float(str(self.sound_values.buf[self.channel*8:self.channel*8+8],'utf-8'))
-            if current_volume > 0:
-                self.flatworld = np.roll(self.flatworld, shift = -1, axis = 2)
-                self.flatworld[:, :, 9, :] = 0.0
-        '''
 
         if self.step % self.speed == 0:
             self.flatworld = np.roll(self.flatworld, shift = -1, axis = 2)

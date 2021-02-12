@@ -15,14 +15,18 @@ class e_rotation():
         self.channel = 4
         self.old_volume = 0
         self.oldspeed = [0.1, 0.1, 0.0]
+        self.lastvalue = 0
+        self.counter = 0
 
     #strings for GUI
     def return_values(self):
         return [b'rotation', b'X speed', b'Y speed', b'Z speed', b'channel']
 
     def return_gui_values(self):
-        if self.channel >= 0:
+        if 4 > self.channel >=0:
             channel = str(self.channel)
+        elif self.channel == 4:
+            channel = 'Trigger'
         else:
             channel = 'noS2L'
 
@@ -32,7 +36,7 @@ class e_rotation():
         self.xspeed = args[0]*20
         self.yspeed = args[1]*20
         self.zspeed = args[2]*20
-        self.channel = int(args[3]*4)-1
+        self.channel = int(args[3]*5)-1
 
         if self.xspeed > 10:
             self.xspeed =  - 20 + self.xspeed
@@ -42,7 +46,7 @@ class e_rotation():
             self.zspeed = - 20 + self.zspeed
 
         # check if s2l is activated
-        if self.channel >= 0:
+        if 4 > self.channel >= 0:
             current_volume = float(str(self.sound_values.buf[self.channel*8:self.channel*8+8],'utf-8'))
             current_volume = np.clip(current_volume, 0, 10)
             if self.old_volume < current_volume:
@@ -87,6 +91,9 @@ class e_rotation():
 
 #            self.old_volume = np.clip(self.old_volume - 0.08, 0, 100)*0.9
             self.old_volume = np.clip(self.old_volume - current_volume/8, 0, 100)*0.9
+
+            '''
+
             # rotate
             for i in range(3):
                 world[i, :, :, :] = rotate(world[i, :, :, :], self.step*self.oldspeed[0],
@@ -100,21 +107,43 @@ class e_rotation():
                 world[i, :, :, :] = rotate(world[i, :, :, :], self.step*self.oldspeed[2],
                                   axes = (0,2), order = 1,
         	                      mode = 'nearest', reshape = False)
+            '''
+            #trythisinstead
+            self.xspeed = self.oldspeed[0]
+            self.yspeed = self.oldspeed[1]
+            self.zspeed = self.oldspeed[2]
 
-        else:
-            # rotate
-            for i in range(3):
-                world[i, :, :, :] = rotate(world[i, :, :, :], self.step*self.xspeed,
-                                  axes = (1,2), order = 1,
-        	                      mode = 'nearest', reshape = False)
 
-                world[i, :, :, :] = rotate(world[i, :, :, :], self.step*self.yspeed,
-                                  axes = (0,1), order = 1,
-        	                      mode = 'nearest', reshape = False)
 
-                world[i, :, :, :] = rotate(world[i, :, :, :], self.step*self.zspeed,
-                                  axes = (0,2), order = 1,
-        	                      mode = 'nearest', reshape = False)
+        elif self.channel == 4:
+            current_volume = int(float(str(self.sound_values.buf[32:40],'utf-8')))
+            if current_volume > self.lastvalue:
+                self.lastvalue = current_volume
+                self.counter = 1
+
+            if self.counter < 8:
+                self.xspeed = (2-np.log(self.counter))/2) * self.xspeed + self.xspeed
+                self.yspeed = (2-np.log(self.counter))/2) * self.yspeed + self.yspeed
+                self.xspeed = (2-np.log(self.counter))/2) * self.zspeed + self.zspeed
+
+                self.counter += 1
+
+
+
+        #else:
+        # rotate
+        for i in range(3):
+            world[i, :, :, :] = rotate(world[i, :, :, :], self.step*self.xspeed,
+                              axes = (1,2), order = 1,
+    	                      mode = 'nearest', reshape = False)
+
+            world[i, :, :, :] = rotate(world[i, :, :, :], self.step*self.yspeed,
+                              axes = (0,1), order = 1,
+    	                      mode = 'nearest', reshape = False)
+
+            world[i, :, :, :] = rotate(world[i, :, :, :], self.step*self.zspeed,
+                              axes = (0,2), order = 1,
+    	                      mode = 'nearest', reshape = False)
 
 
         world[:, :, :, :] = world[:, :, :, :]**1.3

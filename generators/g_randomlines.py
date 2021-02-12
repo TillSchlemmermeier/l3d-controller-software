@@ -14,7 +14,7 @@ class g_randomlines():
         self.sound_values = shared_memory.SharedMemory(name = "global_s2l_memory")
         self.channel = 0
         self.lastvalue = 0
-        self.counter = 0
+        self.step = 0
         self.linelist = []
 
     def return_values(self):
@@ -42,19 +42,19 @@ class g_randomlines():
                 direction = randint(0, 2)
                 if direction == 0:
                     world[:, :, randint(0, 9), randint(0, 9)] = 1
-
                 elif direction == 1:
                     world[:, randint(0, 9), :, randint(0, 9)] = 1
                 elif direction == 2:
                     world[:, randint(0, 9), randint(0, 9), :] = 1
 
         elif self.channel == 4:
-            current_volume = float(str(self.sound_values.buf[self.channel*8:self.channel*8+8],'utf-8'))
+            current_volume = int(float(str(self.sound_values.buf[32:40],'utf-8')))
             if current_volume > self.lastvalue:
                 self.lastvalue = current_volume
-                self.counter = 0
+                self.step = 0
+                self.linelist.clear()
 
-                for in range(8):
+                for i in range(self.reset):
                     direction = randint(0, 2)
                     a = randint(0, 9)
                     b = randint(0, 9)
@@ -69,9 +69,7 @@ class g_randomlines():
                     self.linelist.append(a)
                     self.linelist.append(b)
 
-                    i += 1
-
-                if self.counter < 8:
+                if self.step < self.reset:
                     direction = self.linelist[3*self.counter]
                     a = self.linelist[3*self.counter + 1]
                     b = self.linelist[3*self.counter + 2]
@@ -82,7 +80,7 @@ class g_randomlines():
                     elif direction == 2:
                         world[:, a, b, :] = 0
 
-                    self.counter += 1
+                    self.step += 1
 
 
         elif self.counter % self.reset == 0:

@@ -16,6 +16,10 @@ class g_planes():
         self.step = 0
         self.sound_values = shared_memory.SharedMemory(name = "global_s2l_memory")
         self.channel = 4
+        self.lastvalue = 0
+        self.oldposition = 0
+        self.switch = False
+        self.stop = False
 
         #dict for dir
         self.dict = {0: 'X',
@@ -33,8 +37,10 @@ class g_planes():
         else:
             type = 'triangle'
 
-        if self.channel >= 0:
+        if 4 > self.channel >=0:
             channel = str(self.channel)
+        elif self.channel == 4:
+            channel = 'Trigger'
         else:
             channel = 'noS2L'
 
@@ -50,20 +56,21 @@ class g_planes():
         else:
             self.type = 1.0
 
-        self.channel = int(args[3]*4)-1
+        self.channel = int(args[3]*5)-1
 
-        # check if s2l is activated
-        if self.channel >= 0:
-            current_volume = float(str(self.sound_values.buf[self.channel*8:self.channel*8+8],'utf-8'))
-
-            if current_volume > 0:
-                self.step += 1
-
+        #check if s2l trigger is activated
+        if self.channel == 4:
+            current_volume = int(float(str(self.sound_values.buf[32:40],'utf-8')))
+            if current_volume > self.lastvalue:
+                self.lastvalue = current_volume
+                self.switch = False
+                self.stop = False
+                self.step = 0
 
         # calculate frame
         world = np.zeros([3, 10, 10, 10])
-
         position = int(round((sawtooth(0.1*self.step*self.speed, self.type)+1)*4.51))
+
 
         if self.dir == 0:
             world[:, position,:,:] = 1.0
@@ -72,7 +79,36 @@ class g_planes():
         else:
             world[:, :,:,position] = 1.0
 
-        if self.channel < 0:
+        # check if s2l is activated
+        if 4 > self.channel >= 0:
+            current_volume = float(str(self.sound_values.buf[self.channel*8:self.channel*8+8],'utf-8'))
+            if current_volume > 0:
+                self.step += 1
+
+        # check if s2l trigger is activated
+        elif self.channel == 4:
+            if self.type == 0.5:
+                if self.switch:
+                    if position > self.oldposition:
+                        self.stop = True
+                    else:
+                        self.step += 1
+                else:
+                    if position < self.oldposition:
+                        self.switch = True
+                    self.step += 1
+
+            elif self.type == 1:
+                if position < self.oldposition:
+                    self.stop = True
+                else: self.step += 1
+
+            if self.stop:
+                world[:, :, :, :] = 0.0
+
+            self.oldposition = position
+
+        else:
             self.step += 1
 
-        return world
+        return np.clip(world, 0, 1)

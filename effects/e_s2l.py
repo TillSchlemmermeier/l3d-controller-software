@@ -41,7 +41,7 @@ class e_s2l():
             world[:, :, :, :] *= (1-self.amount) + np.clip(current_volume,0,1)*self.amount
 
         else:
-            current_volume = int(float(str(self.sound_values.buf[self.channel*8:self.channel*8+8],'utf-8')))
+            current_volume = int(float(str(self.sound_values.buf[32:40],'utf-8')))
             if current_volume > self.lastvalue:
                 self.lastvalue = current_volume
                 self.counter = 0

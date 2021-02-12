@@ -6,3 +6,7 @@ difference gradient - colorfade?
 e_mirror mit s2l trigger
 e_s2l   Kommentare löschen wenn es geht, Trigger hinzugefügt
 g_randomlines added Trigger
+g_rising_square added trigger
+e_rotation added trigger, wenns funktioniert Kommentare entfernen
+g_corner_grow added Trigger
+g_planes: added trigger
