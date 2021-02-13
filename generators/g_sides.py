@@ -26,8 +26,10 @@ class g_sides():
         return [b'cube', b'size', b'', b'', b'channel']
 
     def return_gui_values(self):
-        if self.channel >=0:
+        if 4 > self.channel >= 0:
             channel = str(self.channel)
+        elif self.channel == 4:
+            channel = "Trigger"
         else:
             channel = 'noS2L'
 
@@ -36,7 +38,7 @@ class g_sides():
 
     def __call__(self, args):
         self.size = round(args[0]*4)
-        self.channel = int(args[3]*4)-1
+        self.channel = int(args[3]*5)-1
 
         # create world
         world = np.zeros([3, 10, 10, 10])
@@ -50,9 +52,17 @@ class g_sides():
         size = self.size
 
         # check if S2L is activated
-        if self.channel >= 0:
+        if 4 > self.channel >= 0:
             current_volume = float(str(self.sound_values.buf[self.channel*8:self.channel*8+8],'utf-8'))
             if current_volume > 0:
+                # select side
+                self.side = randint(0, 5)
+
+        #check for trigger
+        elif self.channel == 4:
+            current_volume = int(float(str(self.sound_values.buf[32:40],'utf-8')))
+            if current_volume > self.lastvalue:
+                self.lastvalue = current_volume
                 # select side
                 self.side = randint(0, 5)
 

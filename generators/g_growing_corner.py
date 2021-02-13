@@ -33,6 +33,7 @@ class g_growing_corner():
         self.sound_values = shared_memory.SharedMemory(name = "global_s2l_memory")
         self.channel = 4
         self.lastvalue = 0
+        self.trigger = False
 
     #Strings for GUI
     def return_values(self):
@@ -70,27 +71,24 @@ class g_growing_corner():
                 self.counter += int(current_volume*2)
                 if self.counter > self.maxsize:
                     self.counter = 0
+
         #check for trigger
         elif self.channel == 4:
-            if self.counter == 0:
-                list = ([0,0,0],[0,0,9],[0,9,0],[0,9,9],[9,0,0],[9,9,0],[9,0,9], [9,9,9])
-                [self.xpos, self.ypos, self.zpos] = choice(list)
-                print(self.xpos)
-                print(self.ypos)
-                print(self.zpos)
-            current_volume = int(float(str(self.sound_values.buf[self.channel*8:self.channel*8+8],'utf-8')))
-
+            current_volume = int(float(str(self.sound_values.buf[32:40],'utf-8')))
             if current_volume > self.lastvalue:
                 self.lastvalue = current_volume
+                self.trigger = True
                 self.counter = 0
-            else:
-                if self.counter <= self.growspeed:
+                list = ([0,0,0],[0,0,9],[0,9,0],[0,9,9],[9,0,0],[9,9,0],[9,0,9], [9,9,9])
+                [self.xpos, self.ypos, self.zpos] = choice(list)
+
+            if self.trigger:
+                if self.counter < self.growspeed:
                     self.counter += 1
-                '''
-                self.counter += 1
-                if self.counter > self.growspeed:
-                    self.counter -= 1
-                '''
+                else:
+                    self.trigger = False
+
+
         elif self.counter > self.growspeed:
             self.xpos = 9*randint(0,1)
             self.ypos = 9*randint(0,1)
@@ -101,12 +99,9 @@ class g_growing_corner():
         else:
             pass
 
-
         x = self.xpos
         y = self.ypos
         z = self.zpos
-
-
 
         #size = self.maxsize*(-np.cos(self.counter*3.14/self.growspeed)+1)*0.5
         #size = self.maxsize*(np.sin(np.pi*0.5*self.counter/self.growspeed - 0.5*np.pi)+1)

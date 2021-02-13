@@ -33,14 +33,18 @@ class g_growingface():
 
         self.sound_values = shared_memory.SharedMemory(name = "global_s2l_memory")
         self.channel = 4
+        self.lastvalue = 0
+        self.trigger = False
 
     #Strings for GUI
     def return_values(self):
         return [b'growingface', b'maxsize', b'speed', b'channel', b'']
 
     def return_gui_values(self):
-        if self.channel >= 0:
+        if 4 > self.channel >=0:
             channel = str(self.channel)
+        elif self.channel == 4:
+            channel = 'Trigger'
         else:
             channel = 'noS2L'
 
@@ -51,20 +55,14 @@ class g_growingface():
         self.maxsize = args[0]*17
         self.growspeed = 55 - (args[1]*45+9)
         self.steps = int(self.maxsize/self.growspeed)
-        self.channel = int(args[2]*4)-1
+        self.channel = int(args[2]*5)-1
 
     #def generate(self, step, dumpworld):
 
         world = np.zeros([3, 10, 10, 10])
 
-        # check for new calculation
-        if self.counter > self.growspeed:
-            list = ([0,4.5,4.5],[9,4.5,4.5],[4.5,0,4.5],[4.5,9,4.5],[4.5,4.5,0],[4.5,4.5,9])
-            [self.xpos, self.ypos, self.zpos] = choice(list)
-
-            self.counter = 0
-
-        elif self.channel >= 0:
+        # check if S2L is activated
+        if 4 > self.channel >= 0:
             current_volume = float(str(self.sound_values.buf[self.channel*8:self.channel*8+8],'utf-8'))
             if self.counter == 0:
                 list = ([0,4.5,4.5],[9,4.5,4.5],[4.5,0,4.5],[4.5,9,4.5],[4.5,4.5,0],[4.5,4.5,9])
@@ -74,6 +72,29 @@ class g_growingface():
                 if self.counter > self.growspeed:
                     self.counter = 0
 
+        # check if s2l trigger is activated
+        elif self.channel == 4:
+            current_volume = int(float(str(self.sound_values.buf[32:40],'utf-8')))
+            if current_volume > self.lastvalue:
+                self.lastvalue = current_volume
+                self.trigger = True
+                self.counter = 0
+                list = ([0,4.5,4.5],[9,4.5,4.5],[4.5,0,4.5],[4.5,9,4.5],[4.5,4.5,0],[4.5,4.5,9])
+                [self.xpos, self.ypos, self.zpos] = choice(list)
+
+            if self.trigger:
+                if self.counter < self.growspeed:
+                    self.counter += 1
+                else:
+                    self.trigger = False
+
+        else:
+            # check for new calculation
+            if self.counter > self.growspeed:
+                list = ([0,4.5,4.5],[9,4.5,4.5],[4.5,0,4.5],[4.5,9,4.5],[4.5,4.5,0],[4.5,4.5,9])
+                [self.xpos, self.ypos, self.zpos] = choice(list)
+
+                self.counter = 0
 
         x = self.xpos
         y = self.ypos

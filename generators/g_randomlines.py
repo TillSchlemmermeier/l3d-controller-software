@@ -65,9 +65,7 @@ class g_randomlines():
                     elif direction == 2:
                         world[:, a, b, :] = 1
 
-                    self.linelist.append(direction)
-                    self.linelist.append(a)
-                    self.linelist.append(b)
+                    self.linelist.extend([direction, a, b])
 
                 if self.step < self.reset:
                     direction = self.linelist[3*self.counter]
