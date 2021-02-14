@@ -18,14 +18,13 @@ g_sides added trigger
 g_cube added trigger, maybe prolem line 84
 g_rain added trigger
 g_obliqueplane added trigger
+g_wave added trigger
+g_growing_sphere_rand added trigger
 
 
-
-g_wave
 g_growing_sphere
 g_squares
 g_trees
-g_rising_square
 g_obliqueplaneXYZ
 g_snake
 g_sides
@@ -34,7 +33,6 @@ g_shooting_star
 g_rotate_plane
 g_randomcross
 g_orbiter
-g_growing_sphere_rand
 g_text
 g_pyramid
 g_pyramid_upsidedown

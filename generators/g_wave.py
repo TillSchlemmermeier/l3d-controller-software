@@ -24,14 +24,17 @@ class g_wave():
         self.maxsize = 35
         self.sound_values = shared_memory.SharedMemory(name = "global_s2l_memory")
         self.channel = 0
+        self.lastvalue = 0
 
     #Strings for GUI
     def return_values(self):
         return [b'wave', b'sigma', b'speed', b'', b'channel']
 
     def return_gui_values(self):
-        if self.channel >=0:
+        if 4 > self.channel >= 0:
             channel = str(self.channel)
+        elif self.channel == 4:
+            channel = "Trigger"
         else:
             channel = 'noS2L'
 
@@ -41,12 +44,22 @@ class g_wave():
     def __call__(self, args):
         self.sigma = args[0]*1.4+0.2
         self.speed = args[1]*2.5+0.4
-        self.channel = int(args[3]*4)-1
+        self.channel = int(args[3]*5)-1
 
         # check if S2L is activated
-        if self.channel >= 0:
+        if 4 > self.channel >= 0:
             current_volume = float(str(self.sound_values.buf[self.channel*8:self.channel*8+8],'utf-8'))
             self.sigma = current_volume * 1.4 + 0.2
+
+        #check for trigger
+        elif self.channel == 4:
+            current_volume = int(float(str(self.sound_values.buf[32:40],'utf-8')))
+            if current_volume > self.lastvalue:
+                self.lastvalue = current_volume
+                self.counter = 0
+
+            if self.counter > self.maxsize:
+                self.counter = self.maxsize
 
         world = np.zeros([3, 10, 10, 10])
 

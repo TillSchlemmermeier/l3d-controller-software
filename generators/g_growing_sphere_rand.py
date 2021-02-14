@@ -3,6 +3,7 @@ import numpy as np
 from scipy.signal import sawtooth
 from generators.g_genhsphere import gen_hsphere
 from random import randint
+from multiprocessing import shared_memory
 # fortran routine is in g_growing_sphere_f.f90
 
 class g_growing_sphere_rand():
@@ -24,9 +25,13 @@ class g_growing_sphere_rand():
         self.step = 1
         self.pos = [randint(0,9), randint(0,9), randint(0,9)]
         self.wait = 15
+        # s2l
+        self.sound_values = shared_memory.SharedMemory(name = "global_s2l_memory")
+        self.trigger = False
+        self.lastvalue = 0
 
     def return_values(self):
-        return [b'growing_sphere', b'maxsize', b'speed', b'shape', b'']
+        return [b'growing_sphere', b'maxsize', b'speed', b'shape', b'S2L Trigger']
 
     def return_gui_values(self):
         if self.oscillate < 0.3:
@@ -35,16 +40,35 @@ class g_growing_sphere_rand():
             osci = 'implode'
         else:
             osci = 'explode'
-        return bytearray('{0:<8s}{1:<8s}{2:<8s}{3:<8s}'.format(str(round(self.maxsize,2)), str(round(self.growspeed,2)), osci, str(self.wait)),'utf-8')
+
+        if self.trigger:
+            trigger = 'On'
+        else:
+            trigger = 'Off'
+        return bytearray('{0:<8s}{1:<8s}{2:<8s}{3:<8s}'.format(str(round(self.maxsize,2)), str(round(self.growspeed,2)), osci, trigger),'utf-8')
 
 
     def __call__(self, args):
         self.maxsize = args[0]*15
         self.growspeed = args[1]
         self.oscillate = args[2]
+        if args[3] > 0.2:
+            self.trigger = True
+        else:
+            self.trigger = False
+
         self.wait = int(1 / (self.growspeed * 2 * np.pi + 0.01)) + 1
 
-        if self.step % self.wait == 0:
+        if self.trigger:
+            current_volume = int(float(str(self.sound_values.buf[32:40],'utf-8')))
+            if current_volume > self.lastvalue:
+                self.lastvalue = current_volume
+                self.pos = [randint(0,9), randint(0,9), randint(0,9)]
+            if self.step % self.wait == 0:
+                self.step -= 1
+
+
+        elif self.step % self.wait == 0:
             self.pos = [randint(0,9), randint(0,9), randint(0,9)]
 
         world = np.zeros([3, 10, 10, 10])
