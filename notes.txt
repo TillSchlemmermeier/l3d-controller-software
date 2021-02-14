@@ -20,17 +20,18 @@ g_rain added trigger
 g_obliqueplane added trigger
 g_wave added trigger
 g_growing_sphere_rand added trigger
-
+g_corner added trigger
+g_cut added trigger, not quite sure what it does
+g_snake added trigger
+g_circles added trigger
+g_rotate_plane added trigger
 
 g_growing_sphere
 g_squares
 g_trees
 g_obliqueplaneXYZ
-g_snake
-g_sides
 g_sound_lines
 g_shooting_star
-g_rotate_plane
 g_randomcross
 g_orbiter
 g_text
@@ -39,12 +40,8 @@ g_pyramid_upsidedown
 g_inandout
 g_falling
 g_drop
-g_cut
 g_cube_edges
-g_corner
-g_corner_grow
 g_cone
-g_circles
 g_grow
 g_soundsphere
 g_swell

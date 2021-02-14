@@ -33,15 +33,17 @@ class g_cut():
         #s2l
         self.sound_values = shared_memory.SharedMemory(name = "global_s2l_memory")
         self.channel = 0
-
+        self.lastvalue = 0
 
     #Strings for GUI
     def return_values(self):
         return [b'cut', b'speed', b'', b'', b'channel']
 
     def return_gui_values(self):
-        if self.channel >=0:
+        if 4 > self.channel >= 0:
             channel = str(self.channel)
+        elif self.channel == 4:
+            channel = "Trigger"
         else:
             channel = 'noS2L'
 
@@ -50,13 +52,13 @@ class g_cut():
 
     def __call__(self, args):
         self.speed = args[0]*0.5 + 0.1
-        self.channel = int(args[3]*4)-1
+        self.channel = int(args[3]*5)-1
 
         # create world
         world = np.zeros([3, 10, 10, 10])
 
         # check if S2L is activated
-        if self.channel >= 0:
+        if 4 > self.channel >= 0:
             current_volume = float(str(self.sound_values.buf[self.channel*8:self.channel*8+8],'utf-8'))
             if current_volume > 0:
                 if self.brightness <=1.0:
@@ -65,6 +67,22 @@ class g_cut():
                 else:
                     self.edge = choice(self.edge_list)
                     self.brightness = 0
+
+        #check for trigger
+        elif self.channel == 4:
+            current_volume = int(float(str(self.sound_values.buf[32:40],'utf-8')))
+            if current_volume > self.lastvalue:
+                self.lastvalue = current_volume
+                self.counter = 0
+                self.edge = choice(self.edge_list)
+                self.brightness = 0
+
+            if self.brightness <=1.0:
+                world[0, self.edge[0], self.edge[1], self.edge[2]] = self.brightness**2
+                self.brightness += self.speed
+            else:
+                self.brightness = 1
+
 
         elif self.brightness <= 1.0:
             world[0, self.edge[0], self.edge[1], self.edge[2]] = self.brightness**2

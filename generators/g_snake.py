@@ -27,14 +27,17 @@ class g_snake():
         #s2l
         self.sound_values = shared_memory.SharedMemory(name = "global_s2l_memory")
         self.channel = 0
+        self.lastvalue = 0
 
     def return_values(self):
         return [b'snake', b'turn', b'', b'', b'channel']
 
 
     def return_gui_values(self):
-        if self.channel >=0:
+        if 4 > self.channel >= 0:
             channel = str(self.channel)
+        elif self.channel == 4:
+            channel = "Trigger"
         else:
             channel = 'noS2L'
 
@@ -43,12 +46,12 @@ class g_snake():
 
     def __call__(self, args):
         self.turnprop = 1-args[0]
-        self.channel = int(args[3]*4)-1
+        self.channel = int(args[3]*5)-1
 
         world = np.zeros([3,10,10,10])
 
         # check if S2L is activated
-        if self.channel >= 0:
+        if 4 > self.channel >= 0:
             current_volume = float(str(self.sound_values.buf[self.channel*8:self.channel*8+8],'utf-8'))
             self.turnprop = 1
             if current_volume > 0:
@@ -58,6 +61,15 @@ class g_snake():
                     self.axis = randint(1, 3)
 
                 self.direction = choice([-1, 1])
+
+        #check for trigger
+        elif self.channel == 4:
+            current_volume = int(float(str(self.sound_values.buf[32:40],'utf-8')))
+            if current_volume > self.lastvalue:
+                self.lastvalue = current_volume
+                self.turnprop = 0
+            else:
+                self.turnprop = 1
 
         # choose direction
         if uniform(0, 1) > self.turnprop:
