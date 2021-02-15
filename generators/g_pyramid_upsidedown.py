@@ -4,7 +4,7 @@ from scipy.signal import sawtooth
 
 class g_pyramid_upsidedown():
     '''
-    Generator: pyramid
+    Generator: upsidedown pyramid
     '''
 
     def __init__(self):

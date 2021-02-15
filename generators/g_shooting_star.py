@@ -17,13 +17,16 @@ class g_shooting_star():
         #s2l
         self.sound_values = shared_memory.SharedMemory(name = "global_s2l_memory")
         self.channel = 0
+        self.lastvalue = 0
 
     def return_values(self):
         return [b'shooting star', b'wait frames', b'speed', b'mode', b'channel']
 
     def return_gui_values(self):
-        if self.channel >=0:
+        if 4 > self.channel >= 0:
             channel = str(self.channel)
+        elif self.channel == 4:
+            channel = "Trigger"
         else:
             channel = 'noS2L'
 
@@ -40,21 +43,28 @@ class g_shooting_star():
             self.mode = 'through'
         else:
             self.mode = 'top'
-        self.channel = int(args[3]*4)-1
+        self.channel = int(args[3]*5)-1
 
 
         world = np.zeros([3, 10, 10, 10])
 
         # check if S2L is activated
-        if self.channel >= 0:
+        if 4 > self.channel >= 0:
             current_volume = float(str(self.sound_values.buf[self.channel*8:self.channel*8+8],'utf-8'))
             if current_volume > 0:
                 self.dot_list.insert(0, gen_line_2(self.steps, self.mode))
-                self.counter -= 1
-                
+
+        #check for trigger
+        elif self.channel == 4:
+            current_volume = int(float(str(self.sound_values.buf[32:40],'utf-8')))
+            if current_volume > self.lastvalue:
+                self.lastvalue = current_volume
+                self.dot_list.insert(0, gen_line_2(self.steps, self.mode))
+
         # add new dot
         elif self.counter % self.add_wait == 0:
             self.dot_list.insert(0, gen_line_2(self.steps, self.mode))
+            self.counter += 1
 
 
         delete_last = False
@@ -80,7 +90,7 @@ class g_shooting_star():
         world[1,:,:,:] = world[0,:,:,:]
         world[2,:,:,:] = world[0,:,:,:]
 
-        self.counter += 1
+
 
         return np.clip(world, 0, 1)
 

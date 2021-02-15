@@ -6,9 +6,8 @@ from PIL import Image, ImageDraw, ImageFont
 
 class g_text():
     '''
-    Generator: random
+    Generator: text
 
-    Moves planes through the cube
     '''
     def __init__(self):
 

@@ -56,14 +56,17 @@ class g_cube_edges():
         #s2l
         self.sound_values = shared_memory.SharedMemory(name = "global_s2l_memory")
         self.channel = 0
+        self.lastvalue = 0
 
     #Strings for GUI
     def return_values(self):
         return [b'cube_edges', b'speed', b'number', b'', b'channel']
 
     def return_gui_values(self):
-        if self.channel >=0:
+        if 4 > self.channel >= 0:
             channel = str(self.channel)
+        elif self.channel == 4:
+            channel = "Trigger"
         else:
             channel = 'noS2L'
 
@@ -75,7 +78,7 @@ class g_cube_edges():
         self.number = int(3*args[1])
         if self.number == 0:
             self.number = 1
-        self.channel = int(args[3]*4)-1
+        self.channel = int(args[3]*5)-1
 
 
         # create world
@@ -87,13 +90,22 @@ class g_cube_edges():
             self.corner = choice(self.corner_list)
 
         # check if S2L is activated
-        elif self.channel >= 0:
+        elif 4 > self.channel >= 0:
             current_volume = float(str(self.sound_values.buf[self.channel*8:self.channel*8+8],'utf-8'))
             if current_volume > 0:
                 self.counter = 0
                 self.corner = choice(self.corner_list)
                 self.speed = 2.4
                 self.number = 3
+
+        #check for trigger
+        elif self.channel == 4:
+            current_volume = int(float(str(self.sound_values.buf[32:40],'utf-8')))
+            if current_volume > self.lastvalue:
+                self.lastvalue = current_volume
+                self.counter = 0
+                self.corner = choice(self.corner_list)
+
 
         # create gaussian profile
         row = np.linspace(0, 19, 20)

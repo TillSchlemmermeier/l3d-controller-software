@@ -1,16 +1,18 @@
 # modules
 import numpy as np
 from random import randint
+from multiprocessing import shared_memory
 
 class g_trees():
     '''
-    Generator: cube
+    Generator: trees
 
-    a cube in the cube
+    Trees growing from the bottom
 
     Parameters:
-    - size
-    - sides y/n : just the edges or also the sides of the cube?
+    - number of LEDs
+    - Speed
+    - Frames before reset
     '''
 
     def __init__(self):
@@ -19,22 +21,45 @@ class g_trees():
         self.flatworld = np.zeros([4,10,10])
         self.step = 0
         self.reset = 1
+        #s2l
+        self.sound_values = shared_memory.SharedMemory(name = "global_s2l_memory")
+        self.trigger = False
+        self.lastvalue = 0
+
 
     #Strings for GUI
     def return_values(self):
-        return [b'trees', b'N LEDs', b'speed', b'wait', b'']
+        return [b'trees', b'N LEDs', b'speed', b'wait', b'Trigger']
 
     def return_gui_values(self):
-        return bytearray('{0:<8s}{1:<8s}{2:<8s}{3:<8s}'.format(str(round(self.nled,2)), str(round(self.speed,2)), str(round(self.reset,2)), ''),'utf-8')
+        if self.trigger:
+            trigger = 'On'
+        else:
+            trigger = "Off"
+
+        return bytearray('{0:<8s}{1:<8s}{2:<8s}{3:<8s}'.format(str(round(self.nled,2)), str(round(self.speed,2)), str(round(self.reset,2)), trigger),'utf-8')
 
     #def generate(self, step, dumpworld):
     def __call__(self, args):
         self.nled = int(round(args[0]*4)+1)
         self.speed = 5-int((args[1]*4))
         self.reset = int(args[2]*5+1)
+        if args[3] > 0.2:
+            self.trigger = True
+        else:
+            self.trigger = False
+
         world = np.zeros([3,10,10,10])
 
-        if self.step % self.reset == 0:
+        if self.trigger:
+            current_volume = int(float(str(self.sound_values.buf[32:40],'utf-8')))
+            if current_volume > self.lastvalue:
+                self.lastvalue = current_volume
+                for i in range(self.nled):
+                    self.flatworld[randint(0,3), 9, randint(0,9)] = 1.0
+
+
+        elif self.step % self.reset == 0:
             for i in range(self.nled):
                 self.flatworld[randint(0,3), 9, randint(0,9)] = 1.0
 

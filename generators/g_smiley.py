@@ -1,10 +1,15 @@
 import numpy as np
 import os
+from multiprocessing import shared_memory
 
 class g_smiley():
     def __init__(self):
         # create list of all filenames
         self.voxdata = []
+        #s2l
+        self.sound_values = shared_memory.SharedMemory(name = "global_s2l_memory")
+        self.trigger = False
+        self.lastvalue = 0
 
         filelist = []
         for file in os.listdir('./voxFiles/Smiley/'):
@@ -34,31 +39,51 @@ class g_smiley():
 
     #Strings for GUI
     def return_values(self):
-        return [b'smiley', b'wait', b'', b'', b'']
+        return [b'smiley', b'wait', b'', b'', b'Triger']
 
     def return_gui_values(self):
-        return bytearray('{0:<8s}{1:<8s}{2:<8s}{3:<8s}'.format(str(round(self.wait,2)), '', '', ''),'utf-8')
+        if self.channel > 0.2:
+            trigger = 'Off'
+        else:
+            trigger = '0n'
+
+        return bytearray('{0:<8s}{1:<8s}{2:<8s}{3:<8s}'.format(str(round(self.wait,2)), '', '', trigger),'utf-8')
 
 
     #def generate(self, step, dumpworld):
     def __call__(self, args):
         self.wait = int(args[0]*10)+1
+        if args[3] > 0.2:
+            self.trigger = True
+        else:
+            self.trigger = False
 
         # create empty world
         world = np.zeros([3, 10, 10, 10])
 
-        # choose correct world according to step
-        if self.counter >= self.max:
-            self.counter = 0
+        # check for trigger
+        if self.trigger:
+            current_volume = int(float(str(self.sound_values.buf[32:40],'utf-8')))
+            if current_volume > self.lastvalue:
+                self.lastvalue = current_volume
+                self.counter = 0
+            if self.counter < self.max:
+                self.counter += 1
+
+        else:
+            # choose correct world according to step
+            if self.counter >= self.max:
+                self.counter = 0
 
         # copy world from storate to world
         world[0,:,:,:] = self.voxdata[self.counter]
         world[1,:,:,:] = world[0,:,:,:]
         world[2,:,:,:] = world[0,:,:,:]
 
-        # increase counter
-        if self.step % self.wait == 0:
-            self.counter += 1
+        if not self.trigger:
+            # increase counter
+            if self.step % self.wait == 0:
+                self.counter += 1
 
         self.step += 1
         # return world
