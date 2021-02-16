@@ -32,24 +32,22 @@ g_pyramid_upsidedown und g_pyramid zusammenlegen??
 g_shooting_star added trigger, corrected self.counter
 g_smiley added trigger
 g_edgelines corrected s2l <= --> >=, added trigger, not quite sure what it does
+g_randomcross added trigger
+g_centralglow added trigger
 
 g_growing_sphere
 g_obliqueplaneXYZ coden
 g_sound_lines
-g_randomcross
 g_orbiter
 g_text
-g_inandout
 g_drop
 g_soundsphere
 g_swell
 a_multi_cube_edges
-g_centralglow
 a_orbbot
 g_soundcube
 g_sinus
 g_sound_ellipsoid
-g_square_equalizer
 g_sound_sidesquares
 g_sidesquares
 g_soundsinus
@@ -60,3 +58,4 @@ g_explodingsquares
 was machen die? Muss ich einmal sehen
 g_grow
 g_cone
+g_inandout

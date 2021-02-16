@@ -1,6 +1,7 @@
 # modules
 import numpy as np
 from random import randint, choice
+from multiprocessing import shared_memory
 
 class g_randomcross():
 
@@ -10,13 +11,22 @@ class g_randomcross():
         self.reset = 1
         self.counter = 0
         self.saveworld = np.zeros([3,10,10,10])
+        #s2l
+        self.sound_values = shared_memory.SharedMemory(name = "global_s2l_memory")
+        self.trigger = False
+        self.lastvalue = 0
 
     #Strings for GUI
     def return_values(self):
-        return [b'randomcross', b'number', b'length', b'wait', b'']
+        return [b'randomcross', b'number', b'length', b'wait', b'Trigger']
 
     def return_gui_values(self):
-        return bytearray('{0:<8s}{1:<8s}{2:<8s}{3:<8s}'.format(str(round(self.number,2)), str(round(self.length,2)), str(round(self.reset,2)), ''),'utf-8')
+        if self.trigger:
+            trigger = 'On'
+        else:
+            trigger = "Off"
+
+        return bytearray('{0:<8s}{1:<8s}{2:<8s}{3:<8s}'.format(str(round(self.number,2)), str(round(self.length,2)), str(round(self.reset,2)), trigger),'utf-8')
 
 
     #def generate(self, step, dumpworld):
@@ -24,8 +34,20 @@ class g_randomcross():
         self.number = int(args[0]*2)
         self.length = int(args[1]*10)
         self.reset = int(args[2]*10+1)
+        if args[3] > 0.2:
+            self.trigger = True
+        else:
+            self.trigger = False
 
         world = np.zeros([3, 10, 10, 10])
+
+        #check for trigger
+        if self.trigger:
+            current_volume = int(float(str(self.sound_values.buf[32:40],'utf-8')))
+            if current_volume > self.lastvalue:
+                self.lastvalue = current_volume
+                self.counter = self.reset
+
 
         if self.counter % self.reset == 0:
             xpos = randint(0,9)
@@ -68,8 +90,9 @@ class g_randomcross():
         else:
             world = self.saveworld
 
-
-        self.counter +=1
+        if not self.trigger:
+            self.counter +=1
+            
         self.saveworld = world
 
         return np.clip(world, 0, 1)
