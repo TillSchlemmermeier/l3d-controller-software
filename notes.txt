@@ -14,8 +14,9 @@ g_torus added trigger
 g_growingface added trigger
 g_growing_corner modified trigger
 g_multicube added trigger, maybe problem line 68... LÖSCHEN, siehe cube
+g_soundcube löschen, siehe cube
 g_sides added trigger
-g_cube added trigger, maybe prolem line 84
+g_cube added trigger, maybe problem line 84
 g_rain added trigger
 g_obliqueplane added trigger
 g_wave added trigger
@@ -34,6 +35,10 @@ g_smiley added trigger
 g_edgelines corrected s2l <= --> >=, added trigger, not quite sure what it does
 g_randomcross added trigger
 g_centralglow added trigger
+g_sidesquares added trigger, not quite sure how it looks
+Unterschied sidesquares sound_sidesquares??
+g_swell added trigger, not quite sure how it looks
+g_letters added s2l, added trigger
 
 g_growing_sphere
 g_obliqueplaneXYZ coden
@@ -42,17 +47,12 @@ g_orbiter
 g_text
 g_drop
 g_soundsphere
-g_swell
 a_multi_cube_edges
 a_orbbot
-g_soundcube
 g_sinus
 g_sound_ellipsoid
-g_sound_sidesquares
-g_sidesquares
 g_soundsinus
 g_fulldrip
-g_letters
 g_explodingsquares
 
 was machen die? Muss ich einmal sehen
