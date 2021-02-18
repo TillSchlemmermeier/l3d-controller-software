@@ -20,14 +20,18 @@ class g_sinus():
 
         self.sound_values = shared_memory.SharedMemory(name = "global_s2l_memory")
         self.channel = 0
+        self.lastvalue = 0
+        self.counter = 0
 
 
     def return_values(self):
-        return [b'g_sinus', b'FreqY', b'FreqZ', b'step',b'channel']
+        return [b'g_sinus', b'FreqY', b'FreqZ', b'step', b'channel']
 
     def return_gui_values(self):
-        if self.channel >=0:
+        if 4 > self.channel >= 0:
             channel = str(self.channel)
+        elif self.channel == 4:
+            channel = "Trigger"
         else:
             channel = 'noS2L'
 
@@ -38,7 +42,7 @@ class g_sinus():
         self.freq1 = args[0]
         self.freq2 = args[1]
         self.stepincrease = args[2]*0.5
-        self.channel = int(args[3]*4)-1
+        self.channel = int(args[3]*5)-1
 
         world = np.zeros([3, 10, 10, 10])
 
@@ -51,9 +55,24 @@ class g_sinus():
                 world[:,map[y,z]+5,y,z] = 1.0
 
         # check if S2L is activated
-        if self.channel >= 0:
+        if 4 > self.channel >= 0:
             current_volume = float(str(self.sound_values.buf[self.channel*8:self.channel*8+8],'utf-8'))
             self.step += current_volume
+
+        #check for trigger
+        elif self.channel == 4:
+            current_volume = int(float(str(self.sound_values.buf[32:40],'utf-8')))
+            if current_volume > self.lastvalue:
+                self.lastvalue = current_volume
+                self.counter = 0
+
+            if self.counter < 10:
+                self.freq1 += self.counter / 10
+                self.freq1 += self.counter / 10
+                self.counter += 1
+
+            self.step += self.stepincrease
+
         else:
             self.step += self.stepincrease
 

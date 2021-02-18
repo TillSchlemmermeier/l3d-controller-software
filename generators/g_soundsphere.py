@@ -1,10 +1,5 @@
 
 import numpy as np
-import pyaudio
-from scipy.fftpack import fft, fftfreq
-import scipy
-import struct
-from time import sleep
 from generators.g_genhsphere import gen_hsphere
 from multiprocessing import shared_memory
 

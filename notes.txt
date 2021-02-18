@@ -39,23 +39,22 @@ g_sidesquares added trigger, not quite sure how it looks
 Unterschied sidesquares sound_sidesquares??
 g_swell added trigger, not quite sure how it looks
 g_letters added s2l, added trigger
+g_growing_sphere_new: self.smooth standard value? delete g_soundsphere, replace g_growing_sphere
+g_sinus added trigger, maybe change it a bit
 
-g_growing_sphere
 g_obliqueplaneXYZ coden
 g_sound_lines
 g_orbiter
 g_text
-g_drop
-g_soundsphere
 a_multi_cube_edges
 a_orbbot
-g_sinus
 g_sound_ellipsoid
 g_soundsinus
-g_fulldrip
 g_explodingsquares
 
 was machen die? Muss ich einmal sehen
 g_grow
 g_cone
 g_inandout
+g_drop
+g_fulldrip
