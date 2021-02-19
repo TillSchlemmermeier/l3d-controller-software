@@ -48,9 +48,6 @@ g_orbiter
 g_text
 a_multi_cube_edges
 a_orbbot
-g_sound_ellipsoid
-g_soundsinus
-g_explodingsquares
 
 was machen die? Muss ich einmal sehen
 g_grow
@@ -58,3 +55,6 @@ g_cone
 g_inandout
 g_drop
 g_fulldrip
+g_soundsinus
+g_explodingsquares  (s2l komplett auskommentiert??)
+g_sound_ellipsoid (trigger sinnvoll?)
