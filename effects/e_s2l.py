@@ -12,10 +12,11 @@ class e_s2l():
         self.lastvalue = 0
         self.counter = 0
         self.step = 8
+        self.mode = 'normal'
 
     def return_values(self):
         # strings for GUI
-        return [b's2l', b'amount', b'channel', b'', b'']
+        return [b's2l', b'amount', b'channel', b'mode', b'']
 
     def return_gui_values(self):
         if self.channel < 4:
@@ -23,12 +24,16 @@ class e_s2l():
         else:
             channel = "Trigger"
 
-        return bytearray('{0:<8s}{1:<8s}{2:<8s}{3:<8s}'.format(str(round(self.amount,1)), channel, '','') ,'utf-8')
+        return bytearray('{0:<8s}{1:<8s}{2:<8s}{3:<8s}'.format(str(round(self.amount,1)), channel, self.mode,'') ,'utf-8')
 
     def __call__(self, world, args):
         # process parameters
         self.amount = args[0]
         self.channel = int(args[1]*4)
+        if args[2] > 0.5:
+            self.mode = 'invert'
+        else:
+            self.mode = 'normal'
 
         # apply manipulation
         if self.channel < 4:
@@ -41,9 +46,14 @@ class e_s2l():
                 self.lastvalue = current_volume
                 self.counter = 0
 
-            if self.counter < self.step:
-                world[:, :, :, :] *= (1 - self.amount) + ((self.step - self.counter) / self.step) * self.amount
+            if self.mode == 'normal':
+                if self.counter < self.step:
+                    world[:, :, :, :] *= (1 - self.amount) + ((self.step - self.counter) / self.step) * self.amount
+            else:
+                if self.counter < (self.step + 10):
+                    world[:, :, :, :] *= (1 - self.amount) + ((self.counter) / (self.step + 10)) * self.amount
 
             self.counter += 1
+
 
         return np.clip(world, 0, 1)
