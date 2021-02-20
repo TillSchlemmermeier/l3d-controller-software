@@ -18,6 +18,8 @@ class class_arduino_midi:
                 print('found arduino')
                 self.arduino = serial.Serial(p.device, 9600)
 
+                print('initialized arduino')
+
         self.controller_ids = ['00', '01', '10', '11', '20', '21']
         # old values:
         # 1st column value from encoder
@@ -73,6 +75,7 @@ class class_arduino_midi:
                 message = message.decode("utf-8")
                 message = message.split(':')
                 value = int(message[1])
+                print('+', message)
 
                 # first, preset encoders
                 if message[0] == '00':

@@ -20,6 +20,7 @@ class g_sides():
 
         self.sound_values = shared_memory.SharedMemory(name = "global_s2l_memory")
         self.channel = 0
+        self.lastvalue = 0
 
     #Strings for GUI
     def return_values(self):

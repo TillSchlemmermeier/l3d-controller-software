@@ -58,26 +58,9 @@ class g_planes():
 
         self.channel = int(args[3]*5)-1
 
-        #check if s2l trigger is activated
-        if self.channel == 4:
-            current_volume = int(float(str(self.sound_values.buf[32:40],'utf-8')))
-            if current_volume > self.lastvalue:
-                self.lastvalue = current_volume
-                self.switch = False
-                self.stop = False
-                self.step = 0
-
         # calculate frame
         world = np.zeros([3, 10, 10, 10])
         position = int(round((sawtooth(0.1*self.step*self.speed, self.type)+1)*4.51))
-
-
-        if self.dir == 0:
-            world[:, position,:,:] = 1.0
-        elif self.dir == 1:
-            world[:, :, position,:] = 1.0
-        else:
-            world[:, :,:,position] = 1.0
 
         # check if s2l is activated
         if 4 > self.channel >= 0:
@@ -87,28 +70,41 @@ class g_planes():
 
         # check if s2l trigger is activated
         elif self.channel == 4:
+            current_volume = int(float(str(self.sound_values.buf[32:40],'utf-8')))
+            if current_volume > self.lastvalue:
+                self.lastvalue = current_volume
+                self.switch = False
+                self.stop = False
+                self.step = 0
+                self.oldposition = 0
+
             if self.type == 0.5:
+                if position < self.oldposition:
+                    self.switch = True
+
                 if self.switch:
                     if position > self.oldposition:
                         self.stop = True
-                    else:
-                        self.step += 1
-                else:
-                    if position < self.oldposition:
-                        self.switch = True
-                    self.step += 1
 
             elif self.type == 1:
                 if position < self.oldposition:
                     self.stop = True
-                else: self.step += 1
 
-            if self.stop:
-                world[:, :, :, :] = 0.0
-
+            self.step += 1
             self.oldposition = position
 
         else:
             self.step += 1
+
+        if self.dir == 0:
+            world[:, position,:,:] = 1.0
+        elif self.dir == 1:
+            world[:, :, position,:] = 1.0
+        else:
+            world[:, :,:,position] = 1.0
+
+        if self.channel == 4:
+            if self.stop:
+                world[:, :, :, :] = 0.0
 
         return np.clip(world, 0, 1)

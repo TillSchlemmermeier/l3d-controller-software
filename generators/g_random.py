@@ -43,7 +43,8 @@ class g_random():
         if 4 > self.channel >= 0:
             current_volume = float(str(self.sound_values.buf[self.channel*8:self.channel*8+8],'utf-8'))
             self.number_of_leds = int(current_volume*30)
-        elif self.channel > 3 :
+
+        elif self.channel > 4 :
             current_volume = int(float(str(self.sound_values.buf[self.channel*8:self.channel*8+8],'utf-8')))
             if current_volume > self.lastvalue:
                 self.lastvalue = current_volume

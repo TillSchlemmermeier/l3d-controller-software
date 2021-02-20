@@ -13,6 +13,7 @@ class g_corner():
         self.sound_values = shared_memory.SharedMemory(name = "global_s2l_memory")
         self.channel = 0
         self.lastvalue = 0
+        self.counter = 0
 
     #Strings for GUI
     def return_values(self):
@@ -30,7 +31,7 @@ class g_corner():
 
 
     def __call__(self, args):
-        self.size = int(args[0]*2 + 1)
+        self.size = int(args[0]*3 + 1)
         self.channel = int(args[3]*5)-1
 
         # create world
@@ -45,9 +46,10 @@ class g_corner():
             current_volume = int(float(str(self.sound_values.buf[32:40],'utf-8')))
             if current_volume > self.lastvalue:
                 self.lastvalue = current_volume
-                self.size = 0
-            if self.size < 5:
-                self.size += 1
+                self.counter = 10
+            if self.counter > 0:
+                self.counter -= 1
+                self.size = int(self.counter/2)
 
         # switch on corners
         world[:,0:self.size,0:self.size,0:self.size] = 1.0

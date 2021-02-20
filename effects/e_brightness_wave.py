@@ -48,9 +48,13 @@ class e_brightness_wave():
 
         map = np.round(4 * map ,0).astype(int)
 
+        brightness_world = np.zeros([3, 10, 10, 10])
+
         for y in range(10):
             for z in range(10):
-                world[:,map[y,z]+5,y,z] *= 1.0
+                brightness_world[:,map[y,z]+5,y,z] = 1.0
+
+        world *= brightness_world
 
         # check if S2L is activated
         if 4 > self.channel >= 0:

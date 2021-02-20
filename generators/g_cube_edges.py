@@ -84,10 +84,11 @@ class g_cube_edges():
         # create world
         world = np.zeros([3, 10, 10, 10])
 
-        # choose new corner
-        if self.counter > 19:
-            self.counter = 0
-            self.corner = choice(self.corner_list)
+        if self.channel < 4:
+            # choose new corner
+            if self.counter > 19:
+                self.counter = 0
+                self.corner = choice(self.corner_list)
 
         # check if S2L is activated
         elif 4 > self.channel >= 0:

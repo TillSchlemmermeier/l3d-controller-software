@@ -25,7 +25,7 @@ class g_letters():
         else:
             channel = 'noS2L'
 
-        return bytearray('{0:<8s}{1:<8s}{2:<8s}{3:<8s}'.format(self.char, '', '', ''),'utf-8')
+        return bytearray('{0:<8s}{1:<8s}{2:<8s}{3:<8s}'.format(self.char, '', '', channel),'utf-8')
 
 
     def __call__(self, args):

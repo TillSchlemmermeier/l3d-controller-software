@@ -122,9 +122,9 @@ class e_rotation():
                 self.counter = 1
 
             if self.counter < 8:
-                self.xspeed = (2-np.log(self.counter))/2) * self.xspeed + self.xspeed
-                self.yspeed = (2-np.log(self.counter))/2) * self.yspeed + self.yspeed
-                self.xspeed = (2-np.log(self.counter))/2) * self.zspeed + self.zspeed
+                self.xspeed = ((2-np.log(self.counter))/2) * self.xspeed + self.xspeed
+                self.yspeed = ((2-np.log(self.counter))/2) * self.yspeed + self.yspeed
+                self.xspeed = ((2-np.log(self.counter))/2) * self.zspeed + self.zspeed
 
                 self.counter += 1
 

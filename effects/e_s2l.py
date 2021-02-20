@@ -4,7 +4,6 @@ from multiprocessing import shared_memory
 
 class e_s2l():
 
-
     def __init__(self):
         # parameters
         self.amount = 1.0
@@ -34,10 +33,6 @@ class e_s2l():
         # apply manipulation
         if self.channel < 4:
             current_volume = float(str(self.sound_values.buf[self.channel*8:self.channel*8+8],'utf-8'))**4
-            #for i in range(3):
-            #    world[i, :, :, :] *= (1-self.amount) + np.clip(current_volume,0,1)*self.amount
-
-            # maybe edit formula?
             world[:, :, :, :] *= (1-self.amount) + np.clip(current_volume,0,1)*self.amount
 
         else:
@@ -46,7 +41,6 @@ class e_s2l():
                 self.lastvalue = current_volume
                 self.counter = 0
 
-            # maybe more than 8:
             if self.counter < self.step:
                 world[:, :, :, :] *= (1 - self.amount) + ((self.step - self.counter) / self.step) * self.amount
 

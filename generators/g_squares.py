@@ -103,10 +103,10 @@ class g_squares():
                 self.lastvalue = current_volume
                 self.step = 0
 
-            if self.step < self.speed:
+            if self.step < 8:
                 self.step += 1
 
-        else:
+        if self.channel < 4:
             self.step += 1
-
+            
         return world

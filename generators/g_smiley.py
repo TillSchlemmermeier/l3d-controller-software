@@ -10,6 +10,7 @@ class g_smiley():
         self.sound_values = shared_memory.SharedMemory(name = "global_s2l_memory")
         self.trigger = False
         self.lastvalue = 0
+        self.channel = 0
 
         filelist = []
         for file in os.listdir('./voxFiles/Smiley/'):

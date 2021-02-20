@@ -1,46 +1,19 @@
 e_sound_color kann gelöscht werden (Funktionalität in rainbow enthalten)
-e_soundstrobo korrigiert
-e_colorfade fade korrigiert, s2l hinzugefügt, trigger hinzugefügt
-e_staticcolor: wenns funktioniert, Kommentare entfernen
-difference gradient - colorfade?
-e_mirror mit s2l trigger
-e_s2l   Kommentare löschen wenn es geht, Trigger hinzugefügt
-g_randomlines added Trigger
+sdifference gradient - colorfade?
 g_rising_square added trigger
 e_rotation added trigger, wenns funktioniert Kommentare entfernen
-g_corner_grow added Trigger
 g_planes: added trigger
-g_torus added trigger
-g_growingface added trigger
-g_growing_corner modified trigger
 g_multicube added trigger, maybe problem line 68... LÖSCHEN, siehe cube
 g_soundcube löschen, siehe cube
-g_sides added trigger
-g_cube added trigger, maybe problem line 84
-g_rain added trigger
-g_obliqueplane added trigger
-g_wave added trigger
-g_growing_sphere_rand added trigger
-g_corner added trigger
 g_cut added trigger, not quite sure what it does
-g_snake added trigger
-g_circles added trigger
-g_rotate_plane added trigger
-g_squares added trigger, not quite sure how it looks
 g_trees added trigger, maybe modulate step instead of reset?
-g_cube_edges added trigger
 g_pyramid_upsidedown und g_pyramid zusammenlegen??
-g_shooting_star added trigger, corrected self.counter
 g_smiley added trigger
 g_edgelines corrected s2l <= --> >=, added trigger, not quite sure what it does
-g_randomcross added trigger
-g_centralglow added trigger
-g_sidesquares added trigger, not quite sure how it looks
 Unterschied sidesquares sound_sidesquares??
-g_swell added trigger, not quite sure how it looks
 g_letters added s2l, added trigger
 g_growing_sphere_new: self.smooth standard value? delete g_soundsphere, replace g_growing_sphere
-g_sinus added trigger, maybe change it a bit
+
 
 g_obliqueplaneXYZ coden
 g_sound_lines

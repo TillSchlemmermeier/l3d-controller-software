@@ -105,7 +105,7 @@ class g_circles():
             current_volume = int(float(str(self.sound_values.buf[32:40],'utf-8')))
             if current_volume > self.lastvalue:
                 self.lastvalue = current_volume
-                self.counter = 10
+                self.counter = 3
 
             if self.counter > 0:
                 self.number = self.counter
@@ -114,7 +114,7 @@ class g_circles():
 
         for i in range(self.number):
             # check if S2L is activated
-        if 4 > self.channel >= 0:
+            if 4 > self.channel >= 0:
                 j = int(np.clip(randint(self.soundsize - 1, self.soundsize + 1), 0, 3))
             else:
                 j = randint(0,3)

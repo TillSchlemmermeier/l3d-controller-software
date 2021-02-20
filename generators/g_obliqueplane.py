@@ -42,10 +42,10 @@ class g_obliqueplane():
         return [b'obliqueplane', b'wait', b'', b'', b'Trigger']
 
     def return_gui_values(self):
-                if self.trigger:
-                    trigger = 'On'
-                else:
-                    trigger = 'Off'
+        if self.trigger:
+            trigger = 'On'
+        else:
+            trigger = 'Off'
 
         return bytearray('{0:<8s}{1:<8s}{2:<8s}{3:<8s}'.format(str(round(self.wait,2)), '', '', trigger),'utf-8')
 

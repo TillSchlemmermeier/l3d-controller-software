@@ -36,41 +36,56 @@ class g_corner_grow():
         # create world
         world = np.zeros([3, 10, 10, 10])
 
-        if self.size > 4.0:
-            # switch into waiting state
-            self.waitingcounter = self.waiting
-            self.size = 0
+        if self.channel < 4:
+            if self.size > 4.0:
+                # switch into waiting state
+                self.waitingcounter = self.waiting
+                self.size = 0
 
 
-        elif self.waitingcounter == 0:
-        # switch on corners
-            world[:,4-self.size,4-self.size,4-self.size] = 1.0
-            world[:,4-self.size,4-self.size,5+self.size] = 1.0
-            world[:,4-self.size,5+self.size,4-self.size] = 1.0
-            world[:,5+self.size,4-self.size,4-self.size] = 1.0
-            world[:,4-self.size,5+self.size,5+self.size] = 1.0
-            world[:,5+self.size,4-self.size,5+self.size] = 1.0
-            world[:,5+self.size,5+self.size,4-self.size] = 1.0
-            world[:,5+self.size,5+self.size,5+self.size] = 1.0
+            elif self.waitingcounter <= 0:
+            # switch on corners
+                world[:,4-self.size,4-self.size,4-self.size] = 1.0
+                world[:,4-self.size,4-self.size,5+self.size] = 1.0
+                world[:,4-self.size,5+self.size,4-self.size] = 1.0
+                world[:,5+self.size,4-self.size,4-self.size] = 1.0
+                world[:,4-self.size,5+self.size,5+self.size] = 1.0
+                world[:,5+self.size,4-self.size,5+self.size] = 1.0
+                world[:,5+self.size,5+self.size,4-self.size] = 1.0
+                world[:,5+self.size,5+self.size,5+self.size] = 1.0
 
-            self.size += 1
+                self.size += 1
 
-        #check if S2L is activated
-        elif 4 > self.channel >= 0:
-            current_volume = float(str(self.sound_values.buf[self.channel*8:self.channel*8+8],'utf-8'))
-            if current_volume > 0:
-                self.waitingcounter = 1
-            else:
-                self.waitingcounter = 2
+            #check if S2L is activated
+            elif 4 > self.channel >= 0:
+                current_volume = float(str(self.sound_values.buf[self.channel*8:self.channel*8+8],'utf-8'))
+                if current_volume > 0:
+                    self.waitingcounter = 1
+                else:
+                    self.waitingcounter = 2
 
         #check if trigger is activated
         elif self.channel == 4:
             current_volume = int(float(str(self.sound_values.buf[32:40],'utf-8')))
             if current_volume > self.lastvalue:
                 self.lastvalue = current_volume
-                self.waitingcounter = 1
+                self.size = 0
+
+            if self.size < 4:
+                world[:,4-self.size,4-self.size,4-self.size] = 1.0
+                world[:,4-self.size,4-self.size,5+self.size] = 1.0
+                world[:,4-self.size,5+self.size,4-self.size] = 1.0
+                world[:,5+self.size,4-self.size,4-self.size] = 1.0
+                world[:,4-self.size,5+self.size,5+self.size] = 1.0
+                world[:,5+self.size,4-self.size,5+self.size] = 1.0
+                world[:,5+self.size,5+self.size,4-self.size] = 1.0
+                world[:,5+self.size,5+self.size,5+self.size] = 1.0
+
+                self.size += 1
+
             else:
-                self.waitingcounter = 2
+                world[:, :, :, :] = 0
+
 
         # stay in waiting state
         self.waitingcounter -= 1

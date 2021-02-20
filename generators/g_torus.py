@@ -59,9 +59,11 @@ class g_torus():
             if current_volume > self.lastvalue:
                 self.lastvalue = current_volume
                 self.counter = 0
-            if self.counter < 11:
-                self.radius = 10 - self.counter
+            if self.counter < 9:
+                self.radius = 8 - self.counter
                 self.counter += 1
+            else:
+                self.radius = 0
 
         # create torus
         n = 25

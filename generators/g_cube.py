@@ -80,7 +80,7 @@ class g_cube():
                 self.lastvalue = current_volume
                 self.counter = 0
 
-            if self.counter < 6:
+            if self.counter < 5:
                 size = next(self.sizes)
                 self.counter += 1
             else:

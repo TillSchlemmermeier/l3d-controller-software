@@ -53,6 +53,7 @@ class g_randomlines():
                 self.lastvalue = current_volume
                 self.step = 0
                 self.linelist.clear()
+                self.saveworld[:, :, :, :] = 0
 
                 for i in range(self.reset):
                     direction = randint(0, 2)
@@ -67,18 +68,26 @@ class g_randomlines():
 
                     self.linelist.extend([direction, a, b])
 
-                if self.step < self.reset:
-                    direction = self.linelist[3*self.counter]
-                    a = self.linelist[3*self.counter + 1]
-                    b = self.linelist[3*self.counter + 2]
-                    if direction == 0:
-                        world[:, :, a, b] = 0
-                    elif direction == 1:
-                        world[:, a, :, b] = 0
-                    elif direction == 2:
-                        world[:, a, b, :] = 0
+            if self.step < self.reset:
+                try:
+                    direction = self.linelist[3*self.step]
+                    a = self.linelist[3*self.step + 1]
+                    b = self.linelist[3*self.step + 2]
 
-                    self.step += 1
+                except:
+                    direction = 0
+                    a = 0
+                    b = 0
+
+                if direction == 0:
+                    world[:, :, a, b] = 1
+                elif direction == 1:
+                    world[:, a, :, b] = 1
+                elif direction == 2:
+                    world[:, a, b, :] = 1
+
+
+                self.step += 1
 
 
         elif self.counter % self.reset == 0:

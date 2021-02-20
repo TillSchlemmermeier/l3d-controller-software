@@ -47,6 +47,8 @@ class g_randomcross():
             if current_volume > self.lastvalue:
                 self.lastvalue = current_volume
                 self.counter = self.reset
+            else:
+                self.reset = self.counter + 1
 
 
         if self.counter % self.reset == 0:
@@ -92,7 +94,7 @@ class g_randomcross():
 
         if not self.trigger:
             self.counter +=1
-            
+
         self.saveworld = world
 
         return np.clip(world, 0, 1)

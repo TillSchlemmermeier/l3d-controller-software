@@ -59,7 +59,6 @@ class g_growing_corner():
         world = np.zeros([3, 10, 10, 10])
 
         size = (-np.cos(self.counter*np.pi/self.growspeed)+1)*0.5*self.maxsize
-        print(size)
 
         # check if s2l is activated
         if 4 > self.channel >= 0:

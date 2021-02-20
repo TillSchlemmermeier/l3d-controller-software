@@ -44,15 +44,7 @@ class g_sinus():
         self.stepincrease = args[2]*0.5
         self.channel = int(args[3]*5)-1
 
-        world = np.zeros([3, 10, 10, 10])
 
-        map = np.sin(self.freq1 * self.mapY + self.step) * np.sin(self.freq2 * self.mapZ + self.step)
-
-        map = np.round(4 * map ,0).astype(int)
-
-        for y in range(10):
-            for z in range(10):
-                world[:,map[y,z]+5,y,z] = 1.0
 
         # check if S2L is activated
         if 4 > self.channel >= 0:
@@ -66,14 +58,26 @@ class g_sinus():
                 self.lastvalue = current_volume
                 self.counter = 0
 
-            if self.counter < 10:
-                self.freq1 += self.counter / 10
-                self.freq1 += self.counter / 10
+            if self.counter < 6:
+
+                0 - 0.5
+                self.freq1 += 0.5 - (self.counter / 10)
+                self.freq2 += 0.5 - (self.counter / 10)
                 self.counter += 1
 
             self.step += self.stepincrease
 
         else:
             self.step += self.stepincrease
+
+        world = np.zeros([3, 10, 10, 10])
+
+        map = np.sin(self.freq1 * self.mapY + self.step) * np.sin(self.freq2 * self.mapZ + self.step)
+
+        map = np.round(4 * map ,0).astype(int)
+
+        for y in range(10):
+            for z in range(10):
+                world[:,map[y,z]+5,y,z] = 1.0
 
         return world

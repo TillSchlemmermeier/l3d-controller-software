@@ -23,7 +23,7 @@ class g_centralglow():
         return [b'centralglow', b'exponent', b'channel', b'', b'']
 
     def return_gui_values(self):
-        if 4 > self.channel >= 0:
+        if 3 > self.channel >= 0:
             channel = str(self.channel)
         else:
             channel = "Trigger"
@@ -36,7 +36,7 @@ class g_centralglow():
 
         world = np.zeros([3, 10, 10, 10])
 
-        if 4 > self.channel >= 0:
+        if 4 > self.channel:
             current_volume = np.clip(float(str(self.sound_values.buf[self.channel*8:self.channel*8+8],'utf-8')),0,3)
 
         #check for trigger
@@ -49,6 +49,9 @@ class g_centralglow():
             if self.counter < 11:
                 current_volume = 1 - (self.counter / 10)
                 self.counter += 1
+
+            else:
+                current_volume = 0
 
         bla = gen_central_glow(6-self.exponent*current_volume, 5.5, 5.5, 5.5)
         world[0, :, :, :] = bla

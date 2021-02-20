@@ -57,15 +57,19 @@ class g_wave():
             if current_volume > self.lastvalue:
                 self.lastvalue = current_volume
                 self.counter = 0
+                self.direction = randint(1,8)
+                self.position = randint(0,9)
 
-            if self.counter > self.maxsize:
-                self.counter = self.maxsize
+                if self.direction < 5:
+                    self.maxsize=20
+                else:
+                    self.maxsize=31
 
-        world = np.zeros([3, 10, 10, 10])
+                if self.counter > self.maxsize:
+                    self.counter = self.maxsize
 
-        a = np.zeros([10,10])
 
-        if self.counter > self.maxsize:
+        elif self.counter > self.maxsize:
 
             self.direction = randint(1,8)
             self.position = randint(0,9)
@@ -75,6 +79,11 @@ class g_wave():
                 self.maxsize=20
             else:
                 self.maxsize=31
+
+
+        world = np.zeros([3, 10, 10, 10])
+
+        a = np.zeros([10,10])
 
         i = self.counter
         direction = self.direction
@@ -124,6 +133,7 @@ class g_wave():
 
         world[1,:,:,:]=world[0,:,:,:]
         world[2,:,:,:]=world[0,:,:,:]
+
 
         self.counter += self.speed
 
