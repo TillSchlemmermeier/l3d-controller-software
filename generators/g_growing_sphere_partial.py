@@ -29,13 +29,14 @@ class g_growing_sphere_partial():
 
     def return_gui_values(self):
         osci = 'sin'
-        return bytearray('{0:<8s}{1:<8s}{2:<8s}{3:<8s}'.format(str(round(self.maxsize,2)), str(round(self.growspeed,2)), osci, ''),'utf-8')
+        return bytearray('{0:<8s}{1:<8s}{2:<8s}{3:<8s}'.format(str(round(self.maxsize,2)), str(round(self.maxsize_variation,2)), str(round(self.growspeed,2)), str(round(self.growspeed_variation,2))),'utf-8')
 
 
     def __call__(self, args):
         self.maxsize = args[0]*10
-        self.growspeed = args[1]
-        self.oscillate = args[2]
+        self.maxsize_variation = args[1]*2
+        self.growspeed = args[2]
+        self.growspeed_variation = args[3]*2
 
         world = np.zeros([3, 10, 10, 10])
 
@@ -46,8 +47,9 @@ class g_growing_sphere_partial():
 
         # creates hollow sphere with parameters
         world[0, :, :, :] = gen_hsphere(size, 4.5, 4.5, 4.5)
-        world[1:, :, :, :] = world[0, :, :, :]
-        world[2:, :, :, :] = world[0, :, :, :]
+        #world[1:, :, :, :] = world[0, :, :, :]
+        #world[2:, :, :, :] = world[0, :, :, :]
+
 
         # second half
         osci = np.sin(self.step*(self.growspeed+self.growspeed_variation))*0.5 + 0.5
@@ -55,9 +57,12 @@ class g_growing_sphere_partial():
         size = (self.maxsize + self.maxsize_variation) * osci
 
         # creates hollow sphere with parameters
-        world[0, :, :, :] = gen_hsphere(size, 4.5, 4.5, 4.5)[:, 5:, :]
-        world[1:, :, :, :] = world[0, :, :, :]
-        world[2:, :, :, :] = world[0, :, :, :]
+        world[0, :, 5:, :] = gen_hsphere(size, 4.5, 4.5, 4.5)[:, 5:, :]
+
+        world[1, :, :, :] = world[0, :, :, :]
+        world[2, :, :, :] = world[0, :, :, :]
+
+        self.step += 1
 
 
         return np.round(np.clip(world, 0, 1), 3)

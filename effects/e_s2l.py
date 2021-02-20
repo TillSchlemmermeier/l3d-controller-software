@@ -50,9 +50,15 @@ class e_s2l():
                 if self.counter < self.step:
                     world[:, :, :, :] *= (1 - self.amount) + ((self.step - self.counter) / self.step) * self.amount
             else:
-                if self.counter < (self.step + 10):
-                    world[:, :, :, :] *= (1 - self.amount) + ((self.counter) / (self.step + 10)) * self.amount
-
+                # if self.counter < 20:
+                #     pass
+                if 15 < self.counter < (self.step + 100):
+#                    print(self.counter ,(self.counter-15)/(self.step + 100))
+                    world[:, :, :, :] *= ((self.counter-15)/(self.step + 100))
+                #elif self.counter > (self.step + 100):
+                #    world[:, :, :, :] = 0.0
+                else:
+                    world[:, :, :, :] = 0.0
             self.counter += 1
 
 
