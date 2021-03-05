@@ -47,20 +47,20 @@ In the following, the global parameters are listed. Default values are given in 
 | 20 -  39 | **channel settings**
 |       20 | generator channel 1      | 0-255  | 0
 |       21 | effect 1 channel 1       | 0-255  | 0
-|       22 | effect 1 channel 1       | 0-255  | 0
-|       23 | effect 1 channel 1       | 0-255  | 0
+|       22 | effect 2 channel 1       | 0-255  | 0
+|       23 | effect 3 channel 1       | 0-255  | 0
 |       25 | generator channel 2      | 0-255  | 0
 |       26 | effect 1 channel 2       | 0-255  | 0
-|       27 | effect 1 channel 2       | 0-255  | 0
-|       28 | effect 1 channel 2       | 0-255  | 0
+|       27 | effect 2 channel 2       | 0-255  | 0
+|       28 | effect 3 channel 2       | 0-255  | 0
 |       30 | generator channel 3      | 0-255  | 0
 |       31 | effect 1 channel 3       | 0-255  | 0
-|       32 | effect 1 channel 3       | 0-255  | 0
-|       33 | effect 1 channel 3       | 0-255  | 0
+|       32 | effect 2 channel 3       | 0-255  | 0
+|       33 | effect 3 channel 3       | 0-255  | 0
 |       35 | generator channel 4      | 0-255  | 0
 |       36 | effect 1 channel 4       | 0-255  | 0
-|       37 | effect 1 channel 4       | 0-255  | 0
-|       38 | effect 1 channel 4       | 0-255  | 0
+|       37 | effect 2 channel 4       | 0-255  | 0
+|       38 | effect 3 channel 4       | 0-255  | 0
 | 40 -  69 | **parameters channel 1**
 |       40 | on/off                   | 0,1    | 0  
 |       41 | brightness               | 0-1    | 1.0
