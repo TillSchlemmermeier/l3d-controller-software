@@ -12,7 +12,7 @@ g_smiley added trigger
 g_edgelines corrected s2l <= --> >=, added trigger, not quite sure what it does
 Unterschied sidesquares sound_sidesquares??
 g_letters added s2l, added trigger
-g_growing_sphere_new: self.smooth standard value? delete g_soundsphere, replace g_growing_sphere
+g_sphere: delete g_soundsphere, delete g_growing_sphere
 
 
 g_obliqueplaneXYZ coden
@@ -23,11 +23,6 @@ a_multi_cube_edges
 a_orbbot
 
 was machen die? Muss ich einmal sehen
-g_grow
-g_cone
 g_inandout
 g_drop
 g_fulldrip
-g_soundsinus
-g_explodingsquares  (s2l komplett auskommentiert??)
-g_sound_ellipsoid (trigger sinnvoll?)

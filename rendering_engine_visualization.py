@@ -1,7 +1,6 @@
 
 import numpy as np
 import logging
-import serial
 from world2vox_fortran import world2vox_f as world2vox
 from channel import class_channel
 from multiprocessing import shared_memory
@@ -19,7 +18,7 @@ from oneshots.s_cubes import s_cubes
 from oneshots.s_dark_sphere import s_dark_sphere
 
 
-class rendering_engine:
+class rendering_engine_visualization:
     """
     L3D Cube 3.0
 
@@ -93,20 +92,6 @@ class rendering_engine:
         self.shot_list.append(s_cubes)
         self.shot_list.append(s_dark_sphere)
 
-        # try to establish connection to arduino
-        try:
-            self.arduino = serial.Serial('/dev/ttyACM0', 230400)
-            logging.info('Connection to Arduino established')
-            logging.info(self.arduino)
-        except IOError:
-            try:
-                self.arduino = serial.Serial('/dev/ttyACM1', 230400)
-                logging.info('Connection to Arduino established')
-                logging.info(self.arduino)
-            except IOError:
-                self.debug = True
-                logging.warning('No Connection to Arduino established, entering DEBUG mode')
-
         # setup empty world
         self.cubeworld = np.zeros([3, 10, 10, 10])
         self.channelworld = np.zeros([4, 3, 10, 10, 10])
@@ -118,25 +103,24 @@ class rendering_engine:
         self.channels.append(class_channel(3))
         self.channels.append(class_channel(4))
 
+
         logging.warning('Initialisation complete')
 
     def run(self):
         """generates a frame and sends the package when cube is turned on"""
         # check wether 'running' flag is set
-        colors = np.zeros([4, 1000])
-
         if self.global_parameter[0] == 1:
             self.generate_frame()
-            self.send_frame()
             self.framecounter += 1
-
+            colors = np.zeros([4, 1000])
             colors[0, :] = self.cubeworld[0, :, :, :].flatten()
             colors[1, :] = self.cubeworld[1, :, :, :].flatten()
             colors[2, :] = self.cubeworld[2, :, :, :].flatten()
             colors[3, :] = 1.0
 
+
         else:
-            pass
+            colors = np.zeros([4, 1000])
 
         return colors.T
 
@@ -148,7 +132,7 @@ class rendering_engine:
         """
 
         package = bytearray(self.header + self.get_cubedata())
-        self.arduino.write(package)
+        # self.arduino.write(package)
 
         # if not self.debug:
         #     self.arduino.write(bytearray(package))

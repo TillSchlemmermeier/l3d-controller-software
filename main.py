@@ -4,6 +4,7 @@ import time
 # import rendering class
 from rendering_engine import rendering_engine
 from rendering_engine_2d import rendering_engine_2d
+from rendering_engine_visualization import rendering_engine_visualization
 # import global variable
 #from global_parameter_module import global_parameter
 from copy import deepcopy
@@ -12,6 +13,10 @@ import sys
 #import subprocess   # obsolete?
 #import urllib.request
 from PyQt5 import QtWidgets, QtGui, QtCore
+
+from pyqtgraph.Qt import QtCore, QtGui
+import pyqtgraph.opengl as gl
+
 import numpy as np
 from ctypes import c_char, c_char_p
 
@@ -127,13 +132,99 @@ def rendering(array, label, pause_time = 0.03, log = False):
         # long sleeping time, so logfile is not flooded
         pause_time = 2
 
+    # initialize window
+    app = QtGui.QApplication([])
+    window = gl.GLViewWidget()
+    window.show()
+    #g = gl.GLGridItem()
+    #window.addItem(g)
+
+    # get positions for scatter plot
+    pos = []
+    for x in range(10):
+        for y in range(10):
+            for z in range(10):
+                pos.append([x, y, z])
+
+    pos = np.array(pos)
+    pos[:, :] = pos[:, :] - 4.5
+    scatterplot = gl.GLScatterPlotItem(pos = pos, )
+    window.addItem(scatterplot)
+
     # start rendering engine
     frame_renderer = rendering_engine(array, label, log)
 
+    '''
     while True:
         time.sleep(pause_time)
         # render frame
-        frame_renderer.run()
+        colors = frame_renderer.run()
+        scatterplot.setData(color = colors)
+    '''
+    def update():
+        colors = frame_renderer.run()
+        colors += 0.05
+
+        #colors[:, :] = 1.0
+        #colors[0, 0] = 0.0
+        #colors[1, 1] = 0.0
+        #colors[8, 2] = 0.0
+
+        scatterplot.setData(color = np.clip(colors, 0, 1))
+
+    t = QtCore.QTimer()
+    t.timeout.connect(update)
+    t.start(50)
+    QtGui.QApplication.instance().exec_()
+
+
+
+def rendering_visualize(array, label, pause_time = 0.03, log = False):
+    '''
+    Rendering Thread to visualize cube
+    '''
+    print('...starting rendering thread')
+
+    # initialize window
+    app = QtGui.QApplication([])
+    window = gl.GLViewWidget()
+    window.show()
+    g = gl.GLGridItem()
+    window.addItem(g)
+
+    # get positions for scatter plot
+    pos = []
+    for x in range(10):
+        for y in range(10):
+            for z in range(10):
+                pos.append([x, y, z])
+
+    pos = np.array(pos)
+    scatterplot = gl.GLScatterPlotItem(pos = pos, )
+    window.addItem(scatterplot)
+
+    # start rendering engine
+    frame_renderer = rendering_engine_visualization(array, label, log)
+
+    def update():
+        colors = frame_renderer.run()
+        #colors[:, :] = 1.0
+        #colors[0, 0] = 0.0
+        #colors[1, 1] = 0.0
+        #colors[8, 2] = 0.0
+
+        scatterplot.setData(color = colors)
+
+    t = QtCore.QTimer()
+    t.timeout.connect(update)
+    t.start(50)
+    QtGui.QApplication.instance().exec_()
+
+    #while True:
+    #    time.sleep(pause_time)
+        # render frame
+    #    frame_renderer.run()
+
 
 def rendering_2d(array, label, pause_time = 0.03, log = False):
     '''
@@ -182,6 +273,9 @@ if __name__ == '__main__':
         if sys.argv[1] == '--2d':
             proc_renderer = mp.Process(target=rendering_2d, args = [global_parameter, global_label])
             mode = '2d'
+        elif sys.argv[1] == '--visualize':
+            proc_renderer = mp.Process(target=rendering_visualize, args = [global_parameter, global_label])
+            mode = '3d'
         else:
             mode = '3d'
             proc_renderer = mp.Process(target=rendering, args = [global_parameter, global_label])
@@ -191,7 +285,7 @@ if __name__ == '__main__':
 
     # assign processes
     proc_midi = mp.Process(target=midi_devices, args = [global_parameter])
-    proc_arduino = mp.Process(target=midi_arduino, args = [global_parameter])
+    # proc_arduino = mp.Process(target=midi_arduino, args = [global_parameter])
     proc_gui = mp.Process(target=gui, args = [global_parameter, global_label, mode])
     # proc_artnet = mp.Process(target=artnet_process, args = [global_parameter])
     proc_sound = mp.Process(target = sound_process, args = [global_parameter])
@@ -222,7 +316,7 @@ if __name__ == '__main__':
     # starting processes
     print('start')
     proc_midi.start()
-    proc_arduino.start()
+    # proc_arduino.start()
     proc_renderer.start()
     proc_autopilot.start()
     proc_gui.start()
@@ -231,7 +325,7 @@ if __name__ == '__main__':
 
 #    time.sleep(1)
     proc_midi.join()
-    proc_arduino.join()
+    # proc_arduino.join()
     proc_renderer.join()
     proc_gui.join()
     proc_sound.join()

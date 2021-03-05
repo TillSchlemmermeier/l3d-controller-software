@@ -2,10 +2,11 @@
 import numpy as np
 from scipy.signal import sawtooth
 from generators.g_genhsphere import gen_hsphere
+from multiprocessing import shared_memory
 
 # fortran routine is in g_growing_sphere_f.f90
 
-class g_growing_sphere():
+class g_sphere:
     '''
     Generator: growing_sphere
 
@@ -34,7 +35,10 @@ class g_growing_sphere():
 
 
     def return_values(self):
-        return [b'growing_sphere', b'maxsize', b'speed', b'shape', b'channel']
+        if 4 > self.channel >= 0:
+            return [b'sphere', b'maxsize', b'speed', b'smooth', b'channel']
+        else:
+            return [b'sphere', b'maxsize', b'speed', b'shape', b'channel']
 
     def return_gui_values(self):
         if self.oscillate < 0.3:
@@ -46,6 +50,7 @@ class g_growing_sphere():
 
         if 4 > self.channel >= 0:
             channel = str(self.channel)
+            osci = str(round(self.oscillate/2,2))
         elif self.channel == 4:
             channel = "Trigger"
         else:
@@ -59,6 +64,8 @@ class g_growing_sphere():
         self.growspeed = args[1]
         self.oscillate = args[2]
         self.channel = int(args[3]*5)-1
+
+        self.smooth = self.oscillate / 2
 
         world = np.zeros([3, 10, 10, 10])
 

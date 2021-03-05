@@ -25,12 +25,13 @@ class g_fulldrip():
         else:
             channel = 'noS2L'
 
-        return bytearray('{0:<8s}{1:<8s}{2:<8s}{3:<8s}'.format(str(self.n), '', '', ''),'utf-8')
+        return bytearray('{0:<8s}{1:<8s}{2:<8s}{3:<8s}'.format(str(self.n), str(round(self.stop_pos,1)), '', channel),'utf-8')
 
 
     def __call__(self, args):
         self.n = int(args[0]*40)+1
         self.stop_pos = int(round(args[1]*10,0))
+        self.channel = int(args[3]*4)-1
 
         world = np.zeros([3, 10, 10, 10])
 

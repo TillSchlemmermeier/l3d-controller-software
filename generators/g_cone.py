@@ -17,7 +17,7 @@ class g_cone():
         self.mode = 0
 
     def return_values(self):
-        return [b'circles', b'number', b'mode', b'', b'channel']
+        return [b'cone', b'number', b'mode', b'', b'channel']
 
     def return_gui_values(self):
         return bytearray('{0:<8s}{1:<8s}{2:<8s}{3:<8s}'.format(str(round(self.number,2)), str(self.mode), '', str(self.channel)),'utf-8')
