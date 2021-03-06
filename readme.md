@@ -133,6 +133,9 @@ apt-get install libasound-dev
 pip3 install numpy
 pip3 install scipy
 pip3 install matplotlib
+pip3 install pyqtgraph
+pip3 install PyOpenGL
+sudo apt-get install python3-pyqt4.qtopengl
 
 git clone https://github.com/TillSchlemmermeier/l3d-controller-software
 cd l3d-controller-software/
