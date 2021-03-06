@@ -8,8 +8,8 @@ def swap_eff(effects, effect1, effect2):
     ind2 = np.where(np.array(effects) == effect2+'\n')[0][0]
 
     temp = deepcopy(effects)
-    temp[ind1] = effects2+'\n'
-    temp[ind2] = effects1+'\n'
+    temp[ind1] = effect2+'\n'
+    temp[ind2] = effect1+'\n'
 
     return temp
 
@@ -47,8 +47,15 @@ def update_presets(swap_dict):
 
     # change number
     for preset in list_presets:
-        ind = int(float(preset[1]))
-        preset[1] = str(swap_dict[ind])
+        for i in range(4):
+            for j in range(2, 5):
+                ind = int(float(preset[5*i+j]))
+                preset[5*i+j] = str(swap_dict[ind])
+                '''
+                2 3 4
+                7 8 9
+                12 13 14
+                '''
 
     print('trying to save file...')
     # saving modified presets
@@ -68,15 +75,16 @@ def update_global_presets(swap_dict):
 
     # change number
     for preset in list_presets:
+        # loop over channels
         for i in range(4):
             for j in range(2, 5):
-                ind = int(float(preset[4*i+j]))
-                preset[4*i+j] = str(swap_dict[ind])
+                ind = int(float(preset[5*i+j]))
+                #print(5*i, j, ind)
+                preset[5*i+j] = str(swap_dict[ind])
 
         for i in range(3):
-            ind = int(float(preset[230+i]))
-            preset[4*i+j] = str(swap_dict[230+i])
-
+            ind = int(float(preset[140+i]))
+            preset[140+i] = str(swap_dict[ind])
 
     # saving modified presets
     with open('global_presets.dat', 'w') as file:
@@ -87,25 +95,26 @@ def update_global_presets(swap_dict):
 if __name__ == "__main__":
     print(sys.argv)
 
-    try:
-        with open('effects.dat', 'r') as file:
-            effects = file.readlines()
+    with open('effects.dat', 'r') as file:
+        effects = file.readlines()
 
-        if sys.argv[1] == 'a':
-            new_effects = append_eff(effects, sys.argv[2])
-        elif sys.argv[1] == 'i':
-            new_effects = insert_eff(effects, sys.argv[2], int(sys.argv[3]))
-        elif sys.argv[1] == 's':
-            new_effects = swap_eff(effects, sys.argv[2], sys.argv[3])
+    if sys.argv[1] == 'a':
+        new_effects = append_eff(effects, sys.argv[2])
+    elif sys.argv[1] == 'i':
+        new_effects = insert_eff(effects, sys.argv[2], int(sys.argv[3]))
+    elif sys.argv[1] == 's':
+        new_effects = swap_eff(effects, sys.argv[2], sys.argv[3])
 
 
-        swap_dict = get_dictionary(effects, new_effects)
-        update_presets(swap_dict)
-        update_global_presets(swap_dict)
+    swap_dict = get_dictionary(effects, new_effects)
+    update_presets(swap_dict)
+    update_global_presets(swap_dict)
 
-        with open('effects.dat', 'w') as file:
-            for line in new_effects:
-                file.write(line)
+    with open('effects.dat', 'w') as file:
+        for line in new_effects:
+            file.write(line)
+'''
     except:
         print('ERROR!' )
         print('usage: python3.8 sort_effects.py <a/i/s> <new_effect/new_effect/effect 1> <NaN/pos/effect 2>')
+'''
