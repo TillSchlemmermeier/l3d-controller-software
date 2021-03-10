@@ -188,9 +188,24 @@ def rendering_visualize(array, label, pause_time = 0.03, log = False):
     # initialize window
     app = QtGui.QApplication([])
     window = gl.GLViewWidget()
+    window.setWindowTitle('L3D Cube')
+    # x coordinate, y coordinate, xsize, ysize
+    window.setGeometry(450, 550, 500, 500)
+
+    #window.setCameraPosition(pos = None, distance = 15, elevation = 30, azimuth = 40)
+    window.opts['distance'] = 30
+    window.opts['elevation'] = 30
+    window.opts['azimuth'] = 40
+    window.opts['fov'] = 30
+
+    #warum geht der scheiss nicht???
+    #window.opts['center'] = [0.0,0.0,0.0]
+    #pos = print(window.cameraPosition()
+    #print(pos)
+
     window.show()
-    g = gl.GLGridItem()
-    window.addItem(g)
+    #g = gl.GLGridItem()
+    #window.addItem(g)
 
     # get positions for scatter plot
     pos = []
@@ -200,7 +215,8 @@ def rendering_visualize(array, label, pause_time = 0.03, log = False):
                 pos.append([x, y, z])
 
     pos = np.array(pos)
-    scatterplot = gl.GLScatterPlotItem(pos = pos, )
+    # pos-4.5 to center cube
+    scatterplot = gl.GLScatterPlotItem(pos = pos-4.5, size = 10)
     window.addItem(scatterplot)
 
     # start rendering engine
@@ -208,12 +224,13 @@ def rendering_visualize(array, label, pause_time = 0.03, log = False):
 
     def update():
         colors = frame_renderer.run()
-        #colors[:, :] = 1.0
+        colors[:, :] += 0.05
         #colors[0, 0] = 0.0
         #colors[1, 1] = 0.0
         #colors[8, 2] = 0.0
 
-        scatterplot.setData(color = colors)
+
+        scatterplot.setData(color = np.clip(colors, 0, 1))
 
     t = QtCore.QTimer()
     t.timeout.connect(update)
