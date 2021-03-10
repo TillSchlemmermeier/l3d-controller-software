@@ -22,10 +22,20 @@ def sound_process(array):
     p = pyaudio.PyAudio()
     sound_values = mp.shared_memory.SharedMemory(name = "global_s2l_memory")
 
+    # find pule audio device
+    chosen_device_index = -1
+    for x in range(0,p.get_device_count()):
+        info = p.get_device_info_by_index(x)
+        print(info)
+        if info["name"] == "pulse":
+            chosen_device_index = info["index"]
+            print("chosen index: ", chosen_device_index)
+
     stream = p.open(
         format = pyaudio.paInt16,
         channels = 1,
         rate = sample_rate,
+        input_device_index = chosen_device_index,
         input = True,
         output = False,
         frames_per_buffer = buffer_size)
