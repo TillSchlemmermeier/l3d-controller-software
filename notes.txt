@@ -26,3 +26,7 @@ was machen die? Muss ich einmal sehen
 g_inandout
 g_drop
 g_fulldrip
+
+
+main.py get screen resolution
+e_radial_gradient funktioniert mit s2l nicht richtig 

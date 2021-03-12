@@ -189,8 +189,11 @@ def rendering_visualize(array, label, pause_time = 0.03, log = False):
     app = QtGui.QApplication([])
     window = gl.GLViewWidget()
     window.setWindowTitle('L3D Cube')
+    screen_resolution = app.desktop().screenGeometry()
+    width = screen_resolution.width()
     # x coordinate, y coordinate, xsize, ysize
-    window.setGeometry(450, 550, 500, 500)
+    window.setGeometry(width + 1, 0, 1080, 1200)
+    window.setWindowFlags(QtCore.Qt.FramelessWindowHint)
 
     #window.setCameraPosition(pos = None, distance = 15, elevation = 30, azimuth = 40)
     window.opts['distance'] = 30
@@ -216,7 +219,7 @@ def rendering_visualize(array, label, pause_time = 0.03, log = False):
 
     pos = np.array(pos)
     # pos-4.5 to center cube
-    scatterplot = gl.GLScatterPlotItem(pos = pos-4.5, size = 10)
+    scatterplot = gl.GLScatterPlotItem(pos = pos-4.5, size = 20)
     window.addItem(scatterplot)
 
     # start rendering engine
@@ -236,6 +239,7 @@ def rendering_visualize(array, label, pause_time = 0.03, log = False):
     t.timeout.connect(update)
     t.start(50)
     QtGui.QApplication.instance().exec_()
+
 
     #while True:
     #    time.sleep(pause_time)

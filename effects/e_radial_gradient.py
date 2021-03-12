@@ -43,6 +43,8 @@ class e_radial_gradient():
 
     def __call__(self, world, args):
         # parsing input
+        self.c1[0] = args[0] # hsv_to_rgb(c1,1,1)
+        self.c2[0] = args[1] # hsv_to_rgb(c2,1,1)
         self.balance = 6 * args[2] + 0.01
         self.channel = int(args[3]*4)-1
 
@@ -55,10 +57,6 @@ class e_radial_gradient():
                 self.c1[0] = self.c1[0] % 1
                 self.c2[0] += current_volume / 10
                 self.c2[0] = self.c2[0] % 1
-
-        else:
-            self.c1[0] = args[0] # hsv_to_rgb(c1,1,1)
-            self.c2[0] = args[1] # hsv_to_rgb(c2,1,1)
 
 
         for lamp in list(self.distances.keys()):

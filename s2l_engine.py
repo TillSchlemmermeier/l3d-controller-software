@@ -13,29 +13,31 @@ import multiprocessing as mp
 from multiprocessing import shared_memory
 import matplotlib as mpl
 
-from PyQt5 import QtCore
+from PyQt5 import QtCore, QtGui
 
 def sound_process(array):
     # initialize pyaudio
     sample_rate = 44100
     buffer_size = int(44100/20)
+    print("\n \n \nInitializing PyAudio...")
     p = pyaudio.PyAudio()
+    print("End of PyAudio initialization \n----------------------------- \n \n")
     sound_values = mp.shared_memory.SharedMemory(name = "global_s2l_memory")
 
-    # find pule audio device
-    chosen_device_index = -1
+    # find pulse audio device
+    pulse_device_index = -1
     for x in range(0,p.get_device_count()):
         info = p.get_device_info_by_index(x)
-        print(info)
         if info["name"] == "pulse":
-            chosen_device_index = info["index"]
-            print("chosen index: ", chosen_device_index)
+            pulse_device_index = info["index"]
+            print("chosen audio device: ")
+            print(info)
 
     stream = p.open(
         format = pyaudio.paInt16,
         channels = 1,
         rate = sample_rate,
-        input_device_index = chosen_device_index,
+        input_device_index = pulse_device_index,
         input = True,
         output = False,
         frames_per_buffer = buffer_size)
@@ -56,29 +58,43 @@ def sound_process(array):
 
     mpl.rcParams['toolbar'] = 'None'
     # initialize figure
-    fig, ax = plt.subplots(figsize=(3.3, 1.9))#'''figsize=(4, 1.8)'''50
-    fig.canvas.manager.window.move(348, 565)
+    fig, ax = plt.subplots()#figsize=(10.6, 6.5)
+    plt.xticks(fontsize = 24, rotation = 0)
+    plt.yticks(fontsize = 24)
+    ax.set_facecolor('black')
+    fig.set_facecolor('black')
+    ax.xaxis.label.set_color('red')
+    ax.tick_params(colors='white')
+    ax.spines['bottom'].set_color('white')
+    ax.spines['top'].set_color('white')
+    ax.spines['left'].set_color('white')
+    ax.spines['right'].set_color('white')
+
+    #fig.canvas.manager.window.move(1921, 1130)
+
+    fig.canvas.manager.window.setGeometry(1921, 1200, 1080, 720)
     fig.canvas.manager.window.setWindowFlags(QtCore.Qt.FramelessWindowHint)
     fig.canvas.manager.window.setWindowOpacity(1.0)
 
+
     ax.set_xlim(50, 10000)
     ax.set_ylim(-0.1,2)
-    line = ax.plot(freqs, np.abs(FFT))[0]
-    select1 = ax.plot([100,100], [-10,10], label = '0', color = 'red')[0]
-    select2 = ax.plot([100,500], [-10,10], label = '1', color = 'green')[0]
-    select3 = ax.plot([100,1000], [-10,10], label = '2', color = 'blue')[0]
-    select4 = ax.plot([100,2000], [-10,10], label = '3', color = 'orange')[0]
+    line = ax.plot(freqs, np.abs(FFT), color='white', lw=3)[0]
+    select1 = ax.plot([100,100], [-10,10], label = '0', color = 'red', linewidth = 5)[0]
+    select2 = ax.plot([100,500], [-10,10], label = '1', color = 'green', linewidth = 5)[0]
+    select3 = ax.plot([100,1000], [-10,10], label = '2', color = 'blue', linewidth = 5)[0]
+    select4 = ax.plot([100,2000], [-10,10], label = '3', color = 'orange', linewidth = 5)[0]
 
-    thres1 = ax.plot([100-10,100+10], [0,0],  color = 'red')[0]
-    thres2 = ax.plot([100-10,100+10], [0,0],  color = 'green')[0]
-    thres3 = ax.plot([100-10,100+10], [0,0],  color = 'blue')[0]
-    thres4 = ax.plot([100-10,100+10], [0,0], color = 'orange')[0]
+    thres1 = ax.plot([100-10,100+10], [0,0],  color = 'red', linewidth = 6)[0]
+    thres2 = ax.plot([100-10,100+10], [0,0],  color = 'green', linewidth = 6)[0]
+    thres3 = ax.plot([100-10,100+10], [0,0],  color = 'blue', linewidth = 6)[0]
+    thres4 = ax.plot([100-10,100+10], [0,0], color = 'orange', linewidth = 6)[0]
 
-    ax.set_xscale('symlog', linthreshx=0.01)
+    ax.set_xscale('symlog', linthresh=0.01)
 
     ax.set_xticks([50, 100, 250, 500, 1000, 2500, 5000, 10000])
     ax.set_xticklabels([50, 100, 250, 500, 1000, 2500, 5000, 10000])
-    plt.legend(loc='upper center',bbox_to_anchor=(0.5,1.2),ncol=4,fancybox=True)
+    plt.legend(loc='upper center',bbox_to_anchor=(0.5,1.16),ncol=4,fancybox=True, fontsize=24, labelcolor='white', facecolor='black')
 
     # normalization
     normalized = [False]
