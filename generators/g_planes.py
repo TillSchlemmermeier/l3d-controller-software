@@ -22,9 +22,12 @@ class g_planes():
         self.stop = False
 
         #dict for dir
-        self.dict = {0: 'X',
-                     1: 'Y',
-                     2: 'Z'}
+        self.dict = {0: 'X+',
+                     1: 'Y+',
+                     2: 'Z+',
+                     3: 'X-',
+                     4: 'Y-',
+                     5: 'Z-'}
 
     #Strings for GUI
     def return_values(self):
@@ -49,8 +52,8 @@ class g_planes():
 
     def __call__(self, args):
         # parsing input
-        self.speed = args[0]*10+0.5
-        self.dir = int(round(args[1]*2))
+        self.speed = args[0]*10
+        self.dir = int(round(args[1]*5))
         if args[2] > 0.5:
             self.type = 0.5
         else:
@@ -66,7 +69,10 @@ class g_planes():
         if 4 > self.channel >= 0:
             current_volume = float(str(self.sound_values.buf[self.channel*8:self.channel*8+8],'utf-8'))
             if current_volume > 0:
-                self.step += 1
+                if self.dir < 3:
+                    self.step += 1
+                else:
+                    self.step-= 1
 
         # check if s2l trigger is activated
         elif self.channel == 4:
@@ -90,15 +96,23 @@ class g_planes():
                 if position < self.oldposition:
                     self.stop = True
 
-            self.step += 1
+            if not self.stop:
+                if self.dir < 3:
+                    self.step += 1
+                else:
+                    self.step-= 1
+
             self.oldposition = position
 
         else:
-            self.step += 1
+            if self.dir < 3:
+                self.step += 1
+            else:
+                self.step-= 1
 
-        if self.dir == 0:
+        if self.dir == 0 or self.dir == 3:
             world[:, position,:,:] = 1.0
-        elif self.dir == 1:
+        elif self.dir == 1 or self.dir == 4:
             world[:, :, position,:] = 1.0
         else:
             world[:, :,:,position] = 1.0

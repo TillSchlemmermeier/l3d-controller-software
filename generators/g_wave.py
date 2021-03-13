@@ -89,26 +89,27 @@ class g_wave():
         direction = self.direction
         position = self.position
 
+        # factor to account for different corner/face speeds
+        if direction < 5:
+            self.speed /= 1.44
+
+
         if direction == 1: #x+
             for x in range(10):
     #            a[x,:] = ((np.sin((i)/np.pi + x/np.pi)+1)/2)**4
                 a[x,:] = np.exp(-(((x+5-i)/self.sigma)**2)/10)
-            self.counter -= 0.3
             world[0,position,:,:] = a
         elif direction == 2: #x-
             for x in range(10):
                 a[x,:] = np.exp(-(((x-15+i)/self.sigma)**2)/10)
-            self.counter -= 0.3
             world[0,position,:,:] = a
         elif direction == 3: #y+
             for y in range(10):
                 a[:,y] = np.exp(-(((y+5-i)/self.sigma)**2)/10)
-            self.counter -= 0.3
             world[0,position,:,:] = a
         elif direction == 4: #y-
             for y in range(10):
                 a[:,y] = np.exp(-(((y-15+i)/self.sigma)**2)/10)
-            self.counter -= 0.3
             world[0,position,:,:] = a
         elif direction == 5: #xy
             for x in range(10):
