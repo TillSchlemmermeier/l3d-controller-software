@@ -5,120 +5,132 @@ from multiprocessing import shared_memory
 
 class g_planes():
     '''
-    Generator: random
+    Generator: panes
+    a plane moving up and down the cube
 
-    Moves planes through the cube
+    Parameters:
+    speed
+    direction (x, y or z)
+    type (cosinus, up or down)
+    Sound2Light trigger On / Off
     '''
     def __init__(self):
         self.speed = 10
         self.dir = 1
         self.type = 0
         self.step = 0
+        self.position = 0
+        # s2l
         self.sound_values = shared_memory.SharedMemory(name = "global_s2l_memory")
-        self.channel = 4
+        self.trigger = False
         self.lastvalue = 0
-        self.oldposition = 0
+        self.nextposition = 0
         self.switch = False
         self.stop = False
 
-        #dict for dir
-        self.dict = {0: 'X+',
-                     1: 'Y+',
-                     2: 'Z+',
-                     3: 'X-',
-                     4: 'Y-',
-                     5: 'Z-'}
-
     #Strings for GUI
     def return_values(self):
-        return [b'planes', b'speed', b'direction', b'type', b'channel']
+        return [b'Planes', b'Speed', b'Direction', b'Type', b'Trigger']
 
     def return_gui_values(self):
-        direction = self.dict[self.dir]
-        if self.type == 0.5:
-            type = 'saw'
+        if self.dir == 0:
+            dir = 'X'
+        elif self.dir == 1:
+            dir ='Y'
         else:
-            type = 'triangle'
+            dir = 'Z'
 
-        if 4 > self.channel >=0:
-            channel = str(self.channel)
-        elif self.channel == 4:
-            channel = 'Trigger'
+        if self.type < 0.33:
+            type = 'cos'
+        elif self.type >= 0.33 and self.type < 0.66:
+            type = 'up'
         else:
-            channel = 'noS2L'
+            type = 'down'
 
-        return bytearray('{0:<8s}{1:<8s}{2:<8s}{3:<8s}'.format(str(round(self.speed,2)), direction, type, channel),'utf-8')
+        if self.trigger:
+            trigger = 'On'
+        else:
+            trigger = 'Off'
+
+        return bytearray('{0:<8s}{1:<8s}{2:<8s}{3:<8s}'.format(str(round(self.speed,2)), dir, type, trigger),'utf-8')
 
 
     def __call__(self, args):
         # parsing input
-        self.speed = args[0]*10
-        self.dir = int(round(args[1]*5))
-        if args[2] > 0.5:
-            self.type = 0.5
+        self.speed = int(args[0]*8)
+        self.dir = int(round(args[1]*3))
+        self.type = args[2]
+
+        if args[3] < 0.5:
+            self.trigger = False
         else:
-            self.type = 1.0
+            self.trigger = True
 
-        self.channel = int(args[3]*5)-1
-
-        # calculate frame
+        #def generate(self, step, dumpworld):
         world = np.zeros([3, 10, 10, 10])
-        position = int(round((sawtooth(0.1*self.step*self.speed, self.type)+1)*4.51))
 
-        # check if s2l is activated
-        if 4 > self.channel >= 0:
-            current_volume = float(str(self.sound_values.buf[self.channel*8:self.channel*8+8],'utf-8'))
-            if current_volume > 0:
-                if self.dir < 3:
-                    self.step += 1
-                else:
-                    self.step-= 1
-
-        # check if s2l trigger is activated
-        elif self.channel == 4:
+        #check for trigger
+        if self.trigger:
             current_volume = int(float(str(self.sound_values.buf[32:40],'utf-8')))
             if current_volume > self.lastvalue:
                 self.lastvalue = current_volume
+                self.step = 0
                 self.switch = False
                 self.stop = False
-                self.step = 0
-                self.oldposition = 0
-
-            if self.type == 0.5:
-                if position < self.oldposition:
-                    self.switch = True
-
-                if self.switch:
-                    if position > self.oldposition:
-                        self.stop = True
-
-            elif self.type == 1:
-                if position < self.oldposition:
-                    self.stop = True
+                if self.type < 0.66:
+                    self.nextposition = 0
+                else:
+                    self.nextposition = 9
 
             if not self.stop:
-                if self.dir < 3:
-                    self.step += 1
+                self.position = self.nextposition
+                if self.type < 0.33:
+                    nextposition = 9-int(round((np.cos(0.1*(self.step+1)*self.speed)+1)*4.5))
+                    if nextposition < self.position:
+                        self.switch = True
+
+                    if self.switch:
+                        if nextposition > self.position:
+                            self.stop = True
+
+                elif self.type >= 0.33 and self.type < 0.66:
+                    nextposition = int(round((sawtooth(0.1*(self.step+1)*self.speed)+1)*4.5))
+                    if nextposition < self.position:
+                        self.stop = True
+
                 else:
-                    self.step-= 1
+                    nextposition = int(round((sawtooth(0.1*(self.step+1)*self.speed, width=0)+1)*4.5))
+                    if nextposition > self.position:
+                        self.stop = True
 
-            self.oldposition = position
+                if not self.stop:
+                    self.step += 1
+                    self.nextposition = nextposition
+
 
         else:
-            if self.dir < 3:
-                self.step += 1
+            if self.type < 0.33:
+                self.position = 9-int(round((np.cos(0.1*self.step*self.speed)+1)*4.5))
+            elif self.type >= 0.33 and self.type < 0.66:
+                self.position = int(round((sawtooth(0.1*self.step*self.speed)+1)*4.5))
             else:
-                self.step-= 1
+                self.position = int(round((sawtooth(0.1*self.step*self.speed, width=0)+1)*4.5))
 
-        if self.dir == 0 or self.dir == 3:
-            world[:, position,:,:] = 1.0
-        elif self.dir == 1 or self.dir == 4:
-            world[:, :, position,:] = 1.0
+            self.step += 1
+
+
+        if self.dir == 0:
+            world[:, self.position,:,:] = 1.0
+        elif self.dir == 1:
+            world[:, :, self.position,:] = 1.0
         else:
-            world[:, :,:,position] = 1.0
+            world[:, :,:,self.position] = 1.0
 
-        if self.channel == 4:
+        '''
+        # delete if idle?
+        if self.trigger:
             if self.stop:
                 world[:, :, :, :] = 0.0
+        '''
 
         return np.clip(world, 0, 1)

@@ -11,7 +11,7 @@ class g_squares():
     speed
     direction (x, y or z)
     type (sinus, up or down)
-    Sound2Light channel
+    Sound2Light trigger On / Off
     '''
 
     def __init__(self):
@@ -57,7 +57,7 @@ class g_squares():
 
     #def generate(self, step, dumpworld):
     def __call__(self, args):
-        self.speed = int(args[0]*9)
+        self.speed = int(args[0]*8)
         self.dir = int(round(args[1]*3))
         self.type = args[2]
 
@@ -69,7 +69,6 @@ class g_squares():
         #def generate(self, step, dumpworld):
         world = np.zeros([3, 10, 10, 10])
 
-
         #check for trigger
         if self.trigger:
             current_volume = int(float(str(self.sound_values.buf[32:40],'utf-8')))
@@ -78,14 +77,12 @@ class g_squares():
                 self.step = 0
                 self.switch = False
                 self.stop = False
+                if self.type < 0.66:
+                    self.nextposition = 0
+                else:
+                    self.nextposition = 9
 
-            if self.type < 0.33:
-                position = 9-int(round((np.cos(0.1*self.step*self.speed)+1)*4.5))
-            elif self.type >= 0.33 and self.type < 0.66:
-                position = int(round((sawtooth(0.1*self.step*self.speed)+1)*4.5))
-            else:
-                position = int(round((sawtooth(0.1*self.step*self.speed, width=0)+1)*4.5))
-
+            position = self.nextposition
             if not self.stop:
                 if self.type < 0.33:
                     nextposition = 9-int(round((np.cos(0.1*(self.step+1)*self.speed)+1)*4.5))
@@ -108,6 +105,7 @@ class g_squares():
 
                 if not self.stop:
                     self.step += 1
+                    self.nextposition = nextposition
 
 
         else:

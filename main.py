@@ -195,17 +195,18 @@ def rendering_visualize(array, label, pause_time = 0.03, log = False):
     window.setGeometry(width + 1, 0, 1080, 1200)
     window.setWindowFlags(QtCore.Qt.FramelessWindowHint)
 
-    #window.setCameraPosition(pos = None, distance = 15, elevation = 30, azimuth = 40)
+    #window.setCameraPosition(pos = None, distance = 15, elevation = 30, azimuth = 0)
     window.opts['distance'] = 30
     window.opts['elevation'] = 30
     window.opts['azimuth'] = 40
     window.opts['fov'] = 30
-
-    #warum geht der scheiss nicht???
-    #window.opts['center'] = [0.0,0.0,0.0]
-    #pos = print(window.cameraPosition()
-    #print(pos)
-
+    '''
+    window.opts['roation'] = QtGui.QQuaternion(60,10,20,30)
+    quaternion = QtGui.QQuaternion(60,10,20,30)
+    print(quaternion)
+    window.opts['center'] = [0.0,0.0,0.0]
+    print(window.cameraPosition())
+    '''
     window.show()
     #g = gl.GLGridItem()
     #window.addItem(g)

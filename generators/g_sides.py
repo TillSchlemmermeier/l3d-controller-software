@@ -1,6 +1,7 @@
 # modules
 import numpy as np
-from random import randint
+from random import randint, uniform
+from colorsys import hsv_to_rgb
 from multiprocessing import shared_memory
 
 class g_sides():
@@ -17,14 +18,15 @@ class g_sides():
         self.size = 4
         self.sides = True
         self.side = 0
-
+        self.randomcolor = False
+        # s2l
         self.sound_values = shared_memory.SharedMemory(name = "global_s2l_memory")
         self.channel = 0
         self.lastvalue = 0
 
     #Strings for GUI
     def return_values(self):
-        return [b'cube', b'size', b'', b'', b'channel']
+        return [b'Sides', b'Size', b'Color', b'', b'Channel']
 
     def return_gui_values(self):
         if 4 > self.channel >= 0:
@@ -34,12 +36,24 @@ class g_sides():
         else:
             channel = 'noS2L'
 
-        return bytearray('{0:<8s}{1:<8s}{2:<8s}{3:<8s}'.format(str(round(self.size,2)), '', '', channel),'utf-8')
+        if self.randomcolor:
+            color = 'On'
+        else:
+            color = 'Off'
+
+        return bytearray('{0:<8s}{1:<8s}{2:<8s}{3:<8s}'.format(str(round(self.size,2)), color, '', channel),'utf-8')
 
 
     def __call__(self, args):
         self.size = round(args[0]*4)
+        if args[1] > 0.5:
+            self.randomcolor = True
+        else:
+            self.randomcolor = False
+
         self.channel = int(args[3]*5)-1
+
+
 
         # create world
         world = np.zeros([3, 10, 10, 10])
@@ -84,9 +98,12 @@ class g_sides():
         elif self.side == 5:
             tempworld[4-size:6+size, 4-size:6+size, 5+size] += 1
 
-        # path world together
-        world[0, :, :, :] = tempworld
-        world[1, :, :, :] = tempworld
-        world[2, :, :, :] = tempworld
+        for i in range(3):
+            world[i, :, :, :] = tempworld
+
+        if self.randomcolor:
+            color = hsv_to_rgb(uniform(0, 1), 1, 1)
+            for i in range(3):
+                world[i, :, :, :] *= color[i]
 
         return np.clip(world, 0, 1)
