@@ -17,19 +17,19 @@ class g_cube():
         # parameters
         self.size = 4
         self.sides = False
-
-        self.amount = 1.0
-        self.channel = 4
-
         self.sizes = cycle([0,1,2,3,4])
-
+        self.growsize = 0
+        # s2l
         self.sound_values = shared_memory.SharedMemory(name = "global_s2l_memory")
+        self.channel = 4
         self.lastvalue = 0
         self.counter = 0
+        self.speed = 0
+        self.step = 0
 
     #Strings for GUI
     def return_values(self):
-        return [b'cube', b'size', b'surface', b'channel', b'']
+        return [b'cube', b'size', b'surface', b'channel', b'speed']
 
     def return_gui_values(self):
         if self.sides == False:
@@ -44,7 +44,7 @@ class g_cube():
         else:
             channel = 'noS2L'
 
-        return bytearray('{0:<8s}{1:<8s}{2:<8s}{3:<8s}'.format(str(round(self.size,2)), sides, channel, ''),'utf-8')
+        return bytearray('{0:<8s}{1:<8s}{2:<8s}{3:<8s}'.format(str(round(self.size,2)), sides, channel, str(round(11 - self.speed,2))),'utf-8')
 
 
     def __call__(self, args):
@@ -54,6 +54,7 @@ class g_cube():
         else:
             self.sides = True
         self.channel = int(args[2]*5)-1
+        self.speed = 11 - int(args[3]*10)
 
         # create world
         world = np.zeros([3, 10, 10, 10])
@@ -69,9 +70,14 @@ class g_cube():
 
             # apply threshold
             if current_volume > 0:
-                size = next(self.sizes)
+                if self.step % self.speed == 0:
+                    size = next(self.sizes)
+                    self.growsize = size
+                else:
+                    size = self.growsize
             else:
                 size = 0
+                self.growsize = 0
 
         #check for trigger
         elif self.channel == 4:
@@ -81,13 +87,25 @@ class g_cube():
                 self.counter = 0
 
             if self.counter < 5:
-                size = next(self.sizes)
-                self.counter += 1
+                if self.step % self.speed == 0:
+                    size = next(self.sizes)
+                    self.counter += 1
+                    self.growsize = size
+                else:
+                    size = self.growsize
             else:
                 size = 0
+                self.growsize = 0
 
         else:
-            size = self.size
+            if self.speed < 11:
+                if self.step % self.speed == 0:
+                    size = next(self.sizes)
+                    self.growsize = size
+                else:
+                    size = self.growsize
+            else:
+                size = self.size
 
         # write cube
         # x slices
@@ -101,8 +119,9 @@ class g_cube():
         tempworld[4-size:6+size, 4-size:6+size, 5+size] += 1
 
         # path world together
-        world[0, :, :, :] = tempworld
-        world[1, :, :, :] = tempworld
-        world[2, :, :, :] = tempworld
+        for i in range(3):
+            world[i, :, :, :] = tempworld
+
+        self.step += 1
 
         return np.clip(world, 0, 1)

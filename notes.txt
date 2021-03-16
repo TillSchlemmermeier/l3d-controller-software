@@ -1,6 +1,5 @@
 e_sound_color kann gelöscht werden (Funktionalität in rainbow enthalten)
 sdifference gradient - colorfade?
-g_rising_square added trigger
 e_rotation added trigger, wenns funktioniert Kommentare entfernen
 g_planes: added trigger
 g_multicube added trigger, maybe problem line 68... LÖSCHEN, siehe cube
@@ -29,4 +28,4 @@ g_fulldrip
 
 
 main.py get screen resolution
-e_radial_gradient funktioniert mit s2l nicht richtig 
+e_radial_gradient funktioniert mit s2l nicht richtig

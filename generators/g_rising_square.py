@@ -47,13 +47,13 @@ class g_rising_square():
         else:
             channel = 'noS2L'
 
-        return bytearray('{0:<8s}{1:<8s}{2:<8s}{3:<8s}'.format(str(round(self.speed,2)), color, str(round(self.pause,2)), channel),'utf-8')
+        return bytearray('{0:<8s}{1:<8s}{2:<8s}{3:<8s}'.format(str(round(7-self.speed,2)), color, str(round(self.pause,2)), channel),'utf-8')
 
 
     def __call__(self, args):
         self.speed = 7-int((args[0]*6))
         self.random = int(round(args[1]))
-        self.pause = int(round((args[2]+0.06)*40)+1)
+        self.pause = int(round((args[2]+0.06)*30)+1)
         self.channel = int(args[3]*5)-1
 
         world = np.zeros([3,10,10,10])

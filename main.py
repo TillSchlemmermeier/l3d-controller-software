@@ -197,8 +197,8 @@ def rendering_visualize(array, label, pause_time = 0.03, log = False):
 
     #window.setCameraPosition(pos = None, distance = 15, elevation = 30, azimuth = 0)
     window.opts['distance'] = 30
-    window.opts['elevation'] = 30
     window.opts['azimuth'] = 40
+    window.opts['elevation'] = 30
     window.opts['fov'] = 30
     '''
     window.opts['roation'] = QtGui.QQuaternion(60,10,20,30)

@@ -11,7 +11,9 @@ class g_sides():
 
     Parameters:
     size of cube
-    Sound2Light channel
+    time before choosing new side
+    Random color of side On / Off
+    Sound2Light channel / Trigger
     '''
 
     def __init__(self):
@@ -19,14 +21,18 @@ class g_sides():
         self.sides = True
         self.side = 0
         self.randomcolor = False
+        self.counter = 1
+        self.reset = 1
         # s2l
         self.sound_values = shared_memory.SharedMemory(name = "global_s2l_memory")
         self.channel = 0
         self.lastvalue = 0
 
+        self.safeworld = np.zeros([3, 10, 10, 10])
+
     #Strings for GUI
     def return_values(self):
-        return [b'Sides', b'Size', b'Color', b'', b'Channel']
+        return [b'Sides', b'Size', b'Wait', b'Color', b'Channel']
 
     def return_gui_values(self):
         if 4 > self.channel >= 0:
@@ -41,12 +47,13 @@ class g_sides():
         else:
             color = 'Off'
 
-        return bytearray('{0:<8s}{1:<8s}{2:<8s}{3:<8s}'.format(str(round(self.size,2)), color, '', channel),'utf-8')
+        return bytearray('{0:<8s}{1:<8s}{2:<8s}{3:<8s}'.format(str(round(self.size,2)), str(round(self.reset,2)), color, channel),'utf-8')
 
 
     def __call__(self, args):
         self.size = round(args[0]*4)
-        if args[1] > 0.5:
+        self.reset = int(args[1]*10+1)
+        if args[2] > 0.5:
             self.randomcolor = True
         else:
             self.randomcolor = False
@@ -85,25 +92,36 @@ class g_sides():
             # select side
             self.side = randint(0, 5)
 
-        if self.side == 0:
-            tempworld[4-size, 4-size:6+size, 4-size:6+size] += 1
-        elif self.side == 1:
-            tempworld[5+size, 4-size:6+size, 4-size:6+size] += 1
-        elif self.side == 2:
-            tempworld[4-size:6+size, 4-size, 4-size:6+size] += 1
-        elif self.side == 3:
-            tempworld[4-size:6+size, 5+size, 4-size:6+size] += 1
-        elif self.side == 4:
-            tempworld[4-size:6+size, 4-size:6+size, 4-size] += 1
-        elif self.side == 5:
-            tempworld[4-size:6+size, 4-size:6+size, 5+size] += 1
+        if self.counter % self.reset == 0:
+            if self.side == 0:
+                tempworld[4-size, 4-size:6+size, 4-size:6+size] += 1
+            elif self.side == 1:
+                tempworld[5+size, 4-size:6+size, 4-size:6+size] += 1
+            elif self.side == 2:
+                tempworld[4-size:6+size, 4-size, 4-size:6+size] += 1
+            elif self.side == 3:
+                tempworld[4-size:6+size, 5+size, 4-size:6+size] += 1
+            elif self.side == 4:
+                tempworld[4-size:6+size, 4-size:6+size, 4-size] += 1
+            elif self.side == 5:
+                tempworld[4-size:6+size, 4-size:6+size, 5+size] += 1
 
-        for i in range(3):
-            world[i, :, :, :] = tempworld
-
-        if self.randomcolor:
-            color = hsv_to_rgb(uniform(0, 1), 1, 1)
             for i in range(3):
-                world[i, :, :, :] *= color[i]
+                world[i, :, :, :] = tempworld
+
+            if self.randomcolor:
+                color = hsv_to_rgb(uniform(0, 1), 1, 1)
+                for i in range(3):
+                    world[i, :, :, :] *= color[i]
+
+        else:
+            world = self.safeworld
+
+        self.safeworld = world
+
+        if self.channel < 4:
+            self.counter += 1
+        else:
+            self.counter = 0
 
         return np.clip(world, 0, 1)
