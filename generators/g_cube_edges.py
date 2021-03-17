@@ -17,6 +17,7 @@ class g_cube_edges():
         self.counter = 20
         self.speed = 1
         self.number = 1
+        self.wait_frames = 50
         # corner_list contains the indices for edges
         # which belong to one corner
         self.corner_list = [[   0, 8, 4], # A
@@ -55,22 +56,27 @@ class g_cube_edges():
         seed()
         #s2l
         self.sound_values = shared_memory.SharedMemory(name = "global_s2l_memory")
-        self.channel = 0
+        self.trigger = 0
         self.lastvalue = 0
 
     #Strings for GUI
     def return_values(self):
-        return [b'cube_edges', b'speed', b'number', b'', b'channel']
+        return [b'cube_edges', b'speed', b'number', b'Multi', b'Trigger']
 
     def return_gui_values(self):
-        if 4 > self.channel >= 0:
-            channel = str(self.channel)
-        elif self.channel == 4:
-            channel = "Trigger"
+        if self.trigger:
+            trigger = 'On'
         else:
-            channel = 'noS2L'
+            trigger = 'Off'
 
-        return bytearray('{0:<8s}{1:<8s}{2:<8s}{3:<8s}'.format(str(round(self.speed,2)), str(round(self.number,2)), '', channel),'utf-8')
+        if 100 > self.wait_frames > 5:
+            multi = str(round(self.wait_frames,2))
+        elif self.wait_frames >= 100:
+            multi = 'Trigger'
+        else:
+            multi = 'Off'
+
+        return bytearray('{0:<8s}{1:<8s}{2:<8s}{3:<8s}'.format(str(round(self.speed,2)), str(round(self.number,2)), multi, trigger),'utf-8')
 
 
     def __call__(self, args):
@@ -78,61 +84,84 @@ class g_cube_edges():
         self.number = int(3*args[1])
         if self.number == 0:
             self.number = 1
-        self.channel = int(args[3]*5)-1
+        self.wait_frames = int(args[2] * 100) + 5
+
+        if args[3] < 0.5:
+            self.trigger = False
+        else:
+            self.trigger = True
 
 
         # create world
         world = np.zeros([3, 10, 10, 10])
 
-        if self.channel < 4:
-            # choose new corner
-            if self.counter > 19:
-                self.counter = 0
-                self.corner = choice(self.corner_list)
+        if not self.trigger:
+            if 100 > self.wait_frames > 5:
+                if self.counter > self.wait_frames:
+                    self.counter = 0
+            elif self.wait_frames >= 100:
+                pass
 
-        # check if S2L is activated
-        elif 4 > self.channel >= 0:
-            current_volume = float(str(self.sound_values.buf[self.channel*8:self.channel*8+8],'utf-8'))
-            if current_volume > 0:
+            # choose new corner
+            elif self.counter > 19:
                 self.counter = 0
                 self.corner = choice(self.corner_list)
-                self.speed = 2.4
-                self.number = 3
 
         #check for trigger
-        elif self.channel == 4:
+        if self.trigger:
             current_volume = int(float(str(self.sound_values.buf[32:40],'utf-8')))
             if current_volume > self.lastvalue:
                 self.lastvalue = current_volume
                 self.counter = 0
                 self.corner = choice(self.corner_list)
 
-
         # create gaussian profile
         row = np.linspace(0, 19, 20)
         row = np.exp(-np.abs(row - self.counter))
 
-        # first edge
-        edge1 = self.edge_list[int(abs(self.corner[0]))]
-        if self.corner[0] >= 0:
-            world[0, edge1[0], edge1[1], edge1[2]] = row[5:15]
+        if self.wait_frames > 5:
+            for corner in self.corner_list:
+                # first edge
+                edge1 = self.edge_list[int(abs(corner[0]))]
+                if corner[0] >= 0:
+                    world[0, edge1[0], edge1[1], edge1[2]] += row[5:15]
+                else:
+                    world[0, edge1[0], edge1[1], edge1[2]] += row[5:15][::-1]
+
+                edge2 = self.edge_list[int(abs(corner[1]))]
+                if corner[1] >= 0:
+                    world[0, edge2[0], edge2[1], edge2[2]] += row[5:15]
+                else:
+                    world[0, edge2[0], edge2[1], edge2[2]] += row[5:15][::-1]
+
+                edge3 = self.edge_list[int(abs(corner[2]))]
+                if corner[2] >= 0:
+                    world[0, edge3[0], edge3[1], edge3[2]] += row[5:15]
+                else:
+                    world[0, edge3[0], edge3[1], edge3[2]] += row[5:15][::-1]
+
         else:
-            world[0, edge1[0], edge1[1], edge1[2]] = row[5:15][::-1]
-
-        # second edge
-        if self.number > 1:
-            edge2 = self.edge_list[int(abs(self.corner[1]))]
-            if self.corner[1] >= 0:
-                world[0, edge2[0], edge2[1], edge2[2]] = row[5:15]
+            # first edge
+            edge1 = self.edge_list[int(abs(self.corner[0]))]
+            if self.corner[0] >= 0:
+                world[0, edge1[0], edge1[1], edge1[2]] = row[5:15]
             else:
-                world[0, edge2[0], edge2[1], edge2[2]] = row[5:15][::-1]
+                world[0, edge1[0], edge1[1], edge1[2]] = row[5:15][::-1]
 
-        if self.number > 2:
-            edge3 = self.edge_list[int(abs(self.corner[2]))]
-            if self.corner[2] >= 0:
-                world[0, edge3[0], edge3[1], edge3[2]] = row[5:15]
-            else:
-                world[0, edge3[0], edge3[1], edge3[2]] = row[5:15][::-1]
+            # second edge
+            if self.number > 1:
+                edge2 = self.edge_list[int(abs(self.corner[1]))]
+                if self.corner[1] >= 0:
+                    world[0, edge2[0], edge2[1], edge2[2]] = row[5:15]
+                else:
+                    world[0, edge2[0], edge2[1], edge2[2]] = row[5:15][::-1]
+
+            if self.number > 2:
+                edge3 = self.edge_list[int(abs(self.corner[2]))]
+                if self.corner[2] >= 0:
+                    world[0, edge3[0], edge3[1], edge3[2]] = row[5:15]
+                else:
+                    world[0, edge3[0], edge3[1], edge3[2]] = row[5:15][::-1]
 
         # increase counter
         self.counter += self.speed

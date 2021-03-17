@@ -77,7 +77,7 @@ class g_cut():
                 self.edge = choice(self.edge_list)
                 self.brightness = 0
 
-            if self.brightness <=1.0:
+            if self.brightness <1.0:
                 world[0, self.edge[0], self.edge[1], self.edge[2]] = self.brightness**2
                 self.brightness += self.speed
             else:

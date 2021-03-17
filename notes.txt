@@ -1,28 +1,27 @@
 e_sound_color kann gelöscht werden (Funktionalität in rainbow enthalten)
 sdifference gradient - colorfade?
 e_rotation added trigger, wenns funktioniert Kommentare entfernen
-g_planes: added trigger
-g_multicube added trigger, maybe problem line 68... LÖSCHEN, siehe cube
+g_multicube löschen
 g_soundcube löschen, siehe cube
 g_cut added trigger, not quite sure what it does
 g_trees added trigger, maybe modulate step instead of reset?
-g_pyramid_upsidedown und g_pyramid zusammenlegen??
-g_smiley added trigger
+g_pyramid_upsidedown löschen
 g_edgelines corrected s2l <= --> >=, added trigger, not quite sure what it does
 Unterschied sidesquares sound_sidesquares??
 g_letters added s2l, added trigger
 g_sphere: delete g_soundsphere, delete g_growing_sphere
+g_drop ---> g_rain?
+g_cone self.number???
+g_swell unterschied zu g_growing_sphere_rand?
+a_multicube_edges löschen
 
 
 g_obliqueplaneXYZ coden
-g_sound_lines
 g_orbiter
 g_text
-a_multi_cube_edges
 a_orbbot
 
 was machen die? Muss ich einmal sehen
-g_inandout
 g_drop
 g_fulldrip
 

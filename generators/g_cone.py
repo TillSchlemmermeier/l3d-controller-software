@@ -20,7 +20,11 @@ class g_cone():
         return [b'cone', b'number', b'mode', b'', b'channel']
 
     def return_gui_values(self):
-        return bytearray('{0:<8s}{1:<8s}{2:<8s}{3:<8s}'.format(str(round(self.number,2)), str(self.mode), '', str(self.channel)),'utf-8')
+        if self.mode == 0:
+            mode = 'speaker'
+        else:
+            mode = 'cone'
+        return bytearray('{0:<8s}{1:<8s}{2:<8s}{3:<8s}'.format(str(round(self.number,2)), mode, '', str(self.channel)),'utf-8')
 
 
     def __call__(self, args):
@@ -56,7 +60,6 @@ class g_cone():
 class circleworld:
 
     def __init__(self):
-        print('ini circleworld')
         # size 5
         self.size5 = np.zeros([10,10])
 

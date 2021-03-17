@@ -18,7 +18,7 @@ class g_randomcross():
 
     #Strings for GUI
     def return_values(self):
-        return [b'randomcross', b'number', b'length', b'wait', b'Trigger']
+        return [b'randomcross', b'dimensions', b'length', b'wait', b'Trigger']
 
     def return_gui_values(self):
         if self.trigger:

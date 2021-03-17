@@ -1,16 +1,28 @@
 # modules
 import numpy as np
-from random import randint
+from random import randint, uniform
+from colorsys import hsv_to_rgb
 from multiprocessing import shared_memory
 
 
 class g_randomlines():
+    '''
+    Generator: randomlines
+
+    a random line
+
+    Parameters:
+    - wait time
+    - random color for each line on / Off
+    - s2l channel, channel 4 = Trigger mode
+    '''
 
     def __init__(self):
         self.reset = 1
         self.counter = 0
         self.saveworld = np.zeros([3,10,10,10])
-
+        self.randomcolor = 0
+        # s2l
         self.sound_values = shared_memory.SharedMemory(name = "global_s2l_memory")
         self.channel = 0
         self.lastvalue = 0
@@ -18,9 +30,14 @@ class g_randomlines():
         self.linelist = []
 
     def return_values(self):
-        return [b'randomlines', b'wait', b'', b'', b'channel']
+        return [b'randomlines', b'wait', b'Color', b'', b'channel']
 
     def return_gui_values(self):
+        if self.randomcolor == 0:
+            color = 'off'
+        else:
+            color = 'on'
+
         if 4 > self.channel >=0:
             channel = str(self.channel)
         elif self.channel == 4:
@@ -28,10 +45,11 @@ class g_randomlines():
         else:
             channel = 'noS2L'
 
-        return bytearray('{0:<8s}{1:<8s}{2:<8s}{3:<8s}'.format(str(round(self.reset,2)), '', '', channel),'utf-8')
+        return bytearray('{0:<8s}{1:<8s}{2:<8s}{3:<8s}'.format(str(round(self.reset,2)), color, '', channel),'utf-8')
 
     def __call__(self, args):
         self.reset = int(args[0]*10)+1
+        self.randomcolor = int(round(args[1]))
         self.channel = int(args[3]*5)-1
 
         world = np.zeros([3, 10, 10, 10])
@@ -46,6 +64,11 @@ class g_randomlines():
                     world[:, randint(0, 9), :, randint(0, 9)] = 1
                 elif direction == 2:
                     world[:, randint(0, 9), randint(0, 9), :] = 1
+
+                if self.randomcolor == 1:
+                    color = hsv_to_rgb(uniform(0, 1), 1, 1)
+                    for i in range(3):
+                        world[i, :, :, :] *= color[i]
 
         elif self.channel == 4:
             current_volume = int(float(str(self.sound_values.buf[32:40],'utf-8')))
@@ -68,6 +91,11 @@ class g_randomlines():
 
                     self.linelist.extend([direction, a, b])
 
+                    if self.randomcolor == 1:
+                        color = hsv_to_rgb(uniform(0, 1), 1, 1)
+                        for i in range(3):
+                            world[i, :, :, :] *= color[i]
+
             if self.step < self.reset:
                 try:
                     direction = self.linelist[3*self.step]
@@ -86,6 +114,11 @@ class g_randomlines():
                 elif direction == 2:
                     world[:, a, b, :] = 1
 
+                if self.randomcolor == 1:
+                    color = hsv_to_rgb(uniform(0, 1), 1, 1)
+                    for i in range(3):
+                        world[i, :, :, :] *= color[i]
+
 
                 self.step += 1
 
@@ -98,6 +131,11 @@ class g_randomlines():
                 world[:, randint(0, 9), :, randint(0, 9)] = 1
             elif direction == 2:
                 world[:, randint(0, 9), randint(0, 9), :] = 1
+
+            if self.randomcolor == 1:
+                color = hsv_to_rgb(uniform(0, 1), 1, 1)
+                for i in range(3):
+                    world[i, :, :, :] *= color[i]
 
         else:
             world = self.saveworld

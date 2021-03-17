@@ -105,7 +105,7 @@ class g_circles():
             current_volume = int(float(str(self.sound_values.buf[32:40],'utf-8')))
             if current_volume > self.lastvalue:
                 self.lastvalue = current_volume
-                self.counter = 3
+                self.counter = 8
 
             if self.counter > 0:
                 self.number = self.counter

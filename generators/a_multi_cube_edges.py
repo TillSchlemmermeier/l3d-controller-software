@@ -42,6 +42,10 @@ class a_multi_cube_edges():
     def return_values(self):
         return [b'a_multi_cube_edges', b'wait', b'speed', b'', b'']
 
+    def return_gui_values(self):
+        return bytearray('{0:<8s}{1:<8s}{2:<8s}{3:<8s}'.format(str(round(self.wait_frames,2)), str(round(self.speed,2)), '', ''),'utf-8')
+
+
     def __call__(self, args):
         self.wait_frames = int(args[0] * 100)+5
         self.speed = args[1]

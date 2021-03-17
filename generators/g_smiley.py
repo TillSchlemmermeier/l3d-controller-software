@@ -40,13 +40,13 @@ class g_smiley():
 
     #Strings for GUI
     def return_values(self):
-        return [b'smiley', b'wait', b'', b'', b'Triger']
+        return [b'smiley', b'wait', b'', b'', b'Trigger']
 
     def return_gui_values(self):
-        if self.channel > 0.2:
-            trigger = 'Off'
+        if self.trigger > 0.2:
+            trigger = 'On'
         else:
-            trigger = '0n'
+            trigger = 'Off'
 
         return bytearray('{0:<8s}{1:<8s}{2:<8s}{3:<8s}'.format(str(round(self.wait,2)), '', '', trigger),'utf-8')
 
@@ -68,7 +68,7 @@ class g_smiley():
             if current_volume > self.lastvalue:
                 self.lastvalue = current_volume
                 self.counter = 0
-            if self.counter < self.max:
+            if self.counter < self.max-1:
                 self.counter += 1
 
         else:

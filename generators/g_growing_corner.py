@@ -31,61 +31,54 @@ class g_growing_corner():
         self.zpos = 0
 
         self.sound_values = shared_memory.SharedMemory(name = "global_s2l_memory")
-        self.channel = 4
         self.lastvalue = 0
         self.trigger = False
+        self.switch = False
 
     #Strings for GUI
     def return_values(self):
-        return [b'growing_corner', b'maxsize', b'speed', b'', b'channel']
+        return [b'growing_corner', b'maxsize', b'speed', b'', b'Trigger']
 
     def return_gui_values(self):
-        if 4 > self.channel >= 0:
-            channel = str(self.channel)
-        elif self.channel == 4:
-            channel = "Trigger"
+        if self.trigger:
+            trigger = 'On'
         else:
-            channel = 'noS2L'
+            trigger = 'Off'
 
-        return bytearray('{0:<8s}{1:<8s}{2:<8s}{3:<8s}'.format(str(round(self.maxsize,2)), str(round(self.growspeed,2)), '', channel),'utf-8')
+        return bytearray('{0:<8s}{1:<8s}{2:<8s}{3:<8s}'.format(str(round(self.maxsize,2)), str(round(55-self.growspeed,2)), '', trigger),'utf-8')
 
 
     def __call__(self, args):
         self.maxsize = args[0]*18
         self.growspeed = 60 - (args[1]*50+5)
         self.steps = int(self.maxsize/self.growspeed)
-        self.channel = int(args[3]*5)-1
+
+        if args[3] < 0.5:
+            self.trigger = False
+        else:
+            self.trigger = True
+
 
         world = np.zeros([3, 10, 10, 10])
 
         size = (-np.cos(self.counter*np.pi/self.growspeed)+1)*0.5*self.maxsize
 
-        # check if s2l is activated
-        if 4 > self.channel >= 0:
-            if self.counter == 0:
-                list = ([0,0,0],[0,0,9],[0,9,0],[0,9,9],[9,0,0],[9,9,0],[9,0,9], [9,9,9])
-                [self.xpos, self.ypos, self.zpos] = choice(list)
-            current_volume = float(str(self.sound_values.buf[self.channel*8:self.channel*8+8],'utf-8'))
-            if current_volume > 0:
-                self.counter += int(current_volume*2)
-                if self.counter > self.maxsize:
-                    self.counter = 0
 
         #check for trigger
-        elif self.channel == 4:
+        if self.trigger:
             current_volume = int(float(str(self.sound_values.buf[32:40],'utf-8')))
             if current_volume > self.lastvalue:
                 self.lastvalue = current_volume
-                self.trigger = True
+                self.switch = True
                 self.counter = 0
                 list = ([0,0,0],[0,0,9],[0,9,0],[0,9,9],[9,0,0],[9,9,0],[9,0,9], [9,9,9])
                 [self.xpos, self.ypos, self.zpos] = choice(list)
 
-            if self.trigger:
+            if self.switch:
                 if self.counter < self.growspeed:
                     self.counter += 1
                 else:
-                    self.trigger = False
+                    self.switch = False
 
 
         elif self.counter > self.growspeed:
@@ -110,7 +103,7 @@ class g_growing_corner():
         world[1, :, :, :] = world[0, :, :, :]
         world[2, :, :, :] = world[0, :, :, :]
 
-        if self.channel < 0:
+        if not self.trigger:
             self.counter += 1
 
         return np.round(np.clip(world, 0, 1), 3)
