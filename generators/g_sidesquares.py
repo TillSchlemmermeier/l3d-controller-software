@@ -19,6 +19,8 @@ class g_sidesquares():
         self.channel = 0
         self.lastvalue = 0
         self.steps = 0
+        self.reset = 0
+        self.number = 0
 
     def return_values(self):
         if self.channel < 0:
@@ -46,7 +48,7 @@ class g_sidesquares():
 
     def __call__(self, args):
         self.inside = int(round(args[0]))
-        self.reset = int(args[1]*20+1)
+        self.reset = int(args[1]*9+1)
         self.number = int(args[2]*12 + 1)
         self.channel = int(args[3]*5)-1
 

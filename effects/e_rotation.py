@@ -92,8 +92,6 @@ class e_rotation():
 #            self.old_volume = np.clip(self.old_volume - 0.08, 0, 100)*0.9
             self.old_volume = np.clip(self.old_volume - current_volume/8, 0, 100)*0.9
 
-            '''
-
             # rotate
             for i in range(3):
                 world[i, :, :, :] = rotate(world[i, :, :, :], self.step*self.oldspeed[0],
@@ -112,7 +110,7 @@ class e_rotation():
             self.xspeed = self.oldspeed[0]
             self.yspeed = self.oldspeed[1]
             self.zspeed = self.oldspeed[2]
-
+            '''
 
 
         elif self.channel == 4:

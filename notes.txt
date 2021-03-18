@@ -20,10 +20,12 @@ g_sound_sidesquares löschen!
 g_random_grow??
 g_stacking???
 g_text reparieren
+g_explodingsquares reparieren
 
 g_obliqueplaneXYZ coden
 g_orbiter
 a_orbbot
+fix e_rotation s2l
 
 main.py get screen resolution
 e_radial_gradient funktioniert mit s2l nicht richtig

@@ -76,10 +76,17 @@ for i in [21]:
 
         counter += 1
 
-    #third grow
+    #third row
     for j in range(0, 8):
         if counter < len(global_preset_labels):
             labels[i, 2, j] = global_preset_labels[counter]
+
+        counter += 1
+
+    #4th row
+    for j in range(0, 8):
+        if counter < len(global_preset_labels):
+            labels[i, 3, j] = global_preset_labels[counter]
 
         counter += 1
 
@@ -102,12 +109,20 @@ for i in [1, 6, 11, 16]:
 
         counter += 1
 
-    #third grow
+    # 3rd row
     for j in range(0, 8):
         if counter < len(preset_labels):
             labels[i, 2, j] = preset_labels[counter]
 
         counter += 1
+
+    # 4th row
+    for j in range(0, 8):
+        if counter < len(preset_labels):
+            labels[i, 3, j] = preset_labels[counter]
+
+        counter += 1
+
 
 
 # add generators
