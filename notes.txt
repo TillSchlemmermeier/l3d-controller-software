@@ -10,21 +10,20 @@ g_edgelines corrected s2l <= --> >=, added trigger, not quite sure what it does
 Unterschied sidesquares sound_sidesquares??
 g_letters added s2l, added trigger
 g_sphere: delete g_soundsphere, delete g_growing_sphere
-g_drop ---> g_rain?
+g_drop ---> g_rain ---> fulldrip?
 g_cone self.number???
 g_swell unterschied zu g_growing_sphere_rand?
 a_multicube_edges löschen
-
+g_centralgrow Parameter verbessern??
+g_soundcube löschen!
+g_sound_sidesquares löschen!
+g_random_grow??
+g_stacking???
+g_text reparieren
 
 g_obliqueplaneXYZ coden
 g_orbiter
-g_text
 a_orbbot
-
-was machen die? Muss ich einmal sehen
-g_drop
-g_fulldrip
-
 
 main.py get screen resolution
 e_radial_gradient funktioniert mit s2l nicht richtig

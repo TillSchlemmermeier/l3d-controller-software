@@ -59,8 +59,6 @@ class g_sinus():
                 self.counter = 0
 
             if self.counter < 6:
-
-                0 - 0.5
                 self.freq1 += 0.5 - (self.counter / 10)
                 self.freq2 += 0.5 - (self.counter / 10)
                 self.counter += 1

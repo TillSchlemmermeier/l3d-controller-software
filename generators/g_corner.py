@@ -72,19 +72,12 @@ class g_corner():
         if self.channel == 4 and self.randomcolor == 1:
             for i in range(3):
                 world[i,0:self.size,0:self.size,0:self.size] = self.colorlist[0][i]
-            for i in range(3):
                 world[i,0:self.size,0:self.size,10-self.size:] = self.colorlist[1][i]
-            for i in range(3):
                 world[i,0:self.size,10-self.size:,0:self.size] = self.colorlist[2][i]
-            for i in range(3):
                 world[i,10-self.size:,0:self.size,0:self.size] = self.colorlist[3][i]
-            for i in range(3):
                 world[i,0:self.size,10-self.size:,10-self.size:] = self.colorlist[4][i]
-            for i in range(3):
                 world[i,10-self.size:,0:self.size,10-self.size:] = self.colorlist[5][i]
-            for i in range(3):
                 world[i,10-self.size:,10-self.size:,0:self.size] = self.colorlist[6][i]
-            for i in range(3):
                 world[i,10-self.size:,10-self.size:,10-self.size:] = self.colorlist[7][i]
 
         else:
