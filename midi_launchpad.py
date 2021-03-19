@@ -327,13 +327,13 @@ class class_launchpad_mk3:
 
         # generator and effect choice
         for i in range(20,40):
-            self.global_parameter[i] = randint(0, 255)
+            self.global_parameter[i] = randint(0, 54)
 
         # channels
         for i in [40, 70, 100, 130]:
             self.global_parameter[i] = 0
             for j in range(i+5, i+30):
-                self.global_parameter[i] = random()
+                self.global_parameter[j] = random()
 
         # turn channel 1 on
         self.global_parameter[40] = 1
