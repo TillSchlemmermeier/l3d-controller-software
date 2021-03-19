@@ -52,10 +52,9 @@ def remove_gen(generators, remove_generator):
     for preset in list_presets:
         # loop over channels
         for i in range(4):
-            if preset[1+5*i] == index:
+            if int(float(preset[1+5*i])) == index:
                 generator_used = True
                 print("generator used in global preset " + preset[0] + ". Eedit or remove global preset first")
-
 
     if not generator_used:
         temp.remove(remove_generator+'\n')
@@ -76,7 +75,6 @@ def get_dictionary(old_gens, new_gens):
             swap_dict[i] = ind
         except:
             print("making dictionary, generator " + str(i) + " now missing")
-
     return swap_dict
 
 def update_presets(swap_dict):
@@ -116,6 +114,7 @@ def update_global_presets(swap_dict):
             ind = int(float(preset[1+i*5]))
             preset[1+i*5] = str(swap_dict[ind])
 
+
     print('trying to save global presets...')
     # saving modified presets
     with open('global_presets.dat', 'w') as file:
@@ -143,8 +142,8 @@ if __name__ == "__main__":
 
         if generators != new_generators:
             swap_dict = get_dictionary(generators, new_generators)
-            update_presets(swap_dict)
             update_global_presets(swap_dict)
+            update_presets(swap_dict)
 
             with open('generators.dat', 'w') as file:
                 for line in new_generators:
@@ -153,6 +152,7 @@ if __name__ == "__main__":
 
         else:
             print("no changes saved")
+
 
     except:
         print('ERROR!' )

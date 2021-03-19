@@ -151,11 +151,20 @@ def rendering(array, label, pause_time = 0.03, log = False):
 
     # get positions for scatter plot
     pos = []
-    for x in range(10):
-        for y in range(10):
-            for z in range(10):
-                pos.append([x, y, z])
+    for z in range(10):
+        for x in range(10):
+            for y in range(10):
+                pos.append([x, y, 9-z])
 
+    '''
+    xyz
+    xzy
+    yxz
+    yzx
+    zxy
+    zyx
+
+    '''
     pos = np.array(pos)
     # pos-4.5 to center cube
     scatterplot = gl.GLScatterPlotItem(pos = pos-4.5, size = 20)

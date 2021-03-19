@@ -1,11 +1,8 @@
 e_sound_color kann gelöscht werden (Funktionalität in rainbow enthalten)
 sdifference gradient - colorfade?
-e_rotation added trigger, wenns funktioniert Kommentare entfernen
-g_multicube löschen
 g_cut added trigger, not quite sure what it does
 g_trees added trigger, maybe modulate step instead of reset?
 g_letters added s2l, added trigger
-g_sphere: delete g_growing_sphere
 g_drop ---> g_rain ---> fulldrip?
 g_cone self.number???
 g_swell unterschied zu g_growing_sphere_rand?
@@ -22,7 +19,7 @@ fix e_rotation s2l
 
 main.py get screen resolution
 e_radial_gradient funktioniert mit s2l nicht richtig
-
+standard für channel 0 = 150Hz
 
 
 g_pyramid_upsidedown gelöscht
@@ -30,3 +27,5 @@ g_soundcube gelöscht
 g_sound_sidesquares gelöscht
 g_soundsphere gelöscht
 a_multi_cube_edges gelöscht
+g_multicube gelöscht
+g_growing_sphere gelöscht
