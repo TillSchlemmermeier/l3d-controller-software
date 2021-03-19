@@ -388,7 +388,11 @@ class class_launchpad_mk3:
             self.midiout.send_message([144, 17, 13])
 
             # send autopilot
-            self.midiout.send_message([144, 18, 1])
+            if self.global_parameter[5] == 0:
+                self.midiout.send_message([144, 18, 1])
+            else:
+                self.midiout.send_message([144, 18, 1])
+                self.midiout.send_message([145, 18, 45])
 
             for i in range(4):
                 self.midiout.send_message([144, 81+i,  5])
@@ -405,7 +409,11 @@ class class_launchpad_mk3:
                 self.midiout.send_message([144, 11+i, 2])
 
                 # on/off button
-                self.midiout.send_message([144, 88, 2])
+                if self.global_parameter[0] == 0:
+                    self.midiout.send_message([144, 88, 54])
+                    self.midiout.send_message([145, 88, 45])
+                else:
+                    self.midiout.send_message([144, 88, 54])
         else:
             # select color
             if self.state[0] == 1:

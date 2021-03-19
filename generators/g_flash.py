@@ -1,6 +1,6 @@
 # modules
 import numpy as np
-from random import choice
+from random import choice, randint
 from multiprocessing import shared_memory
 
 class g_flash():
@@ -36,6 +36,7 @@ class g_flash():
         world = np.zeros([3, 10, 10, 10])
 
         # check if S2L is activated
+        '''
         if 4 > self.channel >= 0:
             current_volume = float(str(self.sound_values.buf[self.channel*8:self.channel*8+8],'utf-8'))
             if current_volume > 0:
@@ -45,17 +46,18 @@ class g_flash():
                 else:
                     self.edge = choice(self.edge_list)
                     self.brightness = 0
+        '''
+        print(self.counter)
 
-
-        if self.counter > self.reset:
+        if self.counter < self.reset:
             for p in range(self.counter):
-                world[0, *self.points[p]] = 1
+                world[0, self.points[p][0], self.points[p][1], self.points[p][2]] = 1
 
             self.counter += 1
 
         else:
             self.counter = 0
-            self.points = self.gen_line
+            self.points = self.gen_line()
 
         world[1, :, :, :] = world[0, :, :, :]
         world[2, :, :, :] = world[0, :, :, :]
@@ -65,11 +67,12 @@ class g_flash():
     def gen_line(self):
 
         points = []
-        points.append([0, randint(0,9), [randint(0,9)])
+        points.append([0, randint(0,9), randint(0,9)])
 
         for i in range(9):
+            print(i)
             y = np.clip(points[-1][1] + choice([-1,0,1]), 0, 9)
             z = np.clip(points[-1][2] + choice([-1,0,1]), 0, 9)
-            points.append([i, x, y])
+            points.append([i, y, z])
 
         return points

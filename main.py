@@ -304,7 +304,7 @@ if __name__ == '__main__':
         global_label[i] = b'init'
 
     # start values for s2l_engine
-    global_parameter[10] = 0.1
+    global_parameter[10] = 0.12
     global_parameter[11] = 0.2
     global_parameter[12] = 0.45
     global_parameter[13] = 0.7

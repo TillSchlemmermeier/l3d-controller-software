@@ -30,31 +30,19 @@ class g_letters():
 
     def __call__(self, args):
         # parsing input
-        self.char = chr(int(args[0]*127)+97)
+        if self.channel != 4:
+            self.char = chr(int(args[0]*(122-48))+48)
+
         self.channel = int(args[3]*5)-1
 
         # create empty world
         world = np.zeros([3, 10, 10, 10])
 
-        self.size = 8
+        self.size = 12
+        # self.char = 'X'
         self.font = ImageFont.truetype("/usr/share/fonts/truetype/ubuntu/UbuntuMono-R.ttf", self.size)
-        img = Image.new(mode = 'L', size = (self.size, self.size), color = (0))
+        img = Image.new(mode = 'L', size = (10, 10), color = (0))
 
-        d = ImageDraw.Draw(img)
-        d.text((0, -2), 'X',  font = self.font, fill=(255))# , anchor = 'rs')
-        self.frame = np.array(img)[:, ::-1]/255.0
-
-        if np.shape(self.frame)[0] == 10:
-            pass
-        elif np.shape(self.frame)[0] < 10:
-            add = 10 - np.shape(self.frame)[0]
-            temp = np.zeros([10, 10])
-            temp[1 : -1, 1 : -1] = self.frame
-            # temp[int(add/2) : -int(add/2), int(add/2) : -int(add/2)] = self.frame
-            self.frame = temp
-        else:
-            cut = np.shape(self.frame)[0] - 10
-            self.frame = self.frame[int(cut/2) : -int(cut/2), int(cut/2) : -int(cut/2)]
 
         # check if S2L is activated
         if 4 > self.channel >= 0:
@@ -62,20 +50,41 @@ class g_letters():
             if current_volume > 0:
                 self.size = np.clip(current_volume * 30, 2, 30)
 
-        #check for trigger
+        # check for trigger
         elif self.channel == 4:
             current_volume = int(float(str(self.sound_values.buf[32:40],'utf-8')))
-            if current_volume > self.lastvalue:
+            if current_volume > self.lastvalue+3:
                 self.lastvalue = current_volume
-                self.size = 2
+                print(self.counter)
+                if self.counter < 9:
+                    self.char = chr(48+self.counter)
+                    self.counter += 1
+                else:
+                    self.counter = 0
 
-            if self.size < 30:
-                self.size += 2
 
-        elif self.size < 30:
-            self.size += 2
+
+
+        d = ImageDraw.Draw(img)
+        w, h = self.font.getsize(self.char)
+        # print(w,h,(10-w)/2,(10-h)/2)
+        d.text(((10-w)/2,(10-h)/2 -2), self.char,  font = self.font, fill=(255))
+        self.frame = np.array(img)[:, ::-1]/255.0
+
+        if np.shape(self.frame)[0] == 10:
+            pass
+        elif np.shape(self.frame)[0] < 10:
+            add = 10 - np.shape(self.frame)[0]
+            temp = np.zeros([10, 10])
+            temp = self.frame # [ add:-add,  add: -add]
+            # temp[int(add/2) : -int(add/2), int(add/2) : -int(add/2)] = self.frame
+            self.frame = temp
         else:
-            self.size = 2
+            cut = np.shape(self.frame)[0] - 10
+            self.frame = self.frame[int(cut/2) : -int(cut/2), int(cut/2) : -int(cut/2)]
+
+
+
 
         # copy world from storate to world
         world[0,:,4,:] = self.frame
