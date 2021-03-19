@@ -135,9 +135,19 @@ def rendering(array, label, pause_time = 0.03, log = False):
     # initialize window
     app = QtGui.QApplication([])
     window = gl.GLViewWidget()
+    window.setWindowTitle('L3D Cube')
+    screen_resolution = app.desktop().screenGeometry()
+    width = screen_resolution.width()
+    # x coordinate, y coordinate, xsize, ysize
+    window.setGeometry(width + 1, 0, 1080, 1200)
+    window.setWindowFlags(QtCore.Qt.FramelessWindowHint)
+
+    #window.setCameraPosition(pos = None, distance = 15, elevation = 30, azimuth = 0)
+    window.opts['distance'] = 30
+    window.opts['azimuth'] = 40
+    window.opts['elevation'] = 30
+    window.opts['fov'] = 30
     window.show()
-    #g = gl.GLGridItem()
-    #window.addItem(g)
 
     # get positions for scatter plot
     pos = []
@@ -147,8 +157,8 @@ def rendering(array, label, pause_time = 0.03, log = False):
                 pos.append([x, y, z])
 
     pos = np.array(pos)
-    pos[:, :] = pos[:, :] - 4.5
-    scatterplot = gl.GLScatterPlotItem(pos = pos, )
+    # pos-4.5 to center cube
+    scatterplot = gl.GLScatterPlotItem(pos = pos-4.5, size = 20)
     window.addItem(scatterplot)
 
     # start rendering engine
@@ -163,12 +173,11 @@ def rendering(array, label, pause_time = 0.03, log = False):
     '''
     def update():
         colors = frame_renderer.run()
-        colors += 0.05
-
-        #colors[:, :] = 1.0
+        colors[:, :] += 0.05
         #colors[0, 0] = 0.0
         #colors[1, 1] = 0.0
         #colors[8, 2] = 0.0
+
 
         scatterplot.setData(color = np.clip(colors, 0, 1))
 
