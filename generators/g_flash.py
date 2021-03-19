@@ -9,6 +9,7 @@ class g_flash():
         self.counter = 0
         self.points = self.gen_line()
         self.reset = 10
+        self.speed = 1
 
         # s2l
         self.sound_values = shared_memory.SharedMemory(name = "global_s2l_memory")
@@ -32,6 +33,8 @@ class g_flash():
 
     def __call__(self, args):
 
+        self.speed = int(round(args[0]*1))+1
+
         # create world
         world = np.zeros([3, 10, 10, 10])
 
@@ -50,10 +53,12 @@ class g_flash():
         print(self.counter)
 
         if self.counter < self.reset:
-            for p in range(self.counter):
-                world[0, self.points[p][0], self.points[p][1], self.points[p][2]] = 1
+            for i in self.speed:
+                for step in range(self.counter):
+                    for point = self.points[step]:
+                        world[0, points[0], points[1], points[2]] = 1
 
-            self.counter += 1
+                self.counter += 1
 
         else:
             self.counter = 0
@@ -69,10 +74,10 @@ class g_flash():
         points = []
         points.append([0, randint(0,9), randint(0,9)])
 
-        for i in range(9):
-            print(i)
+        for i in range(1,9):
             y = np.clip(points[-1][1] + choice([-1,0,1]), 0, 9)
             z = np.clip(points[-1][2] + choice([-1,0,1]), 0, 9)
             points.append([i, y, z])
+
 
         return points
