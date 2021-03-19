@@ -11,13 +11,13 @@ g_random_grow??
 g_stacking???
 g_text reparieren
 g_explodingsquares reparieren
+g_multicube löschen
 
 g_obliqueplaneXYZ coden
 g_orbiter
 a_orbbot
 fix e_rotation s2l
 
-main.py get screen resolution
 e_radial_gradient funktioniert mit s2l nicht richtig
 standard für channel 0 = 150Hz
 
@@ -27,5 +27,4 @@ g_soundcube gelöscht
 g_sound_sidesquares gelöscht
 g_soundsphere gelöscht
 a_multi_cube_edges gelöscht
-g_multicube gelöscht
 g_growing_sphere gelöscht

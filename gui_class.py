@@ -208,9 +208,9 @@ class MainWindow(QtWidgets.QMainWindow):
 
         for item in self.stringArray_ch1:
             if "G:" in item.text() or "E:" in item.text():
-                item.setStyleSheet("color: black; font: 16px; font-weight: bold");
+                item.setStyleSheet("color: black; font: 16px; font-weight: bold; font-family: Manjari;");
             else:
-                item.setStyleSheet("color: black; font: 14px;");
+                item.setStyleSheet("color: black; font: 14px;; font-family: Manjari;");
             fi_ch1_CGL.addWidget(item)
 #
         self.stringArray_ch2 = []
@@ -242,9 +242,9 @@ class MainWindow(QtWidgets.QMainWindow):
 
         for item in self.stringArray_ch2:
             if "G:" in item.text() or "E:" in item.text():
-                item.setStyleSheet("color: black; font: 18px; font-weight: bold");
+                item.setStyleSheet("color: black; font: 18px; font-weight: bold; font-family: Manjari;");
             else:
-                item.setStyleSheet("color: black; font: 14px;");
+                item.setStyleSheet("color: black; font: 14px;; font-family: Manjari;");
             fi_ch2_CGL.addWidget(item)
 #
         self.stringArray_ch3 = []
@@ -275,9 +275,9 @@ class MainWindow(QtWidgets.QMainWindow):
 
         for item in self.stringArray_ch3:
             if "G:" in item.text() or "E:" in item.text():
-                item.setStyleSheet("color: black; font: 18px; font-weight: bold");
+                item.setStyleSheet("color: black; font: 18px; font-weight: bold; font-family: Manjari;");
             else:
-                item.setStyleSheet("color: black; font: 14px;");
+                item.setStyleSheet("color: black; font: 14px;; font-family: Manjari;");
             fi_ch3_CGL.addWidget(item)
 #
         self.stringArray_ch4 = []
@@ -308,9 +308,9 @@ class MainWindow(QtWidgets.QMainWindow):
 
         for item in self.stringArray_ch4:
             if "G:" in item.text() or "E:" in item.text():
-                item.setStyleSheet("color: black; font: 18px; font-weight: bold");
+                item.setStyleSheet("color: black; font: 18px; font-weight: bold; font-family: Manjari;");
             else:
-                item.setStyleSheet("color: black; font: 14px;");
+                item.setStyleSheet("color: black; font: 14px;; font-family: Manjari;");
             fi_ch4_CGL.addWidget(item)
 
         #  copy params to check for changes
@@ -586,23 +586,23 @@ class MainWindow(QtWidgets.QMainWindow):
         for active, channel in zip(active_menu, [self.stringArray_ch1, self.stringArray_ch2, self.stringArray_ch3, self.stringArray_ch4]):
             # reset
             for i ,j, k, l in zip(channel[4:9], channel[9:14], channel[14:19], channel[19:24]):
-                i.setStyleSheet("color: black; font: 16px; background-color: "+offcolor[0])
-                j.setStyleSheet("color: black; font: 16px; background-color: "+offcolor[1])
-                k.setStyleSheet("color: black; font: 16px; background-color: "+offcolor[2])
-                l.setStyleSheet("color: black; font: 16px; background-color: "+offcolor[3])
+                i.setStyleSheet("color: black; font: 16px; font-family: Manjari; background-color: "+offcolor[0])
+                j.setStyleSheet("color: black; font: 16px; font-family: Manjari; background-color: "+offcolor[1])
+                k.setStyleSheet("color: black; font: 16px; font-family: Manjari; background-color: "+offcolor[2])
+                l.setStyleSheet("color: black; font: 16px; font-family: Manjari; background-color: "+offcolor[3])
 
             if active == 0:
                 for i in channel[4:9]:
-                    i.setStyleSheet("font-weight: bold; color: black; font: 16px; background-color: "+oncolor[0])
+                    i.setStyleSheet("font-weight: bold; color: black; font: 16px; font-family: Manjari; background-color: "+oncolor[0])
             elif active == 1:
                 for i in channel[9:14]:
-                    i.setStyleSheet("font-weight: bold; color: black; font: 16px; background-color: "+oncolor[1])
+                    i.setStyleSheet("font-weight: bold; color: black; font: 16px; font-family: Manjari; background-color: "+oncolor[1])
             elif active == 2:
                 for i in channel[14:19]:
-                    i.setStyleSheet("font-weight: bold; color: black; font: 16px; background-color: "+oncolor[2])
+                    i.setStyleSheet("font-weight: bold; color: black; font: 16px; font-family: Manjari; background-color: "+oncolor[2])
             elif active == 3:
                 for i in channel[19:24]:
-                    i.setStyleSheet("font-weight: bold; color: black; font: 16px; background-color: "+oncolor[3])
+                    i.setStyleSheet("font-weight: bold; color: black; font: 16px; font-family: Manjari; background-color: "+oncolor[3])
 
         if self.global_parameter[40] == 0:
             self.fi_ch1_CGF.setStyleSheet('background-color: rgba(75, 75, 75, 1);')
