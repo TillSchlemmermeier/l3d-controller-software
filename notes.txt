@@ -19,7 +19,6 @@ a_orbbot
 fix e_rotation s2l
 
 e_radial_gradient funktioniert mit s2l nicht richtig
-standard für channel 0 = 150Hz
 
 
 g_pyramid_upsidedown gelöscht
