@@ -1,5 +1,6 @@
 import time as time
 from rtmidi.midiutil import open_midiinput,open_midioutput, open_midiport
+from random import randint, random
 
 class class_launchpad_mk3:
 
@@ -176,6 +177,11 @@ class class_launchpad_mk3:
                 elif message[1] == 15:
                     print('saving global preset')
                     self.save_global_preset()
+
+                # now the randomizer
+                elif message[1] == 16:
+                    self.randomizer()
+
             else:
                 # some selection menu is open
 
@@ -317,6 +323,21 @@ class class_launchpad_mk3:
         correction = int(number/8)*8 / 2.0
         return number - correction
 
+    def randomizer(self):
+
+        # generator and effect choice
+        for i in range(20,40):
+            self.global_parameter[i] = randint(0, 255)
+
+        # channels
+        for i in [40, 70, 100, 130]:
+            self.global_parameter[i] = 0
+            for j in range(i+5, i+30):
+                self.global_parameter[i] = random()
+
+        # turn channel 1 on
+        self.global_parameter[40] = 1
+
 
     def sendstate(self):
         """send states and colors to midi device"""
@@ -359,6 +380,9 @@ class class_launchpad_mk3:
             self.midiout.send_message([144, 65, 13])
             self.midiout.send_message([144, 55, 21])
             self.midiout.send_message([144, 45, 37])
+
+            # send randomizer
+            self.midiout.send_message([144, 16, 23])
 
             # send global effect control switch for fighter
             self.midiout.send_message([144, 17, 13])
