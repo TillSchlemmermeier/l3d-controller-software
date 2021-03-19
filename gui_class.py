@@ -466,7 +466,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
                     if counter == ind + 1:
                         # active generator/effect gets red border
-                        self.padlabels[x][y].setStyleSheet('Background-color: rgba('+', '.join(color)+'); color: red; border-style: dashed; border-width: 4px; border-color: red; text-align: center;')
+                        self.padlabels[x][y].setStyleSheet('Background-color: rgba('+', '.join(color)+'); color: red; border-style: dashed; border-width: 4px; border-color: white; text-align: center;')
                     else:
                         self.padlabels[x][y].setStyleSheet('background-color: rgba('+', '.join(color)+'); text-align: center;')
 
