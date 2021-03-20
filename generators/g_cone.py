@@ -29,7 +29,7 @@ class g_cone():
 
     def __call__(self, args):
         self.number = int(args[0]*10)
-        self.channel = int(args[4]*3)
+        self.channel = int(args[3]*3)
         self.mode = int(round(args[1]))
 
         world = np.zeros([3, 10, 10, 10])

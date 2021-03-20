@@ -13,9 +13,14 @@ class g_letters():
         self.channel = 0
         self.lastvalue = 0
         self.counter = 0
+        self.beatstep = 0
 
     def return_values(self):
-        return [b'Letters', b'char', b'', b'', b'channel']
+        if self.channel == 4:
+            return [b'Letters', b'char', b'beatstep', b'', b'channel']
+        else:
+            return [b'Letters', b'char', b'', b'', b'channel']
+
 
     def return_gui_values(self):
         if 4 > self.channel >= 0:
@@ -25,14 +30,20 @@ class g_letters():
         else:
             channel = 'noS2L'
 
-        return bytearray('{0:<8s}{1:<8s}{2:<8s}{3:<8s}'.format(self.char, '', '', channel),'utf-8')
+
+        if self.channel == 4:
+            return bytearray('{0:<8s}{1:<8s}{2:<8s}{3:<8s}'.format(self.char, str(round(self.beatstep,2)), '', channel),'utf-8')
+
+
+        else:
+            return       bytearray('{0:<8s}{1:<8s}{2:<8s}{3:<8s}'.format(self.char, '', '', channel),'utf-8')
 
 
     def __call__(self, args):
         # parsing input
         if self.channel != 4:
             self.char = chr(int(args[0]*(122-48))+48)
-
+        self.beatstep = int(args[1]*8)
         self.channel = int(args[3]*5)-1
 
         # create empty world
@@ -53,10 +64,9 @@ class g_letters():
         # check for trigger
         elif self.channel == 4:
             current_volume = int(float(str(self.sound_values.buf[32:40],'utf-8')))
-            if current_volume > self.lastvalue+3:
+            if current_volume > self.lastvalue+self.beatstep:
                 self.lastvalue = current_volume
-                print(self.counter)
-                if self.counter < 9:
+                if self.counter < 10:
                     self.char = chr(48+self.counter)
                     self.counter += 1
                 else:

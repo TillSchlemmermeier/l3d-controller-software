@@ -8,7 +8,8 @@ class g_flash():
     def __init__(self):
         self.counter = 0
         self.points = self.gen_line()
-        self.reset = 10
+        self.reset = 11
+        self.wait = 4
         self.speed = 1
 
         # s2l
@@ -18,7 +19,7 @@ class g_flash():
 
     #Strings for GUI
     def return_values(self):
-        return [b'flash', b'', b'', b'', b'channel']
+        return [b'flash', b'speed', b'wait', b'', b'channel']
 
     def return_gui_values(self):
         if 4 > self.channel >= 0:
@@ -28,12 +29,13 @@ class g_flash():
         else:
             channel = 'noS2L'
 
-        return bytearray('{0:<8s}{1:<8s}{2:<8s}{3:<8s}'.format('', '', '', channel),'utf-8')
+        return bytearray('{0:<8s}{1:<8s}{2:<8s}{3:<8s}'.format(str(self.speed), str(self.wait), '', channel),'utf-8')
 
 
     def __call__(self, args):
 
         self.speed = int(round(args[0]*1))+1
+        self.wait = int(round(args[1]*20))
 
         # create world
         world = np.zeros([3, 10, 10, 10])
@@ -50,19 +52,27 @@ class g_flash():
                     self.edge = choice(self.edge_list)
                     self.brightness = 0
         '''
-        print(self.counter)
 
-        if self.counter < self.reset:
-            for i in self.speed:
+        if 0 < self.counter < self.reset:
+            for i in range(self.speed):
                 for step in range(self.counter):
-                    for point = self.points[step]:
-                        world[0, points[0], points[1], points[2]] = 1
+                    world[0, self.points[step][0], self.points[step][1], self.points[step][2]] = 1
 
                 self.counter += 1
 
-        else:
-            self.counter = 0
+        elif self.reset <= self.counter < self.reset + 2:
+            self.counter += 1
+
+        elif self.reset + 2 <= self.counter < self.reset + 4:
+            for p in self.points:
+                world[0, p[0], p[1], p[2]] = 1
+            self.counter += 1
+
+        elif self.counter >= self.reset + 4:
+            self.counter = -self.wait
             self.points = self.gen_line()
+        else:
+            self.counter += 1
 
         world[1, :, :, :] = world[0, :, :, :]
         world[2, :, :, :] = world[0, :, :, :]
@@ -74,7 +84,7 @@ class g_flash():
         points = []
         points.append([0, randint(0,9), randint(0,9)])
 
-        for i in range(1,9):
+        for i in range(1,10):
             y = np.clip(points[-1][1] + choice([-1,0,1]), 0, 9)
             z = np.clip(points[-1][2] + choice([-1,0,1]), 0, 9)
             points.append([i, y, z])
