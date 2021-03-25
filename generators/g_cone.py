@@ -7,30 +7,27 @@ from scipy.signal import sawtooth
 class g_cone():
 
     def __init__(self):
-        self.number = 1
         self.sound_values = shared_memory.SharedMemory(name = "global_s2l_memory")
-        self.soundsize = 1
         self.make_rings = circleworld()
         self.channel = 0
         self.sizes = np.array([0,0,0,0])
-        self.counter = 1
         self.mode = 0
+        self.counter = 0
 
     def return_values(self):
-        return [b'cone', b'number', b'mode', b'', b'channel']
+        return [b'cone', b'mode', b'', b'', b'channel']
 
     def return_gui_values(self):
         if self.mode == 0:
             mode = 'speaker'
         else:
             mode = 'cone'
-        return bytearray('{0:<8s}{1:<8s}{2:<8s}{3:<8s}'.format(str(round(self.number,2)), mode, '', str(self.channel)),'utf-8')
+        return bytearray('{0:<8s}{1:<8s}{2:<8s}{3:<8s}'.format(mode, '', '', str(self.channel)),'utf-8')
 
 
     def __call__(self, args):
-        self.number = int(args[0]*10)
+        self.mode = int(round(args[0]))
         self.channel = int(args[3]*3)
-        self.mode = int(round(args[1]))
 
         world = np.zeros([3, 10, 10, 10])
 

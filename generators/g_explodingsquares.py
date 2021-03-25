@@ -64,8 +64,8 @@ class g_explodingsquares():
                 self.ypos = randint(3,6)
                 self.zpos = randint(3,6)
                 self.direction = randint(0,3)
-            if self.counter > 7:
-                self.counter = 7
+            if self.counter > 8:
+                self.counter = 8
 
 
         if self.counter <= self.nframes:

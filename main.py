@@ -34,7 +34,6 @@ from random import choice
 
 #from PyQt5.QtCore import QObject,QThread, pyqtSigna
 #from mainwindow import Ui_MainWindow
-
 def autopilot(array):
 
     starttime = tottime()
@@ -156,15 +155,6 @@ def rendering(array, label, pause_time = 0.03, log = False):
             for y in range(10):
                 pos.append([x, y, 9-z])
 
-    '''
-    xyz
-    xzy
-    yxz
-    yzx
-    zxy
-    zyx
-
-    '''
     pos = np.array(pos)
     # pos-4.5 to center cube
     scatterplot = gl.GLScatterPlotItem(pos = pos-4.5, size = 20)
@@ -213,28 +203,21 @@ def rendering_visualize(array, label, pause_time = 0.03, log = False):
     window.setGeometry(width + 1, 0, 1080, 1200)
     window.setWindowFlags(QtCore.Qt.FramelessWindowHint)
 
-    #window.setCameraPosition(pos = None, distance = 15, elevation = 30, azimuth = 0)
     window.opts['distance'] = 30
     window.opts['azimuth'] = 40
     window.opts['elevation'] = 30
     window.opts['fov'] = 30
-    '''
-    window.opts['roation'] = QtGui.QQuaternion(60,10,20,30)
-    quaternion = QtGui.QQuaternion(60,10,20,30)
-    print(quaternion)
-    window.opts['center'] = [0.0,0.0,0.0]
-    print(window.cameraPosition())
-    '''
+
     window.show()
     #g = gl.GLGridItem()
     #window.addItem(g)
 
     # get positions for scatter plot
     pos = []
-    for x in range(10):
-        for y in range(10):
-            for z in range(10):
-                pos.append([x, y, z])
+    for z in range(10):
+        for x in range(10):
+            for y in range(10):
+                pos.append([x, y, 9-z])
 
     pos = np.array(pos)
     # pos-4.5 to center cube
@@ -247,10 +230,6 @@ def rendering_visualize(array, label, pause_time = 0.03, log = False):
     def update():
         colors = frame_renderer.run()
         colors[:, :] += 0.05
-        #colors[0, 0] = 0.0
-        #colors[1, 1] = 0.0
-        #colors[8, 2] = 0.0
-
 
         scatterplot.setData(color = np.clip(colors, 0, 1))
 

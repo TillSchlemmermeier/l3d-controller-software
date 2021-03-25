@@ -51,7 +51,7 @@ class e_colorfade():
             self.step = (current_volume * np.pi) / self.speed
 
         #check if trigger is activated
-        elif self.channel > 3 :
+        elif self.channel > 4 :
             current_volume = int(float(str(self.sound_values.buf[32:40],'utf-8')))
             #check if trigger has been activated
             if current_volume > self.lastvalue:

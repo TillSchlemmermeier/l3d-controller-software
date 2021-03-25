@@ -35,7 +35,7 @@ class e_rainbow:
 
     def __call__(self, world, args):
         # parsing input
-        self.speed = args[0]/20
+        self.speed = (args[0]**2)/20
         self.Trigger = args[3]
 
         color = hsv_to_rgb(self.color[0], 1, 1)

@@ -1,15 +1,18 @@
-e_sound_color kann gelöscht werden (Funktionalität in rainbow enthalten)
+e_sound_color löschen (siehe rainbow)
+e_sound_gradient löschen
+
 sdifference gradient - colorfade?
-g_cut added trigger, not quite sure what it does
+repair e_squared
+e_rotating_rainbow adapt parameters
+überall die balance rausnehmen
+e_radial_gradient funktioniert mit s2l nicht richtig
+
 g_trees added trigger, maybe modulate step instead of reset?
-g_letters added s2l, added trigger
 g_drop ---> g_rain ---> fulldrip?
-g_cone self.number???
-g_swell unterschied zu g_growing_sphere_rand?
+g_swell löschen (siehe g_growing_sphere_rand)
 g_centralgrow Parameter verbessern??
 g_random_grow??
 g_stacking???
-g_explodingsquares reparieren
 g_multicube löschen
 
 g_obliqueplaneXYZ coden
@@ -17,12 +20,54 @@ g_orbiter
 a_orbbot
 fix e_rotation s2l
 
-e_radial_gradient funktioniert mit s2l nicht richtig
 
-
-g_pyramid_upsidedown gelöscht
-g_soundcube gelöscht
-g_sound_sidesquares gelöscht
-g_soundsphere gelöscht
-a_multi_cube_edges gelöscht
 g_growing_sphere gelöscht
+
+
+Effekte sortieren:
+e_blank
+e_rainbow
+e_staticcolor
+e_gradient
+e_colorfade
+e_radial_gradient
+e_rotating_rainbow
+
+e_redyellow
+
+e_s2l
+e_tremolo
+e_rare_strobo
+e_bright_osci
+e_soundstrobo
+e_random_brightness
+
+e_rotation
+e_mirror
+e_slicer
+e_brightness_wave
+e_mean
+e_mean_vertical
+e_squared
+e_mean_updown
+e_randomizer
+e_soundfade
+
+e_rotating_black_color
+e_rotating_black_white
+e_rotating_blue_orange
+e_outer_shadow
+
+e_divider
+
+
+e_sound_color
+e_sound_gradient
+
+
+rainbow: immer durch den regenbogen
+gradient: c1 und c2 aber nur x-achse (Ortskoordinate)
+staticcolor: eine bestimmte Farbe
+colorfade: fade bestimmt 2 Farben (Zeitkoordinate)
+radial_gradient: c1 und c2: radialkoordinaten
+roating rainbow:

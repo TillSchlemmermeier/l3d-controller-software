@@ -18,7 +18,7 @@ class e_radial_gradient():
 
         self.c1 = [0.1,0.0,0.0]
         self.c2 = [0.4,0.4,0.0]
-        self.balance = 1.0
+        self.balance = 6.0
         self.sound_values = shared_memory.SharedMemory(name = "global_s2l_memory")
         self.channel = 4
 
@@ -31,7 +31,7 @@ class e_radial_gradient():
 
 
     def return_values(self):
-        return [b'rad grad', b'Color In', b'ColorOut', b'Balance', b'channel']
+        return [b'rad grad', b'Color In', b'ColorOut', b'', b'channel']
 
     def return_gui_values(self):
         if self.channel >= 0:
@@ -39,13 +39,13 @@ class e_radial_gradient():
         else:
             channel = 'noS2L'
 
-        return bytearray('{0:<8s}{1:<8s}{2:<8s}{3:<8s}'.format(str(round(self.c1[0],1)), str(round(self.c2[0],1)), str(round(self.balance,1)), channel), 'utf-8')
+        return bytearray('{0:<8s}{1:<8s}{2:<8s}{3:<8s}'.format(str(round(self.c1[0],1)), str(round(self.c2[0],1)), '', channel), 'utf-8')
 
     def __call__(self, world, args):
         # parsing input
         self.c1[0] = args[0] # hsv_to_rgb(c1,1,1)
         self.c2[0] = args[1] # hsv_to_rgb(c2,1,1)
-        self.balance = 6 * args[2] + 0.01
+        #self.balance = 6 * args[2] + 0.01
         self.channel = int(args[3]*4)-1
 
         # check if s2l is activated

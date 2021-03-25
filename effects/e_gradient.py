@@ -36,12 +36,6 @@ class e_gradient():
         self.balance = 1 - (2 * args[2])
         self.channel = int(args[3]*4)-1
 
-        '''
-        if self.c2 > self.c1:
-            temp = self.c1
-            self.c1 = self.c2
-            self.c2 = temp
-        '''
 
         # generate color list
         x = np.array([0,1,2,3,4,5,6,7,8,9])
@@ -65,9 +59,8 @@ class e_gradient():
         # choose color according to x position
         for x in range(10):
             color = hsv_to_rgb(y[x],1,1)
-            world[0,x,:,:] = world[0,x,:,:] * color[0]
-            world[1,x,:,:] = world[1,x,:,:] * color[1]
-            world[2,x,:,:] = world[2,x,:,:] * color[2]
+            for i in range(3):
+                world[i,x,:,:] = world[i,x,:,:] * color[i]
 
         return np.clip(world, 0, 1)
 

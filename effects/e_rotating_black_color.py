@@ -1,5 +1,6 @@
 # modules
 import numpy as np
+from colorsys import hsv_to_rgb
 from scipy.ndimage.interpolation import rotate
 
 
@@ -12,8 +13,9 @@ class e_rotating_black_color():
         self.xspeed = 0.1
         self.yspeed = 0.1
         self.zspeed = 0.0
-        self.color = {'r':1.0, 'g':0.0, 'b':0.0}
+        self.color = [0.1,0.0,0.0]
         self.step = 0
+        self.hue = 0.1
 
         # create gradient
         self.colorworld = np.zeros([3, 10, 10, 10])
@@ -28,10 +30,12 @@ class e_rotating_black_color():
 
     #strings for GUI
     def return_values(self):
-        return [b'rotating_black_color', b'X speed', b'Y speed', b'Z speed', b'color']
+        return [b'rotating_black_color', b'X speed', b'Y speed', b'Z speed', b'R G B']
 
     def return_gui_values(self):
-        return bytearray('{0:<8s}{1:<8s}{2:<8s}{3:<8s}'.format(str(round(self.xspeed,1)), str(round(self.yspeed,1)), str(round(self.zspeed,1)), ''), 'utf-8')
+        RGBvalues = str(round(self.color[0]*10)) + ' ' + str(round(self.color[1]*10)) + ' ' + str(round(self.color[2]*10))
+
+        return bytearray('{0:<8s}{1:<8s}{2:<8s}{3:<8s}'.format(str(round(self.xspeed,1)), str(round(self.yspeed,1)), str(round(self.zspeed,1)), RGBvalues), 'utf-8')
 
 
     def __call__(self, world, args):
@@ -39,7 +43,9 @@ class e_rotating_black_color():
         self.xspeed = args[0]*15+0.01
         self.yspeed = args[1]*15
         self.zspeed = args[2]*15
-        self.color = color_translate(args[3])
+        self.hue = args[3]
+
+        self.color = hsv_to_rgb(self.hue, 1, 1)
 
         # rotate
         newworld = rotate(self.colorworld, self.step*self.xspeed,
@@ -54,56 +60,11 @@ class e_rotating_black_color():
                           axes = (2,3), order = 1,
 	                      mode = 'nearest', reshape = False)
 
+        self.step += 1
 
-        #self.colorworld[0, :, :, :] *= self.color['r']
-        #self.colorworld[0, :, :, :] *= self.color['g']
-        #self.colorworld[0, :, :, :] *= self.color['b']
-
-        newworld[0, :, :, :] = newworld[0, :, :, :]*self.color['r']
-        newworld[1, :, :, :] = newworld[1, :, :, :]*self.color['g']
-        newworld[2, :, :, :] = newworld[2, :, :, :]*self.color['b']
+        for i in range(3):
+            newworld[i, :, :, :] = newworld[i, :, :, :]*self.color[i]
 
         world = newworld * world
 
-        self.step += 1
-
         return np.clip(world, 0, 1)
-
-
-
-def color_translate(value):
-    value *= 127
-    #translates values from 0 to 127 to rgb values
-    if (value>126):
-        value=126
-
-    r_out = 0.0
-    g_out = 0.0
-    b_out = 0.0
-
-    if(value<=21):
-        r_out=1
-        g_out=value/21.0
-        b_out=0
-    elif(value>21 and value<=42):
-        r_out=1-((value-21.0)/21.0)
-        g_out=1
-        b_out=0
-    elif(value>42 and value<=63):
-        r_out=0
-        g_out=1
-        b_out=(value-42.0)/21.0
-    elif(value>63 and value<=84):
-        r_out=0
-        g_out=1-((value-63.0)/21.0)
-        b_out=1
-    elif(value>84 and value<=105):
-        r_out=(value-84.0)/21.0
-        g_out=0
-        b_out=1
-    elif(value>105):
-        r_out=1
-        g_out=0
-        b_out=1-((value-105.0)/21.0)
-
-    return {'r':r_out, 'g':g_out, 'b':b_out}
