@@ -4,6 +4,8 @@ from random import randint, random
 import tkinter as tk
 from tkinter import simpledialog
 import subprocess as sb
+from sklearn import svm
+from random import choice, random
 
 class class_launchpad_mk3:
 
@@ -36,6 +38,19 @@ class class_launchpad_mk3:
         self.indices.append([30, 31, 32, 33] + [x for x in range(100,130)])
         self.indices.append([35, 36, 37, 38] + [x for x in range(130,160)])
 
+
+        # when initialising, learn also classifier
+        with open('database.dat', 'r') as file:
+            database = file.readlines().strip('\n').split()
+
+            features = []
+            targets = []
+            for dat in database:
+                targets.append(int(dat[0]))
+                features.append(np.array(dat[1:], dtype = 'float'))
+
+            self.classifier = svm.SVC(kernel = 'rbf')
+            self.classifier.fit(features, labels)
 
     def event(self, event, data=None):
         """Call gets midi message and calls the mapping routine"""
@@ -193,6 +208,18 @@ class class_launchpad_mk3:
 
                     with open('database.dat', 'a+') as file:
                          file.write(' '.join(last))
+
+                    # relearn classifier
+                    with open('database.dat', 'r') as file:
+                        database = file.readlines().strip('\n').split()
+
+                        features = []
+                        targets = []
+                        for dat in database:
+                            targets.append(int(dat[0]))
+                            features.append(np.array(dat[1:], dtype = 'float'))
+
+                        self.classifier.fit(features, labels)
 
 
                 # now the randomizer
@@ -424,11 +451,15 @@ class class_launchpad_mk3:
         # generator = sphere
         self.global_parameter[20] = 2
 
+
+        new_settings = [random() for i in range(4)]
+
+        print(new_settings, '->', classifier.predict([new_settings]))
         # channels
         for i in [40]:
             self.global_parameter[i] = 0
-            for j in range(i+5, i+10):
-                self.global_parameter[j] = random()
+            for j, n in zip(range(i+5, i+10),new_settings):
+                self.global_parameter[j] = n
 
         # turn channel 1 on
         self.global_parameter[40] = 1
