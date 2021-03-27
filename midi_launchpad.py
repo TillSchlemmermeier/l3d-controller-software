@@ -1,6 +1,9 @@
 import time as time
 from rtmidi.midiutil import open_midiinput,open_midioutput, open_midiport
 from random import randint, random
+import tkinter as tk
+from tkinter import simpledialog
+import subprocess as sb
 
 class class_launchpad_mk3:
 
@@ -134,10 +137,10 @@ class class_launchpad_mk3:
 
                 elif key[0] == 8 and key[1] <= 4:
                     print('saving preset for channel', key[1])
-                    try:
-                        self.save_preset(key[1])
-                    except:
-                        print('error saving preset!')
+                    #try:
+                    self.save_preset(key[1])
+                    #except:
+                    #    print('error saving preset!')
 
                 elif key[0] == 7 and key[1] <= 4:
                     print('saving temporary preset for channel', key[1])
@@ -178,9 +181,23 @@ class class_launchpad_mk3:
                     print('saving global preset')
                     self.save_global_preset()
 
+                # good randomizer
+                elif message[1] == 26:
+
+                    with open('database.dat', 'r') as file:
+                         last = file.readlines()[-1].split()
+
+                         last[0] = '1'
+
+                    sb.call('head -n -1 database.dat > temp && mv temp database.dat', shell = True)
+
+                    with open('database.dat', 'a+') as file:
+                         file.write(' '.join(last))
+
+
                 # now the randomizer
                 elif message[1] == 16:
-                    self.randomizer()
+                    self.randomizer_test()
 
             else:
                 # some selection menu is open
@@ -248,33 +265,98 @@ class class_launchpad_mk3:
         '''appends the current values of a channel to a file
         channel goes from 1 to 4
         '''
+        preset_used = False
+        ROOT = tk.Tk()
+        ROOT.withdraw()
+        # the input dialog
+        USER_INP = simpledialog.askstring(title="name",
+                                          prompt="Name of the preset: ")
+
         # assemble list of parameters
         list = []
-        list.append('name')
+        list.append(USER_INP)
 
         for i in self.indices[channel-1]:
             list.append(str(round(self.global_parameter[i], 2)))
 
+        # check if preset name is already used
+        with open(filename, 'r') as file:
+            presets = file.readlines()
+
+        list_presets = []
+        for p in presets:
+            list_presets.append(p.strip('\n').split())
+
+        for i in range(len(list_presets)):
+            if str(list_presets[i][0]) == USER_INP:
+                preset_used = True
+                list_presets[i] = list
+
         # save preset
-        with open(filename, 'a+') as file:
-            file.write(' '.join(list)+'\n')
+        # replace
+        if preset_used:
+            with open(filename, 'w') as file:
+                for preset in list_presets:
+                    file.write(' '.join(preset) + '\n')
+            print("preset updated")
+        # append
+        else:
+            with open(filename, 'a+') as file:
+                file.write(' '.join(list)+'\n')
+            print("preset added")
+
+
 
     def save_global_preset(self, filename = 'global_presets.dat'):
         '''appends the current values of a channel to a file
         channel goes from 1 to 4
         '''
+        preset_used = False
+        ROOT = tk.Tk()
+        ROOT.withdraw()
+        # the input dialog
+        USER_INP = simpledialog.askstring(title="name",
+                                          prompt="Name of global preset: ")
+
+
         # assemble list of parameters
         list = []
-        list.append('name')
+        list.append(USER_INP)
 
         for i in range(20,159):
             list.append(str(round(self.global_parameter[i], 2)))
 
         for i in range(231,246):
             list.append(str(round(self.global_parameter[i], 2)))
+
+
+        # check if preset name is already used
+        with open(filename, 'r') as file:
+            presets = file.readlines()
+
+        list_presets = []
+        for p in presets:
+            list_presets.append(p.strip('\n').split())
+
+        for i in range(len(list_presets)):
+            if str(list_presets[i][0]) == USER_INP:
+                preset_used = True
+                list_presets[i] = list
+
         # save global preset
-        with open(filename, 'a+') as file:
-            file.write(' '.join(list)+'\n')
+        # replace
+        if preset_used:
+            with open(filename, 'w') as file:
+                for preset in list_presets:
+                    file.write(' '.join(preset) + '\n')
+            print("global preset updated")
+        # append
+        else:
+            with open(filename, 'a+') as file:
+                file.write(' '.join(list)+'\n')
+            print("global preset added")
+
+
 
     def load_preset(self, preset_id, channel, filename = 'presets.dat'):
         '''loads preset from file and writes to global array'''
@@ -338,6 +420,31 @@ class class_launchpad_mk3:
         # turn channel 1 on
         self.global_parameter[40] = 1
 
+    def randomizer_test(self):
+        # generator = sphere
+        self.global_parameter[20] = 2
+
+        # channels
+        for i in [40]:
+            self.global_parameter[i] = 0
+            for j in range(i+5, i+10):
+                self.global_parameter[j] = random()
+
+        # turn channel 1 on
+        self.global_parameter[40] = 1
+
+        # assemble list of parameters
+        list = []
+        list.append('0')
+
+        for i in range(4):
+            list.append(str(round(self.global_parameter[45+i], 2)))
+
+        with open('database.dat', 'a+') as file:
+            file.write(' '.join(list) + '\n')
+
+        print("random entry added to database")
+
 
     def sendstate(self):
         """send states and colors to midi device"""
@@ -383,6 +490,9 @@ class class_launchpad_mk3:
 
             # send randomizer
             self.midiout.send_message([144, 16, 23])
+
+            # send voting button
+            self.midiout.send_message([144, 26, 24])
 
             # send global effect control switch for fighter
             self.midiout.send_message([144, 17, 13])

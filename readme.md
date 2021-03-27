@@ -135,7 +135,8 @@ pip3 install scipy
 pip3 install matplotlib
 pip3 install pyqtgraph
 pip3 install PyOpenGL
-sudo apt-get install python3-pyqt4.qtopengl
+sudo apt install python3-pyqt4.qtopengl
+sudo apt install python3-tk
 
 git clone https://github.com/TillSchlemmermeier/l3d-controller-software
 cd l3d-controller-software/
