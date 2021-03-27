@@ -41,7 +41,7 @@ class class_launchpad_mk3:
 
 
         # when initialising, learn also classifier
-        self.classifier = svm.SVC(kernel = 'rbf')
+        self.classifier = svm.SVC() # kernel = 'rbf'
         with open('database.dat', 'r') as file:
             database = file.readlines()
 
@@ -466,15 +466,35 @@ class class_launchpad_mk3:
         with open('effects.dat', 'r') as file:
             num_eff = len(file.readlines())
 
+
+        bla = 0
+        while True:
+            # generate random "proposal"
+            new = []
+            new.append(randint(1, num_gen - 1))
+            for i in range(3):
+                new.append(randint(0, num_eff - 1))
+
+            for i in range(20):
+                new.append(random())
+
+            print(bla, self.classifier.predict([new]))
+            bla += 1
+
+            if self.classifier.predict([new])[0] == 1:
+                break
+
+
+        new = iter(new)
         # choose generator
-        self.global_parameter[20] = randint(1, num_gen - 1)
+        self.global_parameter[20] = next(new)
 
         # effect choice
         for i in range(21,24):
-            self.global_parameter[i] = randint(0, num_eff - 1)
+            self.global_parameter[i] = next(new)
 
         for i in range(45, 64):
-            self.global_parameter[i] = random()
+            self.global_parameter[i] = next(new)
 
         for i in [49, 54, 59]:
             self.global_parameter[i] = 0
