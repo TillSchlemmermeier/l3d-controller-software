@@ -6,6 +6,7 @@ from tkinter import simpledialog
 import subprocess as sb
 from sklearn import svm
 from random import choice, random
+import numpy as np
 
 class class_launchpad_mk3:
 
@@ -40,17 +41,22 @@ class class_launchpad_mk3:
 
 
         # when initialising, learn also classifier
+        self.classifier = svm.SVC(kernel = 'rbf')
         with open('database.dat', 'r') as file:
-            database = file.readlines().strip('\n').split()
+            database = file.readlines()
 
             features = []
             targets = []
             for dat in database:
-                targets.append(int(dat[0]))
-                features.append(np.array(dat[1:], dtype = 'float'))
+                temp = dat.strip('\n').split()
+                targets.append(int(temp[0]))
+                features.append(np.array(temp[1:], dtype = 'float'))
 
-            self.classifier = svm.SVC(kernel = 'rbf')
-            self.classifier.fit(features, labels)
+
+            try:
+                self.classifier.fit(features, targets)
+            except:
+                print('learning failed')
 
     def event(self, event, data=None):
         """Call gets midi message and calls the mapping routine"""
@@ -203,23 +209,28 @@ class class_launchpad_mk3:
                          last = file.readlines()[-1].split()
 
                          last[0] = '1'
-
+                    # delete last line of database.dat
                     sb.call('head -n -1 database.dat > temp && mv temp database.dat', shell = True)
 
                     with open('database.dat', 'a+') as file:
-                         file.write(' '.join(last))
+                         file.write(' '.join(last)+'\n')
 
                     # relearn classifier
                     with open('database.dat', 'r') as file:
-                        database = file.readlines().strip('\n').split()
+                        database = file.readlines()
 
                         features = []
                         targets = []
                         for dat in database:
-                            targets.append(int(dat[0]))
-                            features.append(np.array(dat[1:], dtype = 'float'))
+                            temp = dat.strip('\n').split()
+                            targets.append(int(temp[0]))
+                            features.append(np.array(temp[1:], dtype = 'float'))
 
-                        self.classifier.fit(features, labels)
+                        try:
+                            self.classifier.fit(features, targets)
+                            print('relearned classifier!')
+                        except:
+                            print('fail to learn classifier')
 
 
                 # now the randomizer
@@ -448,19 +459,30 @@ class class_launchpad_mk3:
         self.global_parameter[40] = 1
 
     def randomizer_test(self):
-        # generator = sphere
-        self.global_parameter[20] = 2
+        # get number of generators
+        with open('generators.dat', 'r') as file:
+            num_gen = len(file.readlines())
+        # get number of effects
+        with open('effects.dat', 'r') as file:
+            num_eff = len(file.readlines())
 
+        # choose generator
+        self.global_parameter[20] = randint(0, num_gen - 1)
 
-        new_settings = [random() for i in range(4)]
+        # effect choice
+        for i in range(21,24):
+            self.global_parameter[i] = randint(0, num_eff - 1)
 
-        print(new_settings, '->', classifier.predict([new_settings]))
-        # channels
-        for i in [40]:
+        for i in range(45, 64):
+            self.global_parameter[i] = random()
+
+        for i in [49, 54, 59]:
             self.global_parameter[i] = 0
-            for j, n in zip(range(i+5, i+10),new_settings):
-                self.global_parameter[j] = n
 
+        #try:
+        print("This guess is ", self.classifier.predict([[*self.global_parameter[20:24], *self.global_parameter[45:65]]]))
+        #except:
+        #    print('no prediction available')
         # turn channel 1 on
         self.global_parameter[40] = 1
 
@@ -468,7 +490,10 @@ class class_launchpad_mk3:
         list = []
         list.append('0')
 
-        for i in range(4):
+        for i in [20, 21, 22, 23]:
+            list.append(str(self.global_parameter[i]))
+
+        for i in range(20):
             list.append(str(round(self.global_parameter[45+i], 2)))
 
         with open('database.dat', 'a+') as file:
