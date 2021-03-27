@@ -467,7 +467,7 @@ class class_launchpad_mk3:
             num_eff = len(file.readlines())
 
         # choose generator
-        self.global_parameter[20] = randint(0, num_gen - 1)
+        self.global_parameter[20] = randint(1, num_gen - 1)
 
         # effect choice
         for i in range(21,24):
