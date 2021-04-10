@@ -1,6 +1,3 @@
-e_sound_color löschen (siehe rainbow)
-e_sound_gradient löschen
-
 sdifference gradient - colorfade?
 repair e_squared
 e_rotating_rainbow adapt parameters
@@ -13,15 +10,11 @@ g_swell löschen (siehe g_growing_sphere_rand)
 g_centralgrow Parameter verbessern??
 g_random_grow??
 g_stacking???
-g_multicube löschen
 
 g_obliqueplaneXYZ coden
 g_orbiter
 a_orbbot
 fix e_rotation s2l
-
-
-g_growing_sphere gelöscht
 
 
 Effekte sortieren:

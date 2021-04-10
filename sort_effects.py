@@ -146,32 +146,34 @@ def update_global_presets(swap_dict):
 if __name__ == "__main__":
     print(sys.argv)
 
-    try:
-        with open('effects.dat', 'r') as file:
-            effects = file.readlines()
 
-        if sys.argv[1] == 'a':
-            new_effects = append_eff(effects, sys.argv[2])
-        elif sys.argv[1] == 'i':
-            new_effects = insert_eff(effects, sys.argv[2], int(sys.argv[3]))
-        elif sys.argv[1] == 's':
-            new_effects = swap_eff(effects, sys.argv[2], sys.argv[3])
-        elif sys.argv[1] == 'r':
-            new_effects = remove_eff(effects, sys.argv[2])
+    with open('effects.dat', 'r') as file:
+        effects = file.readlines()
 
-        if effects != new_effects:
-            swap_dict = get_dictionary(effects, new_effects)
-            update_presets(swap_dict)
-            update_global_presets(swap_dict)
+    if sys.argv[1] == 'a':
+        new_effects = append_eff(effects, sys.argv[2])
+    elif sys.argv[1] == 'i':
+        new_effects = insert_eff(effects, sys.argv[2], int(sys.argv[3]))
+    elif sys.argv[1] == 's':
+        new_effects = swap_eff(effects, sys.argv[2], sys.argv[3])
+    elif sys.argv[1] == 'r':
+        new_effects = remove_eff(effects, sys.argv[2])
 
-            with open('effects.dat', 'w') as file:
-                for line in new_effects:
-                    file.write(line)
-            print("effects.dat updated")
+    if effects != new_effects:
+        swap_dict = get_dictionary(effects, new_effects)
+        update_presets(swap_dict)
+        update_global_presets(swap_dict)
 
-        else:
-            print("no changes saved")
+        with open('effects.dat', 'w') as file:
+            for line in new_effects:
+                file.write(line)
+        print("effects.dat updated")
 
+    else:
+        print("no changes saved")
+
+'''
     except:
         print('ERROR!' )
         print('usage: python3.8 sort_effects.py <a/i/s> <new_effect/new_effect/effect 1> <NaN/pos/effect 2>')
+'''

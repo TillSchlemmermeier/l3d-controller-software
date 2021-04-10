@@ -39,8 +39,8 @@ class class_arduino_midi:
         # create an list with avaiable presets and what
         # can be [modified, minimal value, maximal value]
         self.presets = []
-        self.presets.append([1, [10, 0, 1]])
-        self.presets.append([4, [10, 0, 1]])
+        self.presets.append([1, [9, 0, 1]])
+        self.presets.append([4, [9, 0, 1]])
 
     def load_preset(self, preset_id, channel, filename = 'presets.dat'):
 

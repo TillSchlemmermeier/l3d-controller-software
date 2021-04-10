@@ -102,27 +102,13 @@ for i in [1, 6, 11, 16]:
 
         counter += 1
 
-    # second row
-    for j in range(0, 8):
-        if counter < len(preset_labels):
-            labels[i, 1, j] = preset_labels[counter]
+    # for next 4 rows
+    for row in range(1, 6):
+        for column in range(0, 8):
+            if counter < len(preset_labels):
+                labels[i, row, column] = preset_labels[counter]
 
-        counter += 1
-
-    # 3rd row
-    for j in range(0, 8):
-        if counter < len(preset_labels):
-            labels[i, 2, j] = preset_labels[counter]
-
-        counter += 1
-
-    # 4th row
-    for j in range(0, 8):
-        if counter < len(preset_labels):
-            labels[i, 3, j] = preset_labels[counter]
-
-        counter += 1
-
+            counter += 1
 
 
 # add generators

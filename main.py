@@ -304,7 +304,7 @@ if __name__ == '__main__':
 
     # assign processes
     proc_midi = mp.Process(target=midi_devices, args = [global_parameter])
-    # proc_arduino = mp.Process(target=midi_arduino, args = [global_parameter])
+    proc_arduino = mp.Process(target=midi_arduino, args = [global_parameter])
     proc_gui = mp.Process(target=gui, args = [global_parameter, global_label, mode])
     # proc_artnet = mp.Process(target=artnet_process, args = [global_parameter])
     proc_sound = mp.Process(target = sound_process, args = [global_parameter])
@@ -335,16 +335,16 @@ if __name__ == '__main__':
     # starting processes
     print('start')
     proc_midi.start()
-    # proc_arduino.start()
+    #proc_arduino.start()
     proc_renderer.start()
     proc_autopilot.start()
     proc_gui.start()
     proc_sound.start()
-    # proc_artnet.start()
+    #proc_artnet.start()
 
 #    time.sleep(1)
     proc_midi.join()
-    # proc_arduino.join()
+    #proc_arduino.join()
     proc_renderer.join()
     proc_gui.join()
     proc_sound.join()
