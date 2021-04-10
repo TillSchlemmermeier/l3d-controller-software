@@ -3,6 +3,7 @@ import serial
 import serial.tools.list_ports
 import numpy as np
 
+
 class class_arduino_midi:
 
     def __init__(self, array):
@@ -14,7 +15,8 @@ class class_arduino_midi:
         ports = list(serial.tools.list_ports.comports())
 
         for p in ports:
-            if p.serial_number == '55731323536351C012B2':
+            print(p.pid)
+            if p.pid == 29987:
                 print('found arduino')
                 self.arduino = serial.Serial(p.device, 9600)
 
@@ -34,13 +36,11 @@ class class_arduino_midi:
         self.indices.append([30, 31, 32, 33] + [x for x in range(100,130)])
         self.indices.append([35, 36, 37, 38] + [x for x in range(130,160)])
 
-        # create an dict with avaiable presets and what
+        # create an list with avaiable presets and what
         # can be [modified, minimal value, maximal value]
-        self.presets = {}
-        self.presets[1] = [[10, 0, 1]]
-        self.presets[4] = [[10, 0, 1]]
-
-
+        self.presets = []
+        self.presets.append([1, [10, 0, 1]])
+        self.presets.append([4, [10, 0, 1]])
 
     def load_preset(self, preset_id, channel, filename = 'presets.dat'):
 
@@ -72,51 +72,40 @@ class class_arduino_midi:
 
             try:
                 # parse raw message
-                message = message.decode("utf-8")
-                message = message.split(':')
-                value = int(message[1])
-                print('+', message)
+                temp = message.decode("utf-8")
+                channel = int(temp[0])
+                message = int(temp[1])
+                value   = int(temp[2:])
+                # print('+', channel, message, value)
 
-                # first, preset encoders
-                if message[0] == '00':
-                    if value < self.values[0, 0]:
-                        self.values[0, 0] = value
-                        self.values[0, 1] += 1
-                        keys = list(self.presets.keys())
+                # map into self.values
+                if message == 0:
+                    if value > self.values[0, channel]:
+                        self.values[0, channel] = value
+                        self.values[1, channel] += 1
+                    elif value < self.values[0, channel]:
+                        self.values[0, channel] = value
+                        self.values[1, channel] -= 1
 
-                        # get preset number
-                        id = keys[int(self.values[0, 1]%len(self.presets.keys()))]
+                    # clip list id to length of preset list
+                    self.values[1, channel] = np.clip(self.values[1, channel], 0, len(self.presets)-1)
+                    preset_id = self.presets[int(self.values[1, channel])][0]
+                    # load preset
+                    self.load_preset(int(preset_id), channel)
 
-                        self.load_preset(id, 0)
+                elif message == 1:
+                    # print('change value')
+                    self.values[2, channel] = value/100
 
-                    elif value > self.values[0, 0]:
-                        self.values[0, 0] = value
-                        self.values[0, 1] -= 1
+                    for mod in self.presets[int(self.values[1, channel])][1:]:
+                        temp_val = self.values[2, channel]*(mod[2] - mod[1]) + mod[1]
+                        temp_ind = self.indices[channel][mod[0]]
+                        self.global_parameter[temp_ind] = temp_val
+                        # print(temp_ind,  '->', temp_val)
 
-                        # get preset number
-                        id = keys[int(self.values[0, 1]%len(self.presets.keys()))]
+#                     pos = self.indices[channel][self.preset[self]]
 
-                        self.load_preset(id, 0)
-                # the, values
-                elif message[0] == '01':
-                    #print('value triggered')
-                    value = np.round(np.clip(value/1000, 0, 1),1)
 
-                    if value != self.values[0, 2]:
-
-                        keys = list(self.presets.keys())
-
-                        # get preset number
-                        id = keys[int(self.values[0, 1]%len(self.presets.keys()))]
-
-                        mod_destination = self.presets[id]
-                        # get correct indice
-#                        mod_destination = self.presets[self.values[0, 1]%len(self.presets.keys())]
-
-                        for mod in mod_destination:
-                            self.global_parameter[mod[0]+35] = value
-#
-                        self.values[0, 2] = value
 
             except:
                 pass
@@ -133,5 +122,5 @@ class class_arduino_midi:
 
 
 if __name__ == '__main__':
-    midi = class_arduino_midi(np.zeros(2))
+    midi = class_arduino_midi(np.zeros(255))
     midi.run()
