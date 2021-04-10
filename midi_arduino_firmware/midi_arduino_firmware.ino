@@ -73,7 +73,7 @@ void loop() {
    }
 
   // Potis
-  temp = analogRead(A5)/10.23;
+  temp = analogRead(A7)/10.23;
   if (temp != Enc1_pot) {
     Enc1_pot = temp;
     Serial.print(0);
@@ -87,7 +87,7 @@ void loop() {
     Serial.print(1);    
     Serial.println(temp);
   }
-  temp = analogRead(A7)/10.23;
+  temp = analogRead(A5)/10.23;
   if (temp != Enc3_pot) {
     Enc3_pot = temp;
     Serial.print(2);

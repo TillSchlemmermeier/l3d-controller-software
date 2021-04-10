@@ -41,6 +41,9 @@ class class_arduino_midi:
         self.presets = []
         self.presets.append([1, [9, 0, 1]])
         self.presets.append([4, [9, 0, 1]])
+        self.presets.append([0, [9, 0.16, 1], [10, 0, 0.5]])
+        self.presets.append([3, [12, 0, 1]])
+        self.presets.append([30, [11, 0, 1]])
 
     def load_preset(self, preset_id, channel, filename = 'presets.dat'):
 
