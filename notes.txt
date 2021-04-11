@@ -1,5 +1,4 @@
 sdifference gradient - colorfade?
-repair e_squared
 e_rotating_rainbow adapt parameters
 überall die balance rausnehmen
 e_radial_gradient funktioniert mit s2l nicht richtig
@@ -12,9 +11,17 @@ g_random_grow??
 g_stacking???
 
 g_obliqueplaneXYZ coden
-g_orbiter
 a_orbbot
 fix e_rotation s2l
+
+
+temporary_preset no name abfrage
+
+
+
+
+
+
 
 
 Effekte sortieren:

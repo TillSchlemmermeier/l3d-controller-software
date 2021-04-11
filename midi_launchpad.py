@@ -100,8 +100,14 @@ class class_launchpad_mk3:
                         # activate channel 1
                         self.global_parameter[40] = 1
                         self.global_parameter[41] = 1
-                        # activate channel 2
-                        self.global_parameter[70] = 1
+                        # turn on brightness for channel 2
+                        self.global_parameter[71] = 1
+                        # turn on brightness for channel 3
+                        self.global_parameter[101] = 1
+                        # turn on brightness for channel 4
+                        self.global_parameter[131] = 1
+
+
 
                 elif message[1] == 18:
                     if self.global_parameter[5] == 0:
