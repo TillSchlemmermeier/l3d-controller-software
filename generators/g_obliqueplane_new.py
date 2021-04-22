@@ -35,7 +35,8 @@ class g_obliqueplane_new():
         #create bigworld
         self.bigworld = np.zeros([21, 21, 10])
 
-        self.bigworld[10, 1:-1, 1:-1] = 1.0
+        #self.bigworld[10, 1:-1, 1:-1] = 1.0
+        self.bigworld[10, 1:-1, :] = 1.0        
         self.counter = 1
 
     #Strings for GUI
@@ -110,7 +111,7 @@ class g_obliqueplane_new():
         # insert array
         newworld = self.get_transition(newworld, self.side1, self.side2)
 
-        print(np.shape(newworld ))
+        #print(np.shape(newworld ))
 
         world[:, :, :, :] = newworld
 
