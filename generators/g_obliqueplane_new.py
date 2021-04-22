@@ -15,7 +15,7 @@ class g_obliqueplane_new():
         self.real_speed = 0
         #s2l
         self.sound_values = shared_memory.SharedMemory(name = "global_s2l_memory")
-        self.channel = 0
+        self.trigger = False
         self.lastvalue = 0
         self.counter = 0
         self.side1 = 1
@@ -36,23 +36,21 @@ class g_obliqueplane_new():
         self.bigworld = np.zeros([21, 21, 10])
 
         #self.bigworld[10, 1:-1, 1:-1] = 1.0
-        self.bigworld[10, 1:-1, :] = 1.0        
+        self.bigworld[10, 1:-1, :] = 1.0
         self.counter = 1
 
     #Strings for GUI
     def return_values(self):
-        return [b'rotate_plane', b'speed', b'modus', b'zspeed', b'channel']
+        return [b'rotate_plane', b'speed', b'modus', b'zspeed', b'Trigger']
 
 
     def return_gui_values(self):
-        if 4 > self.channel >= 0:
-            channel = str(self.channel)
-        elif self.channel == 4:
-            channel = "Trigger"
+        if self.trigger:
+            trigger = 'On'
         else:
-            channel = 'noS2L'
+            trigger = 'Off'
 
-        return bytearray('{0:<8s}{1:<8s}{2:<8s}{3:<8s}'.format(str(round(self.speed,2)), self.mode,'', channel),'utf-8')
+        return bytearray('{0:<8s}{1:<8s}{2:<8s}{3:<8s}'.format(str(round(self.speed,2)), self.mode,'', trigger),'utf-8')
 
 
     #def generate(self, step, dumpworld):
@@ -67,7 +65,10 @@ class g_obliqueplane_new():
         else:
             self.mode = 'random'
 
-        self.channel = int(args[3]*5)-1
+        if args[3] > 0.1:
+            self.trigger = True
+        else:
+            self.trigger = False
 
         # create world
         world = np.zeros([3, 10, 10, 10])
@@ -76,7 +77,16 @@ class g_obliqueplane_new():
 
         self.real_speed = self.step*self.speed
         if self.real_speed > 90:
-            self.step = 0
+            if self.trigger:
+                current_volume = int(float(str(self.sound_values.buf[32:40],'utf-8')))
+                if current_volume > self.lastvalue:
+                    self.lastvalue = current_volume
+                    self.step = 0
+                else:
+                    self.step -= 1
+            else:
+                self.step = 0
+                
             self.real_speed = self.step*self.speed
             if self.mode == 'random':
                 #self.axes = choice(self.combinations)
