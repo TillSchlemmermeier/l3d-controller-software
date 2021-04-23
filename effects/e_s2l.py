@@ -52,7 +52,7 @@ class e_s2l():
             else:
                 # if self.counter < 20:
                 #     pass
-                if 15 < self.counter < (self.step + 100):
+                if 15 < self.counter: # < (self.step + 1000)
 #                    print(self.counter ,(self.counter-15)/(self.step + 100))
                     world[:, :, :, :] *= ((self.counter-15)/(self.step + 100))
                 #elif self.counter > (self.step + 100):

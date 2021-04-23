@@ -1,7 +1,7 @@
 sdifference gradient - colorfade?
 e_rotating_rainbow adapt parameters
 überall die balance rausnehmen
-e_radial_gradient funktioniert mit s2l nicht richtig
+e_radial_gradient sigmoid funktion anpassen, farbverlauf nicht richtig
 
 g_trees added trigger, maybe modulate step instead of reset?
 g_drop ---> g_rain ---> fulldrip?

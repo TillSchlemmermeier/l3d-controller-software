@@ -34,10 +34,11 @@ class g_growing_corner():
         self.lastvalue = 0
         self.trigger = False
         self.switch = False
+        self.mode = 'single'
 
     #Strings for GUI
     def return_values(self):
-        return [b'growing_corner', b'maxsize', b'speed', b'', b'Trigger']
+        return [b'growing_corner', b'maxsize', b'speed', b'mode', b'Trigger']
 
     def return_gui_values(self):
         if self.trigger:
@@ -45,7 +46,7 @@ class g_growing_corner():
         else:
             trigger = 'Off'
 
-        return bytearray('{0:<8s}{1:<8s}{2:<8s}{3:<8s}'.format(str(round(self.maxsize,2)), str(round(55-self.growspeed,2)), '', trigger),'utf-8')
+        return bytearray('{0:<8s}{1:<8s}{2:<8s}{3:<8s}'.format(str(round(self.maxsize,2)), str(round(55-self.growspeed,2)), self.mode, trigger),'utf-8')
 
 
     def __call__(self, args):
@@ -58,6 +59,10 @@ class g_growing_corner():
         else:
             self.trigger = True
 
+        if args[2] < 0.5:
+            self.mode = 'single'
+        else:
+            self.mode = 'double'
 
         world = np.zeros([3, 10, 10, 10])
 
@@ -99,7 +104,11 @@ class g_growing_corner():
         #size = self.maxsize*(np.sin(np.pi*0.5*self.counter/self.growspeed - 0.5*np.pi)+1)
 
         # creates hollow sphere with parameters
+
         world[0, :, :, :] = gen_hsphere(size,x,y,z)
+
+        if self.mode == 'double':
+            world[0, :, :, :] += gen_hsphere(size*2.5,x,y,z)        
         world[1, :, :, :] = world[0, :, :, :]
         world[2, :, :, :] = world[0, :, :, :]
 

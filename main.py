@@ -314,7 +314,7 @@ if __name__ == '__main__':
     if len(sys.argv) >= 2:
         if sys.argv[1] == '--test':
             print(' test mode - loading temporary preset')
-            with open('temporary_preset.dat') as file:
+            with open('temporary_presets.dat') as file:
                 presets = file.readlines()
 
             try:
@@ -335,7 +335,7 @@ if __name__ == '__main__':
     # starting processes
     print('start')
     proc_midi.start()
-    #proc_arduino.start()
+    proc_arduino.start()
     proc_renderer.start()
     proc_autopilot.start()
     proc_gui.start()
@@ -344,7 +344,7 @@ if __name__ == '__main__':
 
 #    time.sleep(1)
     proc_midi.join()
-    #proc_arduino.join()
+    proc_arduino.join()
     proc_renderer.join()
     proc_gui.join()
     proc_sound.join()

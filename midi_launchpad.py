@@ -172,14 +172,14 @@ class class_launchpad_mk3:
                 elif key[0] == 7 and key[1] <= 4:
                     print('saving temporary preset for channel', key[1])
                     try:
-                        self.save_preset(key[1], filename = 'temporary_preset.dat')
+                        self.save_preset(key[1], filename = 'temporary_presets.dat')
                     except:
                         print('error saving preset!')
 
                 elif key[0] == 6 and key[1] <= 4:
                     print('loading temporary preset for channel', key[1])
                     try:
-                        self.load_preset(-1, key[1], 'temporary_preset.dat')
+                        self.load_preset(-1, key[1], 'temporary_presets.dat')
                     except:
                         print('error loading temporary preset!')
 
@@ -241,7 +241,8 @@ class class_launchpad_mk3:
 
                 # now the randomizer
                 elif message[1] == 16:
-                    self.randomizer_test()
+#                    self.randomizer_test()
+                    self.randomizer()
 
             else:
                 # some selection menu is open
@@ -309,16 +310,26 @@ class class_launchpad_mk3:
         '''appends the current values of a channel to a file
         channel goes from 1 to 4
         '''
-        preset_used = False
-        ROOT = tk.Tk()
-        ROOT.withdraw()
-        # the input dialog
-        USER_INP = simpledialog.askstring(title="name",
-                                          prompt="Name of the preset: ")
 
         # assemble list of parameters
         list = []
-        list.append(USER_INP)
+        print('trying to save preset...')
+
+        if filename == 'presets.dat':
+            preset_used = False
+            ROOT = tk.Tk()
+            ROOT.withdraw()
+            # the input dialog
+            USER_INP = simpledialog.askstring(title="name",
+                                              prompt="Name of the preset: ")
+
+
+        else:
+            preset_used  = False
+            USER_INP = 'name'
+
+            list.append(USER_INP)
+
 
         for i in self.indices[channel-1]:
             list.append(str(round(self.global_parameter[i], 2)))

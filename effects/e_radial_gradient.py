@@ -22,6 +22,8 @@ class e_radial_gradient():
         self.sound_values = shared_memory.SharedMemory(name = "global_s2l_memory")
         self.channel = 4
 
+        self.old_c1 = [0.0,0.0,0.0]
+        self.old_c2 = [0.0,0.4,0.0]
         # distance to the center for each voxel
         self.distances = {}
         for x in range(10):
@@ -52,19 +54,20 @@ class e_radial_gradient():
         if self.channel >= 0:
             current_volume = float(str(self.sound_values.buf[self.channel*8:self.channel*8+8],'utf-8'))
 
-            if current_volume > 0:
-                self.c1[0] += current_volume / 10
-                self.c1[0] = self.c1[0] % 1
-                self.c2[0] += current_volume / 10
-                self.c2[0] = self.c2[0] % 1
+            dif = np.abs(self.c1[0] - self.c2[0])
 
+            self.c1[0] = self.old_c1[0] + current_volume / 40
+            self.c1[0] = self.c1[0] % 1
+            self.c2[0] = self.old_c2[0] + (current_volume + dif) / 40
+            self.c2[0] = self.c2[0] % 1
+            self.old_c1[0] = self.c1[0]
+            self.old_c2[0] = self.c2[0]
 
         for lamp in list(self.distances.keys()):
             dist = self.distances[lamp]
             # 0 -> -1
             # 8.6 -> 1
             color = hsv_to_rgb(self.sigmoid(2*dist/8.2-1.25)*(self.c1[0]-self.c2[0])+self.c2[0], 1, 1)
-
             x = int(lamp/100)
             y = int((lamp-x*100)/10)
             z = int(lamp-x*100-y*10)

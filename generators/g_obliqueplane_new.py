@@ -82,33 +82,58 @@ class g_obliqueplane_new():
                 if current_volume > self.lastvalue:
                     self.lastvalue = current_volume
                     self.step = 0
+
+                    self.real_speed = self.step*self.speed
+                    if self.mode == 'random':
+                        #self.axes = choice(self.combinations)
+                        #self.n_rot = randint(1,3)
+                        self.side1 = randint(1,6)
+                        self.side2 = choice(self.connections[self.side1])
+                    elif self.mode == 'chain':
+                        self.side1 = self.side2
+                        self.side2 = choice(self.connections[self.side1])
+                    elif self.mode == 'forward':
+                        temp = self.side1
+                        self.side1 = self.side2
+                        while True:
+                            self.side2 = choice(self.connections[self.side1])
+                            if self.side2 != temp:
+                                break
+                    elif self.mode == 'circle':
+                #        print(self.side1, self.side2)
+                        self.side1 = self.counter%4+1
+                        self.side2 = (self.counter+1)%4+1 # next(self.circle_iter)
+                        #print(self.step, self.side1, self.side2)
+                        self.counter += 1
+
                 else:
                     self.step -= 1
+                    self.real_speed = 90
             else:
                 self.step = 0
-                
-            self.real_speed = self.step*self.speed
-            if self.mode == 'random':
-                #self.axes = choice(self.combinations)
-                #self.n_rot = randint(1,3)
-                self.side1 = randint(1,6)
-                self.side2 = choice(self.connections[self.side1])
-            elif self.mode == 'chain':
-                self.side1 = self.side2
-                self.side2 = choice(self.connections[self.side1])
-            elif self.mode == 'forward':
-                temp = self.side1
-                self.side1 = self.side2
-                while True:
+
+                self.real_speed = self.step*self.speed
+                if self.mode == 'random':
+                    #self.axes = choice(self.combinations)
+                    #self.n_rot = randint(1,3)
+                    self.side1 = randint(1,6)
                     self.side2 = choice(self.connections[self.side1])
-                    if self.side2 != temp:
-                        break
-            elif self.mode == 'circle':
-        #        print(self.side1, self.side2)
-                self.side1 = self.counter%4+1
-                self.side2 = (self.counter+1)%4+1 # next(self.circle_iter)
-                #print(self.step, self.side1, self.side2)
-                self.counter += 1
+                elif self.mode == 'chain':
+                    self.side1 = self.side2
+                    self.side2 = choice(self.connections[self.side1])
+                elif self.mode == 'forward':
+                    temp = self.side1
+                    self.side1 = self.side2
+                    while True:
+                        self.side2 = choice(self.connections[self.side1])
+                        if self.side2 != temp:
+                            break
+                elif self.mode == 'circle':
+            #        print(self.side1, self.side2)
+                    self.side1 = self.counter%4+1
+                    self.side2 = (self.counter+1)%4+1 # next(self.circle_iter)
+                    #print(self.step, self.side1, self.side2)
+                    self.counter += 1
 
         self.step += 1
 
