@@ -334,7 +334,7 @@ class MainWindow(QtWidgets.QMainWindow):
         timer.timeout.connect(self.update_fighter_values)
         timer.timeout.connect(self.update_global_values)
         timer.timeout.connect(self.update_launchpad_values)
-        timer.setInterval(50)
+        timer.setInterval(60)
         timer.start()
 
         # start threads

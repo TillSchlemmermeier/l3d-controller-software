@@ -187,7 +187,7 @@ def rendering(array, label, pause_time = 0.03, log = False):
 
 
 
-def rendering_visualize(array, label, pause_time = 0.03, log = False):
+def rendering_visualize(array, label, pause_time = 0.1, log = False):
     '''
     Rendering Thread to visualize cube
     '''
