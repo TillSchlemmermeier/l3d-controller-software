@@ -17,7 +17,7 @@ class g_stacking():
 
 
     def return_values(self):
-        return [b'stacking', b'number', b'stop pos', b'', b'channel']
+        return [b'stacking', b'number', b'lifetime', b'', b'channel']
 
 
     def return_gui_values(self):
@@ -26,12 +26,12 @@ class g_stacking():
         else:
             channel = 'noS2L'
 
-        return bytearray('{0:<8s}{1:<8s}{2:<8s}{3:<8s}'.format(str(self.n), '', '', channel),'utf-8')
+        return bytearray('{0:<8s}{1:<8s}{2:<8s}{3:<8s}'.format(str(self.n), str(self.lifetime), '', ''),'utf-8')
 
 
     def __call__(self, args):
         self.n = int(args[0]*100)+1
-        self.lifetime = int(args[1]*200) + 5
+        self.lifetime = int(args[1]*50) + 5
         world = np.zeros([3, 10, 10, 10])
 
         # append new leds at top
@@ -52,7 +52,8 @@ class g_stacking():
 
 class led:
     def __init__(self, waittime):
-        self.x, self.y, self.z = 0, randint(0,9), randint(0,9)
+#        self.x, self.y, self.z = 0, randint(0,9), randint(0,9)
+        self.x, self.y, self.z = 0, 0, 0
         self.stop_x = 9
         self.stop_t = waittime
         self.current_t = waittime
@@ -68,9 +69,10 @@ class led:
             run = True
             for led in leds:
                 if led.z == self.z and led.y == self.y:
-                    # print(led.x, self.x)
+                    print(led.x, self.x)
                     if led.x == self.x+1: #  and led.state == 'wait':
                         run = False
+                        print('dont run')
 
             if run:
                 self.x += 1

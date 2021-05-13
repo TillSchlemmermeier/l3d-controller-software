@@ -17,15 +17,15 @@ class e_rotating_rainbow():
 
     #strings for GUI
     def return_values(self):
-        return [b'rotating_rainbow', b'Length', b'Speed', b'Rot_X', b'Rot_YZ']
+        return [b'rotating_rainbow', b'Speed', b'Length', b'Rot_X', b'Rot_YZ']
 
     def return_gui_values(self):
-        return bytearray('{0:<8s}{1:<8s}{2:<8s}{3:<8s}'.format(str(round(10 * self.speed,2)), str(round(self.gradient_length,1)), str(round(self.rotX,1)), str(round(self.rotYZ,1))), 'utf-8')
+        return bytearray('{0:<8s}{1:<8s}{2:<8s}{3:<8s}'.format(str(round(10 * self.speed*50,2)), str(round(1-2*self.gradient_length,1)), str(round(self.rotX,1)), str(round(self.rotYZ,1))), 'utf-8')
 
     def __call__(self, world, args):
 		# parse input
-        self.speed = args[0]*0.1
-        self.gradient_length = args[1]
+        self.speed = args[0]*0.05
+        self.gradient_length = 0.5-args[1]*0.5
         self.rotX = args[2]*15+0.01
         self.rotYZ = args[3]*15+0.01
 

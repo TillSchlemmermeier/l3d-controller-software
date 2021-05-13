@@ -31,7 +31,7 @@ class g_centralglow():
         return bytearray('{0:<8s}{1:<8s}{2:<8s}{3:<8s}'.format(str(round(self.exponent,2)),  str(round(self.channel,2)), '', ''),'utf-8')
 
     def __call__(self, args):
-        self.exponent = args[0]*8
+        self.exponent = args[0]*4
         self.channel = int(args[1]*4)
 
         world = np.zeros([3, 10, 10, 10])

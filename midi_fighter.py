@@ -47,6 +47,7 @@ class class_fighter:
             if key != []:
                 self.global_parameter[key[0]] = key[1]/127.0
             else:
+                
                 # when a stateswitch is detected, send all values
                 # and colors back to midifighter
                 self.sendstate()
@@ -109,6 +110,7 @@ class class_fighter:
         24-25-26-27
         28-29-30-31
         '''
+
         # check for state switches
         if channel == 177:
             self.setstate(key, value)
@@ -146,7 +148,7 @@ class class_fighter:
                     basic_index = 238
 
             elif key in [2, 6, 10, 14]:  # channel 3
-                if self.current_state[1] < 4:
+                if self.current_state[2] < 4:
                     basic_index = 105
                     state = self.current_state[2]
                 else:
@@ -179,6 +181,7 @@ class class_fighter:
 
     def setstate(self, key, value):
         """check for state switches"""
+
         if key in [0, 4, 8, 12]:     # channel 1
             if key == 0 and value == 0:
                 self.current_state[0] = 0

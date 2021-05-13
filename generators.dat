@@ -17,10 +17,10 @@ g_growingface
 g_growing_corner
 g_growing_sphere_partial
 g_growing_sphere_rand
-g_swell
 g_centralglow
 g_circles
 g_cone
+g_blank
 g_square_equalizer
 g_corner_grow
 g_cut
@@ -39,12 +39,12 @@ g_shooting_star
 a_orbbot
 g_rain
 g_trees
-g_fulldrip
 g_inandout
 g_stacking
 g_grow
 g_random_grow
 g_drop
+g_blank
 g_falling
 g_pong
 g_soundsinus

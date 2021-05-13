@@ -68,7 +68,7 @@ class e_colorfade():
         else:
             self.balance = self.color1 + (1 - self.color1 + self.color2) * ((np.cos(self.speed*self.step)*0.5)+0.5)
 
-        color = hsv_to_rgb(self.balance, 1, 1)
+        color = hsv_to_rgb(np.clip(self.balance, 0, 1), 1, 1)
 
         for i in range(3):
             world[i, :, :, :] *= color[i]

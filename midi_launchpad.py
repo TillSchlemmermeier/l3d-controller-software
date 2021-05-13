@@ -328,7 +328,7 @@ class class_launchpad_mk3:
             preset_used  = False
             USER_INP = 'name'
 
-            list.append(USER_INP)
+        list.append(USER_INP)
 
 
         for i in self.indices[channel-1]:

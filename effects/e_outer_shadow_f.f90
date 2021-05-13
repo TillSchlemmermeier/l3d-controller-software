@@ -23,7 +23,7 @@ subroutine outer_shadow(world, scale, xpos, ypos, zpos)
     do y=1, 10
       do z=1, 10
         tempvalue = sqrt(real((x-xpos)**2+(y-ypos)**2+(z-zpos)**2))
-        world(x,y,z) = (0.2 * tempvalue)**scale
+        world(x,y,z) = (0.18 * tempvalue)**scale
       end do
     end do
   end do

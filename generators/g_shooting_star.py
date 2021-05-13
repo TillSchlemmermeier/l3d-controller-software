@@ -14,7 +14,7 @@ class g_shooting_star():
 
         self.dot_list = []
         self.dot_list.append(gen_line_2(self.steps, self.mode))
-        #s2l
+        # s2l
         self.sound_values = shared_memory.SharedMemory(name = "global_s2l_memory")
         self.channel = 0
         self.lastvalue = 0
@@ -30,7 +30,7 @@ class g_shooting_star():
         else:
             channel = 'noS2L'
 
-        return bytearray('{0:<8s}{1:<8s}{2:<8s}{3:<8s}'.format(str(self.add_wait), str(19-self.steps), self.mode, channel),'utf-8')
+        return bytearray('{0:<8s}{1:<8s}{2:<8s}{3:<8s}'.format(str(self.add_wait), str(20-self.steps), self.mode, channel),'utf-8')
 
     def __call__(self, args):
         self.add_wait = int(args[0]*10+1)
@@ -44,7 +44,6 @@ class g_shooting_star():
         else:
             self.mode = 'top'
         self.channel = int(args[3]*5)-1
-
 
         world = np.zeros([3, 10, 10, 10])
 
@@ -64,8 +63,8 @@ class g_shooting_star():
         # add new dot
         elif self.counter % self.add_wait == 0:
             self.dot_list.insert(0, gen_line_2(self.steps, self.mode))
-            self.counter += 1
 
+        self.counter += 1
 
         delete_last = False
         for i in range(len(self.dot_list)):
@@ -86,11 +85,8 @@ class g_shooting_star():
         if delete_last:
             del(self.dot_list[-1])
 
-
         world[1,:,:,:] = world[0,:,:,:]
         world[2,:,:,:] = world[0,:,:,:]
-
-
 
         return np.clip(world, 0, 1)
 

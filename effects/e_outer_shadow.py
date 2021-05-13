@@ -20,17 +20,24 @@ class e_outer_shadow():
 
     #Strings for GUI
     def return_values(self):
-        return [b'outershadow', b'exponent', b'channel', b'', b'']
+        return [b'outershadow', b'exponent', b'', b'', b'channel']
 
     def return_gui_values(self):
-        return bytearray('{0:<8s}{1:<8s}{2:<8s}{3:<8s}'.format(str(round(self.exponent,2)),  str(round(self.channel,2)), '', ''),'utf-8')
+        if 4 > self.channel >=0:
+            channel = str(self.channel)
+        elif self.channel < 0:
+            channel = 'noS2L'
+
+        return bytearray('{0:<8s}{1:<8s}{2:<8s}{3:<8s}'.format(str(round(self.exponent,2)),  '', '', channel),'utf-8')
 
     def __call__(self, world, args):
-        self.exponent = args[0]*4
-        self.channel = int(args[1]*4)
+        self.exponent = args[0]
+        self.channel = int(args[3]*5)-1
         # self.amount = args[2]
-
-        current_volume = np.clip(float(str(self.sound_values.buf[self.channel*8:self.channel*8+8],'utf-8')),0,5)
+        if self.channel >= 0:
+            current_volume = np.clip(float(str(self.sound_values.buf[self.channel*8:self.channel*8+8],'utf-8')),0,5)
+        else:
+            current_volume = 1
 
         bla = outer_shadow(self.exponent*current_volume, 5.5, 5.5, 5.5)
         world[0, :, :, :] -= bla

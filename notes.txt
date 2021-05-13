@@ -1,28 +1,12 @@
-sdifference gradient - colorfade?
-e_rotating_rainbow adapt parameters
 überall die balance rausnehmen
 e_radial_gradient sigmoid funktion anpassen, farbverlauf nicht richtig
 
-g_trees added trigger, maybe modulate step instead of reset?
-g_drop ---> g_rain ---> fulldrip?
-g_swell löschen (siehe g_growing_sphere_rand)
-g_centralgrow Parameter verbessern??
-g_random_grow??
+g_centralglow Parameter verbessern??
 g_stacking???
 
-g_obliqueplaneXYZ coden
 a_orbbot
-fix e_rotation s2l
 
-
-temporary_preset no name abfrage
-
-
-
-
-
-
-
+label soundfade
 
 Effekte sortieren:
 e_blank
