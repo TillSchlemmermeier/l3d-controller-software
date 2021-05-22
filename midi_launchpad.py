@@ -58,6 +58,9 @@ class class_launchpad_mk3:
             except:
                 print('learning failed')
 
+        # freeze world
+        self.freeze = np.zeros([255])
+
     def event(self, event, data=None):
         """Call gets midi message and calls the mapping routine"""
         # gets message from midi input
@@ -207,6 +210,15 @@ class class_launchpad_mk3:
                 elif message[1] == 15:
                     print('saving global preset')
                     self.save_global_preset()
+
+                elif message[1] == 27:
+                    self.freeze[:] = self.global_parameter[:]
+                    print('freeze...')
+                elif message[1] == 28:
+                    self.global_parameter[20:] = self.freeze[20:]
+                    print('...unfreeze')
+
+
 
                 # good randomizer
                 elif message[1] == 26:
@@ -586,6 +598,10 @@ class class_launchpad_mk3:
 
             # send voting button
             self.midiout.send_message([144, 26, 24])
+
+            # send freeze/unfreeze button
+            self.midiout.send_message([144, 27, 26])
+            self.midiout.send_message([144, 28, 26])
 
             # send global effect control switch for fighter
             self.midiout.send_message([144, 17, 13])
