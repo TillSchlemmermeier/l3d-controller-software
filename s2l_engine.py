@@ -15,6 +15,9 @@ import matplotlib as mpl
 
 from PyQt5 import QtCore, QtGui
 
+from pyqtgraph.Qt import QtCore, QtGui
+import pyqtgraph.opengl as gl
+
 def sound_process(array):
     # initialize pyaudio
     sample_rate = 44100
@@ -56,8 +59,42 @@ def sound_process(array):
 
     print('\nstarting sound loop\n')
 
+
+    # initialize window
+    app = QtGui.QApplication([])
+    window = gl.GLViewWidget()
+    window.setWindowTitle('L3D Cube')
+    screen_resolution = app.desktop().screenGeometry()
+    width = screen_resolution.width()
+    # x coordinate, y coordinate, xsize, ysize
+    window.setGeometry(width + 1, 0, 1080, 1200)
+    window.setWindowFlags(QtCore.Qt.FramelessWindowHint)
+
+    #window.setCameraPosition(pos = None, distance = 15, elevation = 30, azimuth = 0)
+    window.opts['distance'] = 30
+    window.opts['azimuth'] = 40
+    window.opts['elevation'] = 30
+    window.opts['fov'] = 30
+    window.show()
+
+    # add plots
+    spectrum = gl.plot(freqs, np.abs(FFT), color='white', lw = 3))
+    window.addItem(scatterplot)
+
+    select1 = gl.plot([100,100], [-10,10], label = '0', color = 'red', linewidth = 5)
+    select2 = gl.plot([100,500], [-10,10], label = '1', color = 'green', linewidth = 5)
+    select3 = gl.plot([100,1000], [-10,10], label = '2', color = 'blue', linewidth = 5)
+    select4 = gl.plot([100,2000], [-10,10], label = '3', color = 'orange', linewidth = 5)
+
+    thres1 = gl.plot([100-10,100+10], [0,0],  color = 'red', linewidth = 6)[0]
+    thres2 = gl.plot([100-10,100+10], [0,0],  color = 'green', linewidth = 6)[0]
+    thres3 = gl.plot([100-10,100+10], [0,0],  color = 'blue', linewidth = 6)[0]
+    thres4 = gl.plot([100-10,100+10], [0,0], color = 'orange', linewidth = 6)[0]
+
+    '''
+    # initialize matplotlib figure
     mpl.rcParams['toolbar'] = 'None'
-    # initialize figure
+
     fig, ax = plt.subplots()#figsize=(10.6, 6.5)
     plt.xticks(fontsize = 24, rotation = 0)
     plt.yticks(fontsize = 24)
@@ -77,6 +114,7 @@ def sound_process(array):
     fig.canvas.manager.window.setWindowOpacity(1.0)
 
 
+
     ax.set_xlim(50, 10000)
     ax.set_ylim(-0.1,2)
     line = ax.plot(freqs, np.abs(FFT), color='white', lw=3)[0]
@@ -90,11 +128,13 @@ def sound_process(array):
     thres3 = ax.plot([100-10,100+10], [0,0],  color = 'blue', linewidth = 6)[0]
     thres4 = ax.plot([100-10,100+10], [0,0], color = 'orange', linewidth = 6)[0]
 
+
     ax.set_xscale('symlog', linthresh=0.01)
 
     ax.set_xticks([50, 100, 250, 500, 1000, 2500, 5000, 10000])
     ax.set_xticklabels([50, 100, 250, 500, 1000, 2500, 5000, 10000])
     plt.legend(loc='upper center',bbox_to_anchor=(0.5,1.16),ncol=4,fancybox=True, fontsize=24, labelcolor='white', facecolor='black')
+    '''
 
     # normalization
     normalized = [False]
@@ -155,8 +195,8 @@ def sound_process(array):
         final_data = (final_data - min[0])/(max[0] - min[0])
 
         # set data
-        line.set_data(freq_axis, final_data)
-
+        spectrum.set_data(freq_axis, final_data)
+        '''
         select1.set_data([selectors[0], selectors[0]], [-10,10])
         select2.set_data([selectors[1], selectors[1]], [-10,10])
         select3.set_data([selectors[2], selectors[2]], [-10,10])
@@ -167,6 +207,7 @@ def sound_process(array):
         thres3.set_data([selectors[2]-0.1*selectors[2], selectors[2]+0.1*selectors[2]], [thresholds[2],thresholds[2]])
         thres4.set_data([selectors[3]-0.1*selectors[3], selectors[3]+0.1*selectors[3]], [thresholds[3],thresholds[3]])
 
+        '''
         # write data
         for i in range(len(selectors)):
             # get data
@@ -198,7 +239,16 @@ def sound_process(array):
                 else:
                     pass
 
-        return line, select1, select2, select3, select4, thres1, thres2, thres3, thres4
+        # scatterplot.setData(color = np.clip(colors, 0, 1))
 
+#        return line, select1, select2, select3, select4, thres1, thres2, thres3, thres4
+
+    t = QtCore.QTimer()
+    t.timeout.connect(update)
+    t.start(50)
+    QtGui.QApplication.instance().exec_()
+
+    '''
     animation = FuncAnimation(fig, func = update_line, interval=10, blit=True, fargs = (normalized, buffer, min, max))
     plt.show()
+    '''
