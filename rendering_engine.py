@@ -6,6 +6,7 @@ from world2vox_fortran import world2vox_f as world2vox
 from channel import class_channel
 from multiprocessing import shared_memory
 from collection import effects
+from pyqtgraph.ptime import time
 
 # load shots
 from oneshots.s_sides import *
@@ -93,6 +94,9 @@ class rendering_engine:
         self.shot_list.append(s_cubes)
         self.shot_list.append(s_dark_sphere)
 
+        self.fpslastTime = time()
+        self.fps = None
+
         # try to establish connection to arduino
         try:
             self.arduino = serial.Serial('/dev/ttyACM0', 230400)
@@ -156,6 +160,18 @@ class rendering_engine:
         # else:
         #     logging.info('Frame '+str(self.framecounter))
         #     logging.info(package)
+
+
+        now = time()
+        dt = now - lastTime
+        self.fpslastTime = now
+        if self.fps is None:
+            self.fps = 1.0/dt
+        else:
+            s = np.clip(dt*3., 0, 1)
+            self.fps = self.fps * (1-s) + (1.0/dt) * s
+
+        print("FPS: " + str(self.fps))
 
     def generate_frame(self):
         """
