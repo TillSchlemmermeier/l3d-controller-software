@@ -14,6 +14,8 @@ class g_circles():
         self.soundsize = 1
         self.lastvalue = 0
         self.counter = 0
+        self.counter_total = 0
+        self.mode = 'random'
 
         # size 5
         self.size5 = np.zeros([10,10])
@@ -74,7 +76,7 @@ class g_circles():
 
     #Strings for GUI
     def return_values(self):
-        return [b'circles', b'number', b'', b'', b'channel']
+        return [b'circles', b'number', b'mode', b'', b'channel']
 
     def return_gui_values(self):
         if 4 > self.channel >= 0:
@@ -84,11 +86,16 @@ class g_circles():
         else:
             channel = 'noS2L'
 
-        return bytearray('{0:<8s}{1:<8s}{2:<8s}{3:<8s}'.format(str(round(self.number,2)), '', '', channel),'utf-8')
+        return bytearray('{0:<8s}{1:<8s}{2:<8s}{3:<8s}'.format(str(round(self.number,2)), self.mode, '', channel),'utf-8')
 
 
     def __call__(self, args):
         self.number = int(args[0]*10)
+        if args[1] < 0.5:
+            self.mode = 'random'
+        else:
+            self.mode = 'tunnel'
+
         self.channel = int(args[3]*5)-1
 
         # create world
@@ -119,17 +126,21 @@ class g_circles():
             else:
                 j = randint(0,3)
 
-            if j == 0:
-                world[0, :, randint(0,9), :] = self.size2[:,:]
 
-            elif j == 1:
-                world[0, :, randint(0,9), :] = self.size3[:,:]
+            if self.mode == 'random':
+                if j == 0:
+                    world[0, :, randint(0,9), :] = self.size2[:,:]
 
-            elif j == 2:
-                world[0, :, randint(0,9), :] = self.size4[:,:]
+                elif j == 1:
+                    world[0, :, randint(0,9), :] = self.size3[:,:]
 
-            elif j == 3:
-                world[0, :, randint(0,9), :] = self.size5[:,:]
+                elif j == 2:
+                    world[0, :, randint(0,9), :] = self.size4[:,:]
+
+                elif j == 3:
+                    world[0, :, randint(0,9), :] = self.size5[:,:]
+            elif self.mode == 'tunnel':
+                world[0, :, int(self.counter_total%10), :] = self.size4[:,:]
 
 
             # rotate if necessary
@@ -137,4 +148,6 @@ class g_circles():
 
         world[1,:,:,:] = world[0, :, : , :]
         world[2,:,:,:] = world[0, :, : , :]
+        self.counter_total += 1
+
         return np.clip(world, 0, 1)
