@@ -18,6 +18,7 @@ from oneshots.s_roll import *
 from oneshots.s_strobo import s_strobo
 from oneshots.s_cubes import s_cubes
 from oneshots.s_dark_sphere import s_dark_sphere
+from oneshots.s_threesixty import s_threesixty
 
 
 class rendering_engine:
@@ -93,6 +94,7 @@ class rendering_engine:
         self.shot_list.append(s_strobo)
         self.shot_list.append(s_cubes)
         self.shot_list.append(s_dark_sphere)
+        self.shot_list.append(s_threesixty)
 
         self.fpslastTime = time()
         self.fps = None
@@ -163,7 +165,7 @@ class rendering_engine:
 
 
         now = time()
-        dt = now - lastTime
+        dt = now - self.fpslastTime
         self.fpslastTime = now
         if self.fps is None:
             self.fps = 1.0/dt
@@ -171,7 +173,7 @@ class rendering_engine:
             s = np.clip(dt*3., 0, 1)
             self.fps = self.fps * (1-s) + (1.0/dt) * s
 
-        print("FPS: " + str(self.fps))
+        # print("FPS: " + str(self.fps))
 
     def generate_frame(self):
         """

@@ -62,6 +62,7 @@ class e_soundstrobo():
                         world[:, :, :, :] = 0
                     self.counter += 1
                 else:
+                    world[:, :, :, :] = 0
                     self.counter += 1
 
 

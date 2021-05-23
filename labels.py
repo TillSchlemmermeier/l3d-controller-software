@@ -45,6 +45,7 @@ labels[0, 3, 6] = 'roll'
 labels[0, 3, 5] = 'strobo'
 labels[0, 4, 7] = 'cubes'
 labels[0, 4, 6] = 'dark sphere'
+labels[0, 4, 5] = 'threesixty'
 
 # add global presets
 global_preset_labels = []

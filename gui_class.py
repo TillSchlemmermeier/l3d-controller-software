@@ -454,7 +454,59 @@ class MainWindow(QtWidgets.QMainWindow):
                         self.padlabels[x][y].setStyleSheet('background-color: rgb(255, 0, 0); text-align: center;')
                     elif y > 4 and x == 4:
                         self.padlabels[x][y].setStyleSheet('background-color: rgb(255, 0, 0); text-align: center;')
-                    #rgb(224, 0, 0)
+                    #presets
+                    elif x == 0 and y < 4:
+                        self.padlabels[x][y].setStyleSheet('background-color: rgb(255, 0, 0); text-align: center;')
+                        self.padlabels[x][y].setText('Channel '+str(y+1)+'\nPresets')
+                    elif x == 0 and y == 4:
+                        self.padlabels[x][y].setStyleSheet('background-color: rgb(255, 0, 0); text-align: center;')
+                        self.padlabels[x][y].setText('Global\nPresets')
+
+                    #start
+                    elif x == 0 and y == 7:
+                        self.padlabels[x][y].setStyleSheet('background-color: rgb(255, 0, 255); text-align: center;')
+                        self.padlabels[x][y].setText('Start')
+                    #generators
+                    elif x == 1 and y < 4:
+                        self.padlabels[x][y].setStyleSheet('background-color: rgb(255, 128, 0); text-align: center;')
+                        self.padlabels[x][y].setText('Generator')
+                    # effects 1
+                    elif x == 2 and y < 5:
+                            self.padlabels[x][y].setStyleSheet('background-color: rgb(255, 255, 0); text-align: center;')
+                            self.padlabels[x][y].setText('FX 1')
+                    # effects 2
+                    elif x == 3 and y < 5:
+                            self.padlabels[x][y].setStyleSheet('background-color: rgb(0, 255, 0); text-align: center;')
+                            self.padlabels[x][y].setText('FX 2')
+                    # effects 3
+                    elif x == 4 and y < 5:
+                            self.padlabels[x][y].setStyleSheet('background-color: rgb(0, 255, 255); text-align: center;')
+                            self.padlabels[x][y].setText('FX 3')
+                    # paste
+                    elif x == 5 and y < 4:
+                            self.padlabels[x][y].setStyleSheet('background-color: rgb(0, 0, 255); text-align: center;')
+                            self.padlabels[x][y].setText('Paste')
+                    # copy
+                    elif x == 6 and y < 4:
+                            self.padlabels[x][y].setStyleSheet('background-color: rgb(255, 0, 255); text-align: center;')
+                            self.padlabels[x][y].setText('Copy')
+                    # save presets
+                    elif x == 7 and y < 5:
+                            self.padlabels[x][y].setStyleSheet('background-color: rgb(255, 255, 255); text-align: center;')
+                            self.padlabels[x][y].setText('Save')
+                    # autopilot
+                    elif x == 7 and y == 7:
+                            self.padlabels[x][y].setStyleSheet('background-color: rgb(255, 255, 255); text-align: center;')
+                            self.padlabels[x][y].setText('AutoPilot')
+                    # random
+                    elif x == 7 and y == 5:
+                            self.padlabels[x][y].setStyleSheet('background-color: rgb(0, 255, 0); text-align: center;')
+                            self.padlabels[x][y].setText('Random')
+                    # global effects
+                    elif x == 7 and y == 6:
+                            self.padlabels[x][y].setStyleSheet('background-color: rgb(255, 255, 0); text-align: center;')
+                            self.padlabels[x][y].setText('Global FX')
+                        #rgb(224, 0, 0)
                 else:
                     # get color - don't do a shallow copy here!
                     color = self.colors[int(self.global_parameter[200])][:]

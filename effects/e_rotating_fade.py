@@ -3,7 +3,7 @@ import numpy as np
 from scipy.ndimage.interpolation import rotate
 
 
-class e_rotating_black_white():
+class e_rotating_fade():
 
     def __init__(self):
 
@@ -29,10 +29,10 @@ class e_rotating_black_white():
 
     #strings for GUI
     def return_values(self):
-        return [b'rotating_black_white', b'X speed', b'Y speed', b'Z speed', b'']
+        return [b'rotating_black_white', b'X speed', b'Y speed', b'Z speed', b'amount']
 
     def return_gui_values(self):
-        return bytearray('{0:<8s}{1:<8s}{2:<8s}{3:<8s}'.format(str(round(self.xspeed,1)), str(round(self.yspeed,1)), str(round(self.zspeed,1)), ''), 'utf-8')
+        return bytearray('{0:<8s}{1:<8s}{2:<8s}{3:<8s}'.format(str(round(self.xspeed,1)), str(round(self.yspeed,1)), str(round(self.zspeed,1)), str(round(self.amount,1))), 'utf-8')
 
 
     def __call__(self, world, args):
@@ -55,7 +55,7 @@ class e_rotating_black_white():
                           axes = (2,3), order = 1,
 	                      mode = 'nearest', reshape = False)
 
-        world = self.fadeworld * newworld * amount + world
+        world = self.fadeworld * newworld * self.amount + world
 
         self.step += 1
         self.fadeworld = np.clip(world, 0, 1)

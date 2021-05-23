@@ -14,6 +14,7 @@ class g_circles():
         self.soundsize = 1
         self.lastvalue = 0
         self.counter = 0
+        self.channel = 0
         self.counter_total = 0
         self.mode = 'random'
 

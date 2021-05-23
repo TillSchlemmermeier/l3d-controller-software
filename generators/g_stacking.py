@@ -10,9 +10,9 @@ class g_stacking():
         self.n = 10
         self.sound_values = shared_memory.SharedMemory(name = "global_s2l_memory")
         self.channel = 0
-        self.lifetime = 10
+        self.lifetime = 2
 
-        for i in range(120):
+        for i in range(220):
             self.drops.append(led(10))
 
 
@@ -30,7 +30,7 @@ class g_stacking():
 
 
     def __call__(self, args):
-        self.n = int(args[0]*100)+1
+        self.n = int(args[0]*200)+1
         self.lifetime = int(args[1]*50) + 5
         world = np.zeros([3, 10, 10, 10])
 
@@ -41,19 +41,22 @@ class g_stacking():
         # check for dead leds
         for i in range(self.n):
             self.drops[i].stop_t = self.lifetime
-            temp = self.drops[i].run(self.drops)
+            temp = self.drops[i].run(self.drops[:self.n])
+            # print(self.drops[i].state)
+
             if len(temp) == 3:
                 world[:, temp[0], temp[1], temp[2]] = 1.0
             else:
-                self.drops[i] = led(9)
+                self.drops[i] = led(self.lifetime)
 
+        # print(' ')
         return np.clip(world, 0, 1)**2
 
 
 class led:
     def __init__(self, waittime):
-#        self.x, self.y, self.z = 0, randint(0,9), randint(0,9)
-        self.x, self.y, self.z = 0, 0, 0
+        self.x, self.y, self.z = 0, randint(0,9), randint(0,9)
+#        self.x, self.y, self.z = 0, 0, 0
         self.stop_x = 9
         self.stop_t = waittime
         self.current_t = waittime
@@ -69,10 +72,10 @@ class led:
             run = True
             for led in leds:
                 if led.z == self.z and led.y == self.y:
-                    print(led.x, self.x)
+                    # print(led.x, self.x)
                     if led.x == self.x+1: #  and led.state == 'wait':
                         run = False
-                        print('dont run')
+                        # print('dont run')
 
             if run:
                 self.x += 1

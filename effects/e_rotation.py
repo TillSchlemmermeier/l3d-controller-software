@@ -84,7 +84,7 @@ class e_rotation():
         world[:, :, :, :] = world[:, :, :, :]**1.3
 
         if self.mode == 'fixed':
-            self.step = 9
+            self.step = 18
         else:
             self.step += 1
 
