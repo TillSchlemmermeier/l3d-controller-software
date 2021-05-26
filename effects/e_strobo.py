@@ -47,8 +47,8 @@ class e_strobo():
         if self.trigger:
             current_volume = int(float(str(self.sound_values.buf[self.channel*8:self.channel*8+8],'utf-8')))
             if current_volume > self.lastvalue:
-                self.counter = 0
                 self.lastvalue = current_volume
+                self.counter = 0
 
         else:
             if self.counter <= self.on:
@@ -60,7 +60,7 @@ class e_strobo():
                     if self.counter <= self.on/2:
                         world[:, :, :, :] *= (self.counter / (self.on / 2))
                     else:
-                        world[:, :, :, :] *= ((self.on - self.counter) / self.on)
+                        world[:, :, :, :] *= (self.on - self.counter) / (self.on / 2))
 
                 self.counter += 1
 
