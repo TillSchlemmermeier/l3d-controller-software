@@ -39,4 +39,16 @@ class g_rotating_line:
             self.p2 = [randint(2, 7), randint(2, 7), randint(2, 7)]
 
         self.counter += 1
-        return np.clip(world, 0, 1)**2
+        for x in range(10):
+            for y in range(10):
+                for z in range(10):
+                    d = 1/get_dist_to_line(self.p1, self.p2, [x,y,z])
+                    world[:, x, y, z] = 1/(d + 0.00001)**4
+
+
+        return np.clip(world, 0, 1)
+
+
+def get_dist_to_line(p1, p2, p3):
+
+    return np.cross(p2-p1,p3-p1)/np.linalg.norm(p2-p1)
