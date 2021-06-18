@@ -477,8 +477,24 @@ class class_launchpad_mk3:
     def randomizer(self):
 
         # generator and effect choice
-        for i in range(20,40):
-            self.global_parameter[i] = randint(0, 54)
+        #number of generators available
+        num_gen = sum(1 for line in open('generators.dat'))
+
+        # choose a generator
+        for i in (20, 25, 30, 35):
+            self.global_parameter[i] = randint(0, num_gen)
+
+        #number of effects available
+        num_eff = sum(1 for line in open('effects.dat'))
+
+        # choose an effect, if not available = e_blank
+        for i in (21, 26, 31, 36):
+            for j in range(3):
+                self.global_parameter[i+j] = randint(0, 54)
+
+                if self.global_parameter[i+j] > num_eff:
+                    self.global_parameter[i+j] = 1
+
 
         # channels
         for i in [40, 70, 100, 130]:
