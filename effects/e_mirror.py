@@ -8,6 +8,7 @@ class e_mirror():
 
     Parameter:
     - Number of axes
+    - mode: Axis mirror or point symmetry mirror
     - s2l trigger On / Off
     '''
 
@@ -21,7 +22,7 @@ class e_mirror():
         self.mode = 'mirror'
 
     def return_values(self):
-        return [b'naxis', b'# of axes', b'mode', b'', b's2l trigger']
+        return [b'mirror', b'# of axes', b'mode', b'', b's2l trigger']
 
     def return_gui_values(self):
         if self.trigger:
