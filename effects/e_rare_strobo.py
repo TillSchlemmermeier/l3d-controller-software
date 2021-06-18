@@ -18,13 +18,14 @@ class e_rare_strobo():
         self.counter = 0
         self.state = 'wait'
         self.step = 0
+        self.mode = "dark"
 
     #strings for GUI
     def return_values(self):
-        return [b'rare_strobo', b'Wait #', b'Strobo #', b'MovProb', b'']
+        return [b'rare_strobo', b'Wait #', b'Strobo #', b'MovProb', b'Mode']
 
     def return_gui_values(self):
-        return bytearray('{0:<8s}{1:<8s}{2:<8s}{3:<8s}'.format(str(self.waiting_frames), str(self.strobo_frames), str(round(self.disp_prop,1)), ''), 'utf-8')
+        return bytearray('{0:<8s}{1:<8s}{2:<8s}{3:<8s}'.format(str(self.waiting_frames), str(self.strobo_frames), str(round(self.disp_prop,1)), self.mode), 'utf-8')
 
 
     def __call__(self, world, args):
@@ -32,6 +33,10 @@ class e_rare_strobo():
         self.waiting_frames = int(args[0]*300)+50
         self.strobo_frames = int(args[1]*20)+2
         self.disp_prop = args[2]*0.5
+        if self.args[3] > 0.5:
+            self.mode = 'dark'
+        else:
+            self.mode = "invert"
 
         if self.state == 'wait':
             # waiting part
@@ -40,7 +45,8 @@ class e_rare_strobo():
                 self.state = 'strobo'
                 self.counter = 0
 
-            world *= 0
+            if self.mode == 'dark':
+                world *= 0
 
         elif self.state == 'strobo':
             # strobo part
