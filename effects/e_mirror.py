@@ -81,6 +81,9 @@ class e_mirror():
             for i in range(3):
                 tempworld[i,:,:,:] = np.rot90(tempworld[i,:,:,:], 2, (0, 1))
 
+            for i in range(3):
+                tempworld[i,:,:,:] = np.rot90(tempworld[i,:,:,:], 2, (1, 2))
+
             world[:, :, :, :] += tempworld[:, :, :, :]
 
         return np.clip(world, 0, 1)
