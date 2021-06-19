@@ -211,7 +211,7 @@ class rendering_engine:
 			# get current values
             temp, valuesG, valuesE1, valuesE2, valuesE3 = channel.get_labels()
             current_values.append(valuesG + valuesE1 + valuesE2 + valuesE3)
-            for j in range(19):
+            for j in range(20):
                 self.label[j+index_label] = temp[j]
 
             # apply fade

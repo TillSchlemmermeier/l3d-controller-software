@@ -49,8 +49,8 @@ def autopilot(array):
             starttime = tottime()
             while True:
                 if tottime()-starttime > 2+float(array[6])*20:
-                    print('new preset')
                     preset = choice(presets).strip('\n').split()
+                    print('new preset: ', preset[0])
 
                     for i, value in zip(range(20,159), preset[1:]):
                         array[i] = float(value)

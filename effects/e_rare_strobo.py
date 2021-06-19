@@ -33,7 +33,7 @@ class e_rare_strobo():
         self.waiting_frames = int(args[0]*300)+50
         self.strobo_frames = int(args[1]*20)+2
         self.disp_prop = args[2]*0.5
-        if self.args[3] > 0.5:
+        if args[3] > 0.5:
             self.mode = 'dark'
         else:
             self.mode = "invert"

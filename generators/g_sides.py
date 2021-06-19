@@ -86,11 +86,23 @@ class g_sides():
             if current_volume > self.lastvalue:
                 self.lastvalue = current_volume
                 # select side
-                self.side = randint(0, 5)
+                oldside = self.side
+
+                while True:
+                    self.side = randint(0, 5)
+
+                    if self.side != oldside:
+                        break
 
         else:
             # select side
-            self.side = randint(0, 5)
+            oldside = self.side
+
+            while True:
+                self.side = randint(0, 5)
+
+                if self.side != oldside:
+                    break
 
         if self.counter % self.reset == 0:
             if self.side == 0:

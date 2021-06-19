@@ -493,7 +493,7 @@ class class_launchpad_mk3:
                 self.global_parameter[i+j] = randint(0, 54)
 
                 if self.global_parameter[i+j] > num_eff:
-                    self.global_parameter[i+j] = 1
+                    self.global_parameter[i+j] = 0
 
 
         # channels
