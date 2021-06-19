@@ -384,7 +384,7 @@ class MainWindow(QtWidgets.QMainWindow):
             self.utilitylabels[6+i][0].setStyleSheet("background-color: #ffffb2;")
             self.utilitylabels[1+i][1].setText(str(self.global_label[86+i],'utf-8')+" : "+str(self.shared_mem_gui_vals.buf[544+i*8:552+i*8],'utf-8'))
             self.utilitylabels[1+i][1].setStyleSheet("background-color: #b2efb2;")
-            self.utilitylabels[6+i][1].setText(str(self.global_label[91+i],'utf-8')+" : "+str(self.shared_mem_gui_vals.buf[560+i*8:568+i*8],'utf-8'))
+            self.utilitylabels[6+i][1].setText(str(self.global_label[91+i],'utf-8')+" : "+str(self.shared_mem_gui_vals.buf[576+i*8:584+i*8],'utf-8'))
             self.utilitylabels[6+i][1].setStyleSheet("background-color: #b2f4ff;")
 
         #self.stringArray_ch1[5].setText(str(self.global_label[1],'utf-8')+" : "+str(self.shared_mem_gui_vals.buf[0:8],'utf-8'))

@@ -99,8 +99,8 @@ In the following, the global parameters are listed. Default values are given in 
 |      232 | global effect 1
 |      233 | global effect 1
 |234 - 237 | global effect 1 parameters
-|238 - 241 | global effect 1 parameters
-|242 - 245 | global effect 1 parameters
+|238 - 241 | global effect 2 parameters
+|242 - 245 | global effect 3 parameters
 
 ## Testing for rendering engine
 
