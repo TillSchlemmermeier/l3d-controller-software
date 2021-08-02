@@ -20,9 +20,10 @@ class MainWindow(QtWidgets.QMainWindow):
 
         # get global arrays
         self.global_parameter = array
+        self.globalold_parameter = np.zeros(255)
         self.global_label = label
         self.shared_mem_gui_vals = shared_memory.SharedMemory(name = "GuiValues1")
-
+        self.shared_mem_gui_vals_old = str(self.shared_mem_gui_vals.buf,'utf-8')
 
         # initialize layout
         # creating main container-frame, parent it to QWindow
@@ -330,11 +331,13 @@ class MainWindow(QtWidgets.QMainWindow):
         #global_parameter = mp.Array("d",[0,255])
 
         # what do we need the timer for? -> to execute functions periodically in the GUI e.g. updating Strings
+
+
+
+
         timer = QtCore.QTimer(self)
-        timer.timeout.connect(self.update_fighter_values)
-        timer.timeout.connect(self.update_global_values)
-        timer.timeout.connect(self.update_launchpad_values)
-        timer.setInterval(60)
+        timer.timeout.connect(self.conditional_update)
+        timer.setInterval(10)
         timer.start()
 
         # start threads
@@ -343,6 +346,17 @@ class MainWindow(QtWidgets.QMainWindow):
 
 #    def start_download(self,info):
 #        self.list_widget.addItem(info)
+    def conditional_update(self):
+        '''filter GUI update for value change'''
+        #print(self.global_parameter[20], self.globalold_parameter[20])
+        if any(self.globalold_parameter != self.global_parameter) or str(self.shared_mem_gui_vals.buf,'utf-8') != self.shared_mem_gui_vals_old:
+            self.update_fighter_values()
+            self.update_global_values()
+            self.update_launchpad_values()
+
+            for i in range(255):
+                self.globalold_parameter[i] = self.global_parameter[i]
+
 
     def start_Renderer(self):
         """Routine to start all threads

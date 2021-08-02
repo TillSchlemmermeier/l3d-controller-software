@@ -1,3 +1,6 @@
+vorschau programmieren
+2d
+
 überall die balance rausnehmen
 e_radial_gradient sigmoid funktion anpassen, farbverlauf nicht richtig
 

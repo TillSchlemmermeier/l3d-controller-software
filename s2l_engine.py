@@ -45,7 +45,8 @@ def sound_process(array):
         output = False,
         frames_per_buffer = buffer_size)
 
-    freq_axis = 10000*np.linspace(0, 1, 60)**2
+#    freq_axis = 10000*np.linspace(0, 1, 60)**2
+    freq_axis = np.logspace(0, 5, 60)
 
     # initialize selector
     selectors = [200, 1000, 2000, 5000]
@@ -93,6 +94,8 @@ def sound_process(array):
     thres4 = gl.plot([100-10,100+10], [0,0], color = 'orange', linewidth = 6)[0]
 
     '''
+
+
     # initialize matplotlib figure
     mpl.rcParams['toolbar'] = 'None'
 
@@ -113,7 +116,6 @@ def sound_process(array):
     fig.canvas.manager.window.setGeometry(1921, 1200, 1080, 720)
     fig.canvas.manager.window.setWindowFlags(QtCore.Qt.FramelessWindowHint)
     fig.canvas.manager.window.setWindowOpacity(1.0)
-
 
 
     ax.set_xlim(50, 10000)
@@ -176,6 +178,7 @@ def sound_process(array):
 
         # perform fourier transformation
         FFT = fft(data)
+#        FFT = pyfftw.interfaces.numpy_fft.fft(data)
         freqs = fftfreq(buffer_size, 1.0/sample_rate)
 
         # smoothing and interpolating to correct axis

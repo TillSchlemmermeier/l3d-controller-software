@@ -335,11 +335,18 @@ if __name__ == '__main__':
     # starting processes
     print('start')
     proc_midi.start()
+    print('MIDI_Proc :'+ str(proc_midi.pid))
     proc_arduino.start()
+    print('ARDUINO_Proc :'+ str(proc_arduino.pid))
     proc_renderer.start()
+    print('RENDERER_Proc :'+ str(proc_renderer.pid))
     proc_autopilot.start()
+    print('AUTO_Proc :'+ str(proc_autopilot.pid))
     proc_gui.start()
+    print('GUI_Proc :'+ str(proc_gui.pid))
     proc_sound.start()
+    print('SOUND_Proc :'+ str(proc_sound.pid))
+
     #proc_artnet.start()
 
 #    time.sleep(1)
