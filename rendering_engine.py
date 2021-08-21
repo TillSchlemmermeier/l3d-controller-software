@@ -153,7 +153,11 @@ class rendering_engine:
         Arduino
         """
 
-        package = bytearray(self.header + self.get_cubedata())
+        try:
+            package = bytearray(self.header + self.get_cubedata())
+        except:
+            print(self.get_cubedata())
+
         self.arduino.write(package)
 
         # if not self.debug:
@@ -283,9 +287,9 @@ class rendering_engine:
 
     def get_cubedata(self):
         """get vox format from the internal stored world"""
-        list1 = world2vox(np.clip(self.cubeworld[0, :, :, :], 0, 1))
-        list2 = world2vox(np.clip(self.cubeworld[1, :, :, :], 0, 1))
-        list3 = world2vox(np.clip(self.cubeworld[2, :, :, :], 0, 1))
+        list1 = world2vox(np.nan_to_num(np.clip(self.cubeworld[0, :, :, :], 0, 1)))
+        list2 = world2vox(np.nan_to_num(np.clip(self.cubeworld[1, :, :, :], 0, 1)))
+        list3 = world2vox(np.nan_to_num(np.clip(self.cubeworld[2, :, :, :], 0, 1)))
         # stack this lists for each color, so that we have RGB ordering for
         # each LED
         liste = list(np.stack((list1, list2, list3)).flatten('F'))

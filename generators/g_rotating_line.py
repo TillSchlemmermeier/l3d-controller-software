@@ -37,6 +37,7 @@ class g_rotating_line:
         if self.counter % self.wait == 0:
             self.p1[:] = self.p2[:]
             self.p2 = [randint(2, 7), randint(2, 7), randint(2, 7)]
+            self.counter = 0
 
         self.counter += 1
         for x in range(10):
@@ -48,7 +49,8 @@ class g_rotating_line:
 #                    if d < 3:
 #                        world[0, x, y, z] = 1/(d/3+0.0001)
 
-        return np.clip(world, 0, 1)
+#        print(np.clip(world, 0, 1))
+        return np.round(np.clip(world, 0, 1), 3)
 
 
 def get_dist_to_line(p1, p2, p3):
@@ -56,4 +58,4 @@ def get_dist_to_line(p1, p2, p3):
     p1 = np.array(p1)
     p2 = np.array(p2)
     p3 = np.array(p3)
-    return np.linalg.norm(np.cross(p2-p1,p3-p1))/np.linalg.norm(p2-p1)
+    return np.linalg.norm(np.cross(p2-p1,p3-p1))/(np.linalg.norm(p2-p1)+0.01)

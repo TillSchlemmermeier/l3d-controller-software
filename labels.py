@@ -98,6 +98,23 @@ for i in [21]:
 
         counter += 1
 
+
+    #6th row
+    for j in range(0, 8):
+        if counter < len(global_preset_labels):
+            labels[i, 5, j] = global_preset_labels[counter]
+
+        counter += 1
+
+
+    #7th row
+    for j in range(0, 8):
+        if counter < len(global_preset_labels):
+            labels[i, 6, j] = global_preset_labels[counter]
+
+        counter += 1
+
+
 # add presets
 
 for i in [1, 6, 11, 16]:

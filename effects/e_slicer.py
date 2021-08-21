@@ -10,6 +10,7 @@ class e_slicer():
         # parameters
         self.slices = []
         self.number = 5
+        self.frames = 5
         for i in range(self.number):
             self.slices.append(randint(0, 9))
 

@@ -8,13 +8,13 @@ subroutine world2vox_f(list, world)
 
   real*8, dimension(10,10,10) :: world
   integer, dimension(1000)  :: list
-  integer :: x,y,z, index
+  integer :: x,y,z, indexa
 
 !f2py intent(out) list
 !f2py intent(in) world
 
   list(:) = 0
-  index = 1
+  indexa = 1
 
   do x=0, 9
     do y=0, 9
@@ -22,20 +22,20 @@ subroutine world2vox_f(list, world)
 
         if (mod(z, 2) == 0) then
           if (mod(y, 2) == 0) then
-            index = (z*100)+(y*10)+x
+            indexa = (z*100)+(y*10)+x
           else
-            index = (z*100)+(y*10)+9-x
+            indexa = (z*100)+(y*10)+9-x
           endif
 
         else
           if (mod(y, 2) == 0) then
-            index = (z*100)+(90-y*10)+9-x
+            indexa = (z*100)+(90-y*10)+9-x
           else
-            index = (z*100)+(90-y*10)+x
+            indexa = (z*100)+(90-y*10)+x
           endif
         end if
 
-        list(index+1) = int(world(x+1,y+1,z+1)*255)
+        list(indexa+1) = int(world(x+1,y+1,z+1)*255)
 
       end do
     end do

@@ -48,7 +48,7 @@ def autopilot(array):
             print('active autopilot')
             starttime = tottime()
             while True:
-                if tottime()-starttime > 2+float(array[6])*20:
+                if tottime()-starttime > 2+float(array[6])*180:
                     preset = choice(presets).strip('\n').split()
                     print('new preset: ', preset[0])
 

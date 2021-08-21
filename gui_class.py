@@ -23,7 +23,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.globalold_parameter = np.zeros(255)
         self.global_label = label
         self.shared_mem_gui_vals = shared_memory.SharedMemory(name = "GuiValues1")
-        self.shared_mem_gui_vals_old = str(self.shared_mem_gui_vals.buf,'utf-8')
+        self.shared_mem_gui_vals_old = shared_memory.SharedMemory(name = "GuiValues1")
 
         # initialize layout
         # creating main container-frame, parent it to QWindow
@@ -39,6 +39,9 @@ class MainWindow(QtWidgets.QMainWindow):
         self.vert_CF = QtWidgets.QFrame(self)
         self.vert_CL = QtWidgets.QVBoxLayout(self.vert_CF)
         #self.vert_CL.setContentsMargins(0,0,0,0)
+
+        # update gui values in regular intervals
+        self.update = 0
 
         # creating the first subcontainer + layout, parenting it
         #control_CGF = QtWidgets.QFrame(self.main_CF)
@@ -337,7 +340,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
         timer = QtCore.QTimer(self)
         timer.timeout.connect(self.conditional_update)
-        timer.setInterval(10)
+        timer.setInterval(40)
         timer.start()
 
         # start threads
@@ -349,13 +352,19 @@ class MainWindow(QtWidgets.QMainWindow):
     def conditional_update(self):
         '''filter GUI update for value change'''
         #print(self.global_parameter[20], self.globalold_parameter[20])
-        if any(self.globalold_parameter != self.global_parameter) or str(self.shared_mem_gui_vals.buf,'utf-8') != self.shared_mem_gui_vals_old:
+        self.update += 1
+        if any(self.globalold_parameter != self.global_parameter) or self.shared_mem_gui_vals != self.shared_mem_gui_vals_old  or self.update > 50:
+            self.shared_mem_gui_vals_old = self.shared_mem_gui_vals
+            #print("something changed")
             self.update_fighter_values()
             self.update_global_values()
             self.update_launchpad_values()
 
             for i in range(255):
                 self.globalold_parameter[i] = self.global_parameter[i]
+
+            self.update = 0
+
 
 
     def start_Renderer(self):
@@ -379,7 +388,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.utilitylabels[0][0].setText("Global Bright: "+str(round(self.global_parameter[1],2)))
         self.utilitylabels[1][0].setText("Sound Gain: "+str(round(self.global_parameter[19],2)))
         self.utilitylabels[2][0].setText("Normalize")
-        self.utilitylabels[3][0].setText("AutoPilot Timer: "+str(round(self.global_parameter[6],2)))
+        self.utilitylabels[3][0].setText("AutoPilot (s): "+str(int(round(2+self.global_parameter[6]*180,0))))
         self.utilitylabels[4][0].setText("AutoPilot On/Off: "+str(round(self.global_parameter[5],2)))
         if(self.global_parameter[5]>0):
             self.utilitylabels[4][0].setStyleSheet("background-color: #00cc00;")
