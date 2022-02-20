@@ -21,6 +21,10 @@ class e_radial_gradient():
         self.balance = 6.0
         self.sound_values = shared_memory.SharedMemory(name = "global_s2l_memory")
         self.channel = 4
+        self.counter = 0
+
+        self.mode = 'full'
+        self.speed = 10
 
         self.old_c1 = [0.0,0.0,0.0]
         self.old_c2 = [0.0,0.4,0.0]
@@ -33,7 +37,10 @@ class e_radial_gradient():
 
 
     def return_values(self):
-        return [b'rad grad', b'Color In', b'ColorOut', b'', b'channel']
+        if self.mode == 'full':
+            return [b'rad grad', b'Color In', b'ColorOut', b'dual', b'channel']
+        else:
+            return [b'rad grad', b'Color In', b'ColorOut', b'dual', b'speed']
 
     def return_gui_values(self):
         if self.channel >= 0:
@@ -41,7 +48,10 @@ class e_radial_gradient():
         else:
             channel = 'noS2L'
 
-        return bytearray('{0:<8s}{1:<8s}{2:<8s}{3:<8s}'.format(str(round(self.c1[0],1)), str(round(self.c2[0],1)), '', channel), 'utf-8')
+        if self.mode == 'dual':
+            channel = str(round(self.speed,2))
+
+        return bytearray('{0:<8s}{1:<8s}{2:<8s}{3:<8s}'.format(str(round(self.c1[0],1)), str(round(self.c2[0],1)), self.mode, channel), 'utf-8')
 
     def __call__(self, world, args):
         # parsing input
@@ -49,9 +59,14 @@ class e_radial_gradient():
         self.c2[0] = args[1] # hsv_to_rgb(c2,1,1)
         #self.balance = 6 * args[2] + 0.01
         self.channel = int(args[3]*4)-1
+        self.speed = 15.51 - (15 * args[3] + 0.5)
+        if args[2] < 0.5:
+            self.mode = 'full'
+        else:
+            self.mode = 'dual'
 
         # check if s2l is activated
-        if self.channel >= 0:
+        if self.channel >= 0 and self.mode == 'full':
             current_volume = float(str(self.sound_values.buf[self.channel*8:self.channel*8+8],'utf-8'))
 
             dif = np.abs(self.c1[0] - self.c2[0])
@@ -62,6 +77,13 @@ class e_radial_gradient():
             self.c2[0] = self.c2[0] % 1
             self.old_c1[0] = self.c1[0]
             self.old_c2[0] = self.c2[0]
+
+        elif self.mode == 'dual':
+#            print(self.counter, self.c1[0], self.c2[0], end = '')
+            temp = self.c1[0]
+            self.c1[0] = self.c1[0] + (self.c2[0]-self.c1[0])*(np.sin(self.counter/self.speed)+1)*0.5
+            self.c2[0] = temp + (self.c2[0]-temp)*(np.sin(self.counter/self.speed + np.pi)+1)*0.5
+#            print('->', np.sin(self.counter/self.speed), self.c1[0], self.c2[0])
 
         for lamp in list(self.distances.keys()):
             dist = self.distances[lamp]
@@ -75,6 +97,8 @@ class e_radial_gradient():
             world[0, x, y, z] *= color[0]
             world[1, x, y, z] *= color[1]
             world[2, x, y, z] *= color[2]
+
+        self.counter += 1
 
         return np.clip(world, 0, 1)
 
