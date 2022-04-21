@@ -56,3 +56,4 @@ g_obliqueplane_new
 g_rotating_line
 g_soundedges
 g_fulldrip
+g_dots_on_sphere
