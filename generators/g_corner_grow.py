@@ -13,6 +13,7 @@ class g_corner_grow():
         self.sound_values = shared_memory.SharedMemory(name = "global_s2l_memory")
         self.waitingcounter = 0
         self.lastvalue = 0
+        self.channel = 0
 
     #Strings for GUI
     def return_values(self):
