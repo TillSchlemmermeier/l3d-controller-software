@@ -32,6 +32,7 @@ class g_corner_grow():
 
     def __call__(self, args):
         self.waiting = int(args[0]*50)+2
+
         self.channel = int(args[3]*5)-1
 
         # create world

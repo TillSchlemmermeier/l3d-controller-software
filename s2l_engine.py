@@ -145,10 +145,12 @@ def sound_process(array):
     min = [np.zeros(60)]
     max = [np.ones(60)]
 
+    # trigger
     norm_value = [0.0]
     last_value = [0.0]
     armed = [True]
     starttime = [time()]
+    trigger_counter = 0
 
     def update_line(frame, normalized, buffer, min, max):
         # update selectors
@@ -230,12 +232,19 @@ def sound_process(array):
             bla = bytearray('{:.8}'.format(string[:8]),'utf-8')
             sound_values.buf[i*8:i*8+8] =  bla
 
+            # process trigger
             if i == 0:
                 if current_volume > 0.5 and armed[0]:
                     last_value[0] += 1
                     string = '{:8}'.format(last_value[0])
                     bla = bytearray('{:.8}'.format(string[:8]),'utf-8')
                     sound_values.buf[32:40] = bla
+
+                    # trigger / 2
+                    string = '{:8}'.format(last_value[0] % 2)
+                    bla = bytearray('{:.8}'.format(string[:8]),'utf-8')
+                    sound_values.buf[40:48] = bla
+
                     armed[0] = False
                     starttime[0] = time()
                 elif current_volume < 0.5 and not armed[0] and time()-starttime[0] > 0.3:

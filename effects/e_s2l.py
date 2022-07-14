@@ -21,15 +21,17 @@ class e_s2l():
     def return_gui_values(self):
         if self.channel < 4:
             channel = str(self.channel)
-        else:
+        elif self.channel == 4:
             channel = "Trigger"
+        else:
+            channel = 'Trigger/2'
 
         return bytearray('{0:<8s}{1:<8s}{2:<8s}{3:<8s}'.format(str(round(self.amount,1)), channel, self.mode,'') ,'utf-8')
 
     def __call__(self, world, args):
         # process parameters
         self.amount = args[0]
-        self.channel = int(args[1]*4)
+        self.channel = int(args[1]*5)
         if args[2] > 0.5:
             self.mode = 'invert'
         else:
@@ -41,10 +43,17 @@ class e_s2l():
             world[:, :, :, :] *= (1-self.amount) + np.clip(current_volume,0,1)*self.amount
 
         else:
-            current_volume = int(float(str(self.sound_values.buf[32:40],'utf-8')))
-            if current_volume > self.lastvalue:
-                self.lastvalue = current_volume
-                self.counter = 0
+            if self.channel == 4:
+                current_volume = int(float(str(self.sound_values.buf[32:40],'utf-8')))
+                if current_volume > self.lastvalue:
+                    self.lastvalue = current_volume
+                    self.counter = 0
+
+            elif self.channel == 5:
+                current_volume = int(float(str(self.sound_values.buf[40:48],'utf-8')))
+                if current_volume == 1:
+                    self.lastvalue = current_volume
+                    self.counter = 0
 
             if self.mode == 'normal':
                 if self.counter < self.step:

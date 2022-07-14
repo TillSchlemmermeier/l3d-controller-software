@@ -44,7 +44,7 @@ class g_rotating_line:
             for y in range(10):
                 for z in range(10):
                     d = get_dist_to_line(self.p1, self.p2, [x,y,z])
-                    world[0, x, y, z] = 0.5 * (1/(d+ 0.0001)**8)
+                    world[:, x, y, z] = 0.5 * (1/(d+ 0.0001)**8)
 
 #                    if d < 3:
 #                        world[0, x, y, z] = 1/(d/3+0.0001)
