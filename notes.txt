@@ -58,3 +58,12 @@ staticcolor: eine bestimmte Farbe
 colorfade: fade bestimmt 2 Farben (Zeitkoordinate)
 radial_gradient: c1 und c2: radialkoordinaten
 roating rainbow:
+
+
+orbbot geschwindigkeit an bpm anpassen
+speed, s2l bei edgelines
+knopf um channel zu resetten (gen + effekte)
+effekt: "FlächenFade" faden wenn fläche, statt s2l mit trigger + invert & soundfade mit invert
+one shot: alles groß oder klein skalieren
+roll als effekt
+ONE shot: trigger auslösen

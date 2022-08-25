@@ -21,7 +21,7 @@ class e_blackcolorwhite():
 
     def return_values(self):
         # strings for GUI
-        return [b'blackcolorwhite', b'color', b'', b'', b'']
+        return [b'blackcolorwhite', b'', b'', b'', b'']
 
     def return_gui_values(self):
         if self.channel < 4:

@@ -100,8 +100,8 @@ def sound_process(array):
     mpl.rcParams['toolbar'] = 'None'
 
     fig, ax = plt.subplots()#figsize=(10.6, 6.5)
-    plt.xticks(fontsize = 24, rotation = 0)
-    plt.yticks(fontsize = 24)
+    plt.xticks(fontsize = 12, rotation = 0)
+    plt.yticks(fontsize = 12)
     ax.set_facecolor('black')
     fig.set_facecolor('black')
     ax.xaxis.label.set_color('red')
@@ -113,7 +113,8 @@ def sound_process(array):
 
     #fig.canvas.manager.window.move(1921, 1130)
 
-    fig.canvas.manager.window.setGeometry(1921, 1200, 1080, 720)
+    # fig.canvas.manager.window.setGeometry(1921, 1200, 1080, 720)
+    fig.canvas.manager.window.setGeometry(1921, 1200, 600, 424)
     fig.canvas.manager.window.setWindowFlags(QtCore.Qt.FramelessWindowHint)
     fig.canvas.manager.window.setWindowOpacity(1.0)
 
@@ -136,7 +137,7 @@ def sound_process(array):
 
     ax.set_xticks([50, 100, 250, 500, 1000, 2500, 5000, 10000])
     ax.set_xticklabels([50, 100, 250, 500, 1000, 2500, 5000, 10000])
-    plt.legend(loc='upper center',bbox_to_anchor=(0.5,1.16),ncol=4,fancybox=True, fontsize=24, labelcolor='white', facecolor='black')
+    plt.legend(loc='upper center',bbox_to_anchor=(0.5,1.16),ncol=4,fancybox=True, fontsize=12, labelcolor='white', facecolor='black')
 
 
     # normalization
@@ -191,14 +192,14 @@ def sound_process(array):
         if not normalized[0]:
             buffer.append(final_data)
 
-            if len(buffer) > 30:
+            if len(buffer) > 60:
                 print('normalized')
                 normalized[0] = True
                 min[0] = np.min(np.array(buffer), axis = 0)
                 max[0] = np.max(np.array(buffer), axis = 0)
 
 
-        final_data = (final_data - min[0])/(max[0] - min[0])
+        final_data = (final_data - min[0])/(max[0] - min[0] + 0.001)
 
         # set data
         # spectrum.set_data(freq_axis, final_data)

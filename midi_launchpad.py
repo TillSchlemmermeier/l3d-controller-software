@@ -61,6 +61,24 @@ class class_launchpad_mk3:
         # freeze world
         self.freeze = np.zeros([255])
 
+
+        # start automatically
+        self.global_parameter[0] = 1
+        self.global_parameter[1] = 1
+        self.global_parameter[2] = 0.0
+        self.global_parameter[3] = 1.0
+        # self.global_parameter[20] = 1
+        # activate channel 1
+        self.global_parameter[40] = 1
+        self.global_parameter[41] = 1
+        # turn on brightness for channel 2
+        self.global_parameter[71] = 1
+        # turn on brightness for channel 3
+        self.global_parameter[101] = 1
+        # turn on brightness for channel 4
+        self.global_parameter[131] = 1
+
+
     def event(self, event, data=None):
         """Call gets midi message and calls the mapping routine"""
         # gets message from midi input

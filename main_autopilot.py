@@ -30,7 +30,7 @@ from time import sleep
 from time import time as tottime
 import multiprocessing as mp
 from s2l_engine import sound_process
-from random import choice
+from random import choice, randint
 
 #from PyQt5.QtCore import QObject,QThread, pyqtSigna
 #from mainwindow import Ui_MainWindow
@@ -40,7 +40,11 @@ def autopilot(array):
     with open('global_presets.dat', 'r') as file:
         presets = file.readlines()
 
-    preset = choice(presets)
+    preset = choice(presets).strip('\n').split()
+
+    for i, value in zip(range(20,159), preset[1:]):
+        array[i] = float(value)
+
 
     while True:
         time.sleep(0.5)
@@ -49,6 +53,8 @@ def autopilot(array):
             starttime = tottime()
             while True:
                 if tottime()-starttime > 2+float(array[6])*180:
+                    # normalize
+                    array[18] = randint(0,10)
                     preset = choice(presets).strip('\n').split()
                     print('new preset: ', preset[0])
 
@@ -162,6 +168,7 @@ def rendering(array, label, pause_time = 0.03, log = False):
     window.addItem(scatterplot)
 
     # start rendering engine
+    array[0] = 1
     frame_renderer = rendering_engine(array, label, log)
 
     '''
@@ -283,11 +290,17 @@ if __name__ == '__main__':
     for i in range(100):
         global_label[i] = b'init'
 
+    # autopilot
+    global_parameter[5] = 1
+    global_parameter[6] = 0.4
+
+
     # start values for s2l_engine
     global_parameter[10] = 0.12
     global_parameter[11] = 0.2
     global_parameter[12] = 0.45
     global_parameter[13] = 0.7
+
 
     if len(sys.argv) >= 2:
         if sys.argv[1] == '--2d':
@@ -305,7 +318,7 @@ if __name__ == '__main__':
 
     # assign processes
     proc_midi = mp.Process(target=midi_devices, args = [global_parameter])
-    proc_arduino = mp.Process(target=midi_arduino, args = [global_parameter])
+    # proc_arduino = mp.Process(target=midi_arduino, args = [global_parameter])
     proc_gui = mp.Process(target=gui, args = [global_parameter, global_label, mode])
     # proc_artnet = mp.Process(target=artnet_process, args = [global_parameter])
     proc_sound = mp.Process(target = sound_process, args = [global_parameter])
@@ -337,26 +350,34 @@ if __name__ == '__main__':
     print('start')
     proc_midi.start()
     print('MIDI_Proc :'+ str(proc_midi.pid))
-    proc_arduino.start()
-    print('ARDUINO_Proc :'+ str(proc_arduino.pid))
+    #proc_arduino.start()
+
+    #print('ARDUINO_Proc :'+ str(proc_arduino.pid))
     proc_renderer.start()
     print('RENDERER_Proc :'+ str(proc_renderer.pid))
     proc_autopilot.start()
     print('AUTO_Proc :'+ str(proc_autopilot.pid))
     proc_gui.start()
+
     print('GUI_Proc :'+ str(proc_gui.pid))
     proc_sound.start()
     print('SOUND_Proc :'+ str(proc_sound.pid))
 
+
     #proc_artnet.start()
+
 
 #    time.sleep(1)
     proc_midi.join()
-    proc_arduino.join()
+    #proc_arduino.join()
     proc_renderer.join()
-    proc_gui.join()
     proc_sound.join()
     proc_autopilot.join()
+
+    # global_parameter[5] = 1
+
+    proc_gui.join()
+
 #    proc_artnet.join()
 
     global_memory.close()
