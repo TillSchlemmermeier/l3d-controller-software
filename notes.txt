@@ -45,6 +45,7 @@ e_rotating_black_white
 e_rotating_blue_orange
 e_outer_shadow
 
+
 e_divider
 
 
@@ -61,9 +62,14 @@ roating rainbow:
 
 
 orbbot geschwindigkeit an bpm anpassen
-speed, s2l bei edgelines
 knopf um channel zu resetten (gen + effekte)
-effekt: "FlächenFade" faden wenn fläche, statt s2l mit trigger + invert & soundfade mit invert
 one shot: alles groß oder klein skalieren
-roll als effekt
 ONE shot: trigger auslösen
+
+s2l mit decay
+3dconway mit trigger
+benchmark!!!
+multiple trigger -> 4 separate modulationskanäle mit lfo oder sound? und 2 kanäle mit action/drop
+kanal kopieren (von 1 auf 3) fehlerhaft (oder allgemein der erste wert vom generator)
+radial gradient (dual) auch statisch
+langsame aktualisierung der gui fixen (z.b. beim kopieren von kanälen)

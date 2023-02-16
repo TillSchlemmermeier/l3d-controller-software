@@ -19,7 +19,7 @@ from oneshots.s_strobo import s_strobo
 from oneshots.s_cubes import s_cubes
 from oneshots.s_dark_sphere import s_dark_sphere
 from oneshots.s_threesixty import s_threesixty
-
+from oneshots.s_trigger import s_trigger
 
 class rendering_engine:
     """
@@ -95,6 +95,7 @@ class rendering_engine:
         self.shot_list.append(s_cubes)
         self.shot_list.append(s_dark_sphere)
         self.shot_list.append(s_threesixty)
+        self.shot_list.append(s_trigger)
 
         self.fpslastTime = time()
         self.fps = None

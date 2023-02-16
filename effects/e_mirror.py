@@ -22,7 +22,7 @@ class e_mirror():
         self.mode = 'mirror'
 
     def return_values(self):
-        return [b'mirror', b'# of axes', b'mode', b'', b's2l trigger']
+        return [b'mirror', b'# of axes', b'steps', b'mode', b's2l trigger']
 
     def return_gui_values(self):
         if self.trigger:
@@ -30,7 +30,7 @@ class e_mirror():
         else:
             trigger = 'Off'
 
-        return bytearray('{0:<8s}{1:<8s}{2:<8s}{3:<8s}'.format(str(self.naxis), self.mode, '', trigger), 'utf-8')
+        return bytearray('{0:<8s}{1:<8s}{2:<8s}{3:<8s}'.format(str(self.naxis), str(int(self.steps)), self.mode, trigger), 'utf-8')
 
     def __call__(self, world, args):
         # parsing input

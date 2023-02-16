@@ -60,10 +60,12 @@ class e_radial_gradient():
         #self.balance = 6 * args[2] + 0.01
         self.channel = int(args[3]*4)-1
         self.speed = 15.51 - (15 * args[3] + 0.5)
-        if args[2] < 0.5:
+        if args[2] < 0.3:
             self.mode = 'full'
-        else:
+        elif 0.3 <= args[2] < 0.5:
             self.mode = 'dual'
+        else:
+            self.mode = 'fixed'
 
         # check if s2l is activated
         if self.channel >= 0 and self.mode == 'full':
@@ -98,7 +100,8 @@ class e_radial_gradient():
             world[1, x, y, z] *= color[1]
             world[2, x, y, z] *= color[2]
 
-        self.counter += 1
+        if self.mode != 'fixed':
+            self.counter += 1
 
         return np.clip(world, 0, 1)
 

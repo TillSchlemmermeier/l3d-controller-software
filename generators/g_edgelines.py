@@ -10,11 +10,12 @@ class g_edgelines():
         self.sound_values = shared_memory.SharedMemory(name = "global_s2l_memory")
         self.trigger = False
         self.lastvalue = 0
+        self.speed = 1
 
 
     def return_values(self):
         # Strings for GUI
-        return [b'edgelines', b'', b'', b'', b'Trigger']
+        return [b'edgelines', b'speed', b'', b'', b'Trigger']
 
     def return_gui_values(self):
         if self.trigger:
@@ -22,10 +23,11 @@ class g_edgelines():
         else:
             trigger = 'Off'
 
-        return bytearray('{0:<8s}{1:<8s}{2:<8s}{3:<8s}'.format('', '', '', trigger),'utf-8')
+        return bytearray('{0:<8s}{1:<8s}{2:<8s}{3:<8s}'.format(str(self.speed), '', '', trigger),'utf-8')
 
 
     def __call__(self, args):
+        self.speed = int(1+2*args[0])
         if args[3] > 0.2:
             self.trigger = True
         else:
@@ -77,13 +79,13 @@ class g_edgelines():
             world[:, 0, self.counter-70:, 9] = 1.0
             world[:, 0, 9, self.counter-70:] = 1.0
         else:
-            self.counter = -1
+            self.counter = -self.speed
 
         if self.trigger:
             if self.counter % 10 != 0:
-                self.counter +=1
+                self.counter += self.speed
         else:
-            self.counter += 1
+            self.counter += self.speed
 
 
         return np.clip(world, 0, 1)

@@ -12,6 +12,8 @@ class g_flash():
         self.wait = 4
         self.speed = 1
 
+        self.trigger = False
+
         # s2l
         self.sound_values = shared_memory.SharedMemory(name = "global_s2l_memory")
         self.channel = 0
@@ -19,15 +21,13 @@ class g_flash():
 
     #Strings for GUI
     def return_values(self):
-        return [b'flash', b'speed', b'wait', b'', b'channel']
+        return [b'flash', b'speed', b'wait', b'', b'trigger']
 
     def return_gui_values(self):
-        if 4 > self.channel >= 0:
-            channel = str(self.channel)
-        elif self.channel == 4:
-            channel = "Trigger"
+        if self.trigger:
+            channel = 'yes'
         else:
-            channel = 'noS2L'
+            channel = 'no'
 
         return bytearray('{0:<8s}{1:<8s}{2:<8s}{3:<8s}'.format(str(self.speed), str(self.wait), '', channel),'utf-8')
 
@@ -36,9 +36,15 @@ class g_flash():
 
         self.speed = int(round(args[0]*1))+1
         self.wait = int(round(args[1]*20))
+        if args[3] > 0.5:
+            self.trigger = True
+        else:
+            self.trigger = False
 
         # create world
         world = np.zeros([3, 10, 10, 10])
+
+        current_volume = int(float(str(self.sound_values.buf[32:40],'utf-8')))
 
         # check if S2L is activated
         '''
@@ -54,6 +60,7 @@ class g_flash():
         '''
 
         if 0 < self.counter < self.reset:
+            self.lastvalue = current_volume
             for i in range(self.speed):
                 for step in range(self.counter):
                     world[0, self.points[step][0], self.points[step][1], self.points[step][2]] = 1
@@ -61,6 +68,7 @@ class g_flash():
                 self.counter += 1
 
         elif self.reset <= self.counter < self.reset + 2:
+            self.lastvalue = current_volume
             self.counter += 1
 
         elif self.reset + 2 <= self.counter < self.reset + 4:
@@ -68,7 +76,13 @@ class g_flash():
                 world[0, p[0], p[1], p[2]] = 1
             self.counter += 1
 
-        elif self.counter >= self.reset + 4:
+        elif self.counter >= self.reset + 4 and not self.trigger:
+            # reset
+            self.counter = -self.wait
+            self.points = self.gen_line()
+        elif self.counter >= self.reset +4 and self.trigger and current_volume > self.lastvalue:
+            # reset with trigger
+            self.lastvalue = current_volume
             self.counter = -self.wait
             self.points = self.gen_line()
         else:

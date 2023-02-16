@@ -57,3 +57,5 @@ g_soundedges
 g_fulldrip
 g_dots_on_sphere
 g_bouncer
+g_rotating_circle
+g_conway

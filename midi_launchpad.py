@@ -129,7 +129,6 @@ class class_launchpad_mk3:
                         self.global_parameter[131] = 1
 
 
-
                 elif message[1] == 18:
                     if self.global_parameter[5] == 0:
                         self.global_parameter[5] = 1
@@ -204,7 +203,7 @@ class class_launchpad_mk3:
                     except:
                         print('error loading temporary preset!')
 
-                # now the shots
+                # now the oneshots
                 elif message[1] == 68:
                     self.global_parameter[220] = 1
                 elif message[1] == 67:
@@ -225,6 +224,13 @@ class class_launchpad_mk3:
                     self.global_parameter[220] = 8
                 elif message[1] == 46:
                     self.global_parameter[220] = 9
+
+                elif message[1] == 38:
+                    self.global_parameter[220] = 10
+                #elif message[1] == 37:
+                #    self.global_parameter[220] = 11
+                #elif message[1] == 36:
+                #    self.global_parameter[220] = 12
 
                 # now global preset
                 elif message[1] == 15:
@@ -610,7 +616,7 @@ class class_launchpad_mk3:
 
         # if idle state, we can open the selection menu
         if self.state == 0:
-            # send shots
+            # send oneshots
             self.midiout.send_message([144, 68, 5])
             self.midiout.send_message([144, 67, 5])
             self.midiout.send_message([144, 66, 5])
@@ -620,6 +626,7 @@ class class_launchpad_mk3:
             self.midiout.send_message([144, 48, 5])
             self.midiout.send_message([144, 47, 5])
             self.midiout.send_message([144, 46, 5])
+            self.midiout.send_message([144, 38, 5])
 
             # send global preset save/load
             self.midiout.send_message([144, 85, 5])

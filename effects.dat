@@ -33,3 +33,6 @@ e_rotate_plane
 e_soundhsv
 e_redblue
 e_blackcolorwhite
+e_breakfade
+e_roll
+e_fade

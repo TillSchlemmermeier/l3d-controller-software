@@ -46,6 +46,7 @@ labels[0, 3, 5] = 'strobo'
 labels[0, 4, 7] = 'cubes'
 labels[0, 4, 6] = 'dark sphere'
 labels[0, 4, 5] = 'threesixty'
+labels[0, 5, 7] = 'trigger'
 
 # add global presets
 global_preset_labels = []
@@ -111,6 +112,13 @@ for i in [21]:
     for j in range(0, 8):
         if counter < len(global_preset_labels):
             labels[i, 6, j] = global_preset_labels[counter]
+
+        counter += 1
+
+    #8th row
+    for j in range(0, 8):
+        if counter < len(global_preset_labels):
+            labels[i, 7, j] = global_preset_labels[counter]
 
         counter += 1
 

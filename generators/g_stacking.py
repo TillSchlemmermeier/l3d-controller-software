@@ -17,7 +17,7 @@ class g_stacking():
 
 
     def return_values(self):
-        return [b'stacking', b'number', b'lifetime', b'', b'channel']
+        return [b'stacking', b'number', b'lifetime', b'', b'']
 
 
     def return_gui_values(self):

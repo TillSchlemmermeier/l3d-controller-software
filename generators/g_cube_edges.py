@@ -61,7 +61,7 @@ class g_cube_edges():
 
     #Strings for GUI
     def return_values(self):
-        return [b'cube_edges', b'speed', b'number', b'Multi', b'Trigger']
+        return [b'cube_edges', b'speed', b'number', b'wait', b'Trigger']
 
     def return_gui_values(self):
         if self.trigger:

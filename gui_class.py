@@ -477,6 +477,9 @@ class MainWindow(QtWidgets.QMainWindow):
                         self.padlabels[x][y].setStyleSheet('background-color: rgb(255, 0, 0); text-align: center;')
                     elif y > 4 and x == 4:
                         self.padlabels[x][y].setStyleSheet('background-color: rgb(255, 0, 0); text-align: center;')
+                    elif y > 6 and x == 5:
+                        self.padlabels[x][y].setStyleSheet('background-color: rgb(255, 0, 0); text-align: center;')
+
                     #presets
                     elif x == 0 and y < 4:
                         self.padlabels[x][y].setStyleSheet('background-color: rgb(255, 0, 0); text-align: center;')
@@ -529,7 +532,15 @@ class MainWindow(QtWidgets.QMainWindow):
                     elif x == 7 and y == 6:
                             self.padlabels[x][y].setStyleSheet('background-color: rgb(255, 255, 0); text-align: center;')
                             self.padlabels[x][y].setText('Global FX')
-                        #rgb(224, 0, 0)
+
+                    # quicksave & load
+                    elif x == 6 and y == 7:
+                            self.padlabels[x][y].setStyleSheet('background-color: rgb(0, 255, 0); text-align: center;')
+                            self.padlabels[x][y].setText('Quickload')
+                    elif x == 6 and y == 6:
+                            self.padlabels[x][y].setStyleSheet('background-color: rgb(0, 255, 0); text-align: center;')
+                            self.padlabels[x][y].setText('Quicksave')
+
                 else:
                     # get color - don't do a shallow copy here!
                     color = self.colors[int(self.global_parameter[200])][:]
