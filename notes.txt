@@ -4,7 +4,6 @@ vorschau programmieren
 überall die balance rausnehmen
 e_radial_gradient sigmoid funktion anpassen, farbverlauf nicht richtig
 
-g_centralglow Parameter verbessern??
 g_stacking???
 
 a_orbbot
@@ -64,12 +63,12 @@ roating rainbow:
 orbbot geschwindigkeit an bpm anpassen
 knopf um channel zu resetten (gen + effekte)
 one shot: alles groß oder klein skalieren
-ONE shot: trigger auslösen
+
 
 s2l mit decay
-3dconway mit trigger
 benchmark!!!
 multiple trigger -> 4 separate modulationskanäle mit lfo oder sound? und 2 kanäle mit action/drop
-kanal kopieren (von 1 auf 3) fehlerhaft (oder allgemein der erste wert vom generator)
-radial gradient (dual) auch statisch
+kanal kopieren (von 1 auf 3) fehlerhaft (oder allgemein der erste wert vom generator) ?
 langsame aktualisierung der gui fixen (z.b. beim kopieren von kanälen)
+
+quick select for color with launchpad, for all channels at one. e.g. by opening a new menu on launchpad

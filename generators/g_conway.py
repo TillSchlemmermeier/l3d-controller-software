@@ -58,7 +58,8 @@ class g_conway():
                 self.sides += np.random.randint(0, 2, [40,10])
                 # self.sides = np.clip(self.sides, 0, 2)
         else:
-            self.step += 1
+            pass
+        self.step += 1
 
 
         # transfer to real world
