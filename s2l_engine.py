@@ -12,13 +12,13 @@ from scipy.ndimage.filters import uniform_filter1d
 import multiprocessing as mp
 from multiprocessing import shared_memory
 import matplotlib as mpl
-
 #from PyQt5 import QtCore, QtGui
 
 from pyqtgraph.Qt import QtCore, QtGui
 import pyqtgraph.opengl as gl
 
 def sound_process(array):
+
     # initialize pyaudio
     sample_rate = 44100
     buffer_size = int(44100/20)
@@ -45,14 +45,14 @@ def sound_process(array):
         output = False,
         frames_per_buffer = buffer_size)
 
-#    freq_axis = 10000*np.linspace(0, 1, 60)**2
+    # initialize frequency axis for spectrum
     freq_axis = np.logspace(0, 5, 60)
 
-    # initialize selector
-    selectors = [200, 1000, 2000, 5000]
-    thresholds = [0.0, 0.0, 0.0, 0.0]
+    # initialize frequency selector
+    selectors = [200, 1000, 2000, 5000] # frequency
+    thresholds = [0.0, 0.0, 0.0, 0.0]   # threshold
 
-    # inital read
+    # inital reading of spectrum
     dump = stream.read(1024)
     data = struct.unpack("%dh"%(1024), dump)
     FFT = fft(data)
@@ -60,43 +60,9 @@ def sound_process(array):
 
     print('\nstarting sound loop\n')
 
-
-    '''
-    # initialize window
-    app = QtGui.QApplication([])
-    window = gl.GLViewWidget()
-    window.setWindowTitle('L3D Cube')
-    screen_resolution = app.desktop().screenGeometry()
-    width = screen_resolution.width()
-    # x coordinate, y coordinate, xsize, ysize
-    window.setGeometry(width + 1, 0, 1080, 1200)
-    window.setWindowFlags(QtCore.Qt.FramelessWindowHint)
-
-    #window.setCameraPosition(pos = None, distance = 15, elevation = 30, azimuth = 0)
-    window.opts['distance'] = 30
-    window.opts['azimuth'] = 40
-    window.opts['elevation'] = 30
-    window.opts['fov'] = 30
-    window.show()
-
-    # add plots
-    spectrum = gl.GLLinePlotItem(freqs, np.abs(FFT), color='white', lw = 3)
-    window.addItem(scatterplot)
-
-    select1 = gl.plot([100,100], [-10,10], label = '0', color = 'red', linewidth = 5)
-    select2 = gl.plot([100,500], [-10,10], label = '1', color = 'green', linewidth = 5)
-    select3 = gl.plot([100,1000], [-10,10], label = '2', color = 'blue', linewidth = 5)
-    select4 = gl.plot([100,2000], [-10,10], label = '3', color = 'orange', linewidth = 5)
-
-    thres1 = gl.plot([100-10,100+10], [0,0],  color = 'red', linewidth = 6)[0]
-    thres2 = gl.plot([100-10,100+10], [0,0],  color = 'green', linewidth = 6)[0]
-    thres3 = gl.plot([100-10,100+10], [0,0],  color = 'blue', linewidth = 6)[0]
-    thres4 = gl.plot([100-10,100+10], [0,0], color = 'orange', linewidth = 6)[0]
-
-    '''
-
-
     # initialize matplotlib figure
+    # for spectrum visualizer
+
     mpl.rcParams['toolbar'] = 'None'
 
     fig, ax = plt.subplots()#figsize=(10.6, 6.5)
@@ -111,13 +77,9 @@ def sound_process(array):
     ax.spines['left'].set_color('white')
     ax.spines['right'].set_color('white')
 
-    #fig.canvas.manager.window.move(1921, 1130)
-
-    # fig.canvas.manager.window.setGeometry(1921, 1200, 1080, 720)
     fig.canvas.manager.window.setGeometry(1921, 1200, 600, 424)
     fig.canvas.manager.window.setWindowFlags(QtCore.Qt.FramelessWindowHint)
     fig.canvas.manager.window.setWindowOpacity(1.0)
-
 
     ax.set_xlim(50, 10000)
     ax.set_ylim(-0.1,2)
@@ -132,13 +94,11 @@ def sound_process(array):
     thres3 = ax.plot([100-10,100+10], [0,0],  color = 'blue', linewidth = 6)[0]
     thres4 = ax.plot([100-10,100+10], [0,0], color = 'orange', linewidth = 6)[0]
 
-
     ax.set_xscale('symlog', linthresh=0.01)
 
     ax.set_xticks([50, 100, 250, 500, 1000, 2500, 5000, 10000])
     ax.set_xticklabels([50, 100, 250, 500, 1000, 2500, 5000, 10000])
     plt.legend(loc='upper center',bbox_to_anchor=(0.5,1.16),ncol=4,fancybox=True, fontsize=12, labelcolor='white', facecolor='black')
-
 
     # normalization
     normalized = [False]
@@ -154,6 +114,14 @@ def sound_process(array):
     trigger_counter = 0
 
     def update_line(frame, normalized, buffer, min, max):
+        '''
+        function for update the plotting window, which also
+        calls the functions to read the spectrum and parse it
+
+        this function uses `array`, which is passed from the parent
+        function to the function `sound_process`. that's the
+        global parameters array
+        '''
         # update selectors
         selectors[0] = (array[10]**2)*10000
         selectors[1] = (array[11]**2)*10000
@@ -173,7 +141,6 @@ def sound_process(array):
             buffer[:] = []
             print('s2l engine : reseting normalization')
 
-
         # read raw data and unpack it
         n_available = stream.get_read_available()
         dump = stream.read(buffer_size)
@@ -181,14 +148,14 @@ def sound_process(array):
 
         # perform fourier transformation
         FFT = fft(data)
-#        FFT = pyfftw.interfaces.numpy_fft.fft(data)
         freqs = fftfreq(buffer_size, 1.0/sample_rate)
 
         # smoothing and interpolating to correct axis
         FFT_smooth = uniform_filter1d(np.abs(FFT), size=10)
         final_data = griddata(freqs, FFT_smooth, freq_axis, method='cubic', fill_value=0)
 
-        # normalize the whole thing
+        # normalize the whole thing if normalizing was set
+        # to "not normalized"
         if not normalized[0]:
             buffer.append(final_data)
 
@@ -198,11 +165,10 @@ def sound_process(array):
                 min[0] = np.min(np.array(buffer), axis = 0)
                 max[0] = np.max(np.array(buffer), axis = 0)
 
-
+        # final data is the final processed spectrum
         final_data = (final_data - min[0])/(max[0] - min[0] + 0.001)
 
-        # set data
-        # spectrum.set_data(freq_axis, final_data)
+        # set data for plot
         line.set_data(freq_axis, final_data)
 
         select1.set_data([selectors[0], selectors[0]], [-10,10])
@@ -215,9 +181,10 @@ def sound_process(array):
         thres3.set_data([selectors[2]-0.1*selectors[2], selectors[2]+0.1*selectors[2]], [thresholds[2],thresholds[2]])
         thres4.set_data([selectors[3]-0.1*selectors[3], selectors[3]+0.1*selectors[3]], [thresholds[3],thresholds[3]])
 
-        # write data
+        # this loop writes the current intensities for the
+        # different chosen frequencies to global array
         for i in range(len(selectors)):
-            # get data
+            # get data for this frequency
             freq_ind = np.argmin(abs(freq_axis - selectors[i]))
             current_volume = round(final_data[freq_ind],4)
 
@@ -225,16 +192,21 @@ def sound_process(array):
             if current_volume < thresholds[0]:
                 current_volume = 0.0
 
-            # apply gain
+            # apply gain, which can be controlled from
+            # a single poti from the midimix
             current_volume *= (array[19]*4 + 1)
-            #current_volume = current_volume**(1-array[19]*0.5)
 
+            # write the processed sound signal for this
+            # frequency to sound_values
             string = '{:8}'.format(current_volume)
             bla = bytearray('{:.8}'.format(string[:8]),'utf-8')
             sound_values.buf[i*8:i*8+8] =  bla
 
             # process trigger
+            # i is checking for the lowest frequency
             if i == 0:
+                # if loud enough and armed is true
+                # last_value is increased by 1
                 if current_volume > 0.5 and armed[0]:
                     last_value[0] += 1
                     string = '{:8}'.format(last_value[0])
@@ -242,9 +214,10 @@ def sound_process(array):
                     sound_values.buf[32:40] = bla
 
                     # trigger / 2
-                    string = '{:8}'.format(last_value[0] % 2)
-                    bla = bytearray('{:.8}'.format(string[:8]),'utf-8')
-                    sound_values.buf[40:48] = bla
+                    if last_value[0] % 2 == 0:
+                        string = '{:8}'.format(last_value[0])
+                        bla = bytearray('{:.8}'.format(string[:8]),'utf-8')
+                        sound_values.buf[40:48] = bla
 
                     armed[0] = False
                     starttime[0] = time()

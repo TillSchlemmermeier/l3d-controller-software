@@ -5,7 +5,7 @@ import tkinter as tk
 from tkinter import simpledialog
 import subprocess as sb
 from sklearn import svm
-from random import choice, random
+from random import choice, random, gauss
 import numpy as np
 
 class class_launchpad_mk3:
@@ -27,6 +27,7 @@ class class_launchpad_mk3:
         # states are preset, generator, effect1, effect2, effect3 for
         # each channel, which makes 20 states + idle state
         # state 21 = global preset menu
+        # state 25 = global preset 2 menu
         self.state = 0	 # this is the idle state
         self.sendstate() # send the current state to launchpad
 
@@ -159,9 +160,15 @@ class class_launchpad_mk3:
                     #elif key[1]-1 == 4:
                     #    self.global_parameter[200] = key
 
+                # open global presets 1
                 elif message[1] == 85:
                     self.state = key
                     self.global_parameter[200] = 21
+
+                # open global preset 2
+                elif message[1] == 86:
+                    self.state = key
+                    self.global_parameter[200] = 25
 
                 elif message[1] == 65:
                     self.state = key
@@ -292,7 +299,7 @@ class class_launchpad_mk3:
                     self.global_parameter[200] = 0
 
                 else:
-                    # check for presets
+                    # check for global presets
                     if self.state[0] == 1 and self.state[1] == 5:
                         # figure out the state
                         index = 18 + (self.state[1]-1)*5 + self.state[0]
@@ -304,6 +311,20 @@ class class_launchpad_mk3:
                             self.load_global_preset(preset_id = message[1]+add)
                         except:
                             print('error loading preset')
+
+                    # global preset 2
+                    elif self.state[0] == 1 and self.state[1] == 6:
+                        # figure out the state
+                        index = 18 + (self.state[1]-1)*5 + self.state[0]
+
+                        # addition
+                        add = -82 + (8-int(message[1]*0.1))*18
+
+                        try:
+                            self.load_global_preset(preset_id = message[1]+add+64)
+                        except:
+                            print('error loading preset')
+
 
                     elif self.state[0] == 1 and self.state[1] < 6:
                         print('trying to load preset')
@@ -500,34 +521,47 @@ class class_launchpad_mk3:
 
     def randomizer(self):
 
+        '''
         # generator and effect choice
         #number of generators available
         num_gen = sum(1 for line in open('generators.dat'))
 
         # choose a generator
-        for i in (20, 25, 30, 35):
+        for i in [20]: #, 25, 30, 35):
             self.global_parameter[i] = randint(0, num_gen)
 
         #number of effects available
         num_eff = sum(1 for line in open('effects.dat'))
 
         # choose an effect, if not available = e_blank
-        for i in (21, 26, 31, 36):
+        for i in [21]: #, 26, 31, 36):
             for j in range(3):
                 self.global_parameter[i+j] = randint(0, 54)
 
                 if self.global_parameter[i+j] > num_eff:
                     self.global_parameter[i+j] = 0
+        '''
+        #number of effects available
+        num_eff = sum(1 for line in open('effects.dat'))
 
+        # change one effect
+        ind = choice([0,1,2])
+        self.global_parameter[21+ind] = randint(0, num_eff+5)
+        if self.global_parameter[21+ind] > num_eff:
+            self.global_parameter[21+ind] = 0
 
         # channels
-        for i in [40, 70, 100, 130]:
-            self.global_parameter[i] = 0
+        for i in [40]: #, 70, 100, 130]:
+            # self.global_parameter[i] = 0
             for j in range(i+5, i+30):
-                self.global_parameter[j] = random()
+                # self.global_parameter[j] += random()
+                self.global_parameter[j] = round(np.clip(self.global_parameter[j] + gauss(mu = 0.0, sigma = 0.02),0,1),3)
 
         # turn channel 1 on
         self.global_parameter[40] = 1
+
+        # turn brightness of first channel down
+        # self.global_parameter[41] = 0.0
 
     def randomizer_test(self):
         # get number of generators
@@ -629,6 +663,7 @@ class class_launchpad_mk3:
             self.midiout.send_message([144, 38, 5])
 
             # send global preset save/load
+            self.midiout.send_message([144, 86, 5])
             self.midiout.send_message([144, 85, 5])
             self.midiout.send_message([144, 15, 2])
 
@@ -641,7 +676,7 @@ class class_launchpad_mk3:
             self.midiout.send_message([144, 16, 23])
 
             # send voting button
-            self.midiout.send_message([144, 26, 24])
+            # self.midiout.send_message([144, 26, 24])
 
             # send freeze/unfreeze button
             self.midiout.send_message([144, 27, 26])

@@ -44,7 +44,7 @@ g_stacking
 g_grow
 g_random_grow
 g_drop
-g_blank
+g_evolve
 g_falling
 g_pong
 g_soundsinus
@@ -59,3 +59,5 @@ g_dots_on_sphere
 g_bouncer
 g_rotating_circle
 g_conway
+g_circles_revis
+g_evolve

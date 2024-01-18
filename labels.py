@@ -122,6 +122,68 @@ for i in [21]:
 
         counter += 1
 
+for i in [25]:
+    counter = 63
+
+    # first row
+    for j in range(1, 8):
+        if counter < len(global_preset_labels):
+            labels[i, 0, j] = global_preset_labels[counter]
+
+        counter += 1
+
+    # second row
+    for j in range(0, 8):
+        if counter < len(global_preset_labels):
+            labels[i, 1, j] = global_preset_labels[counter]
+
+        counter += 1
+
+    #third row
+    for j in range(0, 8):
+        if counter < len(global_preset_labels):
+            labels[i, 2, j] = global_preset_labels[counter]
+
+        counter += 1
+
+    #4th row
+    for j in range(0, 8):
+        if counter < len(global_preset_labels):
+            labels[i, 3, j] = global_preset_labels[counter]
+
+        counter += 1
+
+    #5th row
+    for j in range(0, 8):
+        if counter < len(global_preset_labels):
+            labels[i, 4, j] = global_preset_labels[counter]
+
+        counter += 1
+
+
+    #6th row
+    for j in range(0, 8):
+        if counter < len(global_preset_labels):
+            labels[i, 5, j] = global_preset_labels[counter]
+
+        counter += 1
+
+
+    #7th row
+    for j in range(0, 8):
+        if counter < len(global_preset_labels):
+            labels[i, 6, j] = global_preset_labels[counter]
+
+        counter += 1
+
+    #8th row
+    for j in range(0, 8):
+        if counter < len(global_preset_labels):
+            labels[i, 7, j] = global_preset_labels[counter]
+
+        counter += 1
+
+
 
 # add presets
 
@@ -194,7 +256,6 @@ for i in range(len(effectsFile)):
     effectsFile[i] = effectsFile[i][2 : :]
 
 # 21 should be global presets
-
 for i in [3,4,5, 8,9,10, 13,14,15, 18,19,20, 22,23,24]:
     h = 0
     # j is row, k is column

@@ -8,48 +8,51 @@ from multiprocessing import shared_memory
 
 class MainWindow(QtWidgets.QMainWindow):
 
-    def __init__(self, array, label , mode, parent=None):
+    def __init__(self, array, label , mode, parent = None):
 
+        # some settings
+        channels = [1,2,3,4]
+
+        # in 2d mode, we need other labels
         if mode == '2d':
             self.labels = t_labels_2d
         else:
             self.labels = t_labels
 
-
+        # initialize window
         super(MainWindow, self).__init__()
 
-        # get global arrays
-        self.global_parameter = array
+        # get global array for parameters of all generators
+        # and effects
+        self.global_parameter    = array
         self.globalold_parameter = np.zeros(255)
+
+        # get labels for all buttons
         self.global_label = label
-        self.shared_mem_gui_vals = shared_memory.SharedMemory(name = "GuiValues1")
+
+        # get array of currently shown gui values
+        # what is this?
+        self.shared_mem_gui_vals     = shared_memory.SharedMemory(name = "GuiValues1")
         self.shared_mem_gui_vals_old = shared_memory.SharedMemory(name = "GuiValues1")
 
         # initialize layout
         # creating main container-frame, parent it to QWindow
         self.main_CF = QtWidgets.QFrame(self)
         self.main_CF.setStyleSheet('background-color: rgba(50, 50, 50, 1)')
-        #self.main_CF.setContentsMargins(0,0,0,0)
         self.setCentralWidget(self.main_CF)
+
         # creating layout and parent it to main container
         # is it correct, that main_CL now manages children of main_CF ?
         self.main_CL = QtWidgets.QHBoxLayout(self.main_CF)
-        #self.main_CL.setContentsMargins(0,0,0,0)
-        #crating vertical Layer for launchpad and utility panel
+        # creating vertical Layer for launchpad and utility panel
         self.vert_CF = QtWidgets.QFrame(self)
         self.vert_CL = QtWidgets.QVBoxLayout(self.vert_CF)
-        #self.vert_CL.setContentsMargins(0,0,0,0)
 
         # update gui values in regular intervals
+        # this is what?
         self.update = 0
 
-        # creating the first subcontainer + layout, parenting it
-        #control_CGF = QtWidgets.QFrame(self.main_CF)
-        #self.main_CL.addWidget(control_CGF)
-        #control_CGF.setStyleSheet('background-color: rgba(50, 50, 50, 1);')
-        #control_CGL = QtWidgets.QVBoxLayout(control_CGF)
-        #control_CGF.setFixedWidth(100)
-
+        # ----------------------------------------
         # Creatin subcontaiver for
         # creating the second subcontainer + layout, parenting it(LAUNCHPAD)
 
@@ -89,12 +92,10 @@ class MainWindow(QtWidgets.QMainWindow):
                        ['255',  '0',  '0', '0.8'], # global presets
                        ['255','255',  '0', '0.8'], # global effect 1
                        [  '0','255',  '0', '0.8'], # global effect 2
-                       [  '0','255','255', '0.8']] # global effect 3
-
+                       [  '0','255','255', '0.8'], # global effect 3
+                       ['255',  '0',  '0', '0.8']]
 
         launchpad_CGF = QtWidgets.QFrame(self.main_CF)
-        #launchpad_CGF.setFixedWidth(683)
-        #launchpad_CGF.setFixedHeight(382+165)
         self.vert_CL.addWidget(launchpad_CGF)
         self.padlabels[x][y].setStyleSheet('background-color: rgba('+', '.join(self.colors[0])+');')
 
@@ -104,11 +105,9 @@ class MainWindow(QtWidgets.QMainWindow):
             for y in range(8):
                 launchpad_CGL.addWidget(self.padlabels[x][y],x,y)
 
-        #utility area under launchpad
+        # ----------------------------------------
+        # utility area under launchpad
         utility_CGF = QtWidgets.QFrame(self.main_CF)
-        #utility_CGF.setFixedWidth(683)
-        #utility_CGF.setFixedHeight(382-165)
-
 
         self.vert_CL.addWidget(utility_CGF)
 
@@ -123,232 +122,93 @@ class MainWindow(QtWidgets.QMainWindow):
 
             self.utilitylabels.append(temp)
 
+        # ----------------------------------------
+        # what is this?
         utility_CGL = QtWidgets.QGridLayout(utility_CGF)
-        #utility_CGL.setContentsMargins(0,0,0,0)
 
         for x in range(10):
             for y in range(4):
                 utility_CGL.addWidget(self.utilitylabels[x][y],x,y)
 
-
-
-        #adding vert_CL
+        # adding vert_CL
         self.main_CL.addWidget(self.vert_CF)
 
-
+        # ----------------------------------------
         # doing the same with a third container(MIDIFIGHTER)
+
         fighter_CGF = QtWidgets.QFrame(self.main_CF)
         self.main_CL.addWidget(fighter_CGF)
         fighter_CGF.setStyleSheet('background-color: rgba(150, 150, 150, 1);')
         self.fighter_CGL = QtWidgets.QHBoxLayout(fighter_CGF)
-        #self.fighter_CGL.setContentsMargins(0,0,0,0)
-        # SUB containers for fighter channels 1-4
-        self.fi_ch1_CGF = QtWidgets.QFrame(fighter_CGF)
-        self.fi_ch1_CGF.setFixedWidth(155)
-        self.fighter_CGL.addWidget(self.fi_ch1_CGF)
-        self.fi_ch1_CGF.setStyleSheet('background-color: rgba(175, 175, 175, 1);')
-        fi_ch1_CGL = QtWidgets.QVBoxLayout(self.fi_ch1_CGF)
-        #fi_ch1_CGL.setContentsMargins(0,0,0,0)
 
-        self.fi_ch2_CGF = QtWidgets.QFrame(fighter_CGF)
-        self.fi_ch2_CGF.setFixedWidth(155)
-        self.fighter_CGL.addWidget(self.fi_ch2_CGF)
-        self.fi_ch2_CGF.setStyleSheet('background-color: rgba(175, 175, 175, 1);')
-        fi_ch2_CGL = QtWidgets.QVBoxLayout(self.fi_ch2_CGF)
-        #fi_ch2_CGL.setContentsMargins(0,0,0,0)
+        # create sub-containers for fighter channels 1-4
+        self.fighter_channels = {}
+        for channel in channels:
+            self.fighter_channels[channel] = QtWidgets.QFrame(fighter_CGF)
 
-        self.fi_ch3_CGF = QtWidgets.QFrame(fighter_CGF)
-        self.fi_ch3_CGF.setFixedWidth(155)
-        self.fighter_CGL.addWidget(self.fi_ch3_CGF)
-        self.fi_ch3_CGF.setStyleSheet('background-color: rgba(175, 175, 175, 1);')
-        fi_ch3_CGL = QtWidgets.QVBoxLayout(self.fi_ch3_CGF)
-        #fi_ch3_CGL.setContentsMargins(0,0,0,0)
+        fighter_channel_list = {}
+        for channel in self.fighter_channels.keys():
+            self.fighter_channels[channel].setFixedWidth(155)
+            self.fighter_CGL.addWidget(self.fighter_channels[channel])
+            self.fighter_channels[channel].setStyleSheet('background-color: rgba(175, 175, 175, 1);')
+            fighter_channel_list[channel] = QtWidgets.QVBoxLayout(self.fighter_channels[channel])
 
-        self.fi_ch4_CGF = QtWidgets.QFrame(fighter_CGF)
-        self.fi_ch4_CGF.setFixedWidth(155)
-        self.fighter_CGL.addWidget(self.fi_ch4_CGF)
-        self.fi_ch4_CGF.setStyleSheet('background-color: rgba(175, 175, 175, 1);')
-        fi_ch4_CGL = QtWidgets.QVBoxLayout(self.fi_ch4_CGF)
-        #fi_ch4_CGL.setContentsMargins(0,0,0,0)
+        # ----------------------------------------
+        # create all labels for the right panel
 
-####
-        #self.button_StartR = QtWidgets.QPushButton("Start")
-        #self.button_StopR = QtWidgets.QPushButton("Stop")
-        #self.button_StartR.clicked.connect(self.start_Renderer)
-        #self.button_StopR.clicked.connect(self.stop_Renderer)
-        #self.string_GlobalBrightness = QtWidgets.QLabel("GB : ")
+        self.stringArray = {}
 
-        #control_CGL.addWidget(self.button_StartR)
-        #control_CGL.addWidget(self.button_StopR)
-        #control_CGL.addWidget(self.string_GlobalBrightness)
-###
+        for channel in channels:
+            self.stringArray[channel] = []
+            self.stringArray[channel].append(QtWidgets.QLabel("Channel "+str(channel)))
+            self.stringArray[channel].append(QtWidgets.QLabel("Brightness : 127"))
+            self.stringArray[channel].append(QtWidgets.QLabel("Fade : 0"))
+            self.stringArray[channel].append(QtWidgets.QLabel("Shutter : 0"))
+            self.stringArray[channel].append(QtWidgets.QLabel("Generator : DUMMY"))
+            self.stringArray[channel].append(QtWidgets.QLabel("Parameter 1 : 89"))
+            self.stringArray[channel].append(QtWidgets.QLabel("Parameter 2 : 54"))
+            self.stringArray[channel].append(QtWidgets.QLabel("Parameter 3 : 110"))
+            self.stringArray[channel].append(QtWidgets.QLabel("Parameter 4 : 110"))
+            self.stringArray[channel].append(QtWidgets.QLabel("Effect 1 : DUMMY"))
+            self.stringArray[channel].append(QtWidgets.QLabel("Parameter 1 : 0"))
+            self.stringArray[channel].append(QtWidgets.QLabel("Parameter 2 : 127"))
+            self.stringArray[channel].append(QtWidgets.QLabel("Parameter 3 : 110"))
+            self.stringArray[channel].append(QtWidgets.QLabel("Parameter 4 : 110"))
+            self.stringArray[channel].append(QtWidgets.QLabel("Effect 2 : DUMMY"))
+            self.stringArray[channel].append(QtWidgets.QLabel("Parameter 1 : 0"))
+            self.stringArray[channel].append(QtWidgets.QLabel("Parameter 2 : 127"))
+            self.stringArray[channel].append(QtWidgets.QLabel("Parameter 3 : 110"))
+            self.stringArray[channel].append(QtWidgets.QLabel("Parameter 4 : 110"))
+            self.stringArray[channel].append(QtWidgets.QLabel("Effect 3 : DUMMY"))
+            self.stringArray[channel].append(QtWidgets.QLabel("Parameter 1 : 0"))
+            self.stringArray[channel].append(QtWidgets.QLabel("Parameter 2 : 127"))
+            self.stringArray[channel].append(QtWidgets.QLabel("Parameter 3 : 110"))
+            self.stringArray[channel].append(QtWidgets.QLabel("Parameter 4 : 110"))
 
-        self.stringArray_ch1 = []
-        self.stringArray_ch1.append(QtWidgets.QLabel("Channel 1"))
-        self.stringArray_ch1.append(QtWidgets.QLabel("Brightness : 127"))
-        self.stringArray_ch1.append(QtWidgets.QLabel("Fade : 0"))
-        self.stringArray_ch1.append(QtWidgets.QLabel("Shutter : 0"))
-        self.stringArray_ch1.append(QtWidgets.QLabel("Generator: "))
-        self.stringArray_ch1.append(QtWidgets.QLabel("Parameter 1 : 89"))
-        self.stringArray_ch1.append(QtWidgets.QLabel("Parameter 2 : 54"))
-        self.stringArray_ch1.append(QtWidgets.QLabel("Parameter 3 : 110"))
-        self.stringArray_ch1.append(QtWidgets.QLabel("Parameter 4 : 110"))
-        self.stringArray_ch1.append(QtWidgets.QLabel("Effect 1 : DUMMY"))
-        self.stringArray_ch1.append(QtWidgets.QLabel("Parameter 1 : 0"))
-        self.stringArray_ch1.append(QtWidgets.QLabel("Parameter 2 : 127"))
-        self.stringArray_ch1.append(QtWidgets.QLabel("Parameter 3 : 110"))
-        self.stringArray_ch1.append(QtWidgets.QLabel("Parameter 4 : 110"))
-        self.stringArray_ch1.append(QtWidgets.QLabel("Effect 2 : DUMMY"))
-        self.stringArray_ch1.append(QtWidgets.QLabel("Parameter 1 : 0"))
-        self.stringArray_ch1.append(QtWidgets.QLabel("Parameter 2 : 127"))
-        self.stringArray_ch1.append(QtWidgets.QLabel("Parameter 3 : 110"))
-        self.stringArray_ch1.append(QtWidgets.QLabel("Parameter 4 : 110"))
-        self.stringArray_ch1.append(QtWidgets.QLabel("Effect 3 : DUMMY"))
-        self.stringArray_ch1.append(QtWidgets.QLabel("Parameter 1 : 0"))
-        self.stringArray_ch1.append(QtWidgets.QLabel("Parameter 2 : 127"))
-        self.stringArray_ch1.append(QtWidgets.QLabel("Parameter 3 : 110"))
-        self.stringArray_ch1.append(QtWidgets.QLabel("Parameter 4 : 110"))
+#        for channel, fi in zip(self.stringArray.keys(),
+#                            [fi_ch1_CGL, fi_ch2_CGL, fi_ch3_CGL, fi_ch4_CGL]):
+            for item in self.stringArray[channel]:
+                if "G:" in item.text() or "E:" in item.text():
+                    item.setStyleSheet("color: black; font: 16px; font-weight: bold; font-family: Manjari;");
+                else:
+                    item.setStyleSheet("color: black; font: 14px;; font-family: Manjari;");
+                fighter_channel_list[channel].addWidget(item)
 
-
-        for item in self.stringArray_ch1:
-            if "G:" in item.text() or "E:" in item.text():
-                item.setStyleSheet("color: black; font: 16px; font-weight: bold; font-family: Manjari;");
-            else:
-                item.setStyleSheet("color: black; font: 14px;; font-family: Manjari;");
-            fi_ch1_CGL.addWidget(item)
-#
-        self.stringArray_ch2 = []
-        self.stringArray_ch2.append(QtWidgets.QLabel("Channel 2"))
-        self.stringArray_ch2.append(QtWidgets.QLabel("Brightness : 127"))
-        self.stringArray_ch2.append(QtWidgets.QLabel("Fade : 0"))
-        self.stringArray_ch2.append(QtWidgets.QLabel("Shutter : 0"))
-        self.stringArray_ch2.append(QtWidgets.QLabel("Generator : DUMMY"))
-        self.stringArray_ch2.append(QtWidgets.QLabel("Parameter 1 : 89"))
-        self.stringArray_ch2.append(QtWidgets.QLabel("Parameter 2 : 54"))
-        self.stringArray_ch2.append(QtWidgets.QLabel("Parameter 3 : 110"))
-        self.stringArray_ch2.append(QtWidgets.QLabel("Parameter 4 : 110"))
-        self.stringArray_ch2.append(QtWidgets.QLabel("Effect 1 : DUMMY"))
-        self.stringArray_ch2.append(QtWidgets.QLabel("Parameter 1 : 0"))
-        self.stringArray_ch2.append(QtWidgets.QLabel("Parameter 2 : 127"))
-        self.stringArray_ch2.append(QtWidgets.QLabel("Parameter 3 : 110"))
-        self.stringArray_ch2.append(QtWidgets.QLabel("Parameter 4 : 110"))
-        self.stringArray_ch2.append(QtWidgets.QLabel("Effect 2 : DUMMY"))
-        self.stringArray_ch2.append(QtWidgets.QLabel("Parameter 1 : 0"))
-        self.stringArray_ch2.append(QtWidgets.QLabel("Parameter 2 : 127"))
-        self.stringArray_ch2.append(QtWidgets.QLabel("Parameter 3 : 110"))
-        self.stringArray_ch2.append(QtWidgets.QLabel("Parameter 4 : 110"))
-        self.stringArray_ch2.append(QtWidgets.QLabel("Effect 3 : DUMMY"))
-        self.stringArray_ch2.append(QtWidgets.QLabel("Parameter 1 : 0"))
-        self.stringArray_ch2.append(QtWidgets.QLabel("Parameter 2 : 127"))
-        self.stringArray_ch2.append(QtWidgets.QLabel("Parameter 3 : 110"))
-        self.stringArray_ch2.append(QtWidgets.QLabel("Parameter 4 : 110"))
-
-
-        for item in self.stringArray_ch2:
-            if "G:" in item.text() or "E:" in item.text():
-                item.setStyleSheet("color: black; font: 18px; font-weight: bold; font-family: Manjari;");
-            else:
-                item.setStyleSheet("color: black; font: 14px;; font-family: Manjari;");
-            fi_ch2_CGL.addWidget(item)
-#
-        self.stringArray_ch3 = []
-        self.stringArray_ch3.append(QtWidgets.QLabel("Channel 3"))
-        self.stringArray_ch3.append(QtWidgets.QLabel("Brightness : 127"))
-        self.stringArray_ch3.append(QtWidgets.QLabel("Fade : 0"))
-        self.stringArray_ch3.append(QtWidgets.QLabel("Shutter : 0"))
-        self.stringArray_ch3.append(QtWidgets.QLabel("Generator : DUMMY"))
-        self.stringArray_ch3.append(QtWidgets.QLabel("Parameter 1 : 89"))
-        self.stringArray_ch3.append(QtWidgets.QLabel("Parameter 2 : 54"))
-        self.stringArray_ch3.append(QtWidgets.QLabel("Parameter 3 : 110"))
-        self.stringArray_ch3.append(QtWidgets.QLabel("Parameter 4 : 110"))
-        self.stringArray_ch3.append(QtWidgets.QLabel("Effect 1 : DUMMY"))
-        self.stringArray_ch3.append(QtWidgets.QLabel("Parameter 1 : 0"))
-        self.stringArray_ch3.append(QtWidgets.QLabel("Parameter 2 : 127"))
-        self.stringArray_ch3.append(QtWidgets.QLabel("Parameter 3 : 110"))
-        self.stringArray_ch3.append(QtWidgets.QLabel("Parameter 4 : 110"))
-        self.stringArray_ch3.append(QtWidgets.QLabel("Effect 2 : DUMMY"))
-        self.stringArray_ch3.append(QtWidgets.QLabel("Parameter 1 : 0"))
-        self.stringArray_ch3.append(QtWidgets.QLabel("Parameter 2 : 127"))
-        self.stringArray_ch3.append(QtWidgets.QLabel("Parameter 3 : 110"))
-        self.stringArray_ch3.append(QtWidgets.QLabel("Parameter 4 : 110"))
-        self.stringArray_ch3.append(QtWidgets.QLabel("Effect 3: DUMMY"))
-        self.stringArray_ch3.append(QtWidgets.QLabel("Parameter 1 : 0"))
-        self.stringArray_ch3.append(QtWidgets.QLabel("Parameter 2 : 127"))
-        self.stringArray_ch3.append(QtWidgets.QLabel("Parameter 3 : 110"))
-        self.stringArray_ch3.append(QtWidgets.QLabel("Parameter 4 : 110"))
-
-        for item in self.stringArray_ch3:
-            if "G:" in item.text() or "E:" in item.text():
-                item.setStyleSheet("color: black; font: 18px; font-weight: bold; font-family: Manjari;");
-            else:
-                item.setStyleSheet("color: black; font: 14px;; font-family: Manjari;");
-            fi_ch3_CGL.addWidget(item)
-#
-        self.stringArray_ch4 = []
-        self.stringArray_ch4.append(QtWidgets.QLabel("Channel 4"))
-        self.stringArray_ch4.append(QtWidgets.QLabel("Brightness : 127"))
-        self.stringArray_ch4.append(QtWidgets.QLabel("Fade : 0"))
-        self.stringArray_ch4.append(QtWidgets.QLabel("Shutter : 0"))
-        self.stringArray_ch4.append(QtWidgets.QLabel("Generator : DUMMY"))
-        self.stringArray_ch4.append(QtWidgets.QLabel("Parameter 1 : 89"))
-        self.stringArray_ch4.append(QtWidgets.QLabel("Parameter 2 : 54"))
-        self.stringArray_ch4.append(QtWidgets.QLabel("Parameter 3 : 110"))
-        self.stringArray_ch4.append(QtWidgets.QLabel("Parameter 4 : 110"))
-        self.stringArray_ch4.append(QtWidgets.QLabel("Effect 1 : DUMMY"))
-        self.stringArray_ch4.append(QtWidgets.QLabel("Parameter 1 : 0"))
-        self.stringArray_ch4.append(QtWidgets.QLabel("Parameter 2 : 127"))
-        self.stringArray_ch4.append(QtWidgets.QLabel("Parameter 3 : 110"))
-        self.stringArray_ch4.append(QtWidgets.QLabel("Parameter 4 : 110"))
-        self.stringArray_ch4.append(QtWidgets.QLabel("Effect 2 : DUMMY"))
-        self.stringArray_ch4.append(QtWidgets.QLabel("Parameter 1 : 0"))
-        self.stringArray_ch4.append(QtWidgets.QLabel("Parameter 2 : 127"))
-        self.stringArray_ch4.append(QtWidgets.QLabel("Parameter 3 : 110"))
-        self.stringArray_ch4.append(QtWidgets.QLabel("Parameter 4 : 110"))
-        self.stringArray_ch4.append(QtWidgets.QLabel("Effect 3 : DUMMY"))
-        self.stringArray_ch4.append(QtWidgets.QLabel("Parameter 1 : 0"))
-        self.stringArray_ch4.append(QtWidgets.QLabel("Parameter 2 : 127"))
-        self.stringArray_ch4.append(QtWidgets.QLabel("Parameter 3 : 110"))
-        self.stringArray_ch4.append(QtWidgets.QLabel("Parameter 4 : 110"))
-
-        for item in self.stringArray_ch4:
-            if "G:" in item.text() or "E:" in item.text():
-                item.setStyleSheet("color: black; font: 18px; font-weight: bold; font-family: Manjari;");
-            else:
-                item.setStyleSheet("color: black; font: 14px;; font-family: Manjari;");
-            fi_ch4_CGL.addWidget(item)
-
-        #  copy params to check for changes
+        # copy params to check for changes
         # self.copied_params = deepcopy(global_parameter)
         self.copied_params = self.global_parameter[:]
-        self.active_param = [-1, -1, -1, -1]
-
+        self.active_param  = [-1, -1, -1, -1]
 
         self.widget = QtWidgets.QWidget(self)
         self.setCentralWidget(self.widget)
         self.widget.setLayout(self.main_CL)
-
-        # initialize threads
-        #self.midi_thread = threading.Thread(name='midi_fighter', target=midi_fighter)
-        #self.rendering_thread = threading.Thread(name='render', target=rendering)
-
-        #global_parameter = mp.Array("d",[0,255])
-
-        # what do we need the timer for? -> to execute functions periodically in the GUI e.g. updating Strings
-
-
-
 
         timer = QtCore.QTimer(self)
         timer.timeout.connect(self.conditional_update)
         timer.setInterval(40)
         timer.start()
 
-        # start threads
-        #self.midi_thread.start()
 
-
-#    def start_download(self,info):
-#        self.list_widget.addItem(info)
     def conditional_update(self):
         '''filter GUI update for value change'''
         #print(self.global_parameter[20], self.globalold_parameter[20])
@@ -366,11 +226,10 @@ class MainWindow(QtWidgets.QMainWindow):
             self.update = 0
 
 
-
     def start_Renderer(self):
         """Routine to start all threads
         """
-        self.global_parameter[0] = 1
+        self.global_parameter[0] = 0
         self.global_parameter[1] = 1
         self.global_parameter[2] = 0.0
         self.global_parameter[3] = 1.0
@@ -401,7 +260,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.utilitylabels[5][1].setText("E3: "+str(self.global_label[90],'utf-8'))
         self.utilitylabels[5][1].setStyleSheet("background-color: #00dcff;")
 
-#ffffb2', '#b2efb2', '#b2f4ff #ffff00', '#00cc00', '#00dcff
+        #ffffb2', '#b2efb2', '#b2f4ff #ffff00', '#00cc00', '#00dcff
         for i in range(4):
             self.utilitylabels[6+i][0].setText(str(self.global_label[81+i],'utf-8')+" : "+str(self.shared_mem_gui_vals.buf[512+i*8:520+i*8],'utf-8'))
             self.utilitylabels[6+i][0].setStyleSheet("background-color: #ffffb2;")
@@ -410,7 +269,6 @@ class MainWindow(QtWidgets.QMainWindow):
             self.utilitylabels[6+i][1].setText(str(self.global_label[91+i],'utf-8')+" : "+str(self.shared_mem_gui_vals.buf[576+i*8:584+i*8],'utf-8'))
             self.utilitylabels[6+i][1].setStyleSheet("background-color: #b2f4ff;")
 
-        #self.stringArray_ch1[5].setText(str(self.global_label[1],'utf-8')+" : "+str(self.shared_mem_gui_vals.buf[0:8],'utf-8'))
 
     def update_launchpad_values(self):
 
@@ -479,7 +337,6 @@ class MainWindow(QtWidgets.QMainWindow):
                         self.padlabels[x][y].setStyleSheet('background-color: rgb(255, 0, 0); text-align: center;')
                     elif y > 6 and x == 5:
                         self.padlabels[x][y].setStyleSheet('background-color: rgb(255, 0, 0); text-align: center;')
-
                     #presets
                     elif x == 0 and y < 4:
                         self.padlabels[x][y].setStyleSheet('background-color: rgb(255, 0, 0); text-align: center;')
@@ -487,7 +344,9 @@ class MainWindow(QtWidgets.QMainWindow):
                     elif x == 0 and y == 4:
                         self.padlabels[x][y].setStyleSheet('background-color: rgb(255, 0, 0); text-align: center;')
                         self.padlabels[x][y].setText('Global\nPresets')
-
+                    elif x == 0 and y == 5:
+                        self.padlabels[x][y].setStyleSheet('background-color: rgb(255, 0, 0); text-align: center;')
+                        self.padlabels[x][y].setText('Global\nPresets 2')
                     #start
                     elif x == 0 and y == 7:
                         self.padlabels[x][y].setStyleSheet('background-color: rgb(255, 0, 255); text-align: center;')
@@ -527,12 +386,11 @@ class MainWindow(QtWidgets.QMainWindow):
                     # random
                     elif x == 7 and y == 5:
                             self.padlabels[x][y].setStyleSheet('background-color: rgb(0, 255, 0); text-align: center;')
-                            self.padlabels[x][y].setText('Random')
-                    # global effects
+                            self.padlabels[x][y].setText('Mutate CH1')
+                    # global effects 1
                     elif x == 7 and y == 6:
                             self.padlabels[x][y].setStyleSheet('background-color: rgb(255, 255, 0); text-align: center;')
                             self.padlabels[x][y].setText('Global FX')
-
                     # quicksave & load
                     elif x == 6 and y == 7:
                             self.padlabels[x][y].setStyleSheet('background-color: rgb(0, 255, 0); text-align: center;')
@@ -549,7 +407,6 @@ class MainWindow(QtWidgets.QMainWindow):
                         for i in range(3):
                             color[i] = str(np.clip(int(color[i]) - 50, 0, 255))
 
-
                     if counter == ind + 1:
                         # active generator/effect gets red border
                         self.padlabels[x][y].setStyleSheet('Background-color: rgba('+', '.join(color)+'); color: red; border-style: dashed; border-width: 4px; border-color: white; text-align: center;')
@@ -560,104 +417,38 @@ class MainWindow(QtWidgets.QMainWindow):
 
 
     def update_fighter_values(self):
-        self.stringArray_ch1[1].setText("Brightness : "+str(round(self.global_parameter[41],2)))
-        self.stringArray_ch1[2].setText("Fade : "+str(round(self.global_parameter[42],2)))
-        self.stringArray_ch1[3].setText("Shutter : "+str(round(self.global_parameter[43],2)))
-        self.stringArray_ch1[4].setText("G: "+str(self.global_label[0],'utf-8'))
-        self.stringArray_ch1[5].setText(str(self.global_label[1],'utf-8')+" : "+str(self.shared_mem_gui_vals.buf[0:8],'utf-8'))
-        self.stringArray_ch1[6].setText(str(self.global_label[2],'utf-8')+" : "+str(self.shared_mem_gui_vals.buf[8:16],'utf-8'))
-        self.stringArray_ch1[7].setText(str(self.global_label[3],'utf-8')+" : "+str(self.shared_mem_gui_vals.buf[16:24],'utf-8'))
-        self.stringArray_ch1[8].setText(str(self.global_label[4],'utf-8')+" : "+str(self.shared_mem_gui_vals.buf[24:32],'utf-8'))
-        self.stringArray_ch1[9].setText("E: "+str(self.global_label[5],'utf-8'))
-        self.stringArray_ch1[10].setText(str(self.global_label[6],'utf-8')+" : "+str(self.shared_mem_gui_vals.buf[32:40],'utf-8'))
-        self.stringArray_ch1[11].setText(str(self.global_label[7],'utf-8')+" : "+str(self.shared_mem_gui_vals.buf[40:48],'utf-8'))
-        self.stringArray_ch1[12].setText(str(self.global_label[8],'utf-8')+" : "+str(self.shared_mem_gui_vals.buf[48:56],'utf-8'))
-        self.stringArray_ch1[13].setText(str(self.global_label[9],'utf-8')+" : "+str(self.shared_mem_gui_vals.buf[56:64],'utf-8'))
-        self.stringArray_ch1[14].setText("E: "+str(self.global_label[10],'utf-8'))
-        self.stringArray_ch1[15].setText(str(self.global_label[11],'utf-8')+" : "+str(self.shared_mem_gui_vals.buf[64:72],'utf-8'))
-        self.stringArray_ch1[16].setText(str(self.global_label[12],'utf-8')+" : "+str(self.shared_mem_gui_vals.buf[72:80],'utf-8'))
-        self.stringArray_ch1[17].setText(str(self.global_label[13],'utf-8')+" : "+str(self.shared_mem_gui_vals.buf[80:88],'utf-8'))
-        self.stringArray_ch1[18].setText(str(self.global_label[14],'utf-8')+" : "+str(self.shared_mem_gui_vals.buf[88:96],'utf-8'))
-        self.stringArray_ch1[19].setText("E: "+str(self.global_label[15],'utf-8'))
-        self.stringArray_ch1[20].setText(str(self.global_label[16],'utf-8')+" : "+str(self.shared_mem_gui_vals.buf[96:104],'utf-8'))
-        self.stringArray_ch1[21].setText(str(self.global_label[17],'utf-8')+" : "+str(self.shared_mem_gui_vals.buf[104:112],'utf-8'))
-        self.stringArray_ch1[22].setText(str(self.global_label[18],'utf-8')+" : "+str(self.shared_mem_gui_vals.buf[112:120],'utf-8'))
-        self.stringArray_ch1[23].setText(str(self.global_label[19],'utf-8')+" : "+str(self.shared_mem_gui_vals.buf[120:128],'utf-8'))
 
+        # loop over dictionary with fighter channels
+        for channel in self.stringArray.keys():
+            # calculate several offsets to point
+            # to the right position in arrays
+            off_1 = (channel-1)*30
+            off_2 = (channel-1)*20
+            off_3 = (channel-1)*128
 
-        self.stringArray_ch2[1].setText("Brightness : "+str(round(self.global_parameter[71],2)))
-        self.stringArray_ch2[2].setText("Fade : "+str(round(self.global_parameter[72],2)))
-        self.stringArray_ch2[3].setText("Shutter : "+str(round(self.global_parameter[73],2)))
-        self.stringArray_ch2[4].setText("G: "+str(self.global_label[20],'utf-8'))
-        self.stringArray_ch2[5].setText(str(self.global_label[21],'utf-8')+" : "+str(self.shared_mem_gui_vals.buf[128:136],'utf-8'))
-        self.stringArray_ch2[6].setText(str(self.global_label[22],'utf-8')+" : "+str(self.shared_mem_gui_vals.buf[136:144],'utf-8'))
-        self.stringArray_ch2[7].setText(str(self.global_label[23],'utf-8')+" : "+str(self.shared_mem_gui_vals.buf[144:152],'utf-8'))
-        self.stringArray_ch2[8].setText(str(self.global_label[24],'utf-8')+" : "+str(self.shared_mem_gui_vals.buf[152:160],'utf-8'))
-        self.stringArray_ch2[9].setText("E: "+str(self.global_label[25],'utf-8'))
-        self.stringArray_ch2[10].setText(str(self.global_label[26],'utf-8')+" : "+str(self.shared_mem_gui_vals.buf[160:168],'utf-8'))
-        self.stringArray_ch2[11].setText(str(self.global_label[27],'utf-8')+" : "+str(self.shared_mem_gui_vals.buf[168:176],'utf-8'))
-        self.stringArray_ch2[12].setText(str(self.global_label[28],'utf-8')+" : "+str(self.shared_mem_gui_vals.buf[176:184],'utf-8'))
-        self.stringArray_ch2[13].setText(str(self.global_label[29],'utf-8')+" : "+str(self.shared_mem_gui_vals.buf[184:192],'utf-8'))
-        self.stringArray_ch2[14].setText("E: "+str(self.global_label[30],'utf-8'))
-        self.stringArray_ch2[15].setText(str(self.global_label[31],'utf-8')+" : "+str(self.shared_mem_gui_vals.buf[192:200],'utf-8'))
-        self.stringArray_ch2[16].setText(str(self.global_label[32],'utf-8')+" : "+str(self.shared_mem_gui_vals.buf[200:208],'utf-8'))
-        self.stringArray_ch2[17].setText(str(self.global_label[33],'utf-8')+" : "+str(self.shared_mem_gui_vals.buf[208:216],'utf-8'))
-        self.stringArray_ch2[18].setText(str(self.global_label[34],'utf-8')+" : "+str(self.shared_mem_gui_vals.buf[216:224],'utf-8'))
-        self.stringArray_ch2[19].setText("E: "+str(self.global_label[35],'utf-8'))
-        self.stringArray_ch2[20].setText(str(self.global_label[36],'utf-8')+" : "+str(self.shared_mem_gui_vals.buf[224:232],'utf-8'))
-        self.stringArray_ch2[21].setText(str(self.global_label[37],'utf-8')+" : "+str(self.shared_mem_gui_vals.buf[232:240],'utf-8'))
-        self.stringArray_ch2[22].setText(str(self.global_label[38],'utf-8')+" : "+str(self.shared_mem_gui_vals.buf[240:248],'utf-8'))
-        self.stringArray_ch2[23].setText(str(self.global_label[39],'utf-8')+" : "+str(self.shared_mem_gui_vals.buf[248:256],'utf-8'))
-
-
-        self.stringArray_ch3[1].setText("Brightness : "+str(round(self.global_parameter[101],2)))
-        self.stringArray_ch3[2].setText("Fade : "+str(round(self.global_parameter[102],2)))
-        self.stringArray_ch3[3].setText("Shutter : "+str(round(self.global_parameter[103],2)))
-        self.stringArray_ch3[4].setText("G: "+str(self.global_label[40],'utf-8'))
-        self.stringArray_ch3[5].setText(str(self.global_label[41],'utf-8')+" : "+str(self.shared_mem_gui_vals.buf[256:264],'utf-8'))
-        self.stringArray_ch3[6].setText(str(self.global_label[42],'utf-8')+" : "+str(self.shared_mem_gui_vals.buf[264:272],'utf-8'))
-        self.stringArray_ch3[7].setText(str(self.global_label[43],'utf-8')+" : "+str(self.shared_mem_gui_vals.buf[272:280],'utf-8'))
-        self.stringArray_ch3[8].setText(str(self.global_label[44],'utf-8')+" : "+str(self.shared_mem_gui_vals.buf[280:288],'utf-8'))
-        self.stringArray_ch3[9].setText("E: "+str(self.global_label[45],'utf-8'))
-        self.stringArray_ch3[10].setText(str(self.global_label[46],'utf-8')+" : "+str(self.shared_mem_gui_vals.buf[288:296],'utf-8'))
-        self.stringArray_ch3[11].setText(str(self.global_label[47],'utf-8')+" : "+str(self.shared_mem_gui_vals.buf[296:304],'utf-8'))
-        self.stringArray_ch3[12].setText(str(self.global_label[48],'utf-8')+" : "+str(self.shared_mem_gui_vals.buf[304:312],'utf-8'))
-        self.stringArray_ch3[13].setText(str(self.global_label[49],'utf-8')+" : "+str(self.shared_mem_gui_vals.buf[312:320],'utf-8'))
-        self.stringArray_ch3[14].setText("E: "+str(self.global_label[50],'utf-8'))
-        self.stringArray_ch3[15].setText(str(self.global_label[51],'utf-8')+" : "+str(self.shared_mem_gui_vals.buf[320:328],'utf-8'))
-        self.stringArray_ch3[16].setText(str(self.global_label[52],'utf-8')+" : "+str(self.shared_mem_gui_vals.buf[328:336],'utf-8'))
-        self.stringArray_ch3[17].setText(str(self.global_label[53],'utf-8')+" : "+str(self.shared_mem_gui_vals.buf[336:344],'utf-8'))
-        self.stringArray_ch3[18].setText(str(self.global_label[54],'utf-8')+" : "+str(self.shared_mem_gui_vals.buf[344:352],'utf-8'))
-        self.stringArray_ch3[19].setText("E: "+str(self.global_label[55],'utf-8'))
-        self.stringArray_ch3[20].setText(str(self.global_label[56],'utf-8')+" : "+str(self.shared_mem_gui_vals.buf[352:360],'utf-8'))
-        self.stringArray_ch3[21].setText(str(self.global_label[57],'utf-8')+" : "+str(self.shared_mem_gui_vals.buf[360:368],'utf-8'))
-        self.stringArray_ch3[22].setText(str(self.global_label[58],'utf-8')+" : "+str(self.shared_mem_gui_vals.buf[368:376],'utf-8'))
-        self.stringArray_ch3[23].setText(str(self.global_label[59],'utf-8')+" : "+str(self.shared_mem_gui_vals.buf[376:384],'utf-8'))
-
-
-        self.stringArray_ch4[1].setText("Brightness : "+str(round(self.global_parameter[131],2)))
-        self.stringArray_ch4[2].setText("Fade : "+str(round(self.global_parameter[132],2)))
-        self.stringArray_ch4[3].setText("Shutter : "+str(round(self.global_parameter[133],2)))
-        self.stringArray_ch4[4].setText("G: "+str(self.global_label[60],'utf-8'))
-        self.stringArray_ch4[5].setText(str(self.global_label[61],'utf-8')+" : "+str(self.shared_mem_gui_vals.buf[384:392],'utf-8'))
-        self.stringArray_ch4[6].setText(str(self.global_label[62],'utf-8')+" : "+str(self.shared_mem_gui_vals.buf[392:400],'utf-8'))
-        self.stringArray_ch4[7].setText(str(self.global_label[63],'utf-8')+" : "+str(self.shared_mem_gui_vals.buf[400:408],'utf-8'))
-        self.stringArray_ch4[8].setText(str(self.global_label[64],'utf-8')+" : "+str(self.shared_mem_gui_vals.buf[408:416],'utf-8'))
-        self.stringArray_ch4[9].setText("E: "+str(self.global_label[65],'utf-8'))
-        self.stringArray_ch4[10].setText(str(self.global_label[66],'utf-8')+" : "+str(self.shared_mem_gui_vals.buf[416:424],'utf-8'))
-        self.stringArray_ch4[11].setText(str(self.global_label[67],'utf-8')+" : "+str(self.shared_mem_gui_vals.buf[424:432],'utf-8'))
-        self.stringArray_ch4[12].setText(str(self.global_label[68],'utf-8')+" : "+str(self.shared_mem_gui_vals.buf[432:440],'utf-8'))
-        self.stringArray_ch4[13].setText(str(self.global_label[69],'utf-8')+" : "+str(self.shared_mem_gui_vals.buf[440:448],'utf-8'))
-        self.stringArray_ch4[14].setText("E: "+str(self.global_label[70],'utf-8'))
-        self.stringArray_ch4[15].setText(str(self.global_label[71],'utf-8')+" : "+str(self.shared_mem_gui_vals.buf[448:456],'utf-8'))
-        self.stringArray_ch4[16].setText(str(self.global_label[72],'utf-8')+" : "+str(self.shared_mem_gui_vals.buf[456:464],'utf-8'))
-        self.stringArray_ch4[17].setText(str(self.global_label[73],'utf-8')+" : "+str(self.shared_mem_gui_vals.buf[464:472],'utf-8'))
-        self.stringArray_ch4[18].setText(str(self.global_label[74],'utf-8')+" : "+str(self.shared_mem_gui_vals.buf[472:480],'utf-8'))
-        self.stringArray_ch4[19].setText("E: "+str(self.global_label[75],'utf-8'))
-        self.stringArray_ch4[20].setText(str(self.global_label[76],'utf-8')+" : "+str(self.shared_mem_gui_vals.buf[480:488],'utf-8'))
-        self.stringArray_ch4[21].setText(str(self.global_label[77],'utf-8')+" : "+str(self.shared_mem_gui_vals.buf[488:496],'utf-8'))
-        self.stringArray_ch4[22].setText(str(self.global_label[78],'utf-8')+" : "+str(self.shared_mem_gui_vals.buf[496:504],'utf-8'))
-        self.stringArray_ch4[23].setText(str(self.global_label[79],'utf-8')+" : "+str(self.shared_mem_gui_vals.buf[504:512],'utf-8'))
+            self.stringArray[channel][1].setText("Brightness : "+str(round(self.global_parameter[41 + off_1],2)))
+            self.stringArray[channel][2].setText("Fade : "      +str(round(self.global_parameter[42 + off_1],2)))
+            self.stringArray[channel][3].setText("Shutter : "   +str(round(self.global_parameter[43 + off_1],2)))
+            self.stringArray[channel][4].setText("G: "+str(self.global_label[0 + off_2],'utf-8'))
+            self.stringArray[channel][5].setText(str(self.global_label[1 + off_2],'utf-8')+" : "+str(self.shared_mem_gui_vals.buf[off_3+0:off_3+8],'utf-8'))
+            self.stringArray[channel][6].setText(str(self.global_label[2 + off_2],'utf-8')+" : "+str(self.shared_mem_gui_vals.buf[off_3+8:off_3+16],'utf-8'))
+            self.stringArray[channel][7].setText(str(self.global_label[3 + off_2],'utf-8')+" : "+str(self.shared_mem_gui_vals.buf[off_3+16:off_3+24],'utf-8'))
+            self.stringArray[channel][8].setText(str(self.global_label[4 + off_2],'utf-8')+" : "+str(self.shared_mem_gui_vals.buf[off_3+24:off_3+32],'utf-8'))
+            self.stringArray[channel][9].setText("E: "+str(self.global_label[5 + off_2],'utf-8'))
+            self.stringArray[channel][10].setText(str(self.global_label[6 + off_2],'utf-8')+" : "+str(self.shared_mem_gui_vals.buf[off_3+32:off_3+40],'utf-8'))
+            self.stringArray[channel][11].setText(str(self.global_label[7 + off_2],'utf-8')+" : "+str(self.shared_mem_gui_vals.buf[off_3+40:off_3+48],'utf-8'))
+            self.stringArray[channel][12].setText(str(self.global_label[8 + off_2],'utf-8')+" : "+str(self.shared_mem_gui_vals.buf[off_3+48:off_3+56],'utf-8'))
+            self.stringArray[channel][13].setText(str(self.global_label[9 + off_2],'utf-8')+" : "+str(self.shared_mem_gui_vals.buf[off_3+56:off_3+64],'utf-8'))
+            self.stringArray[channel][14].setText("E: "+str(self.global_label[10 + off_2],'utf-8'))
+            self.stringArray[channel][15].setText(str(self.global_label[11 + off_2],'utf-8')+" : "+str(self.shared_mem_gui_vals.buf[off_3+64:off_3+72],'utf-8'))
+            self.stringArray[channel][16].setText(str(self.global_label[12 + off_2],'utf-8')+" : "+str(self.shared_mem_gui_vals.buf[off_3+72:off_3+80],'utf-8'))
+            self.stringArray[channel][17].setText(str(self.global_label[13 + off_2],'utf-8')+" : "+str(self.shared_mem_gui_vals.buf[off_3+80:off_3+88],'utf-8'))
+            self.stringArray[channel][18].setText(str(self.global_label[14 + off_2],'utf-8')+" : "+str(self.shared_mem_gui_vals.buf[off_3+88:off_3+96],'utf-8'))
+            self.stringArray[channel][19].setText("E: "+str(self.global_label[15 + off_2],'utf-8'))
+            self.stringArray[channel][20].setText(str(self.global_label[16 + off_2],'utf-8')+" : "+str(self.shared_mem_gui_vals.buf[off_3+96:off_3+104],'utf-8'))
+            self.stringArray[channel][21].setText(str(self.global_label[17 + off_2],'utf-8')+" : "+str(self.shared_mem_gui_vals.buf[off_3+104:off_3+112],'utf-8'))
+            self.stringArray[channel][22].setText(str(self.global_label[18 + off_2],'utf-8')+" : "+str(self.shared_mem_gui_vals.buf[off_3+112:off_3+120],'utf-8'))
+            self.stringArray[channel][23].setText(str(self.global_label[19 + off_2],'utf-8')+" : "+str(self.shared_mem_gui_vals.buf[off_3+120:off_3+128],'utf-8'))
 
         # check for last changed value
         #index_changed = np.where((np.array(self.copied_params) == np.array(self.global_parameter)) == False)[0]
@@ -669,7 +460,7 @@ class MainWindow(QtWidgets.QMainWindow):
         oncolor = ['#ffa500', '#ffff00', '#00cc00', '#00dcff']
         offcolor = ['#ffe4b2', '#ffffb2', '#b2efb2', '#b2f4ff']
 
-        for active, channel in zip(active_menu, [self.stringArray_ch1, self.stringArray_ch2, self.stringArray_ch3, self.stringArray_ch4]):
+        for active, channel in zip(active_menu, [self.stringArray[1], self.stringArray[2], self.stringArray[3], self.stringArray[4]]):
             # reset
             for i ,j, k, l in zip(channel[4:9], channel[9:14], channel[14:19], channel[19:24]):
                 i.setStyleSheet("color: black; font: 16px; font-family: Manjari; background-color: "+offcolor[0])
@@ -690,24 +481,11 @@ class MainWindow(QtWidgets.QMainWindow):
                 for i in channel[19:24]:
                     i.setStyleSheet("font-weight: bold; color: black; font: 16px; font-family: Manjari; background-color: "+oncolor[3])
 
-        if self.global_parameter[40] == 0:
-            self.fi_ch1_CGF.setStyleSheet('background-color: rgba(75, 75, 75, 1);')
-        elif self.global_parameter[40] == 1:
-            self.fi_ch1_CGF.setStyleSheet('background-color: rgba(175, 175, 175, 1);')
-
-        if self.global_parameter[70] == 0:
-            self.fi_ch2_CGF.setStyleSheet('background-color: rgba(75, 75, 75, 1);')
-        elif self.global_parameter[70] == 1:
-            self.fi_ch2_CGF.setStyleSheet('background-color: rgba(175, 175, 175, 1);')
-
-        if self.global_parameter[100] == 0:
-            self.fi_ch3_CGF.setStyleSheet('background-color: rgba(75, 75, 75, 1);')
-        elif self.global_parameter[100] == 1:
-            self.fi_ch3_CGF.setStyleSheet('background-color: rgba(175, 175, 175, 1);')
-
-        if self.global_parameter[130] == 0:
-            self.fi_ch4_CGF.setStyleSheet('background-color: rgba(75, 75, 75, 1);')
-        elif self.global_parameter[130] == 1:
-            self.fi_ch4_CGF.setStyleSheet('background-color: rgba(175, 175, 175, 1);')
+        # switch active color
+        for channel, i in zip(self.fighter_channels.keys(), [40,70,100,130]):
+            if self.global_parameter[i] == 0:
+                self.fighter_channels[channel].setStyleSheet('background-color: rgba(75, 75, 75, 1);')
+            elif self.global_parameter[i] == 1:
+                self.fighter_channels[channel].setStyleSheet('background-color: rgba(175, 175, 175, 1);')
 
         self.copied_params = self.global_parameter[:]

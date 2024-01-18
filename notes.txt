@@ -65,7 +65,7 @@ knopf um channel zu resetten (gen + effekte)
 one shot: alles groß oder klein skalieren
 
 
-s2l mit decay
+s2l mit decay <- first version done
 benchmark!!!
 multiple trigger -> 4 separate modulationskanäle mit lfo oder sound? und 2 kanäle mit action/drop
 kanal kopieren (von 1 auf 3) fehlerhaft (oder allgemein der erste wert vom generator) ?

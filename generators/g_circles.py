@@ -17,6 +17,7 @@ class g_circles():
         self.channel = 0
         self.counter_total = 0
         self.mode = 'random'
+        self.speed = 1
 
         # size 5
         self.size5 = np.zeros([10,10])
@@ -97,6 +98,8 @@ class g_circles():
         else:
             self.mode = 'tunnel'
 
+        self.speed   = int(args[2]*4)+1
+
         self.channel = int(args[3]*5)-1
 
         # create world
@@ -108,7 +111,7 @@ class g_circles():
             self.number = int(10 * current_volume)
             self.soundsize =int(np.clip(3 * current_volume, 0, 3))
 
-        #check for trigger
+        # check for trigger
         elif self.channel == 4:
             current_volume = int(float(str(self.sound_values.buf[32:40],'utf-8')))
             if current_volume > self.lastvalue:
@@ -127,7 +130,6 @@ class g_circles():
             else:
                 j = randint(0,3)
 
-
             if self.mode == 'random':
                 if j == 0:
                     world[0, :, randint(0,9), :] = self.size2[:,:]
@@ -143,12 +145,12 @@ class g_circles():
             elif self.mode == 'tunnel':
                 world[0, :, int(self.counter_total%10), :] = self.size4[:,:]
 
-
-            # rotate if necessary
+        # rotate if necessary
         world[0, :, :, :] = np.rot90(world[0, :, :, :], k = 1)
 
         world[1,:,:,:] = world[0, :, : , :]
         world[2,:,:,:] = world[0, :, : , :]
+
         self.counter_total += 1
 
         return np.clip(world, 0, 1)

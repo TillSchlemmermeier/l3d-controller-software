@@ -48,7 +48,7 @@ class e_mean():
                     self.fadeworld[i, j, :, :] = np.clip(world[i, j, :, :], 0, 1)
 
 
-        else:         
+        else:
             for i in range(3):
                 world[i, :, :, :] = (1-self.fade)*world[i, :, :, :] + self.fade*self.fadeworld[i, :, :, :]
                 world[i, :, :, :] = (1-self.amount)*world[i, :, :, :] + self.amount*fftconvolve(world[i, :, :, :], self.mean, mode='same')
@@ -57,10 +57,9 @@ class e_mean():
 
         return np.clip(world, 0, 1)
 
-
     def gaussian_2d(self, width):
         x, y = np.meshgrid(np.linspace(-1,1,10), np.linspace(-1,1,10))
         d = np.sqrt(x*x+y*y)
-        sigma = width
+        sigma = width+0.0001
         g = np.exp(-( d**2 / ( 2.0 * sigma**2 ) ) )
         return g

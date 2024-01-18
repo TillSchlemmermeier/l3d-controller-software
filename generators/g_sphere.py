@@ -53,6 +53,8 @@ class g_sphere:
             osci = str(round(self.oscillate/2,2))
         elif self.channel == 4:
             channel = "Trigger"
+        elif self.channel == 5:
+            channel = 'Trigger2'
         else:
             channel = 'noS2L'
 
@@ -63,7 +65,7 @@ class g_sphere:
         self.maxsize = args[0]*10
         self.growspeed = args[1]
         self.oscillate = args[2]
-        self.channel = int(args[3]*5)-1
+        self.channel = int(args[3]*6)-1
 
         self.smooth = self.oscillate / 2
 
@@ -85,8 +87,12 @@ class g_sphere:
 
 
         #check for trigger
-        elif self.channel == 4:
-            current_volume = int(float(str(self.sound_values.buf[32:40],'utf-8')))
+        elif self.channel >= 4:
+            if self.channel == 4:
+                current_volume = int(float(str(self.sound_values.buf[32:40],'utf-8')))
+            else:
+                current_volume = int(float(str(self.sound_values.buf[40:48],'utf-8')))
+
             if current_volume > self.lastvalue:
                 self.lastvalue = current_volume
                 self.step = 0

@@ -21,6 +21,7 @@ from oneshots.s_dark_sphere import s_dark_sphere
 from oneshots.s_threesixty import s_threesixty
 from oneshots.s_trigger import s_trigger
 
+from numba import njit
 class rendering_engine:
     """
     L3D Cube 3.0
