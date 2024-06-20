@@ -28,9 +28,10 @@ class g_randomlines():
         self.lastvalue = 0
         self.step = 0
         self.linelist = []
+        self.mode = 'normal'
 
     def return_values(self):
-        return [b'randomlines', b'wait', b'Color', b'', b'channel']
+        return [b'randomlines', b'wait', b'Color', b'mode', b'channel']
 
     def return_gui_values(self):
         if self.randomcolor == 0:
@@ -45,16 +46,24 @@ class g_randomlines():
         else:
             channel = 'noS2L'
 
-        return bytearray('{0:<8s}{1:<8s}{2:<8s}{3:<8s}'.format(str(round(self.reset,2)), color, '', channel),'utf-8')
+        if channel == 'Trigger':
+            return bytearray('{0:<8s}{1:<8s}{2:<8s}{3:<8s}'.format(str(round(self.reset,2)), color, self.mode, channel),'utf-8')
+        else:
+            return bytearray('{0:<8s}{1:<8s}{2:<8s}{3:<8s}'.format(str(round(self.reset,2)), color, '', channel),'utf-8')
 
     def __call__(self, args):
         self.reset = int(args[0]*10)+1
         self.randomcolor = int(round(args[1]))
         self.channel = int(args[3]*5)-1
+        if args[2] > 0.5:
+            self.mode = 'from top'
+        else:
+            self.mode = 'normal'
 
         world = np.zeros([3, 10, 10, 10])
 
         if 4 > self.channel >= 0:
+            # number of random lines derived from sound
             current_volume = float(str(self.sound_values.buf[self.channel*8:self.channel*8+8],'utf-8'))
             if current_volume > 0:
                 direction = randint(0, 2)
@@ -70,7 +79,8 @@ class g_randomlines():
                     for i in range(3):
                         world[i, :, :, :] *= color[i]
 
-        elif self.channel == 4:
+        elif self.channel == 4 and self.mode == 'normal':
+            # some wierd shit with trigger
             current_volume = int(float(str(self.sound_values.buf[32:40],'utf-8')))
             if current_volume > self.lastvalue:
                 self.lastvalue = current_volume
@@ -122,7 +132,23 @@ class g_randomlines():
 
                 self.step += 1
 
+        elif self.channel == 4 and self.mode == 'from top':
 
+            current_volume = int(float(str(self.sound_values.buf[32:40],'utf-8')))
+            if current_volume > self.lastvalue and self.step > 9:
+                self.lastvalue = current_volume
+                self.step = 0
+
+            if self.step <= 9:
+                if randint(0, 1) == 0:
+                    world[:, self.step, :, randint(0, 9)] = 1
+                else:
+                    world[:, self.step, randint(0, 9), :] = 1
+
+                self.step += 1
+            else:
+                pass
+                
         elif self.counter % self.reset == 0:
             direction = randint(0, 2)
             if direction == 0:

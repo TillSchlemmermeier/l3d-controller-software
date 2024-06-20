@@ -18,10 +18,11 @@ class e_blackcolorwhite():
         self.counter = 0
         self.step = 0
         self.mode = 'normal'
+        self.damping = 0.0
 
     def return_values(self):
         # strings for GUI
-        return [b'blackcolorwhite', b'', b'', b'', b'']
+        return [b'blackcolorwhite', b'color', b'damping', b'', b'']
 
     def return_gui_values(self):
         if self.channel < 4:
@@ -29,17 +30,21 @@ class e_blackcolorwhite():
         else:
             channel = "Trigger"
 
-        return bytearray('{0:<8s}{1:<8s}{2:<8s}{3:<8s}'.format(str(round(self.color,1)), '', '','') ,'utf-8')
+        return bytearray('{0:<8s}{1:<8s}{2:<8s}{3:<8s}'.format(str(round(self.color,1)), str(round(self.damping,1)), '','') ,'utf-8')
 
     def __call__(self, world, args):
         # process parameters
         self.channel = int(args[3]*3)
         #self.color   = hsv_to_rgb(args[0], 1, 1)
+        self.damping = args[1]*0.5
         self.color   = args[0]
+
 
 
         # get average brigthness
         temp = np.mean(world, axis = 0)
+
+        world *= 1 - self.damping
 
         # get list of leds
         led_list = temp.reshape(10**3).T

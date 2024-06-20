@@ -12,22 +12,25 @@ class g_cone():
         self.channel = 0
         self.sizes = np.array([0,0,0,0])
         self.mode = 0
+        self.speed = 1
+        self.lastvalue = 0
         self.counter = 0
 
     def return_values(self):
-        return [b'cone', b'mode', b'', b'', b'channel']
+        return [b'cone', b'mode', b'speed', b'', b'channel']
 
     def return_gui_values(self):
         if self.mode == 0:
             mode = 'speaker'
         else:
             mode = 'cone'
-        return bytearray('{0:<8s}{1:<8s}{2:<8s}{3:<8s}'.format(mode, '', '', str(self.channel)),'utf-8')
+        return bytearray('{0:<8s}{1:<8s}{2:<8s}{3:<8s}'.format(mode, str(round(self.speed, 1)), '', str(self.channel)),'utf-8')
 
 
     def __call__(self, args):
         self.mode = int(round(args[0]))
-        self.channel = int(args[3]*3)
+        self.channel = int(args[3]*4)
+        self.speed = args[1]
 
         world = np.zeros([3, 10, 10, 10])
 
@@ -41,7 +44,7 @@ class g_cone():
             world[0, :, :] = self.make_rings(*self.sizes)
 
         elif self.mode == 1: # 'cone'
-            self.sizes = (np.round(2*sawtooth(self.counter * 0.1 * np.linspace(0,3,4), 1))+4).astype('int')
+            self.sizes = (np.round((self.counter*0.1)%7 + 2*sawtooth(self.counter * 0.1 * np.linspace(0,3,4), width = 0.5))+4).astype('int')
             world[0, :, :] = self.make_rings(*self.sizes)
 
         # rotate if necessary
@@ -49,7 +52,17 @@ class g_cone():
         world[1,:,:,:] = world[0, :, : , :]
         world[2,:,:,:] = world[0, :, : , :]
 
-        self.counter += 1
+        #check for trigger
+        if self.channel == 4 and self.mode == 1:
+            current_volume = int(float(str(self.sound_values.buf[32:40],'utf-8')))
+            if current_volume > self.lastvalue:
+                self.lastvalue = current_volume
+                self.counter += self.speed
+
+        else:
+            self.counter += self.speed
+
+
         return np.clip(world, 0, 1)
 
 
@@ -115,9 +128,9 @@ class circleworld:
 
     def __call__(self, h1, h2, h3, h4):
         world = np.zeros([10, 10, 10])
-        world[:, h1, :] += self.size2[:,:]
-        world[:, h2, :] += self.size3[:,:]
-        world[:, h3, :] += self.size4[:,:]
-        world[:, h4, :] += self.size5[:,:]
+        world[:, np.clip(h1,0,9), :] += self.size2[:,:]
+        world[:, np.clip(h2,0,9), :] += self.size3[:,:]
+        world[:, np.clip(h3,0,9), :] += self.size4[:,:]
+        world[:, np.clip(h4,0,9), :] += self.size5[:,:]
 
         return world

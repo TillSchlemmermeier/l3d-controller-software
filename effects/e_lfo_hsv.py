@@ -32,7 +32,7 @@ class e_lfo_hsv():
         current_volume = np.sin(0.1*self.speed * self.counter)+1
 
         # get list of leds
-        led_list = world.reshape([3, 10**3]).T
+        led_list = np.round(world.reshape([3, 10**3]).T,2)
 
         hsv_list = colors.rgb_to_hsv(led_list)
         # print(round(self.amount_h*current_volume, 2), round(self.amount_s*current_volume, 2))

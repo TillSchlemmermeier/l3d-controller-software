@@ -170,6 +170,7 @@ class rendering_engine:
         #     logging.info(package)
 
 
+        '''
         now = time()
         dt = now - self.fpslastTime
         self.fpslastTime = now
@@ -178,6 +179,7 @@ class rendering_engine:
         else:
             s = np.clip(dt*3., 0, 1)
             self.fps = self.fps * (1-s) + (1.0/dt) * s
+        '''
 
         # print("FPS: " + str(self.fps))
 

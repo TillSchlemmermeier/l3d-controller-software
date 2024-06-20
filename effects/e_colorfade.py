@@ -23,6 +23,7 @@ class e_colorfade():
         self.sound_values = shared_memory.SharedMemory(name = "global_s2l_memory")
         self.lastvalue = 0
         self.channel = 0
+        self.color = [0,0,0]
 
     #strings for GUI
     def return_values(self):
@@ -45,12 +46,13 @@ class e_colorfade():
         self.color2 = args[2]
         self.channel = int(args[3]*5)-1
 
-        #check if s2l is activated
+        # check if s2l is activated
         if 4 > self.channel >= 0:
             current_volume = np.clip(float(str(self.sound_values.buf[self.channel*8:self.channel*8+8],'utf-8')), 0, 1)
+
             self.step = (current_volume * np.pi) / self.speed
 
-        #check if trigger is activated
+        # check if trigger is activated
         elif self.channel > 4 :
             current_volume = int(float(str(self.sound_values.buf[32:40],'utf-8')))
             #check if trigger has been activated
@@ -62,16 +64,19 @@ class e_colorfade():
             if (self.step * self.speed) > (2 * np.pi):
                 self.step = (2 * np.pi) / self.speed
 
-        #calculate color
+        # calculate color
         if self.color1 < self.color2:
             self.balance = self.color1 + (self.color2 - self.color1) * ((np.cos(self.speed*self.step)*0.5)+0.5)
         else:
             self.balance = self.color1 + (1 - self.color1 + self.color2) * ((np.cos(self.speed*self.step)*0.5)+0.5)
 
-        color = hsv_to_rgb(np.clip(self.balance, 0, 1), 1, 1)
+        try:
+            self.color = hsv_to_rgb(float(np.clip(self.balance, 0, 1)), 1, 1)
+        except:
+            pass
 
         for i in range(3):
-            world[i, :, :, :] *= color[i]
+            world[i, :, :, :] *= self.color[i]
 
         self.step += 1
 

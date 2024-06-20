@@ -13,6 +13,7 @@ class g_evolve():
         self.reset = 1
         self.lastvalue = 0
         self.randomcolor = 0
+        self.width = 1
         self.workers = []
 
         self.sound_values = shared_memory.SharedMemory(name = "global_s2l_memory")
@@ -21,11 +22,11 @@ class g_evolve():
         self.safeworld = np.zeros([3, 10, 10, 10])
 
         for i in range(2):
-            self.workers.append(worker(self.lifetime))
+            self.workers.append(worker(self.lifetime, self.width))
 
 
     def return_values(self):
-        return [b'g_evolve', b'number', b'lifetime', b'', b'channel']
+        return [b'g_evolve', b'number', b'lifetime', b'width', b'channel']
 
 
     def return_gui_values(self):
@@ -36,12 +37,13 @@ class g_evolve():
         else:
             channel = 'Trigger'
 
+
         if self.randomcolor == 0:
             color = 'off'
         else:
             color = 'on'
 
-        return bytearray('{0:<8s}{1:<8s}{2:<8s}{3:<8s}'.format(str(round(self.number_of_workers,2)), str(round(self.reset,2)), color, channel),'utf-8')
+        return bytearray('{0:<8s}{1:<8s}{2:<8s}{3:<8s}'.format(str(round(self.number_of_workers,2)), str(round(self.lifetime,2)), str(round(self.width,2)), channel),'utf-8')
 
 
     def __call__(self, args):
@@ -49,6 +51,8 @@ class g_evolve():
         self.lifetime = int(args[1]*100+1)
         # self.randomcolor = int(round(args[2]))
         self.channel = int(args[3]*5)-1
+
+        self.width = 1+args[2]
 
         if self.channel == 4 :
             current_volume = int(float(str(self.sound_values.buf[self.channel*8:self.channel*8+8],'utf-8')))
@@ -75,7 +79,7 @@ class g_evolve():
 
 
         if len(self.workers) < self.number_of_workers:
-            self.workers.append(worker(self.lifetime))
+            self.workers.append(worker(self.lifetime, self.width))
 
         return np.clip(np.round(world,2), 0, 1)
 
@@ -96,19 +100,22 @@ def gaussian_filter(pos, sigma=1, muu=0):
     # dst = np.sqrt((x-pos[0])**2 + (y-pos[1])**2 + (z-pos[2])**2)
 
     # normalization
-    normal = 1/(2.0 * np.pi * sigma**2)
+    # normal = 1/(2.0 * np.pi * sigma**2)
 
     # Calculating Gaussian filter
-    gauss = np.exp(-((arr)**2 / (2.0 * sigma**2))) * normal
+    gauss = np.exp(-((arr)**2 / (2.0 * sigma**2))) # * normal
 
     return gauss
 
 class worker:
-    def __init__(self,  lifetime):
+    def __init__(self,  lifetime, width):
 
+        self.width = width
         self.position  = [randint(0,9), randint(0,9), randint(0,9) ]
-        self.lifetime  = lifetime
-        self.starttime = lifetime
+        self.lifetime  = lifetime + randint(-3, 3)
+        self.starttime = self.lifetime
+
+        self.wait = 0
 
     def run(self, world):
 
@@ -117,17 +124,21 @@ class worker:
         else:
             message = True
 
-            if self.lifetime > self.starttime/2.0:
-
-                temp = ((self.starttime-self.lifetime)/self.starttime)*gaussian_filter(self.position, 1.1-self.lifetime/self.starttime)
+            if self.lifetime > 0.5*self.starttime:
+                # starting
+                brightness = round(2 * (self.starttime-self.lifetime)/self.starttime,4)
+                gauss      = gaussian_filter(self.position, (self.width+0.01)-self.width*self.lifetime/self.starttime)
+                # temp       = brightness*
+                temp = brightness**2 * gauss #* (1/np.max(gauss))
 
                 world[0, :, :, :] += temp
                 world[1, :, :, :] += temp
                 world[2, :, :, :] += temp
 
             else:
-
-                temp = (self.lifetime/self.starttime)*gaussian_filter(self.position, 1.1-self.lifetime/self.starttime)
+                # ending
+                brightness = 2*(self.lifetime/self.starttime)
+                temp = brightness**2*gaussian_filter(self.position, (self.width+0.01)-self.width*self.lifetime/self.starttime)
 
                 world[0, :, :, :] += temp
                 world[1, :, :, :] += temp
@@ -146,11 +157,13 @@ class worker:
             '''
             # mv = numpy.random.multivariate_normal(mean = self.position, )
 
-        self.lifetime -= 1
+        if self.wait > 0:
+            self.wait -= 1
+        else:
+            self.lifetime -= 1
 
-        return world, message
+        return world*np.cos(self.wait * 0.1), message
 
     def boost(self):
-        #print(self.lifetime, end = '->')
-        self.lifetime = self.starttime
-        #print(self.lifetime)
+        # self.lifetime = self.starttime
+        self.wait = 10

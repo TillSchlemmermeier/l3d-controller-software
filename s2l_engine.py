@@ -110,8 +110,12 @@ def sound_process(array):
     norm_value = [0.0]
     last_value = [0.0]
     armed = [True]
+    waiting_for_trigger = [0] # 0 means waiting
+                              # a positiv number is last value from trigger
+                              # a negativ number means we are collecting
     starttime = [time()]
     trigger_counter = 0
+
 
     def update_line(frame, normalized, buffer, min, max):
         '''
@@ -128,7 +132,7 @@ def sound_process(array):
         selectors[2] = (array[12]**2)*10000
         selectors[3] = (array[13]**2)*10000
 
-        # update threshold
+        # update thresholds
         thresholds[0] = array[14]
         thresholds[1] = array[15]
         thresholds[2] = array[16]
@@ -147,7 +151,7 @@ def sound_process(array):
         data = struct.unpack("%dh"%(buffer_size), dump)
 
         # perform fourier transformation
-        FFT = fft(data)
+        FFT   = fft(data)
         freqs = fftfreq(buffer_size, 1.0/sample_rate)
 
         # smoothing and interpolating to correct axis
@@ -204,6 +208,7 @@ def sound_process(array):
 
             # process trigger
             # i is checking for the lowest frequency
+            # works best if this is the kick
             if i == 0:
                 # if loud enough and armed is true
                 # last_value is increased by 1
@@ -226,8 +231,33 @@ def sound_process(array):
                 else:
                     pass
 
-        # scatterplot.setData(color = np.clip(colors, 0, 1))
 
+                # now we do continous update
+                if frame % 1200 == 0 and waiting_for_trigger[0] == 0:
+                    # some time has passed, we start
+                    # to wait for trigger
+                    # print('s2l: waited')
+                    waiting_for_trigger[0] = last_value[0]
+
+                # we are waiting for trigger to update the buffer
+                if waiting_for_trigger[0] > 0:
+                    if last_value[0] > waiting_for_trigger[0]:
+                        # print('s2l: trigger')
+                        waiting_for_trigger[0] = -10
+
+                # we have waited, a kick came, we are  normalizing
+                if waiting_for_trigger[0] < 0:
+                    buffer.append(final_data)
+                    buffer = buffer[1:]
+
+                    min[0] = np.min(np.array(buffer), axis = 0)
+                    max[0] = np.max(np.array(buffer), axis = 0)
+
+                    waiting_for_trigger[0] += 1
+
+
+
+        # scatterplot.setData(color = np.clip(colors, 0, 1))
         return line, select1, select2, select3, select4, thres1, thres2, thres3, thres4
 
     '''
