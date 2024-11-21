@@ -16,6 +16,7 @@ class class_akai:
 
         # faders are 19, 23, 27, 31, 49, 53, 57, 61,62
 
+        # print('akai', message[1])
         # global brightness
         if message[1] == 62:
             self.global_parameter[1] = message[2]/127.0

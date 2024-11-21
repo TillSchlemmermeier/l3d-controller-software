@@ -25,8 +25,16 @@ class e_s2l():
             channel = str(self.channel)
         elif self.channel == 4:
             channel = "Trigger"
-        else:
+        elif self.channel == 5:
             channel = 'Trig 2'
+        elif self.channel == 6:
+            channel = 'SIN 1'
+        elif self.channel == 7:
+            channel = 'SIN 2'
+        elif self.channel == 8:
+            channel = 'SAW 1'
+        elif self.channel == 9:
+            channel = 'SAW 2'
 
         if self.decay == 0:
             decay = 'off'
@@ -38,7 +46,12 @@ class e_s2l():
     def __call__(self, world, args):
         # process parameters
         self.amount = args[0]
+
+        # with lfo
+        # self.channel = int(args[1]*9)
+        # without lfo
         self.channel = int(args[1]*5)
+
         if args[2] > 0.5:
             self.mode = 'invert'
         else:
@@ -47,8 +60,8 @@ class e_s2l():
         self.decay = round(args[3]*0.5,2)
 
 
-        # apply manipulation
-        if self.channel < 4:
+        # modulate brightness with audio
+        if self.channel < 4 or self.channel > 5:
 
             current_volume = float(str(self.sound_values.buf[self.channel*8:self.channel*8+8],'utf-8'))**4
 

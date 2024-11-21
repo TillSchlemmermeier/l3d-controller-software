@@ -27,6 +27,8 @@ class e_outer_shadow():
             channel = str(self.channel)
         elif self.channel < 0:
             channel = 'noS2L'
+        else:
+            channel = 'trig'
 
         return bytearray('{0:<8s}{1:<8s}{2:<8s}{3:<8s}'.format(str(round(self.exponent,2)),  str(round(self.amount,2)), '', channel),'utf-8')
 

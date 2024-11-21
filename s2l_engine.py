@@ -264,11 +264,12 @@ def sound_process(array):
                     waiting_for_trigger[0] += 1
 
         # create LFO
-
         lfo[0] = 0.5+0.5*np.sin(frame * (array[246]+0.001))
         lfo[1] = 0.5+0.5*np.sin(frame * (array[247]+0.001))
-        lfo[2] = 0.5+0.5*sawtooth(frame * (array[246]+0.001), width = 0.5)
-        lfo[3] = 0.5+0.5*sawtooth(frame * (array[247]+0.001), width = 0.5)
+        lfo[2] = 0.5+0.5*sawtooth(frame * (array[246]+0.001), width = 1)
+        lfo[3] = 0.5+0.5*sawtooth(frame * (array[247]+0.001), width = 1)
+
+        # print(round(lfo[0],2), array[246])
 
         lfo1_string = '{:8}'.format(round(lfo[0],2))
         sound_values.buf[48:56] = bytearray('{:.8}'.format(lfo1_string),'utf-8')
