@@ -17,6 +17,8 @@ from PyQt5 import QtWidgets, QtGui, QtCore
 from pyqtgraph.Qt import QtCore, QtGui
 import pyqtgraph.opengl as gl
 
+from PyQt5 import QtWidgets
+
 import numpy as np
 from ctypes import c_char, c_char_p
 
@@ -132,7 +134,8 @@ def rendering(array, label, pause_time = 0.03, log = False):
         pause_time = 2
 
     # initialize window
-    app = QtGui.QApplication([])
+    # app = QtGui.QApplication([])
+    app = QtWidgets.QApplication([])
     window = gl.GLViewWidget()
     window.setWindowTitle('L3D Cube')
     screen_resolution = app.desktop().screenGeometry()
@@ -184,8 +187,8 @@ def rendering(array, label, pause_time = 0.03, log = False):
     t = QtCore.QTimer()
     t.timeout.connect(update)
     t.start(40)
-    QtGui.QApplication.instance().exec_()
-
+    # QtGui.QApplication.instance().exec_()
+    QtWidgets.QApplication.instance().exec_()
 
 
 def rendering_visualize(array, label, pause_time = 0.1, log = False):

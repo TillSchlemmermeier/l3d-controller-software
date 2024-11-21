@@ -2,7 +2,8 @@ import numpy as np
 import pyaudio
 from scipy.fftpack import fft, fftfreq
 import scipy
-import struct
+from scipy.signal import sawtooth
+# import struct
 from time import sleep, time
 
 import matplotlib.pyplot as plt
@@ -54,7 +55,8 @@ def sound_process(array):
 
     # inital reading of spectrum
     dump = stream.read(1024)
-    data = struct.unpack("%dh"%(1024), dump)
+    # data = struct.unpack("%dh"%(1024), dump)
+    data = np.frombuffer(dump, dtype=np.uint16)
     FFT = fft(data)
     freqs = fftfreq(1024, 1.0/sample_rate)
 
@@ -116,6 +118,10 @@ def sound_process(array):
     starttime = [time()]
     trigger_counter = 0
 
+    # create LFOs
+
+    lfo = [0.0, 0.0, 0.0, 0.0]
+
 
     def update_line(frame, normalized, buffer, min, max):
         '''
@@ -126,6 +132,7 @@ def sound_process(array):
         function to the function `sound_process`. that's the
         global parameters array
         '''
+
         # update selectors
         selectors[0] = (array[10]**2)*10000
         selectors[1] = (array[11]**2)*10000
@@ -146,9 +153,11 @@ def sound_process(array):
             print('s2l engine : reseting normalization')
 
         # read raw data and unpack it
-        n_available = stream.get_read_available()
+        # n_available = stream.get_read_available()
         dump = stream.read(buffer_size)
-        data = struct.unpack("%dh"%(buffer_size), dump)
+
+        # unpack from byte to numbers
+        data = np.frombuffer(dump, dtype=np.uint16)
 
         # perform fourier transformation
         FFT   = fft(data)
@@ -231,7 +240,6 @@ def sound_process(array):
                 else:
                     pass
 
-
                 # now we do continous update
                 if frame % 1200 == 0 and waiting_for_trigger[0] == 0:
                     # some time has passed, we start
@@ -255,7 +263,24 @@ def sound_process(array):
 
                     waiting_for_trigger[0] += 1
 
+        # create LFO
 
+        lfo[0] = 0.5+0.5*np.sin(frame * (array[246]+0.001))
+        lfo[1] = 0.5+0.5*np.sin(frame * (array[247]+0.001))
+        lfo[2] = 0.5+0.5*sawtooth(frame * (array[246]+0.001), width = 0.5)
+        lfo[3] = 0.5+0.5*sawtooth(frame * (array[247]+0.001), width = 0.5)
+
+        lfo1_string = '{:8}'.format(round(lfo[0],2))
+        sound_values.buf[48:56] = bytearray('{:.8}'.format(lfo1_string),'utf-8')
+
+        lfo2_string = '{:8}'.format(round(lfo[1],2))
+        sound_values.buf[56:64] = bytearray('{:.8}'.format(lfo2_string),'utf-8')
+
+        lfo3_string = '{:8}'.format(round(lfo[2],2))
+        sound_values.buf[64:72] = bytearray('{:.8}'.format(lfo3_string),'utf-8')
+
+        lfo4_string = '{:8}'.format(round(lfo[3],2))
+        sound_values.buf[72:80] = bytearray('{:.8}'.format(lfo4_string),'utf-8')
 
         # scatterplot.setData(color = np.clip(colors, 0, 1))
         return line, select1, select2, select3, select4, thres1, thres2, thres3, thres4
@@ -267,5 +292,26 @@ def sound_process(array):
     QtGui.QApplication.instance().exec_()
 
     '''
+    # print('starting')
+    # animation = FuncAnimation(fig, func = update_line, interval=10, blit=True, frames = 2000, repeat = False, fargs = (normalized, buffer, min, max))
     animation = FuncAnimation(fig, func = update_line, interval=10, blit=True, fargs = (normalized, buffer, min, max))
-    plt.show()
+    a = plt.show()
+    # animation.event_source.stop()
+    # animation.event_source.stop()
+    # print('done')
+
+if __name__ == '__main__':
+
+    # fake global parameters
+
+    global_parameter = np.zeros(255)
+    # start values for s2l_engine
+    global_parameter[10] = 0.12
+    global_parameter[11] = 0.2
+    global_parameter[12] = 0.45
+    global_parameter[13] = 0.7
+
+    # fake shared memory
+    global_memory_s2l  = mp.shared_memory.SharedMemory(create = True,name = "global_s2l_memory", size = 512)
+
+    sound_process(global_parameter)

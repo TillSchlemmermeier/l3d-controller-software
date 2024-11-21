@@ -101,6 +101,7 @@ In the following, the global parameters are listed. Default values are given in 
 |234 - 237 | global effect 1 parameters
 |238 - 241 | global effect 2 parameters
 |242 - 245 | global effect 3 parameters
+|246 + 247 | global lfo 1 + 2
 
 ## Testing for rendering engine
 
@@ -153,3 +154,25 @@ sudo usermod -a -G dialout $USER
 reboot
 
 python3.8 main.py
+
+## sound engine
+
+The sound engine has two channels of communication:
+
+- a shared memory called "global_s2l_memory" passed as sound_values
+- global_parameter passed as args
+
+The sound_values has 512 bytes. It contains:
+
+- [0:8]   sound channel 1
+- [8:16]  sound channel 2
+- [16:24] sound channel 3
+- [24:32] sound channel 4
+- [32:40] trigger 1
+- [40:48] trigger 2
+- [48:56] lfo 1 (sin)
+- [56:64] lfo 2 (sin)
+- [64:72] lfo 1 (triangle)
+- [72:80] lfo 2 (triangle)
+
+Parameters for the s2l are are given above (entries 10-19).

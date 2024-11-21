@@ -20,7 +20,7 @@ class e_rotating_fade():
         self.colorworld = np.zeros([3, 10, 10, 10])
 
         for i in range(10):
-            self.colorworld[:, i, :, :] = (i/9.0)**2
+            self.colorworld[:, i, :, :] = np.sqrt(i/9.0)
 
 #        self.colorworld[0, :, :, :] *= self.color['r']
 #        self.colorworld[0, :, :, :] *= self.color['g']
@@ -29,7 +29,7 @@ class e_rotating_fade():
 
     #strings for GUI
     def return_values(self):
-        return [b'rotating_black_white', b'X speed', b'Y speed', b'Z speed', b'amount']
+        return [b'rotating_fade', b'X speed', b'Y speed', b'Z speed', b'amount']
 
     def return_gui_values(self):
         return bytearray('{0:<8s}{1:<8s}{2:<8s}{3:<8s}'.format(str(round(self.xspeed,1)), str(round(self.yspeed,1)), str(round(self.zspeed,1)), str(round(self.amount,1))), 'utf-8')
@@ -54,6 +54,7 @@ class e_rotating_fade():
         newworld = rotate(newworld, self.step*self.zspeed,
                           axes = (2,3), order = 1,
 	                      mode = 'nearest', reshape = False)
+
 
         world = self.fadeworld * newworld * self.amount + world
 

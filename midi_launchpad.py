@@ -4,7 +4,7 @@ from random import randint, random
 import tkinter as tk
 from tkinter import simpledialog
 import subprocess as sb
-from sklearn import svm
+# from sklearn import svm
 from random import choice, random, gauss
 import numpy as np
 
@@ -42,6 +42,7 @@ class class_launchpad_mk3:
 
 
         # when initialising, learn also classifier
+        '''
         self.classifier = svm.SVC() # kernel = 'rbf'
         with open('database.dat', 'r') as file:
             database = file.readlines()
@@ -58,6 +59,7 @@ class class_launchpad_mk3:
                 self.classifier.fit(features, targets)
             except:
                 print('learning failed')
+        '''
 
         # freeze world
         self.freeze = np.zeros([255])
@@ -267,6 +269,7 @@ class class_launchpad_mk3:
                          file.write(' '.join(last)+'\n')
 
                     # relearn classifier
+                    '''
                     with open('database.dat', 'r') as file:
                         database = file.readlines()
 
@@ -282,6 +285,7 @@ class class_launchpad_mk3:
                             print('relearned classifier!')
                         except:
                             print('fail to learn classifier')
+                    '''
 
 
                 # now the randomizer
@@ -563,6 +567,7 @@ class class_launchpad_mk3:
         # turn brightness of first channel down
         # self.global_parameter[41] = 0.0
 
+    '''
     def randomizer_test(self):
         # get number of generators
         with open('generators.dat', 'r') as file:
@@ -625,7 +630,7 @@ class class_launchpad_mk3:
             file.write(' '.join(list) + '\n')
 
         print("random entry added to database")
-
+    '''
 
     def sendstate(self):
         """send states and colors to midi device"""

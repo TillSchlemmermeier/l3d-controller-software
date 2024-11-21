@@ -1,6 +1,7 @@
 # modules
 import numpy as np
-from scipy.signal import fftconvolve, gaussian
+from scipy.signal import fftconvolve
+from scipy.signal.windows import gaussian
 
 class e_mean_updown():
 

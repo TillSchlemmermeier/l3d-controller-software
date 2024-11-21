@@ -294,6 +294,9 @@ if __name__ == '__main__':
     global_parameter[5] = 1
     global_parameter[6] = 0.4
 
+    # brightness
+    global_parameter[1] = 1
+    global_parameter[0] = 1
 
     # start values for s2l_engine
     global_parameter[10] = 0.12
@@ -317,7 +320,7 @@ if __name__ == '__main__':
         proc_renderer = mp.Process(target=rendering, args = [global_parameter, global_label])
 
     # assign processes
-    proc_midi = mp.Process(target=midi_devices, args = [global_parameter])
+    # proc_midi = mp.Process(target=midi_devices, args = [global_parameter])
     # proc_arduino = mp.Process(target=midi_arduino, args = [global_parameter])
     proc_gui = mp.Process(target=gui, args = [global_parameter, global_label, mode])
     # proc_artnet = mp.Process(target=artnet_process, args = [global_parameter])
@@ -348,8 +351,8 @@ if __name__ == '__main__':
 
     # starting processes
     print('start')
-    proc_midi.start()
-    print('MIDI_Proc :'+ str(proc_midi.pid))
+    # proc_midi.start()
+    # print('MIDI_Proc :'+ str(proc_midi.pid))
     #proc_arduino.start()
 
     #print('ARDUINO_Proc :'+ str(proc_arduino.pid))
@@ -368,7 +371,7 @@ if __name__ == '__main__':
 
 
 #    time.sleep(1)
-    proc_midi.join()
+    # proc_midi.join()
     #proc_arduino.join()
     proc_renderer.join()
     proc_sound.join()

@@ -1,6 +1,7 @@
 # modules
 import numpy as np
-from scipy.signal import fftconvolve, gaussian
+from scipy.signal import fftconvolve
+from scipy.signal.windows import gaussian
 from multiprocessing import shared_memory
 
 class e_mean():

@@ -3,7 +3,9 @@ import scipy
 from random import randint, choice
 from multiprocessing import shared_memory
 from scipy.ndimage.interpolation import rotate
-
+# from generators.g_lightsaber_f import gen_lightsaber
+# from g_lightsaber_f import gen_lightsaber
+from gen_lightsaber_f import gen_lightsaber
 
 class g_lightsaber:
     def __init__(self):
@@ -35,29 +37,29 @@ class g_lightsaber:
 
     def __call__(self, args):
         self.wait  = int(args[0]*20+1)
-        self.speed = 0.5*args[1]**2+0.0001
-        self.fade = args[2]
+        self.speed = 8.0*args[1**2]+0.0001
+        self.fade  = args[2]
 
         world = np.zeros([3, 10, 10, 10])
 
-        #world[:, self.p1[0], self.p1[1], self.p1[2]] = 1
-        #world[:, self.p2[0], self.p2[1], self.p2[2]] = 1
-
-
-
         # after waiting time reset
         if self.counter % self.wait == 0 or self.point[2] <= -3:
-            self.p_in  = [randint(2, 7), randint(2, 7), randint(2, 7)]
+            # define point inside of cube
+            self.p_in = [randint(2, 7), randint(2, 7), randint(2, 7)]
+            # self.p_in = [9, 0, 0]
 
+            # define point outside of cube
             self.p_out = [choice([-3,-2,-1, 10,11,12]), choice([-3,-2,-1, 10,11,12]), choice([-3,-2,-1, 10,11,12])]
-            #self.p_in = [4,4,4]
-            self.p_top = [-2, self.p_in[1] + randint(-1,1), self.p_in[2] + randint(-1,1)]
+            # self.p_out = [0, 9, 9]
+
+            # define point on top of cube
+            self.p_top = [-3, self.p_in[1] + randint(-1,1), self.p_in[2] + randint(-1,1)]
+            # self.p_top = [-2, 0, 0]
+
             self.counter = 0
             self.old_world = np.zeros([3,10,10,10])
 
-            #print(self.p_in, self.p_top, self.p_out)
-
-        self.point = get_point(self.p_top, self.p_in, self.counter, self.speed)
+        self.point = get_point(self.p_top, self.p_in, self.counter/self.wait, self.speed)
         self.counter += 1
 
         for x in range(10):
@@ -73,7 +75,8 @@ class g_lightsaber:
 
 def get_point(p1, p2, step, speed):
     vec = np.array(p2)-np.array(p1)
-    p = p1 + step*vec
+    p = p1 + speed*np.sqrt(step)*vec
+    # print(p)
     return p
 
 def get_dist_to_line(p1, p2, p3):

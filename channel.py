@@ -55,22 +55,11 @@ class class_channel:
         return self.settings_list
 
     def get_labels(self):
-        list = []
-        temp = self.generator.return_values()
-        for t in temp:
-            list.append(t)
 
-        temp = self.effect_1.return_values()
-        for t in temp:
-            list.append(t)
-
-        temp = self.effect_2.return_values()
-        for t in temp:
-            list.append(t)
-
-        temp = self.effect_3.return_values()
-        for t in temp:
-            list.append(t)
+        list = [*self.generator.return_values(),
+                *self.effect_1.return_values(),
+                *self.effect_2.return_values(),
+                *self.effect_3.return_values()]
 
         valuesG  = self.generator.return_gui_values()
         valuesE1 = self.effect_1.return_gui_values()
@@ -85,8 +74,19 @@ class class_channel:
 
         world = self.generator(parameters[5:10])
 
-        world = self.effect_1(world, parameters[10:15])
-        world = self.effect_2(world, parameters[15:20])
-        world = self.effect_3(world, parameters[20:25])
+        try:
+            world = self.effect_1(world, parameters[10:15])
+        except:
+            print('Warning: Effekt 1 failed in channel ', self.id)
+
+        try:
+            world = self.effect_2(world, parameters[15:20])
+        except:
+            print('Warning: Effekt 2 failed in channel ', self.id)
+
+        try:
+            world = self.effect_3(world, parameters[20:25])
+        except:
+            print('Warning: Effekt 3 failed in channel ', self.id)
 
         return world

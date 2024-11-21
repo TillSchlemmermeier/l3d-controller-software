@@ -6,7 +6,8 @@ from world2vox_fortran import world2vox_f as world2vox
 from channel import class_channel
 from multiprocessing import shared_memory
 from collection import effects
-from pyqtgraph.ptime import time
+# from pyqtgraph.ptime import time
+from time import time
 
 # load shots
 from oneshots.s_sides import *
@@ -21,7 +22,7 @@ from oneshots.s_dark_sphere import s_dark_sphere
 from oneshots.s_threesixty import s_threesixty
 from oneshots.s_trigger import s_trigger
 
-from numba import njit
+# from numba import njit
 class rendering_engine:
     """
     L3D Cube 3.0
@@ -131,7 +132,7 @@ class rendering_engine:
     def run(self):
         """generates a frame and sends the package when cube is turned on"""
         # check wether 'running' flag is set
-        colors = np.zeros([4, 1000])
+        colors = np.zeros([3, 1000])
 
         if self.global_parameter[0] == 1:
             self.generate_frame()
@@ -141,7 +142,7 @@ class rendering_engine:
             colors[0, :] = self.cubeworld[0, :, :, :].flatten()
             colors[1, :] = self.cubeworld[1, :, :, :].flatten()
             colors[2, :] = self.cubeworld[2, :, :, :].flatten()
-            colors[3, :] = 1.0
+            # colors[3, :] = 1.0
 
         else:
             pass
@@ -162,33 +163,14 @@ class rendering_engine:
 
         self.arduino.write(package)
 
-        # if not self.debug:
-        #     self.arduino.write(bytearray(package))
-        #
-        # else:
-        #     logging.info('Frame '+str(self.framecounter))
-        #     logging.info(package)
-
-
-        '''
-        now = time()
-        dt = now - self.fpslastTime
-        self.fpslastTime = now
-        if self.fps is None:
-            self.fps = 1.0/dt
-        else:
-            s = np.clip(dt*3., 0, 1)
-            self.fps = self.fps * (1-s) + (1.0/dt) * s
-        '''
-
-        # print("FPS: " + str(self.fps))
-
     def generate_frame(self):
         """
         Calculates a new frame according to the
         entries in the global parameter variable
 
         writes the result into self.cubeworld
+
+        also, current values are send to gui_values
         """
         # perform calculation of frames
         # in order to pass the right midivalues/parameters
@@ -210,7 +192,8 @@ class rendering_engine:
 
                 # calculate frame according to strobo
                 if self.framecounter % int(1+20*self.global_parameter[index_parameters+3]) == 0:
-                    new_world = channel.render_frame(self.framecounter, self.global_parameter[index_parameters:index_parameters+30])
+                    new_world = channel.render_frame(self.framecounter,
+                                                     self.global_parameter[index_parameters:index_parameters+30])
                 else:
                     new_world = np.zeros([3, 10, 10, 10])
             else:

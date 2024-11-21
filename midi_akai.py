@@ -67,6 +67,12 @@ class class_akai:
         elif message[1] == 29:
             self.global_parameter[17] = message[2]/127.0
 
+        # lfo speed
+        elif message[1] == 50:
+            self.global_parameter[246] = message[2]/127.0
+        elif message[1] == 54:
+            self.global_parameter[247] = message[2]/127.0
+
         # s2l normlizing trigger
         elif message[1] == 46:
             self.global_parameter[18] = message[2]/127.0
