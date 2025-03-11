@@ -7,6 +7,7 @@ from scipy.signal import sawtooth
 from time import sleep, time
 
 import matplotlib.pyplot as plt
+import requests
 from matplotlib.animation import FuncAnimation
 from scipy.interpolate import griddata
 from scipy.ndimage.filters import uniform_filter1d
@@ -17,8 +18,10 @@ import matplotlib as mpl
 
 from pyqtgraph.Qt import QtCore, QtGui
 import pyqtgraph.opengl as gl
+from UltraDict import UltraDict
 
-def sound_process(array):
+def sound_process():
+    state = UltraDict(name='state')
 
     # initialize pyaudio
     sample_rate = 44100
@@ -79,9 +82,9 @@ def sound_process(array):
     ax.spines['left'].set_color('white')
     ax.spines['right'].set_color('white')
 
-    fig.canvas.manager.window.setGeometry(1921, 1200, 600, 424)
-    fig.canvas.manager.window.setWindowFlags(QtCore.Qt.FramelessWindowHint)
-    fig.canvas.manager.window.setWindowOpacity(1.0)
+    fig.canvas.manager.window.setGeometry = 1921, 1200, 600, 424
+    fig.canvas.manager.window.setWindowFlags = QtCore.Qt.FramelessWindowHint
+    fig.canvas.manager.window.setWindowOpacity = 1.0
 
     ax.set_xlim(50, 10000)
     ax.set_ylim(-0.1,2)
@@ -134,21 +137,21 @@ def sound_process(array):
         '''
 
         # update selectors
-        selectors[0] = (array[10]**2)*10000
-        selectors[1] = (array[11]**2)*10000
-        selectors[2] = (array[12]**2)*10000
-        selectors[3] = (array[13]**2)*10000
+        selectors[0] = (state['s2l_values'][0]**2)*10000
+        selectors[1] = (state['s2l_values'][1]**2)*10000
+        selectors[2] = (state['s2l_values'][2]**2)*10000
+        selectors[3] = (state['s2l_values'][3]**2)*10000
 
-        # update thresholds
-        thresholds[0] = array[14]
-        thresholds[1] = array[15]
-        thresholds[2] = array[16]
-        thresholds[3] = array[17]
+        # update threshold
+        thresholds[0] = state['s2l_thresholds'][0]
+        thresholds[1] = state['s2l_thresholds'][1]
+        thresholds[2] = state['s2l_thresholds'][2]
+        thresholds[3] = state['s2l_thresholds'][3]
 
         # check for normalizing
-        if array[18] != norm_value[0]:
+        if state['s2l_normalize'] != norm_value[0]:
             normalized[0] = False
-            norm_value[0] = array[18]
+            norm_value[0] = state['s2l_normalize']
             buffer[:] = []
             print('s2l engine : reseting normalization')
 
@@ -181,6 +184,17 @@ def sound_process(array):
         # final data is the final processed spectrum
         final_data = (final_data - min[0])/(max[0] - min[0] + 0.001)
 
+        # send data to frontend
+        data = {
+            "type": "spectrum_data",
+            "data": final_data.tolist()
+        }
+        requests.post(
+            "http://localhost:8000/api/stream", 
+            json = data, 
+            headers={"Content-Type": "application/json"}
+        )
+
         # set data for plot
         line.set_data(freq_axis, final_data)
 
@@ -207,7 +221,7 @@ def sound_process(array):
 
             # apply gain, which can be controlled from
             # a single poti from the midimix
-            current_volume *= (array[19]*4 + 1)
+            current_volume *= (state['s2l_gain']*4 + 1)
 
             # write the processed sound signal for this
             # frequency to sound_values
@@ -240,51 +254,7 @@ def sound_process(array):
                 else:
                     pass
 
-                # now we do continous update
-                '''
-                if frame % 1200 == 0 and waiting_for_trigger[0] == 0:
-                    # some time has passed, we start
-                    # to wait for trigger
-                    # print('s2l: waited')
-                    waiting_for_trigger[0] = last_value[0]
 
-                # we are waiting for trigger to update the buffer
-                if waiting_for_trigger[0] > 0:
-                    if last_value[0] > waiting_for_trigger[0]:
-                        # print('s2l: trigger')
-                        waiting_for_trigger[0] = -10
-
-                # we have waited, a kick came, we are  normalizing
-                if waiting_for_trigger[0] < 0:
-                    buffer.append(final_data)
-                    buffer = buffer[1:]
-
-                    min[0] = np.min(np.array(buffer), axis = 0)
-                    max[0] = np.max(np.array(buffer), axis = 0)
-
-                    waiting_for_trigger[0] += 1
-                '''
-        # create LFO
-        lfo[0] = 0.5+0.5*np.sin(frame * (array[246]+0.001))
-        lfo[1] = 0.5+0.5*np.sin(frame * (array[247]+0.001))
-        lfo[2] = 0.5+0.5*sawtooth(frame * (array[246]+0.001), width = 1)
-        lfo[3] = 0.5+0.5*sawtooth(frame * (array[247]+0.001), width = 1)
-
-        # print(round(lfo[0],2), array[246])
-
-        lfo1_string = '{:8}'.format(round(lfo[0],2))
-        sound_values.buf[48:56] = bytearray('{:.8}'.format(lfo1_string),'utf-8')
-
-        lfo2_string = '{:8}'.format(round(lfo[1],2))
-        sound_values.buf[56:64] = bytearray('{:.8}'.format(lfo2_string),'utf-8')
-
-        lfo3_string = '{:8}'.format(round(lfo[2],2))
-        sound_values.buf[64:72] = bytearray('{:.8}'.format(lfo3_string),'utf-8')
-
-        lfo4_string = '{:8}'.format(round(lfo[3],2))
-        sound_values.buf[72:80] = bytearray('{:.8}'.format(lfo4_string),'utf-8')
-
-        # scatterplot.setData(color = np.clip(colors, 0, 1))
         return line, select1, select2, select3, select4, thres1, thres2, thres3, thres4
 
     '''
@@ -294,26 +264,5 @@ def sound_process(array):
     QtGui.QApplication.instance().exec_()
 
     '''
-    # print('starting')
-    # animation = FuncAnimation(fig, func = update_line, interval=10, blit=True, frames = 2000, repeat = False, fargs = (normalized, buffer, min, max))
     animation = FuncAnimation(fig, func = update_line, interval=10, blit=True, fargs = (normalized, buffer, min, max))
     a = plt.show()
-    # animation.event_source.stop()
-    # animation.event_source.stop()
-    # print('done')
-
-if __name__ == '__main__':
-
-    # fake global parameters
-
-    global_parameter = np.zeros(255)
-    # start values for s2l_engine
-    global_parameter[10] = 0.12
-    global_parameter[11] = 0.2
-    global_parameter[12] = 0.45
-    global_parameter[13] = 0.7
-
-    # fake shared memory
-    global_memory_s2l  = mp.shared_memory.SharedMemory(create = True,name = "global_s2l_memory", size = 512)
-
-    sound_process(global_parameter)
