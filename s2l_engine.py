@@ -241,6 +241,7 @@ def sound_process(array):
                     pass
 
                 # now we do continous update
+                '''
                 if frame % 1200 == 0 and waiting_for_trigger[0] == 0:
                     # some time has passed, we start
                     # to wait for trigger
@@ -262,7 +263,7 @@ def sound_process(array):
                     max[0] = np.max(np.array(buffer), axis = 0)
 
                     waiting_for_trigger[0] += 1
-
+                '''
         # create LFO
         lfo[0] = 0.5+0.5*np.sin(frame * (array[246]+0.001))
         lfo[1] = 0.5+0.5*np.sin(frame * (array[247]+0.001))
