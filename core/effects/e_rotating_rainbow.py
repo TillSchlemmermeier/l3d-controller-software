@@ -1,0 +1,56 @@
+# modules
+import numpy as np
+from colorsys import hsv_to_rgb
+from scipy.ndimage.interpolation import rotate
+
+class e_rotating_rainbow():
+
+    def __init__(self):
+
+        # initial rotating parameters
+        self.speed = 0
+        self.rotation = 0.1
+        self.gradient_length = 1.0
+        self.step = 1
+        self.rotX = 1
+        self.rotYZ = 1
+
+    def return_state(self):
+        return [
+            ['Speed', 'speed', round(10 * self.speed*50,2)],
+            ['Length', 'gradient_length', round(1-2*self.gradient_length,1)],
+            ['Rot_X', 'rotX', round(self.rotX,1)],
+            ['Rot_YZ', 'rotYZ', round(self.rotYZ,1)],
+        ]
+
+    def __call__(self, world, args):
+		# parse input
+        self.speed = args[0]*0.05
+        self.gradient_length = 0.5-args[1]*0.5
+        self.rotX = args[2]*15+0.01
+        self.rotYZ = args[3]*15+0.01
+
+        # create gradient
+        self.rainbowworld = np.zeros([3, 10, 10, 10])
+
+        for i in range(3):
+            for j in range (10):
+                self.rainbowworld[i, j, :, :] = hsv_to_rgb((j / 10) * self.gradient_length + self.step * self.speed, 1, 1)[i]
+
+        # rotate
+        newworld = rotate(self.rainbowworld, self.step*self.rotX,
+                          axes = (1,2), order = 1,
+                          mode = 'nearest', reshape = False)
+
+        newworld = rotate(newworld, self.step*self.rotYZ,
+                          axes = (1,3), order = 1,
+                          mode = 'nearest', reshape = False)
+
+        newworld = rotate(newworld, self.step*self.rotYZ,
+                          axes = (2,3), order = 1,
+                          mode = 'nearest', reshape = False)
+
+        world *= newworld
+        self.step += 1
+
+        return np.clip(world, 0, 1)

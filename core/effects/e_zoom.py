@@ -1,0 +1,28 @@
+# modules
+import numpy as np
+from scipy.ndimage import zoom
+
+class e_zoom():
+    '''Effect: zoom'''
+
+    def __init__(self):
+        self.amount = 0.5
+        self.degree = 2
+
+    def return_state(self):
+        return [
+            ['amount', 'amount', self.amount],
+            ['degree', 'degree', self.degree],
+        ]
+    
+    def __call__(self, world, args):
+		# parse input
+        self.amount = args[0]
+        self.degree = int(args[1]*3+1)
+
+        zoomworld = np.zeros([3, 10, 10, 10])
+
+        for c in range(3):
+            world[c, :, :, :] = zoom(world[c, :, :, :], 2, mode = 'constant')[5:-5, 5:-5, 5:-5]
+
+        return np.clip(world+self.amount*zoomworld, 0, 1)

@@ -1,0 +1,100 @@
+# modules
+import numpy as np
+from random import randint
+from multiprocessing import shared_memory
+
+class g_trees():
+    '''
+    Generator: trees
+
+    Trees growing from the bottom
+
+    Parameters:
+    - number of LEDs
+    - Speed
+    - Frames before reset
+    '''
+
+    def __init__(self):
+        self.nled = 1
+        self.speed = 2
+        self.flatworld = np.zeros([4,10,10])
+        self.step = 0
+        self.reset = 1
+        #s2l
+        self.sound_values = shared_memory.SharedMemory(name = "global_s2l_memory")
+        self.trigger = 0
+        self.lastvalue = 0
+
+    def return_state(self):
+        if self.trigger == 0:
+            trigger = 'off'
+        elif self.trigger == 1:
+            trigger = 'number'
+        else:
+            trigger = 'speed'
+
+        return [
+            ['N LEDs', 'nled', round(self.nled,2)],
+            ['speed', 'speed', round(self.speed,2)],
+            ['wait', 'reset', round(self.reset,2)],
+            ['Trigger', 'trigger', trigger],
+        ]
+
+    def __call__(self, args):
+        self.nled = int(round(args[0]*4)+1)
+        self.speed = 5-int((args[1]*4))
+        self.reset = int(args[2]*5+1)
+        if args[3] < 0.3:
+            self.trigger = 0
+        elif 0.3 < args[3] < 0.6:
+            self.trigger = 1
+        else:
+            self.trigger = 2
+            #self.speed = 1
+
+        world = np.zeros([3,10,10,10])
+
+        if self.trigger == 1:
+            current_volume = int(float(str(self.sound_values.buf[32:40],'utf-8')))
+            if current_volume > self.lastvalue:
+                self.lastvalue = current_volume
+                for i in range(self.nled):
+                    self.flatworld[randint(0,3), 9, randint(0,9)] = 1.0
+
+        elif self.trigger == 2:
+            current_volume = int(float(str(self.sound_values.buf[32:40],'utf-8')))
+            if current_volume > self.lastvalue:
+                self.lastvalue = current_volume
+                for i in range(int(args[1]*4)+1):
+                    self.flatworld = np.roll(self.flatworld, shift = -1, axis = 1)
+                self.flatworld = np.roll(self.flatworld, shift = randint(-1,1), axis = 2)
+
+                self.flatworld[:, 9, :] = 0.0
+
+                for i in range(self.nled):
+                    self.flatworld[randint(0,3), 9, randint(0,9)] = 1.0
+
+        elif self.step % self.reset == 0:
+            for i in range(self.nled):
+                self.flatworld[randint(0,3), 9, randint(0,9)] = 1.0
+
+
+        world[0, :, :, 0] = self.flatworld[0, :, :]
+        world[0, :, 9, :] = self.flatworld[1, :, :]
+        world[0, :, :, 9] = self.flatworld[2, :, :]
+        world[0, :, 0, :] = self.flatworld[3, :, :]
+
+        world[1, :, :, :] = world[0, :, :, :]
+        world[2, :, :, :] = world[0, :, :, :]
+
+        if self.trigger != 2:
+            if self.step % self.speed == 0:
+                self.flatworld = np.roll(self.flatworld, shift = -1, axis = 1)
+                self.flatworld = np.roll(self.flatworld, shift = randint(-1,1), axis = 2)
+
+                self.flatworld[:, 9, :] = 0.0
+
+            self.step += 1
+
+        return np.clip(world, 0, 1)

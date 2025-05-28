@@ -1,5 +1,6 @@
 *.pyc
 *.so
 *.swp
-log_rendering_enginge.log
-output.dump
+node_modules/
+release/
+.git/
