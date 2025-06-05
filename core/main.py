@@ -6,6 +6,7 @@ import tkinter as tk
 import numpy as np
 import requests
 from midi_emulator import MidiControllerEmulator
+from midi_akai import class_akai
 from rendering_engine import rendering_engine
 from s2l_engine import sound_process
 from server import WebSocketAPIServer
@@ -46,9 +47,15 @@ def server():
 
 def midi_devices():
     print('...starting midi thread')
-    root = tk.Tk()
-    midi = MidiControllerEmulator(root)
-    root.mainloop()
+    akai = class_akai()
+    while True:
+        # Small sleep to prevent CPU overload
+        sleep(0.1)
+
+    # use the following to activate on-screen midi emulator
+    # root = tk.Tk()
+    # midi = MidiControllerEmulator(root)
+    # root.mainloop()
 
 def rendering(state):
     print('...waiting for server...')
