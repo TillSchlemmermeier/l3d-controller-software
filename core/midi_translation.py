@@ -120,9 +120,28 @@ class class_midi_translation:
         if midi_index == 8:
             self.state[key] = midi_value
             requests.get(f"{self.api_endpoint}/update_key/{key}") 
+            
+
+    def toggle_fixed(self, midi_index, key):
+        midi_index = int(midi_index)
+        key = str(key)
+        if midi_index < 8:
+            try:
+                channel = self.state[midi_index]
+                channel[key] = not channel[key]
+                self.state[midi_index] = channel
+                requests.get(f"{self.api_endpoint}/update_key/{key}?channel={midi_index}") 
+
+            except:
+                pass
+
+        if midi_index == 8:
+            self.state[key] = not self.state[key]
+            requests.get(f"{self.api_endpoint}/update_key/{key}") 
 
 
     def oneshot(self, midi_index):
+        print("Oneshot triggered with index:", midi_index)
         midi_index = int(midi_index)
         self.state['oneshot'] = midi_index
         requests.get(f"{self.api_endpoint}/update_key/oneshot") 
