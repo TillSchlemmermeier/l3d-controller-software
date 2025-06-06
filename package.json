@@ -24,6 +24,7 @@
     "utf-8-validate": "^5.0.10",
     "vue": "^3.4.21",
     "vue-router": "^4.5.0",
+    "vue3-touch-events": "^5.0.13",
     "vuedraggable": "^4.1.0",
     "ws": "^8.18.1"
   },
