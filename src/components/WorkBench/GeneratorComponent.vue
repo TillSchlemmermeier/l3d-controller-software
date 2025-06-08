@@ -41,10 +41,9 @@
             </div>
           </div>
     
-          <!-- Parameters Grid -->
           <div class="grid grid-cols-2">
             <template
-              v-for="index in Array.from({ length: thisGenerator.params.length / 4 }, (_, i) => i)"
+              v-for="_, index in (thisGenerator.params.length / 4)"
               :key="index"
             >
               <div 
@@ -53,10 +52,51 @@
               >
                 {{ thisGenerator.params[4 * index] }}
               </div>
-              <div 
-                class="text-right text-sm font-bold text-zinc-900"
-              >
-                {{ thisGenerator.params[4 * index + 2] }}
+              <div class="flex items-center justify-end gap-2">
+                <div 
+                  class="text-right text-sm font-bold text-zinc-900" 
+                >
+                  {{ thisGenerator.params[4 * index + 2] }}
+                </div>
+                <!-- Circular Progress -->
+                <div 
+                  v-if="isSelected"
+                  class="relative w-3 h-3 flex-shrink-0" 
+                >
+                  <svg 
+                    class="w-full h-full -rotate-90 origin-center" 
+                    viewBox="0 0 32 32"
+                  >
+                    <!-- Background circle -->
+                    <circle
+                      cx="16"
+                      cy="16"
+                      r="14"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="4"
+                      stroke-opacity="0.2"
+                    />
+                    <!-- Progress circle -->
+                    <circle
+                      cx="16"
+                      cy="16"
+                      r="14"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="4"
+                      :style="{
+                        strokeDasharray: `${loadProgressCircles ? 0 : thisGenerator.params[4 * index + 3] * 88}, 88`,
+                        strokeDashoffset: 0
+                      }"
+                      :class="[
+                        'transition-[stroke-dasharray]',
+                        initialFill ? 'duration-500' : 'duration-0',
+                        'ease-out'
+                      ]"
+                    />
+                  </svg>
+                </div>
               </div>
             </template>
           </div>
@@ -67,7 +107,7 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref, watch } from 'vue'
+import { onMounted, ref, watch, nextTick } from 'vue'
 import { usePresentStateStore } from '../../stores/presentState'
 import { getGeneratorColors } from '../../utils/colors'
 
@@ -87,21 +127,48 @@ const presentState = usePresentStateStore()
 const thisGenerator = ref()
 const loading = ref(true)
 const colors = getGeneratorColors()
+const loadProgressCircles = ref(true)
+const initialFill = ref(true)
 
 onMounted(async () => {
   thisGenerator.value = presentState.channels[props.channel]?.generator
+  console.log(thisGenerator.value)
   if (thisGenerator.value) {
+    console.log('Generator loaded:', thisGenerator.value)
     loading.value = false
+  }
+  if (props.isSelected) {
+    loadProgressCircles.value = true
+    nextTick(() => {
+      loadProgressCircles.value = false
+    })
   }
 })
 
 watch(
-  () => presentState.channels[props.channel].generator,
+  () => presentState.channels[props.channel]?.generator,
   (newVal) => {
     thisGenerator.value = newVal
+    if (newVal) {
+      loading.value = false
+    }
   },
-  { deep: true },
+  { deep: true }
 )
+
+watch(() => props.isSelected, (newVal) => {
+  if (newVal) {
+    loadProgressCircles.value = true
+    initialFill.value = true
+    nextTick(() => {
+      loadProgressCircles.value = false
+    })
+    setTimeout(() => {
+      initialFill.value = false
+    }, 500)
+  }
+})
+
 </script>
 
 <style scoped>
