@@ -329,6 +329,20 @@ class WebSocketAPIServer:
             await update_state()
             return {"message": "Selected"}
 
+        # toggle autopilot
+        @self.app.get('/api/toggle-autopilot')
+        async def toggle_autopilot():
+            self.state_manager.toggle_autopilot()
+            await update_state()
+            return {"message": "Autopilot toggled"}
+
+        # change autopilot mode
+        @self.app.get('/api/autopilot-mode')
+        async def autopilot_mode():
+            self.state_manager.autopilot_mode()
+            await update_state()
+            return {"message": "Autopilot mode changed"}
+
         # create a websocket connection
         @self.app.websocket("/ws")
         async def websocket_endpoint(websocket: WebSocket):

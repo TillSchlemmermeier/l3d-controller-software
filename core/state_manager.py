@@ -179,3 +179,17 @@ class StateManager:
             channel = self.state[channel_index]
             channel[effect_index]['IO'] = not channel[effect_index]['IO']
             self.state[channel_index] = channel
+
+    def toggle_autopilot(self):
+        """Toggle autopilot mode"""
+        with self.state.lock:
+            self.state['autopilot'] = not self.state['autopilot']
+
+    def autopilot_mode(self):
+        """Change autopilot mode"""
+        modes = ['global', 'all_channels', 'single_channel', 'all_elements', 'single_element ']
+        with self.state.lock:
+            current_mode = self.state.get('random', modes[0])
+            current_index = modes.index(current_mode)
+            next_index = (current_index + 1) % len(modes)
+            self.state['random'] = modes[next_index]

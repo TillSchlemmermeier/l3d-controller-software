@@ -51,6 +51,16 @@ export const usePresentStateStore = defineStore('presentState', {
       await this.callBackend(url)
     },
 
+    async toggleAutopilot() {
+      const url = `${baseUrl}/toggle-autopilot`
+      await this.callBackend(url)
+    },
+
+    async autopilotMode() {
+      const url = `${baseUrl}/autopilot-mode`
+      await this.callBackend(url)
+    },
+
     // load a new channel, generator, effect or global effect
     async load(preset_name: string) {
       const sharedVariables = useSharedVariablesStore()

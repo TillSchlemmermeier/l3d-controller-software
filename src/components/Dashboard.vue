@@ -1,12 +1,16 @@
 <template>
   <div 
     class="bg-black p-6 h-full flex flex-row gap-4 border-2"
-    :class="{ 'border-red-600': isSelected, 'border-transparent': !isSelected }" @click="selectDashboard"
-  >
+    :class="{ 'border-red-600': isSelected, 'border-transparent': !isSelected }"
+    @click="selectDashboard"
+    >
     <div class="flex flex-col gap-4">
 
       <div class="flex flex-row gap-4"> 
-        <div class="rounded-xl aspect-square p-3 flex flex-col items-center justify-center w-24" :class="gradientBackground(presentState.autopilot)"
+        <div
+          class="rounded-xl aspect-square p-3 flex flex-col items-center justify-center w-24"
+          :class="gradientBackground(presentState.autopilot)"
+          @click.stop="presentState.toggleAutopilot"
         >
           <span class="text-zinc-900 text-md font-bold text-center" >
             AUTO PILOT
@@ -25,7 +29,10 @@
       </div>
 
       <div class="flex flex-row gap-4"> 
-        <div class="rounded-xl aspect-square p-3 flex flex-col items-center justify-center w-24 bg-zinc-400">
+        <div
+          class="rounded-xl aspect-square p-3 flex flex-col items-center justify-center w-24 bg-zinc-400"
+          @click.stop="presentState.autopilotMode"
+        >
           <span class="text-zinc-900 text-md font-bold text-center" >
             MODE:
           </span>

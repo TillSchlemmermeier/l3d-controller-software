@@ -312,7 +312,6 @@ function endEffectDrag(event: { to: any, oldIndex: number; newIndex: number }, c
     opacity: 0.9;
     z-index: 50;
     cursor: grabbing;
-    transition: all 200ms ease-in-out;
   }
 
   .sortable-ghost {
