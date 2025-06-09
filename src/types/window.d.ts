@@ -10,8 +10,8 @@ interface IpcRenderer {
   invoke(channel: string, ...args: any[]): Promise<any>;
   onWebSocketData(callback: (data: any) => void): void;
   removeWebSocketListener(): void;
+  restartBackend: () => Promise<void>;
 }
-
 interface Window {
   ipcRenderer: IpcRenderer;
 }

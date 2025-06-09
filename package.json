@@ -8,7 +8,7 @@
     "start": "electron --trace-warnings .",
     "build": "vue-tsc && vite build && electron-builder",
     "preview": "vite preview",
-    "l3d": "concurrently --kill-others --prefix \"[{name}]\" --names \"CORE,GUI\" --handle-input \"bash -c 'cd ./core && python3.12 -u main.py'\" \"npm run dev\""
+    "l3d": "concurrently --prefix \"[{name}]\" --names \"CORE,GUI\" --handle-input \"bash -c 'cd ./core && python3.12 -u main.py'\" \"npm run dev\""
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.0.9",
@@ -24,7 +24,6 @@
     "utf-8-validate": "^5.0.10",
     "vue": "^3.4.21",
     "vue-router": "^4.5.0",
-    "vue3-touch-events": "^5.0.13",
     "vuedraggable": "^4.1.0",
     "ws": "^8.18.1"
   },

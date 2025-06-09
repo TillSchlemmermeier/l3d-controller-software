@@ -45,6 +45,9 @@ export const usePresentStateStore = defineStore('presentState', {
         console.error('error', error)
       }
     },
+    async rebootCore() {
+      await window.ipcRenderer.restartBackend()
+    },
 
     async select(channelIndex: number, elementIndex: number) {
       const url = `${baseUrl}/select/${channelIndex}/${elementIndex}`

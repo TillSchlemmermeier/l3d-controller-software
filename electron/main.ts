@@ -2,6 +2,7 @@ import { app, BrowserWindow, ipcMain } from 'electron'
 import { fileURLToPath } from 'node:url'
 import path from 'node:path'
 import WebSocket from 'ws'
+import { exec } from 'child_process'
 
 const APP_ROOT = path.join(path.dirname(fileURLToPath(import.meta.url)), '..')
 const VITE_DEV_SERVER_URL = process.env['VITE_DEV_SERVER_URL']
@@ -33,7 +34,12 @@ function setupWebSocket(win: BrowserWindow) {
 
   ws.on('close', () => {
     console.log('WebSocket connection closed')
-    !isQuitting && setTimeout(() => setupWebSocket(win), 3000)
+    if (!isQuitting) {
+      setTimeout(() => {
+        console.log('Attempting WebSocket reconnection...')
+        setupWebSocket(win)
+      }, 3000)
+    }
   })
 }
 
@@ -57,6 +63,34 @@ function createWindow() {
   })
 }
 
+function restartBackend() {
+  // Close existing WebSocket connection
+  if (ws) {
+    ws.removeAllListeners()
+    ws.close()
+    ws = null
+  }
+  // Kill backend processes and restart
+  exec('killall python3.12', () => {
+    // Wait for processes to terminate
+    setTimeout(() => {
+      const corePath = path.join(APP_ROOT, 'core')
+      exec(`cd "${corePath}" && python3.12 -u main.py`)
+      // reestablish WebSocket connection
+      setTimeout(() => {
+        if (win) {
+          setupWebSocket(win)
+        }
+      }, 1500)
+      console.log('Backend restarting...')
+    }, 500)
+  })
+}
+
+ipcMain.handle('restart-backend', () => {
+  restartBackend()
+})
+
 // App Event Handlers
 app.on('window-all-closed', () => {
   isQuitting = true
@@ -65,6 +99,7 @@ app.on('window-all-closed', () => {
     ws.close()
     ws = null
   }
+  exec('killall python3.12')
   win = null
   app.quit()
 })

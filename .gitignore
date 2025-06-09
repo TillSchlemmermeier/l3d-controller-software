@@ -4,3 +4,6 @@
 node_modules/
 release/
 .git/
+dist-electron/
+dist/
+.vite/

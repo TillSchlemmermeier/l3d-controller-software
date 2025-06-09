@@ -32,6 +32,7 @@ contextBridge.exposeInMainWorld('ipcRenderer', {
       ipcRenderer.off(channel, listener);
     }
   },
+  restartBackend: () => ipcRenderer.invoke('restart-backend'),
 
   // WebSocket ready handler
   on: (channel: string, func: EventCallback) => {

@@ -53,8 +53,13 @@
           </span>
         </div>
     
-        <div class="rounded-xl aspect-square p-3 flex flex-col items-center justify-center w-24 bg-zinc-400">
-          
+        <div
+          class="rounded-xl aspect-square p-3 flex flex-col items-center justify-center w-24 bg-zinc-400"
+          @click.stop="presentState.rebootCore"
+        >
+          <span class="text-zinc-900 text-md font-bold text-center" >
+            REBOOT CORE
+          </span>
         </div>
       </div>
       <div class="flex flex-row gap-4">
@@ -67,7 +72,7 @@
             @click="handleGridClick(index + 1)"
           >
             <img 
-              :src="icon" 
+              :src="icon as string"
               :alt="`Oneshot ${index + 1}`"
               class="w-full h-full object-cover"
             />
