@@ -134,7 +134,13 @@ async function loadPreset(preset_name: string) {
   if (preset_name) {
     await presentState.load(preset_name)
     // update values for midi interface
-    await presentState.select(sharedVariables.channelIndex, sharedVariables.effectIndex)
+    if (sharedVariables.dialogType === 'effect') {
+      await presentState.select(sharedVariables.channelIndex, sharedVariables.effectIndex)
+    } else if (sharedVariables.dialogType === 'generator' || sharedVariables.dialogType === 'channel') {
+      await presentState.select(sharedVariables.channelIndex, 9)
+    } else if (sharedVariables.dialogType === 'global') {
+      await presentState.select(0, 9)
+    }
     setTimeout(() => close(), 50)
   }
 }
