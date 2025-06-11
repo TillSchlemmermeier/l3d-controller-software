@@ -33,15 +33,6 @@ class class_midi_translation:
                     except Exception as e:
                         print(f"Error updating parameter: {e}")
                         
-                elif index == 10:
-                    if midi_index == 0:
-                        this_channel['IO'] = not this_channel['IO']
-                    else:
-                        if midi_index == 1:
-                            key = 'brightness'
-                        elif midi_index == 2:
-                            key = 'fade'
-                        this_channel[key] = midi_value
                     self.state[channel] = this_channel
 
         # API calls outside the lock
@@ -102,7 +93,36 @@ class class_midi_translation:
 
                 requests.get(f"{self.api_endpoint}/update_key/{key}") 
 
-            
+    def get_context_midi_values(self):
+        with self.state.lock:
+            channel = self.state['context'][0]
+            index = self.state['context'][1]
+            if channel <= 9:
+                this_channel = self.state[channel]
+                if index < 10:
+                    element = this_channel[index]
+                    params = element['params']
+                    midi_values = params[3::4]
+                    return midi_values
+            elif channel == 10:
+                if index == 0:
+                    current_values = list(self.state['s2l_values'])
+                    current_thresholds = list(self.state['s2l_thresholds'])
+                    s2l_values = current_values + current_thresholds
+                    return s2l_values
+                elif index == 1:
+                    return [
+                        1.0 if self.state['autopilot'] else 0.0,
+                        self.state['autopilot_time'] / 180.0,
+                        0.1 if self.state['random'] == 'global' else
+                        0.3 if self.state['random'] == 'all_channels' else
+                        0.5 if self.state['random'] == 'single_channel' else
+                        0.7 if self.state['random'] == 'all_elements' else
+                        0.9 if self.state['random'] == 'single_element' else 0.0,
+                        self.state['s2l_normalize'],
+                        self.state['s2l_gain']
+                    ]
+
     def update_fixed(self, midi_index, key, midi_value):
         midi_index = int(midi_index)
         key = str(key)

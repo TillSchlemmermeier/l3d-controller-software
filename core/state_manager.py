@@ -193,3 +193,8 @@ class StateManager:
             current_index = modes.index(current_mode)
             next_index = (current_index + 1) % len(modes)
             self.state['random'] = modes[next_index]
+
+    def update_context(self, channel, index):
+        with self.state.lock:
+            self.state['context'] = [channel, index]
+            self.state['midi_update'] = 1

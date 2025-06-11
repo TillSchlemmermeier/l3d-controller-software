@@ -54,6 +54,7 @@
         </div>
     
         <div
+          v-if="sharedVariables.admin"
           class="rounded-xl aspect-square p-3 flex flex-col items-center justify-center w-24 bg-zinc-400"
           @click.stop="presentState.rebootCore"
         >
@@ -87,6 +88,7 @@
 <script setup lang="ts">
 import { ref, computed, watch } from 'vue'
 import { usePresentStateStore } from '../stores/presentState'
+import { useSharedVariablesStore } from '../stores/sharedVariables'
 
 const iconOrder = [
   'sides',
@@ -108,6 +110,7 @@ const oneshotIcons = import.meta.glob('../assets/oneshots/*.{png,jpg,svg}', {
 const icons = iconOrder.map(name => oneshotIcons[`../assets/oneshots/${name}.svg`])
 
 const presentState = usePresentStateStore()
+const sharedVariables = useSharedVariablesStore()
 const activeOneshot = ref(0)
 
 const isSelected = computed(() => {

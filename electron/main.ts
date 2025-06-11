@@ -79,6 +79,7 @@ function restartBackend() {
       // reestablish WebSocket connection
       setTimeout(() => {
         if (win) {
+          win.reload()
           setupWebSocket(win)
         }
       }, 1500)

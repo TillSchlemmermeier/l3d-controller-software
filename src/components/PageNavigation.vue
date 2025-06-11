@@ -17,7 +17,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { RouteNames } from '../router/RouteNames'
 import { useSharedVariablesStore } from '../stores/sharedVariables'
@@ -36,18 +36,21 @@ function handleClick(item: { label: string; action: () => void }) {
   selectedItem.value = item.label
   item.action()
 }
-const menuItems = [
+const menuItems = computed(() => [
   { icon: home, label: 'Home', action: () => goTo(RouteNames.MAIN_PAGE) },
   { icon: midi_edit, label: 'Select', action: () => sharedVariables.clickBehavior = 'select' },
   { icon: edit, label: 'Edit', action: () => sharedVariables.clickBehavior = 'edit' },
   { icon: io, label: 'IO', action: () => sharedVariables.clickBehavior = 'IO' },
-  { icon: admin, label: 'Admin', action: () => goTo(RouteNames.ADMIN_VIEW) },
+  ...(sharedVariables.admin
+    ? [{ icon: admin, label: 'Admin', action: () => goTo(RouteNames.ADMIN_VIEW) }]
+    : [{ icon: blank, label: 'Dummy', action: () => console.log('DUMMY CLICKED') }]
+  ),
   { icon: blank, label: '2nd', action: () => goTo(RouteNames.SECOND_PAGE) },
   { icon: blank, label: 'Dummy', action: () => console.log('DUMMY CLICKED') },
   { icon: blank, label: 'Dummy', action: () => console.log('DUMMY CLICKED') },
   { icon: blank, label: 'Dummy', action: () => console.log('DUMMY CLICKED') },
   { icon: blank, label: 'Dummy', action: () => console.log('DUMMY CLICKED') },
-]
+])
 
 function goTo(routeName: string) {
   router.push({ name: routeName })

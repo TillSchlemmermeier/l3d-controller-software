@@ -324,8 +324,7 @@ class WebSocketAPIServer:
         # select a new context for the midi-controller
         @self.app.get('/api/select/{channelIndex}/{elementIndex}')
         async def select(channelIndex: int, elementIndex: int):
-            self.state['context'] = [channelIndex, elementIndex]
-            self.state['midi_update'] = 1
+            self.state_manager.update_context(channelIndex, elementIndex)
             await update_state()
             return {"message": "Selected"}
 

@@ -5,7 +5,10 @@
         <div class="col-span-8">
           <ChannelPreview ref="channelPreviewRef" />
         </div>
-        <div class="col-span-1 bg-black"></div>
+        <div
+          class="col-span-1 bg-black"
+          @dblclick="sharedVariables.admin = !sharedVariables.admin"
+        ></div>
       </div>
       <WorkBench />
     </div>

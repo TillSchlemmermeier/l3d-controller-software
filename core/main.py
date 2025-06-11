@@ -7,6 +7,7 @@ import numpy as np
 import requests
 from midi_emulator import MidiControllerEmulator
 from midi_akai import class_akai
+from midi_fighter import class_fighter
 from rendering_engine import rendering_engine
 from s2l_engine import sound_process
 from server import WebSocketAPIServer
@@ -45,11 +46,17 @@ def server():
     server = WebSocketAPIServer()
     server.run()
 
-def midi_devices():
+def midi_devices(state):
     print('...starting midi thread')
-    akai = class_akai()
+    # akai = class_akai()
+    fighter = class_fighter()
     while True:
         # Small sleep to prevent CPU overload
+        if state['midi_update'] == True:
+            fighter.update()
+            with state.lock:
+                state['midi_update'] = False
+
         sleep(0.1)
 
     # use the following to activate on-screen midi emulator
@@ -100,7 +107,7 @@ if __name__ == '__main__':
         "random": "all_elements",
         "s2l_values": [0.12, 0.2, 0.45, 0.7],
         "s2l_thresholds": [0, 0, 0, 0],
-        "s2l_normalize": 10,
+        "s2l_normalize": 0.1,
         "s2l_gain": 0.5,
         "s2l_update": True,
         "context": [0, 9],
@@ -153,7 +160,7 @@ if __name__ == '__main__':
     processes = [
         mp.Process(target=server, name="WebSocket/API Server", args=[]),
         mp.Process(target=sound_process, name="Sound Process", args=[]),
-        mp.Process(target=midi_devices, name="MIDI Devices", args=[]),
+        mp.Process(target=midi_devices, name="MIDI Devices", args=[state]),
         mp.Process(target=rendering, name="Renderer", args=[state]),
         mp.Process(target=autopilot, name="Autopilot", args=[])
     ]
