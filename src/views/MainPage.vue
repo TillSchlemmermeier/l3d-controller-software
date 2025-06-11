@@ -1,16 +1,16 @@
 <template>
   <div class="flex flex-cols h-screen">
     <div class="w-[1530px]">
-      <div class="grid grid-cols-9">
+      <div class="grid grid-cols-9 bg-black pl-6">
         <div class="col-span-8">
           <ChannelPreview ref="channelPreviewRef" />
         </div>
         <div
-          class="col-span-1 bg-black"
+          class="col-span-1"
           @dblclick="sharedVariables.admin = !sharedVariables.admin"
         ></div>
       </div>
-      <WorkBench />
+      <WorkBench class="pl-6" />
     </div>
     <div class="w-[500px] h-full flex flex-col">
       <CubePreview />

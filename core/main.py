@@ -50,6 +50,8 @@ def midi_devices(state):
     print('...starting midi thread')
     # akai = class_akai()
     fighter = class_fighter()
+    fighter.update()
+
     while True:
         # Small sleep to prevent CPU overload
         if state['midi_update'] == True:

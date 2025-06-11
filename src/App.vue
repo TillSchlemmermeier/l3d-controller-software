@@ -1,7 +1,7 @@
 <template>
   <div class="h-screen w-screen overflow-hidden flex bg-zinc-700">
     <!-- Loading Screen -->
-    <div v-if="isLoading" 
+    <div v-if="isLoading"
          class="fixed inset-0 flex items-center justify-center bg-zinc-800 z-50">
       <div class="text-center">
         <div class="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-green-500 mb-4"></div>
@@ -11,7 +11,7 @@
 
     <!-- Main Content -->
     <template v-else>
-      <nav class="bg-zinc-500">
+      <nav>
         <PageNavigation />
       </nav>
       <main class="flex-1 w-full">

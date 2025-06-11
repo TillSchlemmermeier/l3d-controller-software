@@ -1,17 +1,34 @@
 <template>
-  <div class="h-full flex flex-col py-4 w-14 justify-between">
+  <div class="h-full flex flex-col py-4 w-16 justify-between bg-zinc-800">
     <button 
       v-for="(item, index) in menuItems" 
       :key="index"
       @click="handleClick(item)"
-      class="w-full aspect-square flex items-center justify-center text-sm font-medium"
+      class="w-full aspect-square flex items-center justify-center text-sm font-medium relative
+             transition-all duration-200 ease-in-out rounded mx-1 my-0.5 active:scale-95"
       :class="[
         selectedItem === item.label 
-          ? 'bg-emerald-600 text-white' 
-          : 'bg-zinc-500 '
+          ? 'bg-zinc-500 shadow-lg scale-105'
+          : 'bg-zinc-600'
       ]"
     >
-      <img :src="item.icon" class="w-12 h-12"/>
+      <div
+        class="absolute left-0 w-1 h-full transition-all duration-200 rounded-l"
+        :class="[
+          selectedItem === item.label
+            ? 'bg-amber-500'
+            : 'bg-transparent'
+        ]"
+      ></div>
+      <img
+        :src="item.icon"
+        class="w-10 h-10 transition-transform duration-200"
+        :class="[
+          selectedItem === item.label
+            ? 'opacity-100 scale-110 invert'
+            : 'opacity-100'
+        ]"
+      />
     </button>
   </div>
 </template>
@@ -47,9 +64,9 @@ const menuItems = computed(() => [
   ),
   { icon: blank, label: '2nd', action: () => goTo(RouteNames.SECOND_PAGE) },
   { icon: blank, label: 'Dummy', action: () => console.log('DUMMY CLICKED') },
-  { icon: blank, label: 'Dummy', action: () => console.log('DUMMY CLICKED') },
-  { icon: blank, label: 'Dummy', action: () => console.log('DUMMY CLICKED') },
-  { icon: blank, label: 'Dummy', action: () => console.log('DUMMY CLICKED') },
+  { icon: blank, label: 'Dummy2', action: () => console.log('DUMMY CLICKED') },
+  { icon: blank, label: 'Dummy3', action: () => console.log('DUMMY CLICKED') },
+  { icon: blank, label: 'Dummy4', action: () => console.log('DUMMY CLICKED') },
 ])
 
 function goTo(routeName: string) {
