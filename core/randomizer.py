@@ -84,64 +84,64 @@ class Randomizer:
                     self.state_manager.load_effect(channel_idx, effect_idx, preset_data)
 
     def _randomize_single_element(self) -> None:
-      """Load random preset for random element in state"""
-      # 1. Randomly select a channel
-      channel_idx = random.randint(0, self.state['numberOfChannels'] - 1)
-      channel = self.state[channel_idx]
+        """Load random preset for random element in state"""
+        # 1. Randomly select a channel
+        channel_idx = random.randint(0, self.state['numberOfChannels'] - 1)
+        channel = self.state[channel_idx]
 
-      # 2. Build list of possible elements in this channel
-      elements_in_channel = []
-      
-      # Add generator (index 9)
-      if 9 in channel:
-          elements_in_channel.append({
-              'channel': channel_idx,
-              'index': 9
-          })
-      
-      # Add effects (0 to numberOfEffects-1)
-      for effect_idx in range(channel['numberOfEffects']):
-          if effect_idx in channel:
-              elements_in_channel.append({
-                  'channel': channel_idx,
-                  'index': effect_idx
-              })
+        # 2. Build list of possible elements in this channel
+        elements_in_channel = []
 
-      if not elements_in_channel:
-          return
+        # Add generator (index 9)
+        if 9 in channel:
+            elements_in_channel.append({
+                'channel': channel_idx,
+                'index': 9
+            })
 
-      # 3. Randomly select one element from the channel
-      selected_element = random.choice(elements_in_channel)
-      
-      # 4. Get new random element from database based on type
-      if selected_element['index'] == 9:
-          # For generator
-          active_generators = self.db.get_active_elements('generator')
-          if not active_generators:
-              return
-          new_element = random.choice(active_generators)
-          element_type = 'generator'
-      else:
-          # For effect
-          active_effects = self.db.get_active_elements('effect')
-          if not active_effects:
-              return
-          new_element = random.choice(active_effects)
-          element_type = 'effect'
+        # Add effects (0 to numberOfEffects-1)
+        for effect_idx in range(channel['numberOfEffects']):
+            if effect_idx in channel:
+                elements_in_channel.append({
+                    'channel': channel_idx,
+                    'index': effect_idx
+                })
 
-      # 5. Get random preset for the new element
-      presets = self.db.get_preset_names(element_type, new_element['name'])
-      if not presets:
-          return
-      
-      preset = random.choice(presets)
-      preset_data = self.db.get_preset(element_type, new_element['name'], preset['name'], False)
-      
-      if not preset_data:
-          return
+        if not elements_in_channel:
+            return
 
-      # 6. Load the preset
-      if element_type == 'generator':
-          self.state_manager.load_generator(selected_element['channel'], preset_data)
-      else:
-          self.state_manager.load_effect(selected_element['channel'], selected_element['index'], preset_data)
+        # 3. Randomly select one element from the channel
+        selected_element = random.choice(elements_in_channel)
+
+        # 4. Get new random element from database based on type
+        if selected_element['index'] == 9:
+            # For generator
+            active_generators = self.db.get_active_elements('generator')
+            if not active_generators:
+                return
+            new_element = random.choice(active_generators)
+            element_type = 'generator'
+        else:
+            # For effect
+            active_effects = self.db.get_active_elements('effect')
+            if not active_effects:
+                return
+            new_element = random.choice(active_effects)
+            element_type = 'effect'
+
+        # 5. Get random preset for the new element
+        presets = self.db.get_preset_names(element_type, new_element['name'])
+        if not presets:
+            return
+
+        preset = random.choice(presets)
+        preset_data = self.db.get_preset(element_type, new_element['name'], preset['name'], False)
+
+        if not preset_data:
+            return
+
+        # 6. Load the preset
+        if element_type == 'generator':
+            self.state_manager.load_generator(selected_element['channel'], preset_data)
+        else:
+            self.state_manager.load_effect(selected_element['channel'], selected_element['index'], preset_data)

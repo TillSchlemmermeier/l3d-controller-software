@@ -2,10 +2,7 @@ from fastapi import FastAPI, WebSocket, File, UploadFile, Form
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 import uvicorn
-import sqlite3
-import json
 from typing import List, Optional
-from copy import deepcopy
 from UltraDict import UltraDict
 from typing import List
 import multiprocessing as mp
@@ -14,6 +11,7 @@ from starlette.websockets import WebSocketDisconnect
 from pathlib import Path
 from db_manager import DatabaseManager
 from state_manager import StateManager
+from randomizer import Randomizer
 
 
 class WebSocketAPIServer:
@@ -341,6 +339,13 @@ class WebSocketAPIServer:
             self.state_manager.autopilot_mode()
             await update_state()
             return {"message": "Autopilot mode changed"}
+
+        # trigger randomizer
+        @self.app.get('/api/trigger-randomizer')
+        async def trigger_randomizer():
+            Randomizer().trigger()
+            await update_state()
+            return {"message": "Randomizer triggered"}
 
         # create a websocket connection
         @self.app.websocket("/ws")

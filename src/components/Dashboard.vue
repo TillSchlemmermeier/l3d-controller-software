@@ -40,8 +40,16 @@
             {{ presentState.random.replace(/_/g, ' ') }} 
           </span>
         </div>
-      </div>
 
+        <div
+          class="rounded-xl aspect-square p-3 flex flex-col items-center justify-center w-24 bg-zinc-400"
+          @click.stop="presentState.triggerRandomizer"
+        >
+          <span class="text-zinc-900 text-md font-bold text-center" >
+            TRIGGER RANDOM
+          </span>
+        </div>
+      </div>
 
     </div>
 

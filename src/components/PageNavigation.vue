@@ -4,8 +4,7 @@
       v-for="(item, index) in menuItems" 
       :key="index"
       @click="handleClick(item)"
-      class="w-full aspect-square flex items-center justify-center text-sm font-medium relative
-             transition-all duration-200 ease-in-out rounded mx-1 my-0.5 active:scale-95"
+      class="w-full aspect-square flex items-center justify-center text-sm font-medium relative transition-all duration-200 ease-in-out rounded mx-1 my-0.5 active:scale-95"
       :class="[
         selectedItem === item.label 
           ? 'bg-zinc-500 shadow-lg scale-105'
