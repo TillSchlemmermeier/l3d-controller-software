@@ -24,6 +24,8 @@ class Randomizer:
             self._randomize_all_elements()
         elif mode == 'single_element':
             self._randomize_single_element()
+        elif mode == 'selected_element':
+            self._randomize_single_element(True)
 
     def _randomize_global(self) -> None:
         """Load random global preset"""
@@ -83,32 +85,46 @@ class Randomizer:
                     preset_data = self.db.get_preset('effect', effect['name'], preset['name'], False)
                     self.state_manager.load_effect(channel_idx, effect_idx, preset_data)
 
-    def _randomize_single_element(self) -> None:
+    def _randomize_single_element(self, selected_only: bool = False) -> None:
         """Load random preset for random element in state"""
-        # 1. Randomly select a channel
-        channel_idx = random.randint(0, self.state['numberOfChannels'] - 1)
-        channel = self.state[channel_idx]
 
-        # 2. Build list of possible elements in this channel
         elements_in_channel = []
 
-        # Add generator (index 9)
-        if 9 in channel:
-            elements_in_channel.append({
-                'channel': channel_idx,
-                'index': 9
-            })
+        if not selected_only:
+            # 1. Randomly select a channel
+            channel_idx = random.randint(0, self.state['numberOfChannels'] - 1)
+            channel = self.state[channel_idx]
 
-        # Add effects (0 to numberOfEffects-1)
-        for effect_idx in range(channel['numberOfEffects']):
-            if effect_idx in channel:
+            # Add generator (index 9)
+            if 9 in channel:
                 elements_in_channel.append({
                     'channel': channel_idx,
-                    'index': effect_idx
+                    'index': 9
                 })
 
-        if not elements_in_channel:
-            return
+            # Add effects (0 to numberOfEffects-1)
+            for effect_idx in range(channel['numberOfEffects']):
+                if effect_idx in channel:
+                    elements_in_channel.append({
+                        'channel': channel_idx,
+                        'index': effect_idx
+                    })
+
+            if not elements_in_channel:
+                return
+
+        else:
+            # If selected_only is True, use the currently selected element
+            channel = self.state['context'][0]
+            element = self.state['context'][1]
+
+            if channel >= self.state['numberOfChannels']:
+                return
+
+            elements_in_channel.append({
+                'channel': channel,
+                'index': element
+            })
 
         # 3. Randomly select one element from the channel
         selected_element = random.choice(elements_in_channel)

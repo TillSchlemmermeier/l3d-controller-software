@@ -187,7 +187,7 @@ class StateManager:
 
     def autopilot_mode(self):
         """Change autopilot mode"""
-        modes = ['global', 'all_channels', 'single_channel', 'all_elements', 'single_element']
+        modes = ['global', 'all_channels', 'single_channel', 'all_elements', 'single_element', 'selected_element']
         with self.state.lock:
             current_mode = self.state.get('random', modes[0])
             current_index = modes.index(current_mode)

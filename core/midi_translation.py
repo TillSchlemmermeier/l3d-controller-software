@@ -70,16 +70,18 @@ class class_midi_translation:
                     self.state[key] = int(midi_value * 180)
                 elif midi_index == 2:
                     key = 'random'
-                    if midi_value < 0.2:
+                    if midi_value < 0.15:
                         self.state[key] = 'global'
-                    elif midi_value < 0.4:
+                    elif midi_value < 0.3:
                         self.state[key] = 'all_channels'
-                    elif midi_value < 0.6:
+                    elif midi_value < 0.45:
                         self.state[key] = 'single_channel'
-                    elif midi_value < 0.8:
+                    elif midi_value < 0.6:
                         self.state[key] = 'all_elements'
-                    else:
+                    elif midi_value < 0.8:
                         self.state[key] = 'single_element'
+                    else:
+                        self.state[key] = 'selected_element'
                 elif midi_index == 3:
                     key = 's2l_normalize'
                     self.state[key] = midi_value
@@ -115,10 +117,11 @@ class class_midi_translation:
                         1.0 if self.state['autopilot'] else 0.0,
                         self.state['autopilot_time'] / 180.0,
                         0.1 if self.state['random'] == 'global' else
-                        0.3 if self.state['random'] == 'all_channels' else
-                        0.5 if self.state['random'] == 'single_channel' else
-                        0.7 if self.state['random'] == 'all_elements' else
-                        0.9 if self.state['random'] == 'single_element' else 0.0,
+                        0.2 if self.state['random'] == 'all_channels' else
+                        0.4 if self.state['random'] == 'single_channel' else
+                        0.5 if self.state['random'] == 'all_elements' else
+                        0.7 if self.state['random'] == 'single_element' else
+                        0.9 if self.state['random'] == 'selected_element' else 0.0,
                         self.state['s2l_normalize'],
                         self.state['s2l_gain']
                     ]
