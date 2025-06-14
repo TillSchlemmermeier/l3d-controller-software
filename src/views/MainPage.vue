@@ -17,6 +17,14 @@
       <SoundSpectrum />
       <Dashboard class="flex-1" />
     </div>
+    <div>
+      <div v-if="sharedVariables.admin">
+        <ConsoleOutput
+          class="m-2 w-[450px]"
+        />
+      </div>
+      <div v-else class="bg-black w-[466px] h-[1440px]"></div>
+    </div>
     <PresetDialog
       v-if="sharedVariables.dialogOpen"
       :channel-preview-ref="channelPreviewRef!"
@@ -32,6 +40,7 @@ import Dashboard from '../components/Dashboard.vue'
 import CubePreview from '../components/CubePreview.vue'
 import ChannelPreview from '../components/ChannelPreview.vue'
 import SoundSpectrum from '../components/SoundSpectrum.vue'
+import ConsoleOutput from '../components/ConsoleOutput.vue'
 import PresetDialog from '../components/PresetDialog/PresetDialog.vue'
 import { useSharedVariablesStore } from '../stores/sharedVariables'
 import { usePresentStateStore } from '../stores/presentState'

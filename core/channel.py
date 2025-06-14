@@ -25,7 +25,6 @@ class class_channel:
         
     def update_channel(self, channelstate):
         # check if generator values need to be updated
-        print('update channel', channelstate, self.id)
         if channelstate[9]['update']:
             # check if generator changed
             if channelstate[9]['name'] != self.generator.__class__.__name__:

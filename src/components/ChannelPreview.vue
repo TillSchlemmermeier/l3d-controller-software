@@ -142,20 +142,12 @@ function handleCubeData(message: any) {
   }
 }
 
-onMounted(() => {
-  if (!window.ipcRenderer) {
-    console.error('Electron API not available')
-    return
-  }
+function initializeRenderers() {
   renderers.forEach(renderer => {
     renderer.dispose()
     renderer.forceContextLoss()
   })
-  
-  // WebSocket data handling
-  window.ipcRenderer.onCubeData(handleCubeData)
 
-  // Create 8 identical scatter plots
   for (let plot = 0; plot < 9; plot++) {
     const { scene, camera, renderer } = setupScene()
     scenes.push(scene)
@@ -166,7 +158,6 @@ onMounted(() => {
       scatterplots.value[plot]?.appendChild(renderer.domElement)
     }
 
-    // Geometry setup
     const geometry = new THREE.BufferGeometry()
     geometry.setAttribute(
       'position',
@@ -184,14 +175,13 @@ onMounted(() => {
       alphaTest: 0.1,
       sizeAttenuation: true,
       blending: THREE.AdditiveBlending,
-      depthWrite: false     // Prevent depth buffer updates, impotrtant!
+      depthWrite: false
     })
     const point = new THREE.Points(geometry, material)
     points.push(point)
     scene.add(point)
   }
  
-  // Animation
   const animate = () => {
     requestAnimationFrame(animate)
     renderers.forEach((renderer, index) => {
@@ -201,6 +191,16 @@ onMounted(() => {
     })
   }
   animate()
+}
+
+onMounted(() => {
+  if (!window.ipcRenderer) {
+    console.error('Electron API not available')
+    return
+  }
+  // WebSocket data handling
+  window.ipcRenderer.onCubeData(handleCubeData)
+  initializeRenderers()
 })
 
 watch(

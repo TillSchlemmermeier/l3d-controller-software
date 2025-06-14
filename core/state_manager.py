@@ -4,17 +4,31 @@ from copy import deepcopy
 class StateManager:
     def __init__(self):
         self.state = UltraDict(name='state')
+        self._max_retries = 3
+
+    def _safe_state_operation(self, operation):
+        """Safely execute a state operation with retries"""
+        for attempt in range(self._max_retries):
+            try:
+                with self.state.lock:
+                    return operation()
+            except AssertionError as e:
+                if attempt == self._max_retries - 1:
+                    print(f"Failed after {self._max_retries} attempts: {e}")
+                    raise
+                print(f"Retry attempt {attempt + 1} after error: {e}")
 
     def update_channel(self, channel_key):
-        """Set update flags for channel and its components"""
-        with self.state.lock:
-            channel = self.state[channel_key]
+        def _update():
+            channel = dict(self.state[channel_key])  # Local copy
             channel['update'] = 1
             if channel_key != 9:
                 channel[9]['update'] = 1
             for i in range(channel['numberOfEffects']):
                 channel[i]['update'] = 1
             self.state[channel_key] = channel
+
+        self._safe_state_operation(_update)
 
     def load_generator(self, channel: int, preset_data: dict, this_channel: dict = None):
         """Load a generator preset into a channel"""

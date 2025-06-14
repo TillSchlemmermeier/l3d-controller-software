@@ -5,10 +5,11 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "l3d": "vite",
     "start": "electron --trace-warnings .",
     "build": "vue-tsc && vite build && electron-builder",
     "preview": "vite preview",
-    "l3d": "concurrently --prefix \"[{name}]\" --names \"CORE,GUI\" --handle-input \"bash -c 'cd ./core && python3.12 -u main.py'\" \"npm run dev\""
+    "conc": "concurrently --prefix \"[{name}]\" --names \"GUI\" \"npm run dev\""
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.0.9",

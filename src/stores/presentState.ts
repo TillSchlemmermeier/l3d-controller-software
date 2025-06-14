@@ -161,6 +161,10 @@ export const usePresentStateStore = defineStore('presentState', {
     },
 
     initializeIPC() {
+      window.ipcRenderer.onWebSocketConnected(() => {
+        console.log('WebSocket connected, requesting state update')
+        this.requestStateUpdate()
+      })
       window.ipcRenderer.onStateData((message: any) => {
         this.$state = this.parseState(message)
       })

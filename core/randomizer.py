@@ -114,7 +114,7 @@ class Randomizer:
                 return
 
         else:
-            # If selected_only is True, use the currently selected element
+            # If selected_only is True, use only the currently selected element
             channel = self.state['context'][0]
             element = self.state['context'][1]
 
