@@ -47,9 +47,9 @@ function setupWebSocket(win: BrowserWindow) {
   })
 }
 
-function setupPythonProcess() {
+function setupPythonProcess(restore = false) {
   const pythonPath = path.join(APP_ROOT, 'core')
-  const process = spawn('python3.12', ['-u', 'main.py'], {
+  const process = spawn('python3.12', ['-u', 'main.py', ...(restore ? ['--restore'] : [])], {
     cwd: pythonPath,
     stdio: ['ignore', 'pipe', 'pipe']
   })
@@ -115,7 +115,7 @@ function restartBackend() {
   exec('killall python3.12', () => {
     // Wait for processes to terminate
     setTimeout(() => {
-      pythonProcess = setupPythonProcess()
+      setupPythonProcess(true)
       // reestablish WebSocket connection
       setTimeout(() => {
         if (win) {

@@ -2,7 +2,6 @@ from copy import deepcopy
 import numpy as np
 import requests
 from UltraDict import UltraDict
-import time
 
 class class_midi_translation:
 

@@ -1,4 +1,3 @@
-from UltraDict import UltraDict
 from db_manager import DatabaseManager
 
 db = DatabaseManager()
@@ -19,7 +18,6 @@ class class_channel:
         self.id = id
         self.generator = None
         self.effects = []
-        self.state = UltraDict(name='state')
 
         print('Channel '+str(self.id)+' initialised')
         

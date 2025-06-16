@@ -17,13 +17,13 @@
       <SoundSpectrum />
       <Dashboard class="flex-1" />
     </div>
-    <div>
-      <div v-if="sharedVariables.admin">
+    <div class="h-full w-[485px] bg-black">
+      <div v-show="sharedVariables.admin">
         <ConsoleOutput
           class="m-2 w-[450px]"
         />
       </div>
-      <div v-else class="bg-black w-[466px] h-[1440px]"></div>
+      <!-- <div v-else class="bg-black w-[466px] h-[1440px]"></div> -->
     </div>
     <PresetDialog
       v-if="sharedVariables.dialogOpen"
