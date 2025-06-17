@@ -1,4 +1,4 @@
-import { app, BrowserWindow } from "electron";
+import { ipcMain, app, BrowserWindow } from "electron";
 import { fileURLToPath } from "node:url";
 import path from "node:path";
 import require$$0$4 from "events";
@@ -14,6 +14,7 @@ import require$$0 from "fs";
 import require$$1 from "path";
 import require$$2 from "os";
 import require$$0$2 from "buffer";
+import { exec } from "child_process";
 function getDefaultExportFromCjs(x) {
   return x && x.__esModule && Object.prototype.hasOwnProperty.call(x, "default") ? x["default"] : x;
 }
@@ -733,6 +734,10 @@ function inflateOnData(chunk) {
 }
 function inflateOnError(err) {
   this[kPerMessageDeflate]._inflate = null;
+  if (this[kError$1]) {
+    this[kCallback](this[kError$1]);
+    return;
+  }
   err[kStatusCode$2] = 1007;
   this[kCallback](err);
 }
@@ -2928,7 +2933,7 @@ function initAsClient(websocket2, address, protocols, options) {
   const isIpcUrl = parsedUrl.protocol === "ws+unix:";
   let invalidUrlMessage;
   if (parsedUrl.protocol !== "ws:" && !isSecure && !isIpcUrl) {
-    invalidUrlMessage = `The URL's protocol must be one of "ws:", "wss:", "http:", "https", or "ws+unix:"`;
+    invalidUrlMessage = `The URL's protocol must be one of "ws:", "wss:", "http:", "https:", or "ws+unix:"`;
   } else if (isIpcUrl && !parsedUrl.pathname) {
     invalidUrlMessage = "The URL's pathname is empty";
   } else if (parsedUrl.hash) {
@@ -3318,28 +3323,62 @@ function setupWebSocket(win2) {
   });
   ws.on("close", () => {
     console.log("WebSocket connection closed");
-    !isQuitting && setTimeout(() => setupWebSocket(win2), 3e3);
+    if (!isQuitting) {
+      setTimeout(() => {
+        console.log("Attempting WebSocket reconnection...");
+        setupWebSocket(win2);
+      }, 3e3);
+    }
   });
 }
 function createWindow() {
   return new BrowserWindow({
-    width: 2086,
-    height: 1300,
     backgroundColor: "#3f3f46",
-    // frame: false,  // Remove window frame
-    // titleBarStyle: 'hidden', // Hide title bar
-    // resizable: false, // Prevent resizing
-    // minimizable: false, // Optionally prevent minimizing
-    // maximizable: false, // Prevent maximizing
-    // fullscreenable: false, // Prevent fullscreen
-    x: 200,
-    y: 200,
+    // width: 2086,
+    // height: 1300,
+    // x: 200,
+    // y: 200,
+    width: 2560,
+    height: 1440,
+    frame: false,
+    // Remove window frame
+    titleBarStyle: "hidden",
+    // Hide title bar
+    resizable: false,
+    // Prevent resizing
+    minimizable: false,
+    // Optionally prevent minimizing
+    fullscreen: true,
+    // fullscreen window
     icon: path.join(PUBLIC_PATH, "icons/brightness.svg"),
     webPreferences: {
       preload: path.join(APP_ROOT, "dist-electron", "preload.mjs")
     }
   });
 }
+function restartBackend() {
+  if (ws) {
+    ws.removeAllListeners();
+    ws.close();
+    ws = null;
+  }
+  exec("killall python3.12", () => {
+    setTimeout(() => {
+      const corePath = path.join(APP_ROOT, "core");
+      exec(`cd "${corePath}" && python3.12 -u main.py`);
+      setTimeout(() => {
+        if (win) {
+          win.reload();
+          setupWebSocket(win);
+        }
+      }, 1500);
+      console.log("Backend restarting...");
+    }, 500);
+  });
+}
+ipcMain.handle("restart-backend", () => {
+  restartBackend();
+});
 app.on("window-all-closed", () => {
   isQuitting = true;
   if (ws) {
@@ -3347,6 +3386,7 @@ app.on("window-all-closed", () => {
     ws.close();
     ws = null;
   }
+  exec("killall python3.12");
   win = null;
   app.quit();
 });

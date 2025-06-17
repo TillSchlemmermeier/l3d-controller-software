@@ -10,7 +10,7 @@ world2vox_fortran:
 	@f2py3 --quiet -c -m world2vox_fortran world2vox_revis.f90
 
 g_genhsphere:
-	@f2py3 -c -m generators/g_genhsphere generators/g_growing_sphere_f.f90
+	@f2py3 -c -m generators/g_genhsphere generators/g_growing_sphere.f90
 
 g_gentorus:
 	@f2py3 -c -m generators/g_gentorus generators/g_torus.f90

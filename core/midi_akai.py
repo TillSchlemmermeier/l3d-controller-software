@@ -15,10 +15,7 @@ class class_akai:
 
     def event(self, event, data=None):
         """Call gets midi message and calls the mapping routine"""
-        print('Received MIDI event:', event)
         message, deltatime = event
-
-        # self.midi_translation.crossfade(value)
 
         # cc messages
         if message[0] == 176:

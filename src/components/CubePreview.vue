@@ -14,10 +14,11 @@ const geometry = ref<THREE.BufferGeometry | null>(null)
 
 function setupScene() {
   const scene = new THREE.Scene()
-  const camera = new THREE.PerspectiveCamera(75, 500 / 500, 0.1, 1000)
-  camera.position.z = 15
+  const camera = new THREE.PerspectiveCamera(45, 1, 0.1, 1000)
+  camera.position.set(7, 14.5, 11.5) 
+  camera.up.set(-1, 0, 0) 
+  camera.lookAt(-1, 0, 0)
   
-
   const renderer = new THREE.WebGLRenderer()
   renderer.setSize(500, 500)
 
@@ -94,10 +95,10 @@ onMounted(() => {
   )
 
   const material = new THREE.PointsMaterial({
-    size: 0.5,
+    size: 0.8,
     vertexColors: true,
     transparent: true,
-    opacity: 0.8,
+    opacity: 0.9,
     map: circleTexture,
     alphaMap: circleTexture,
     alphaTest: 0.1,
@@ -111,8 +112,8 @@ onMounted(() => {
   // Animation loop
   const animate = () => {
     requestAnimationFrame(animate)
-    points.rotation.x += 0.01
-    points.rotation.y += 0.01
+    // points.rotation.x += 0.001
+    // points.rotation.y += 0.01
     renderer.render(scene, camera)
   }
   animate()

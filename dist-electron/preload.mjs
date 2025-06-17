@@ -24,6 +24,7 @@ electron.contextBridge.exposeInMainWorld("ipcRenderer", {
       electron.ipcRenderer.off(channel, listener);
     }
   },
+  restartBackend: () => electron.ipcRenderer.invoke("restart-backend"),
   // WebSocket ready handler
   on: (channel, func) => {
     if (channel === CHANNELS.WS_READY) {

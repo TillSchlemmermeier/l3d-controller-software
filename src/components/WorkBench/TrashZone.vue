@@ -4,7 +4,7 @@
       <!-- Trash icon background -->
       <div 
         :style="{ 
-          backgroundImage: `url(${trashIconUrl})`,
+          backgroundImage: backgroundImage,
           backgroundSize: '80%',
           backgroundPosition: 'center',
           backgroundRepeat: 'no-repeat',
@@ -36,16 +36,17 @@
 </template>
 
 <script setup lang="ts">
-import { ref, nextTick } from 'vue'
+import { computed, ref, nextTick } from 'vue'
 import draggable from 'vuedraggable'
 import { usePresentStateStore } from '../../stores/presentState'
 import { useSharedVariablesStore } from '../../stores/sharedVariables'
-import trashIcon from '../../assets/icons/trash.svg'
+import trashIcon from '../../assets/icons/trash.png'
 
 const presentState = usePresentStateStore()
 const sharedVariables = useSharedVariablesStore()
 const trashZone = ref(['trash'])
 const trashIconUrl = ref(trashIcon)
+const backgroundImage = computed(() => `url(${trashIconUrl.value})`)
 
 
 function removeItem(event: { item: HTMLElement; oldIndex: number }) {

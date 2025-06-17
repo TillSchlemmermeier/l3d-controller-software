@@ -2,7 +2,6 @@
 from itertools import cycle
 from multiprocessing import shared_memory
 import numpy as np
-import pyaudio
 from scipy.fftpack import fft, fftfreq
 import scipy
 import struct

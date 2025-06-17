@@ -15,6 +15,7 @@ class class_fighter:
 
     def event(self, event, data=None):
         message, deltatime = event
+        print(message[2]/127)
 
         if message[1] in self.fighter_mapping:
             midi_index = self.fighter_mapping.index(message[1])
@@ -22,8 +23,8 @@ class class_fighter:
 
     def update(self):
         values = self.midi_translation.get_context_midi_values()
-        midi_values = [int(v * 127) for v in values]
         print(values)
+        midi_values = [int(v * 127) for v in values]
 
         for i in range(16):
             # Set value and color based on whether encoder is active
