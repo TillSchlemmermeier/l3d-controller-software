@@ -89,12 +89,13 @@ function createWindow() {
     width: 2560,
     height: 1440,
     backgroundColor: '#3f3f46',
-    // frame: false,  // Remove window frame
-    // titleBarStyle: 'hidden', // Hide title bar
-    // resizable: false, // Prevent resizing
-    // minimizable: false, // Optionally prevent minimizing
-    // maximizable: false, // Prevent maximizing
-    // fullscreenable: false, // Prevent fullscreen
+    frame: false,  // Remove window frame
+    titleBarStyle: 'hidden', // Hide title bar
+    resizable: false, // Prevent resizing
+    minimizable: false, // Optionally prevent minimizing
+    maximizable: false, // Prevent maximizing
+    fullscreenable: true, // Prevent fullscreen
+    fullscreen: true,
     // x: 200,
     // y: 200,
     icon: path.join(PUBLIC_PATH, 'icons/brightness.svg'),

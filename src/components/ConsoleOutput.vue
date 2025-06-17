@@ -1,5 +1,5 @@
 <template>
-  <div class="h-[1395px] console-widget bg-zinc-900 text-zinc-400 font-mono text-sm p-4 rounded-lg flex flex-col">
+  <div class="h-[1395px] console-widget bg-zinc-900 text-zinc-400 font-mono text-xs p-4 rounded-lg flex flex-col">
     <div class="flex justify-between mb-2">
       <h3 class="text-zinc-400">Console Output</h3>
       <button @click="clearOutput" class="text-zinc-500 hover:text-zinc-300">Clear</button>

@@ -108,8 +108,8 @@ watch(
 .simple-keyboard.hg-theme-default .hg-button-enter {
   height: 157px !important;
   position: absolute;
-  left: 1600px; 
-  top: 328px; 
+  left: 2024px;
+  top: 331px;
   width: 190px !important;
 }
 
