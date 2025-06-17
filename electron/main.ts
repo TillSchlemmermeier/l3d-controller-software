@@ -2,7 +2,7 @@ import { app, BrowserWindow, ipcMain } from 'electron'
 import { fileURLToPath } from 'node:url'
 import path from 'node:path'
 import WebSocket from 'ws'
-import { exec } from 'child_process'
+import { exec, spawn } from 'child_process'
 
 const APP_ROOT = path.join(path.dirname(fileURLToPath(import.meta.url)), '..')
 const VITE_DEV_SERVER_URL = process.env['VITE_DEV_SERVER_URL']
@@ -16,8 +16,11 @@ let isQuitting = false
 function setupWebSocket(win: BrowserWindow) {
   ws = new WebSocket('ws://localhost:8000/ws')
 
-  ws.on('open', () => console.log('WebSocket connection opened'))
-  
+  ws.on('open', () => {
+    console.log('WebSocket connection opened')
+    win.webContents.send('ws-connected')
+  })
+
   ws.on('error', (error) => {
     console.error('WebSocket error:', error)
     win.webContents.send('ws-error', error.message)
@@ -34,6 +37,7 @@ function setupWebSocket(win: BrowserWindow) {
 
   ws.on('close', () => {
     console.log('WebSocket connection closed')
+    win.webContents.send('ws-disconnected')
     if (!isQuitting) {
       setTimeout(() => {
         console.log('Attempting WebSocket reconnection...')
@@ -43,10 +47,47 @@ function setupWebSocket(win: BrowserWindow) {
   })
 }
 
+function setupPythonProcess(restore = false) {
+  const pythonPath = path.join(APP_ROOT, 'core')
+  const process = spawn('python3.12', ['-u', 'main.py', ...(restore ? ['--restore'] : [])], {
+    cwd: pythonPath,
+    stdio: ['ignore', 'pipe', 'pipe']
+  })
+
+  // Set up console output handlers
+  process.stdout.on('data', (data: Buffer) => {
+    const lines = data.toString().split('\n')
+    lines.forEach(line => {
+      if (line.trim()) {
+        console.log(`[CORE] ${line}`)
+      }
+    })
+    win?.webContents.send('python-output', {
+      type: 'stdout',
+      data: data.toString()
+    })
+  })
+
+  process.stderr.on('data', (data: Buffer) => {
+    const lines = data.toString().split('\n')
+    lines.forEach(line => {
+      if (line.trim()) {
+        console.error(`[CORE] ${line}`)
+      }
+    })
+    win?.webContents.send('python-output', {
+      type: 'stderr',
+      data: data.toString()
+    })
+  })
+
+  return process
+}
+
 function createWindow() {
   return new BrowserWindow({
-    width: 2086,
-    height: 1300,
+    width: 2560,
+    height: 1440,
     backgroundColor: '#3f3f46',
     // frame: false,  // Remove window frame
     // titleBarStyle: 'hidden', // Hide title bar
@@ -54,8 +95,8 @@ function createWindow() {
     // minimizable: false, // Optionally prevent minimizing
     // maximizable: false, // Prevent maximizing
     // fullscreenable: false, // Prevent fullscreen
-    x: 200,
-    y: 200,
+    // x: 200,
+    // y: 200,
     icon: path.join(PUBLIC_PATH, 'icons/brightness.svg'),
     webPreferences: {
       preload: path.join(APP_ROOT, 'dist-electron', 'preload.mjs'),
@@ -74,13 +115,12 @@ function restartBackend() {
   exec('killall python3.12', () => {
     // Wait for processes to terminate
     setTimeout(() => {
-      const corePath = path.join(APP_ROOT, 'core')
-      exec(`cd "${corePath}" && python3.12 -u main.py`)
+      setupPythonProcess(true)
       // reestablish WebSocket connection
       setTimeout(() => {
         if (win) {
-          win.reload()
           setupWebSocket(win)
+          win.webContents.send('reinitialize-renderers')
         }
       }, 1500)
       console.log('Backend restarting...')
@@ -106,6 +146,7 @@ app.on('window-all-closed', () => {
 })
 
 app.whenReady().then(() => {
+  setupPythonProcess()
   win = createWindow()
   win.loadURL(VITE_DEV_SERVER_URL ?? path.join(RENDERER_DIST, 'index.html'))
   setupWebSocket(win)

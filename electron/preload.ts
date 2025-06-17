@@ -33,6 +33,18 @@ contextBridge.exposeInMainWorld('ipcRenderer', {
     }
   },
   restartBackend: () => ipcRenderer.invoke('restart-backend'),
+  onPythonOutput: (callback: (event: any, data: any) => void) => {
+    ipcRenderer.on('python-output', callback)
+  },
+  onWebSocketConnected: (callback: () => void) => {
+    ipcRenderer.on('ws-connected', callback)
+  },
+    onWebSocketDisconnected: (callback: () => void) => {
+    ipcRenderer.on('', () => callback())
+  },
+  onWebSocketError: (callback: (error: Error) => void) => {
+    ipcRenderer.on('ws-error', (_, error) => callback(error))
+  },
 
   // WebSocket ready handler
   on: (channel: string, func: EventCallback) => {
@@ -43,27 +55,27 @@ contextBridge.exposeInMainWorld('ipcRenderer', {
 
   // Data handlers
   onCubeData: createEventHandler(
-    CHANNELS.CUBE, 
+    CHANNELS.CUBE,
     'Registering Cube data handler'
   ),
   onSpectrumData: createEventHandler(
-    CHANNELS.SPECTRUM, 
+    CHANNELS.SPECTRUM,
     'Registering Spectrum data handler'
   ),
   onStateData: createEventHandler(
-    CHANNELS.STATE, 
+    CHANNELS.STATE,
     'Registering State data handler'
   ),
   onStateSectionData: createEventHandler(
-    CHANNELS.STATE_SECTION, 
+    CHANNELS.STATE_SECTION,
     'Registering State Section data handler'
   ),
   onStateKeyData: createEventHandler(
-    CHANNELS.STATE_KEY, 
+    CHANNELS.STATE_KEY,
     'Registering State Key data handler'
   ),
   onWebSocketData: createEventHandler(
-    CHANNELS.WS_DATA, 
+    CHANNELS.WS_DATA,
     'Registering websocket data handler'
   ),
 

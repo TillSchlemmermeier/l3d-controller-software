@@ -2,7 +2,6 @@ from copy import deepcopy
 import numpy as np
 import requests
 from UltraDict import UltraDict
-import time
 
 class class_midi_translation:
 
@@ -18,22 +17,22 @@ class class_midi_translation:
     def update_context(self, midi_index, midi_value):
         midi_index = int(midi_index)
         midi_value = round((float(midi_value) / 127.0), 2)
-        with self.state.lock:  # Single lock block for all operations
-            channel = self.state['context'][0]
-            index = self.state['context'][1]
-            
-            if channel <= 9:
-                this_channel = self.state[channel]
+        try:
+            with self.state.lock:  # Single lock block for all operations
+                channel = self.state['context'][0]
+                index = self.state['context'][1]
                 
-                if index < 10:
-                    try:
-                        this_channel[index]['params'][midi_index * 4 + 3] = midi_value
-                        this_channel[index]['update'] = 1
-                        self.state[channel] = this_channel
-                    except Exception as e:
-                        print(f"Error updating parameter: {e}")
-                        
-                    self.state[channel] = this_channel
+                if channel <= 9:
+                    this_channel = self.state[channel]
+                    if index < 10:
+                        try:
+                            this_channel[index]['params'][midi_index * 4 + 3] = midi_value
+                            this_channel[index]['update'] = 1
+                            self.state[channel] = this_channel
+                        except Exception as e:
+                            print(f"Error updating parameter: {e}")
+        except AssertionError as e:
+            print(f"UltraDict error in update_context: {e}")
 
         # API calls outside the lock
         if channel <= 9:

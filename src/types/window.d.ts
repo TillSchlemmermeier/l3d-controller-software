@@ -11,7 +11,16 @@ interface IpcRenderer {
   onWebSocketData(callback: (data: any) => void): void;
   removeWebSocketListener(): void;
   restartBackend: () => Promise<void>;
+  onPythonOutput(callback: (event: any, data: any) => void): void;
+  onWebSocketConnected(callback: () => void): void;
+  onWebSocketDisconnected(callback: () => void): void;
+  onWebSocketError(callback: (error: Error) => void): void;
 }
-interface Window {
-  ipcRenderer: IpcRenderer;
+
+declare global {
+  interface Window {
+    ipcRenderer: IpcRenderer;
+  }
 }
+
+export {};

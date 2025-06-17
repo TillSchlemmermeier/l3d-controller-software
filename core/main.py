@@ -3,7 +3,6 @@ from UltraDict import UltraDict
 import multiprocessing as mp
 from time import time, sleep
 import tkinter as tk
-import numpy as np
 import requests
 from midi_emulator import MidiControllerEmulator
 from midi_akai import class_akai
@@ -12,7 +11,10 @@ from rendering_engine import rendering_engine
 from s2l_engine import sound_process
 from server import WebSocketAPIServer
 from randomizer import Randomizer
-
+from state_manager import StateManager
+import pickle
+import argparse
+import os
 
 def autopilot():
     # Validate all presets
@@ -48,7 +50,7 @@ def server():
 
 def midi_devices(state):
     print('...starting midi thread')
-    # akai = class_akai()
+    akai = class_akai()
     fighter = class_fighter()
     fighter.update()
 
@@ -94,7 +96,37 @@ def rendering(state):
             next_frame = time()  # Reset if we're falling behind
 
 
+def backup_state(state):
+    while True:
+        sleep(30)  # New backup every 30 seconds
+        with state.lock:
+            state_copy = dict(state)
+
+        backup_file = os.path.join(f"state_backup.pkl")
+        with open(backup_file, 'wb') as f:  # Note: 'wb' for binary write
+            pickle.dump(state_copy, f)
+        print("State backup created")
+
+
+def restore_from_backup(state):
+    backup_file = os.path.join(f"state_backup.pkl")
+    with open(backup_file, 'rb') as f:  # Note: 'rb' for binary read
+        backup_state = pickle.load(f)
+
+    with state.lock:
+        state.clear()
+        state.update(backup_state)
+        state.apply_update()
+
+    channel_indices = list(range(state['numberOfChannels'])) + [9]
+    for channel_key in channel_indices:
+        StateManager().update_channel(channel_key)
+
 if __name__ == '__main__':
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--restore', action='store_true')
+    args = parser.parse_args()
+
     # Unlink both shared memory buffers possibly used by UltraDict
     name = 'state'
     UltraDict.unlink_by_name(name, ignore_errors=True)
@@ -149,6 +181,9 @@ if __name__ == '__main__':
       },
     }, recurse=False, name=name, buffer_size=100000);
 
+    if args.restore:
+        restore_from_backup(state)
+
     try:
         global_memory_s2l  = mp.shared_memory.SharedMemory(create = True,name = "global_s2l_memory", size = 512)
     except FileExistsError:
@@ -163,8 +198,9 @@ if __name__ == '__main__':
         mp.Process(target=server, name="WebSocket/API Server", args=[]),
         mp.Process(target=sound_process, name="Sound Process", args=[]),
         mp.Process(target=midi_devices, name="MIDI Devices", args=[state]),
+        mp.Process(target=backup_state, name="State Backup", args=[state]),
         mp.Process(target=rendering, name="Renderer", args=[state]),
-        mp.Process(target=autopilot, name="Autopilot", args=[])
+        mp.Process(target=autopilot, name="Autopilot", args=[]),
     ]
 
     for proc in processes:
