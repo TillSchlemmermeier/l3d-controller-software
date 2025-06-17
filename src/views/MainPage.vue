@@ -1,6 +1,6 @@
 <template>
   <div class="flex flex-cols h-screen">
-    <div class="w-[1530px]">
+    <div class="w-[1560px]">
       <div class="grid grid-cols-9 bg-black pl-6">
         <div class="col-span-8">
           <ChannelPreview ref="channelPreviewRef" />
@@ -17,10 +17,10 @@
       <SoundSpectrum />
       <Dashboard class="flex-1" />
     </div>
-    <div class="h-full w-[485px] bg-black">
+    <div class="h-full w-[436px] bg-black">
       <div v-show="sharedVariables.admin">
         <ConsoleOutput
-          class="m-2 w-[450px]"
+          class="m-2 w-[420]"
         />
       </div>
       <!-- <div v-else class="bg-black w-[466px] h-[1440px]"></div> -->
