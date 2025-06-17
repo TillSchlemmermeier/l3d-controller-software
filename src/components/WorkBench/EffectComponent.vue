@@ -14,7 +14,7 @@
       }"
     >
       <div
-        class="relative p-3 rounded-xl shadow-sm transition-all duration-200 overflow-hidden"
+        class="relative p-3 rounded-xl shadow-md shadow-zinc-900 transition-all duration-200 overflow-hidden"
         :class="[
           { 'shadow-lg scale-120 ring-2': isSelected },
           { 'grayscale': !thisEffect.IO }

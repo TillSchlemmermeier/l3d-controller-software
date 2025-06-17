@@ -10,7 +10,7 @@
       :class="{ 'z-10 opacity-100': isSelected, 'z-0 opacity-90': !isSelected }"
     >
       <div 
-        class="relative p-4 rounded-xl overflow-hidden backdrop-blur-sm shadow-lg transition-all duration-200"
+        class="relative p-4 rounded-xl overflow-hidden backdrop-blur-sm shadow-lg shadow-zinc-900 transition-all duration-200"
         :class="[
           `shadow-${colors.text}/10`,
           { 'scale-120 ring-2': isSelected },

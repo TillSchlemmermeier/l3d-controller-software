@@ -9,7 +9,7 @@
           backgroundPosition: 'center',
           backgroundRepeat: 'no-repeat',
         }"
-        class="absolute inset-0 bg-slate-100 border-2 rounded-2xl transition-all duration-300"
+        class="absolute inset-0 bg-slate-100 border-2 rounded-2xl transition-all duration-300 shadow-lg shadow-black"
         :class="{
           'opacity-10': !sharedVariables.isDragging,
           'opacity-20 scale-110': sharedVariables.isDragging

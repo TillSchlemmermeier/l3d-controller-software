@@ -1,5 +1,5 @@
 <template>
-  <div class="p-3 rounded-lg transition-all duration-200 flex relative overflow-hidden" 
+  <div class="p-3 rounded-lg transition-all duration-200 flex relative overflow-hidden shadow-md shadow-zinc-900"
        :class="textColor">
     <div class="absolute inset-0 opacity-90"
       :class="gradientBackground">
