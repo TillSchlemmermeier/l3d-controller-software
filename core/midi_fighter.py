@@ -15,7 +15,8 @@ class class_fighter:
 
     def event(self, event, data=None):
         message, deltatime = event
-        print(f"\rValue: {message[2]/127:.3f}", end="", flush=True)
+        print('\033[K', end='')  # Clear line
+        print(f"\r{message[2]/127:.3f}", end='', flush=True)
 
         if message[1] in self.fighter_mapping:
             midi_index = self.fighter_mapping.index(message[1])
