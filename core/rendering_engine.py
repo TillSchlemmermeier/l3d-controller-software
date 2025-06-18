@@ -34,14 +34,8 @@ class rendering_engine:
     def __init__(self):
         """
         Initialises the rendering engine
-
-        Keywords:
-        log : enables logging on the debug label
-              if false, the rendering engine is logging,
-              but only errors/warnings
         """
         # initialise variables
-        # self.framecounter = 1
         self.logging = False
         self.connected = False     # Arduino connection status
         self.arduino_message_shown = False
@@ -86,6 +80,9 @@ class rendering_engine:
             except IOError:
                 print('No Connection to Arduino established')
 
+        # wether to send data to arduino
+        self.should_send = False
+
         # setup empty world
         self.cubeworld = np.zeros([3, 10, 10, 10])
         self.channelworld = np.zeros([8, 3, 10, 10, 10])
@@ -103,15 +100,9 @@ class rendering_engine:
     def run(self, state):
         """generates a frame and sends the package when cube is turned on"""
         # check wether 'running' flag is set
-        # self.generate_frame(state.data.copy())
         self.generate_frame(state)
-        with state.lock:
-            state.apply_update() # Ensure we have latest state
-            should_send = state['IO']
-        if should_send:
+        if self.should_send:
             self.send_frame()
-
-        # self.framecounter += 1
 
         # Prepare combined cube data
         cube_colors = np.zeros([3, 1000])
@@ -207,6 +198,8 @@ class rendering_engine:
                     print(f"[CORE] State update failed after 3 attempts: {e}")
                     break
                 time.sleep(0.001 * retry_count)
+
+        self.should_send = snapshot['IO']
 
         # loop through channels
         for i in range(snapshot['numberOfChannels']):

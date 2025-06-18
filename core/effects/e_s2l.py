@@ -22,7 +22,7 @@ class e_s2l():
         elif self.channel == 4:
             channel = "Trigger"
         elif self.channel == 5:
-            channel = 'Trig 2'
+            channel = 'Trigger/2'
         elif self.channel == 6:
             channel = 'SIN 1'
         elif self.channel == 7:
@@ -88,12 +88,12 @@ class e_s2l():
             # trigger half
             elif self.channel == 5:
 
-                # current_volume = int(float(str(self.sound_values.buf[40:48],'utf-8')))
-                #if current_volume == 1:
-                #    self.lastvalue = current_volume
-                #    self.counter = 0
+                current_volume = int(float(str(self.sound_values.buf[40:48],'utf-8')))
+                if current_volume == 1:
+                   self.lastvalue = current_volume
+                   self.counter = 0
 
-                current_volume = float(str(self.sound_values.buf[72:80],'utf-8'))
+                # current_volume = float(str(self.sound_values.buf[72:80],'utf-8'))
                 #print(current_volume)
                 world[:, :, :, :] *= (1-self.amount) + np.clip(current_volume,0,1)*self.amount
 

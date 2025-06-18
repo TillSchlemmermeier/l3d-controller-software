@@ -12,6 +12,7 @@ const PUBLIC_PATH = VITE_DEV_SERVER_URL ? path.join(APP_ROOT, 'public') : RENDER
 let ws: WebSocket | null = null
 let win: BrowserWindow | null = null
 let isQuitting = false
+let isProcessing = false;
 
 function setupWebSocket(win: BrowserWindow) {
   ws = new WebSocket('ws://localhost:8000/ws')
@@ -27,11 +28,18 @@ function setupWebSocket(win: BrowserWindow) {
   })
 
   ws.on('message', (data: Buffer) => {
+    // drop messages to prevent memory buildup when app is out of focus
+    if (isProcessing) {
+      return
+    }
     try {
+      isProcessing = true;
       const message = JSON.parse(data.toString())
       win?.webContents.send(message.type, message.data)
     } catch (error) {
       console.error('Failed to parse WebSocket message:', error)
+    } finally {
+      isProcessing = false;
     }
   })
 
