@@ -8,7 +8,7 @@
 
       <div class="flex flex-row gap-4"> 
         <div
-          class="rounded-xl aspect-square p-3 flex flex-col items-center justify-center w-24"
+          class="rounded-xl aspect-square p-3 flex flex-col items-center justify-center w-24 select-none transition-all duration-50 active:scale-95 active:opacity-80 focus:ring-2 focus:ring-zinc-400"
           :class="gradientBackground(presentState.autopilot)"
           @click.stop="presentState.toggleAutopilot"
         >
@@ -20,7 +20,7 @@
           </span>
         </div>
   
-        <div class="rounded-xl aspect-square p-3 flex flex-col items-center justify-center w-24" :class="gradientBackground(presentState.crossfade_active)"
+        <div class="rounded-xl select-none aspect-square p-3 flex flex-col items-center justify-center w-24" :class="gradientBackground(presentState.crossfade_active)"
         >
           <span class="text-zinc-900 text-md font-bold text-center" >
             CROSS FADE
@@ -30,7 +30,7 @@
 
       <div class="flex flex-row gap-4"> 
         <div
-          class="rounded-xl aspect-square p-3 flex flex-col items-center justify-center w-24 bg-zinc-400 transition-all duration-50 active:scale-95 active:opacity-80 focus:ring-2 focus:ring-zinc-400"
+          class="rounded-xl aspect-square p-3 flex flex-col items-center justify-center w-24 select-none bg-zinc-400 transition-all duration-50 active:scale-95 active:opacity-80 focus:ring-2 focus:ring-zinc-400"
           @click.stop="presentState.autopilotMode"
         >
           <span class="text-zinc-900 text-md font-bold text-center" >
@@ -42,7 +42,7 @@
         </div>
 
         <div
-          class="rounded-xl aspect-square p-3 flex flex-col items-center justify-center w-24 bg-zinc-400 transition-all duration-50 active:scale-95 active:opacity-80 focus:ring-2 focus:ring-zinc-400"
+          class="rounded-xl aspect-square p-3 flex flex-col items-center justify-center w-24 select-none bg-zinc-400 transition-all duration-50 active:scale-95 active:opacity-80 focus:ring-2 focus:ring-zinc-400"
           @click.stop="presentState.triggerRandomizer"
         >
           <span class="text-zinc-900 text-md font-bold text-center" >
@@ -53,7 +53,7 @@
 
       <div class="flex flex-row gap-4">
         <div
-          class="rounded-xl aspect-square p-3 flex flex-col items-center justify-center w-24 bg-zinc-400 transition-all duration-50 active:scale-95 active:opacity-80 focus:ring-2 focus:ring-zinc-400"
+          class="rounded-xl aspect-square p-3 flex flex-col items-center justify-center w-24 select-none bg-zinc-400 transition-all duration-50 active:scale-95 active:opacity-80 focus:ring-2 focus:ring-zinc-400"
           @click.stop="presentState.normalize"
         >
           <span class="text-zinc-900 text-md font-bold text-center" >
@@ -63,7 +63,7 @@
 
         <div
           v-if="sharedVariables.admin"
-          class="rounded-xl aspect-square p-3 flex flex-col items-center justify-center w-24 bg-zinc-400 transition-all duration-50 active:scale-95 active:opacity-80 focus:ring-2 focus:ring-zinc-400"
+          class="rounded-xl aspect-square p-3 flex flex-col items-center justify-center w-24 select-none bg-zinc-400 transition-all duration-50 active:scale-95 active:opacity-80 focus:ring-2 focus:ring-zinc-400"
           @click.stop="presentState.toggleCube"
         >
           <span class="text-zinc-900 text-md font-bold text-center" >
@@ -76,7 +76,7 @@
 
     <div class="flex flex-col gap-4 flex-1">
       <div class="flex flex-row justify-between"> 
-        <div class="rounded-xl aspect-square p-3 flex flex-col items-center justify-center w-24 bg-zinc-400">
+        <div class="rounded-xl aspect-square p-3 flex flex-col items-center justify-center w-24 select-none bg-zinc-400">
           <span class="text-zinc-900 text-md font-bold text-center" >
             ONE SHOTS
           </span>
@@ -84,7 +84,7 @@
     
         <div
           v-if="sharedVariables.admin"
-          class="rounded-xl aspect-square p-3 flex flex-col items-center justify-center w-24 bg-zinc-400 transition-all duration-50 active:scale-95 active:opacity-80 focus:ring-2 focus:ring-zinc-400"
+          class="rounded-xl aspect-square p-3 flex flex-col items-center justify-center w-24 select-none bg-zinc-400 transition-all duration-50 active:scale-95 active:opacity-80 focus:ring-2 focus:ring-zinc-400"
           @click.stop="presentState.rebootCore"
         >
           <span class="text-zinc-900 text-md font-bold text-center" >
