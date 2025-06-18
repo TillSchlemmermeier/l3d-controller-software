@@ -182,7 +182,6 @@ class rendering_engine:
             try:
                 # Create copy of state to prevent UltraDict AssertionError
                 with state.lock:
-                    state.apply_update()  # Ensure we have latest state
                     snapshot = {
                         'numberOfChannels': state['numberOfChannels'],
                         'IO': state['IO'],
