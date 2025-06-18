@@ -67,7 +67,7 @@
           @click.stop="presentState.toggleCube"
         >
           <span class="text-zinc-900 text-md font-bold text-center" >
-            START CUBE
+            I/O<br>CUBE
           </span>
         </div>
       </div>

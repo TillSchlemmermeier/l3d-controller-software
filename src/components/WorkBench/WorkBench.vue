@@ -3,7 +3,7 @@
     <div>Loading...</div>
   </template>
   <template v-else>
-    <div class="grid grid-cols-9 mt-2 ml-1">
+    <div class="grid grid-cols-9 mt-2 ml-1 select-none">
       <div class="col-span-8">
         <div class="flex">
           <draggable
@@ -15,6 +15,7 @@
               put: true,
               revertClone: true
             }"
+            :delay="50"
             @start="startColumnDrag"
             @end="endColumnDrag"
             :animation="300"
@@ -74,6 +75,7 @@
                 @start="startEffectDrag(channelIndex)"
                 @end="endEffectDrag($event, channelIndex)"
                 :group="{ name: 'effects', pull: 'clone', revertClone: true }"
+                :delay="50"
                 :animation="300"
                 class="w-[162px]"
               >
@@ -115,6 +117,7 @@
           @end="endEffectDrag($event, 9)"
           :group="{ name: 'effects', pull: 'clone', revertClone: true }"
           :animation="300"
+          :delay="50"
           class=""
         >
           <template #item="{ index }">
