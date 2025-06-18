@@ -14,7 +14,7 @@ export const usePresentStateStore = defineStore('presentState', {
     random: '',
     s2l_values: [],
     s2l_thresholds: [],
-    s2l_normalize: 0,
+    s2l_normalize: false,
     s2l_gain: 0,
     s2l_update: false,
     context: [],
@@ -51,6 +51,16 @@ export const usePresentStateStore = defineStore('presentState', {
 
     async select(channelIndex: number, elementIndex: number) {
       const url = `${baseUrl}/select/${channelIndex}/${elementIndex}`
+      await this.callBackend(url)
+    },
+
+    async toggleCube() {
+      const url = `${baseUrl}/toggle-cube`
+      await this.callBackend(url)
+    },
+
+    async normalize() {
+      const url = `${baseUrl}/normalize-s2l`
       await this.callBackend(url)
     },
 

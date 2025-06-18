@@ -51,6 +51,27 @@
         </div>
       </div>
 
+      <div class="flex flex-row gap-4">
+        <div
+          class="rounded-xl aspect-square p-3 flex flex-col items-center justify-center w-24 bg-zinc-400"
+          @click.stop="presentState.normalize"
+        >
+          <span class="text-zinc-900 text-md font-bold text-center" >
+            NORM S2L
+          </span>
+        </div>
+
+        <div
+          v-if="sharedVariables.admin"
+          class="rounded-xl aspect-square p-3 flex flex-col items-center justify-center w-24 bg-zinc-400"
+          @click.stop="presentState.toggleCube"
+        >
+          <span class="text-zinc-900 text-md font-bold text-center" >
+            START CUBE
+          </span>
+        </div>
+      </div>
+
     </div>
 
     <div class="flex flex-col gap-4 flex-1">

@@ -83,7 +83,7 @@ class class_midi_translation:
                         self.state[key] = 'selected_element'
                 elif midi_index == 3:
                     key = 's2l_normalize'
-                    self.state[key] = midi_value
+                    self.state[key] = True
                 elif midi_index == 4:
                     key = 's2l_gain'
                     self.state[key] = midi_value
@@ -121,7 +121,7 @@ class class_midi_translation:
                         0.5 if self.state['random'] == 'all_elements' else
                         0.7 if self.state['random'] == 'single_element' else
                         0.9 if self.state['random'] == 'selected_element' else 0.0,
-                        self.state['s2l_normalize'],
+                        0.0, #self.state['s2l_normalize']
                         self.state['s2l_gain']
                     ]
 

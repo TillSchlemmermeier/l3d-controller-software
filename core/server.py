@@ -347,6 +347,20 @@ class WebSocketAPIServer:
             await update_state()
             return {"message": "Randomizer triggered"}
 
+        # toggle sending data to Arduino
+        @self.app.get('/api/toggle-cube')
+        async def toggle_cube():
+            self.state_manager.toggle_cube()
+            await update_state()
+            return {"message": "Sending to Arduino toggled"}
+
+        # normalize s2l
+        @self.app.get('/api/normalize-s2l')
+        async def normalize_s2l():
+            self.state_manager.normalize_s2l()
+            await update_state()
+            return {"message": "s2l normalized"}
+
         # create a websocket connection
         @self.app.websocket("/ws")
         async def websocket_endpoint(websocket: WebSocket):

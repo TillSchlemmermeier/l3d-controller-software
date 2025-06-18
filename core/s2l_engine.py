@@ -100,9 +100,9 @@ def sound_process():
                 state['s2l_update'] = False
 
         # check for normalizing
-        if state['s2l_normalize'] != norm_value:
+        if state['s2l_normalize']:
             normalized[0] = False
-            norm_value = state['s2l_normalize']
+            state['s2l_normalize'] = False
             buffer[:] = []
             print('s2l engine : reseting normalization')
 

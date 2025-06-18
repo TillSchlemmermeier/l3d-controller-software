@@ -141,7 +141,7 @@ if __name__ == '__main__':
         "random": "all_elements",
         "s2l_values": [0.12, 0.2, 0.45, 0.7],
         "s2l_thresholds": [0, 0, 0, 0],
-        "s2l_normalize": 0.1,
+        "s2l_normalize": False,
         "s2l_gain": 0.5,
         "s2l_update": True,
         "context": [0, 9],

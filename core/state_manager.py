@@ -208,6 +208,16 @@ class StateManager:
             next_index = (current_index + 1) % len(modes)
             self.state['random'] = modes[next_index]
 
+    def toggle_cube(self):
+        """Toggle send to arduino"""
+        with self.state.lock:
+            self.state['IO'] = not self.state['IO']
+
+    def normalize_s2l(self):
+        """Normalize s2l"""
+        with self.state.lock:
+            self.state['s2l_normalize'] = True
+
     def update_context(self, channel, index):
         with self.state.lock:
             self.state['context'] = [channel, index]
