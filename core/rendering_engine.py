@@ -201,10 +201,11 @@ class rendering_engine:
                         snapshot[9] = dict(state[9])
 
                 break
-            except Exception as e:
+            except AssertionError as e:
+                print(f"[CORE] Error accessing shared state: {e}")
                 retry_count += 1
                 if retry_count == 3:
-                    print(f"[CORE] State update failed after 3 attempts")
+                    print(f"[CORE] State update failed after 3 attempts: {e}")
                     break
                 time.sleep(0.001 * retry_count)
 
