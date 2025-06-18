@@ -156,7 +156,9 @@ class rendering_engine:
         if self.connected:
             self.arduino.write(package)
         elif not self.arduino_message_shown:
-            print('NO ARDUINO CONNECTION DETECTED, CAN\'T SEND FRAMES')
+            print('----------------------------------------------------\n' \
+            'NO ARDUINO DETECTED, PLEASE CONNECT AND REBOOT CORE\n' \
+                '-----------------------------------------------------\n')
             self.arduino_message_shown = True
 
 
