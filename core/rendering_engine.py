@@ -177,26 +177,36 @@ class rendering_engine:
         writes the result into self.cubeworld
         """
 
-        # Create copy of state to prevent UltraDict AssertionError
-        with state.lock:
-            state.apply_update()  # Ensure we have latest state
-            snapshot = {
-                'numberOfChannels': state['numberOfChannels'],
-                'IO': state['IO'],
-                'brightness': state['brightness'],
-                'oneshot': state['oneshot'],
-                'crossfade_active': state['crossfade_active']
-            }
-            
-            # Copy individual channel states
-            for i in range(state['numberOfChannels']):
-                if i in state:
-                    snapshot[i] = dict(state[i])
-            
-            # Copy global effects
-            if 9 in state:
-                snapshot[9] = dict(state[9])
+        retry_count = 0
+        while retry_count < 3:
+            try:
+                # Create copy of state to prevent UltraDict AssertionError
+                with state.lock:
+                    state.apply_update()  # Ensure we have latest state
+                    snapshot = {
+                        'numberOfChannels': state['numberOfChannels'],
+                        'IO': state['IO'],
+                        'brightness': state['brightness'],
+                        'oneshot': state['oneshot'],
+                        'crossfade_active': state['crossfade_active']
+                    }
 
+                    # Copy individual channel states
+                    for i in range(state['numberOfChannels']):
+                        if i in state:
+                            snapshot[i] = dict(state[i])
+
+                    # Copy global effects
+                    if 9 in state:
+                        snapshot[9] = dict(state[9])
+
+                break
+            except Exception as e:
+                retry_count += 1
+                if retry_count == 3:
+                    print(f"[CORE] State update failed after 3 attempts")
+                    break
+                time.sleep(0.001 * retry_count)
 
         # loop through channels
         for i in range(snapshot['numberOfChannels']):

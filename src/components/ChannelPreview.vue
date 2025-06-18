@@ -73,10 +73,6 @@ defineExpose({
 function setupScene() {
   const scene = new THREE.Scene()
 
-  // const axesHelper = new THREE.AxesHelper(5)
-  // // Red is X axis, Green is Y axis, Blue is Z axis
-  // scene.add(axesHelper)
-
   const camera = new THREE.PerspectiveCamera(45, 1, 0.1, 1000)
   // camera.position.set(15, 7, 12)  // x: right, y: up, z: forward
   // camera.lookAt(0, -1, 0) // Look at the center of the cube
