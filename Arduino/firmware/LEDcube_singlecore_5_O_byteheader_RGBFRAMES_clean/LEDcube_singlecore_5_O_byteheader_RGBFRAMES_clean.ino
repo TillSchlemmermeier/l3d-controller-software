@@ -1,3 +1,4 @@
+// we need FastLED v. 3.3.3 or older to be compatible with arduino Due
 #include <FastLED.h>
 
 // How many leds are in the strip?
