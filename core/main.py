@@ -77,7 +77,7 @@ def rendering(state):
     frame_renderer = rendering_engine()
     session = requests.Session()  # Reuse connection
 
-    frame_interval = 1/30  # 30 FPS
+    frame_interval = 1/25  # 25 FPS
     next_frame = time()
 
     while True:
