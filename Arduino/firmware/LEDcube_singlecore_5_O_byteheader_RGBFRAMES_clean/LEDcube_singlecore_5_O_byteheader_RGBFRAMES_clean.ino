@@ -3,16 +3,52 @@
 
 // How many leds are in the strip?
 #define NUM_LEDS 3200
-
-/*-----( Declare objects )-----*/
-/*-----( Declare Variables )-----*/
 // This is an array of leds.  One item for each led in your strip.
 CRGB leds[NUM_LEDS];
 
-uint8_t brightArray[NUM_LEDS/2];
 uint8_t rgbArray[(NUM_LEDS/2)*3];
 
 bool framePass = false;
+
+// USE position_mask_generator.py TO GENERATE POSITION_MASK ARRAY
+const uint8_t PROGMEM POSITION_MASK[] = {
+    0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b11000000, 0b00000000, 0b00000000, 0b00000100,
+    0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000,
+    0b10000000, 0b00000001, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000,
+    0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000,
+    0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000,
+    0b00000000, 0b00100000, 0b00000000, 0b00000000, 0b00000011, 0b00000000, 0b00000000, 0b00000000,
+    0b00000000, 0b00000000, 0b00000011, 0b00000000, 0b00000100, 0b00000000, 0b00001110, 0b00000000,
+    0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000,
+    0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000,
+    0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000,
+    0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000,
+    0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000011, 0b00000000,
+    0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000,
+    0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000,
+    0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000,
+    0b00000000, 0b00000000, 0b00000111, 0b00000000, 0b00100000, 0b00000000, 0b00000000, 0b00000000,
+    0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000,
+    0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000,
+    0b00010000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000010, 0b00000000, 0b00000000,
+    0b00000000, 0b00000000, 0b11000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000,
+    0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000,
+    0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000,
+    0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000,
+    0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000,
+    0b00000000, 0b00000000, 0b00110000, 0b00000000, 0b00000000, 0b11111111, 0b00000011, 0b00000000,
+    0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000001, 0b00000000, 0b00000000,
+    0b00000000, 0b00100000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000,
+    0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000,
+    0b01000000, 0b00000000, 0b00000000, 0b00000010, 0b00000000, 0b00001100, 0b00000000, 0b11000000,
+    0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000001,
+    0b00000000, 0b00000000, 0b00000000, 0b01100000, 0b00000000, 0b00000000, 0b00000010,
+};
+
+// Position check using bit operations
+inline bool replacedLedPosition(uint16_t pos) {
+  return pgm_read_byte(&POSITION_MASK[pos >> 3]) & (1 << (pos & 7));
+}
 
 void setup() {
   // put your setup code here, to run once:
@@ -21,37 +57,26 @@ void setup() {
   // sanity check delay - allows reprogramming if accidently blowing power w/leds
   delay(2000);
   LEDS.addLeds<WS2811_PORTD,8,RGB>(leds, 400).setCorrection(TypicalLEDStrip);
-  leds[390]  = CRGB::Red;
-  leds[391] = CRGB::Red;
-  leds[790]  = CRGB::Red;
-  leds[791] = CRGB::Red;
-  leds[1192]  = CRGB::Red;
-  leds[1193] = CRGB::Red;
-  leds[1584]  = CRGB::Red;
-  leds[1585] = CRGB::Red;
-  leds[1987]  = CRGB::Red;
-  leds[1988] = CRGB::Red;
 
+  // Red LEDs at the end of each strand
+  const uint16_t redPositions[] = {390, 790, 1192, 1584, 1987};
+  for(uint8_t i = 0; i < 5; i++) {
+    leds[redPositions[i]] = CRGB::Red;
+    leds[redPositions[i] + 1] = CRGB::Red;
+  }
   FastLED.show();
 }
 
 void loop() {
-  // put your main code here, to run repeatedly:
   // read incomming chars from USB Serial Connection
-  if(SerialUSB.available()>0)
-  {
-    if(SerialUSB.read()=='B')
-    {
-      if(SerialUSB.read()=='E')
-      {
-        if(SerialUSB.read()=='E')
-        {
-          if(SerialUSB.read()=='F')
-          {
-            for(int i=0; i<3000; i++)
-            {
-             rgbArray[i]=SerialUSB.read();
-             if(rgbArray[i]>200)rgbArray[i]=200;// Lichtbremse
+  if(SerialUSB.available()>0) {
+    if(SerialUSB.read()=='B') {
+      if(SerialUSB.read()=='E') {
+        if(SerialUSB.read()=='E') {
+          if(SerialUSB.read()=='F') {
+            for(int i=0; i<3000; i++) {
+              rgbArray[i]=SerialUSB.read();
+              if(rgbArray[i]>200)rgbArray[i]=200;// Lichtbremse
             }
             framePass=true;
           }
@@ -59,45 +84,26 @@ void loop() {
       }
     }
   }
-
   //draw frame if fully transmitted
-  if(framePass)
-  {
-   int k=0;
-   int j=0;
-   for(int i=0; i<NUM_LEDS; i+=2)
-   {
+  if(framePass) {
+    int k=0;
+    for(int i=0; i<NUM_LEDS; i+=2) {
       if(i==392)i=400;
       if(i==792)i=800;
       if(i==1194)i=1200;
       if(i==1586)i=1600;
 
-      if(i==19*2 ||i==20*2-1 ||i==30*2-2 ||i==69*2-3||i==70*2-4
-        || i==169*2-5 || i==179*2-6 || i==180*2-7
-        // 2nd arduino output
-        || i==200*2 || i==201*2-1|| i==210*2-2 || i==218*2-3 || i==219*2-4 || i==220*2-5
-        || i==379*2-6 || i==380*2-7
-        // 3rd arduino output
-        || i==488*2 || i==489*2-1 || i==490*2-2
-        || i==500*2-3 || i==580*2-4 || i==599*2-5
-        // 4th arduino output
-        || i==619*2 || i==620*2-1
-        || i==779*2-2 || i==780*2-3 || i==790*2-4 || i==791*2-5 ||i==792*2-6 || i==793*2-7 || i==794*2-8 || i==795*2-9 || i==796*2-10 || i==797*2-11 || i==798*2-12 || i==799*2-13
-        // 5th arduino output 
-        || i==820*2 || i==839*2-1 || i==900*2-2
-        || i==910*2-3 || i==919*2-4 || i==920*2-5 || i==930*2-6 || i==931*2-7 || i==960*2-8 || i==979*2-9 || i==980*2-10 || i==990*2-11 )
-      {
-       leds[i] =  CRGB( rgbArray[k]*0.7 ,rgbArray[k+2], rgbArray[k+1]*0.60);
+      if(replacedLedPosition(i)) {
+        leds[i] =  CRGB( rgbArray[k]*0.7 ,rgbArray[k+2], rgbArray[k+1]*0.60);
         i--;
+        continue;
+      } else {
+        leds[i]  =  CRGB( rgbArray[k] ,rgbArray[k+1], rgbArray[k+2]);
+        leds[i+1]= CRGB( rgbArray[k] ,rgbArray[k+1], rgbArray[k+2]);
       }
-      else
-      {
-       leds[i]  =  CRGB( rgbArray[k] ,rgbArray[k+1], rgbArray[k+2]);
-       leds[i+1]= CRGB( rgbArray[k] ,rgbArray[k+1], rgbArray[k+2]);
-        }
       k+=3;
-     }
-   }
-   FastLED.show();
-   framePass = false;
+    }
   }
+  FastLED.show();
+  framePass = false;
+}
