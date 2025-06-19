@@ -25,10 +25,10 @@ void setup() {
   leds[391] = CRGB::Red;
   leds[790]  = CRGB::Red;
   leds[791] = CRGB::Red;
-  leds[1193]  = CRGB::Red;
-  leds[1194] = CRGB::Red;
-  leds[1594]  = CRGB::Red;
-  leds[1595] = CRGB::Red;
+  leds[1192]  = CRGB::Red;
+  leds[1193] = CRGB::Red;
+  leds[1584]  = CRGB::Red;
+  leds[1585] = CRGB::Red;
   leds[1987]  = CRGB::Red;
   leds[1988] = CRGB::Red;
 
