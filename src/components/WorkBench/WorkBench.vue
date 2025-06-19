@@ -15,7 +15,7 @@
               put: true,
               revertClone: true
             }"
-            :delay="50"
+            :delay="0"
             @start="startColumnDrag"
             @end="endColumnDrag"
             :animation="300"
