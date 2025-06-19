@@ -186,6 +186,9 @@ if __name__ == '__main__':
 
     try:
         global_memory_s2l  = mp.shared_memory.SharedMemory(create = True,name = "global_s2l_memory", size = 512)
+        # Initialize buffer with zeros in string format
+        for i in range(0, 512, 8):
+            global_memory_s2l.buf[i:i+8] = '0.0'.encode('utf-8').ljust(8, b'\x00')
     except FileExistsError:
         global_memory_s2l = mp.shared_memory.SharedMemory(name="global_s2l_memory")
 
