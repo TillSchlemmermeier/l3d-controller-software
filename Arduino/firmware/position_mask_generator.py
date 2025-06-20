@@ -1,6 +1,6 @@
 def create_position_mask(positions):
     # Calculate how many bytes we need (highest position / 8, rounded up)
-    max_pos = max(positions)
+    max_pos = 2000
     mask_size = (max_pos + 8) // 8
     
     # Create empty mask

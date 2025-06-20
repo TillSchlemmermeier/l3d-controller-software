@@ -2,7 +2,7 @@
 #include <FastLED.h>
 
 // How many leds are in the strip?
-#define NUM_LEDS 3200
+#define NUM_LEDS 2000
 // This is an array of leds.  One item for each led in your strip.
 CRGB leds[NUM_LEDS];
 
@@ -42,7 +42,8 @@ const uint8_t PROGMEM POSITION_MASK[] = {
     0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000,
     0b01000000, 0b00000000, 0b00000000, 0b00000010, 0b00000000, 0b00001100, 0b00000000, 0b11000000,
     0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000001,
-    0b00000000, 0b00000000, 0b00000000, 0b01100000, 0b00000000, 0b00000000, 0b00000010,
+    0b00000000, 0b00000000, 0b00000000, 0b01100000, 0b00000000, 0b00000000, 0b00000010, 0b00000000,
+    0b00000000, 0b00000000, 0b00000000,
 };
 
 // Position check using bit operations
@@ -88,10 +89,12 @@ void loop() {
   if(framePass) {
     int k=0;
     for(int i=0; i<NUM_LEDS; i+=2) {
-      if(i==392)i=400;
-      if(i==792)i=800;
-      if(i==1194)i=1200;
-      if(i==1586)i=1600;
+      switch(i) {
+        case 392: i = 400; break;
+        case 792: i = 800; break;
+        case 1194: i = 1200; break;
+        case 1586: i = 1600; break;
+      }
 
       if(replacedLedPosition(i)) {
         leds[i] =  CRGB( rgbArray[k]*0.7 ,rgbArray[k+2], rgbArray[k+1]*0.60);
