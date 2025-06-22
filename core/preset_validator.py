@@ -114,7 +114,7 @@ class PresetValidator:
         for generator in self.generators:
             presets = self.db.get_preset_names('generator', generator)
             for preset in presets:
-                preset_data = self.db.get_preset('generator', generator, preset, False)
+                preset_data = self.db.get_preset('generator', generator, preset['name'], False)
                 valid, message = self.validate_generator(generator, preset_data)
                 self.validation_results.append({
                     'type': 'generator',
@@ -123,7 +123,6 @@ class PresetValidator:
                     'valid': valid,
                     'message': message
                 })
-        
         # Validate effects, channels, and global presets
         # ... (rest of validation logic)
         
@@ -157,7 +156,7 @@ class PresetValidator:
             print(f"\nInvalid presets found ({summary['invalid_presets']}/{summary['total_presets']}):")
             for result in summary['results']:
                 if not result['valid']:
-                    print(f"- {result['type']}: {result['name']} - {result['preset']}")
+                    print(f"- {result['type']}: {result['name']} - {result['preset']['name']}")
                     if result['message']:
                         print(f"  Error: {result['message']}")
         else:

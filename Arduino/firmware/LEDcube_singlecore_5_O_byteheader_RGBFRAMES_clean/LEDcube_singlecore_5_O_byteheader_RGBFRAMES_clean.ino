@@ -10,7 +10,7 @@ uint8_t rgbArray[(NUM_LEDS/2)*3];
 
 bool framePass = false;
 
-// USE position_mask_generator.py TO GENERATE POSITION_MASK ARRAY
+// USE position_mask_generator.py TO GENERATE BINARY LOOKUP TABLE
 const uint8_t PROGMEM POSITION_MASK[] = {
     0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b11000000, 0b00000000, 0b00000000, 0b00000100,
     0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000,
@@ -77,7 +77,7 @@ void loop() {
           if(SerialUSB.read()=='F') {
             for(int i=0; i<3000; i++) {
               rgbArray[i]=SerialUSB.read();
-              if(rgbArray[i]>200)rgbArray[i]=200;// Lichtbremse
+              rgbArray[i] = min(rgbArray[i], 200); // Limit RGB values to 200
             }
             framePass=true;
           }
