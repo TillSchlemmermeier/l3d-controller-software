@@ -7,6 +7,7 @@ import requests
 from midi_emulator import MidiControllerEmulator
 from midi_akai import class_akai
 from midi_fighter import class_fighter
+from midi_launchcontrol import class_launchcontrol
 from rendering_engine import rendering_engine
 from s2l_engine import sound_process
 from server import WebSocketAPIServer
@@ -50,14 +51,15 @@ def server():
 
 def midi_devices(state):
     print('...starting midi thread')
-    akai = class_akai()
-    fighter = class_fighter()
-    fighter.update()
+    launchcontrol = class_launchcontrol()
+    # akai = class_akai()
+    # fighter = class_fighter()
+    # fighter.update()
 
     while True:
         # Small sleep to prevent CPU overload
         if state['midi_update'] == True:
-            fighter.update()
+            launchcontrol.update()
             with state.lock:
                 state['midi_update'] = False
 
