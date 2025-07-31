@@ -21,6 +21,7 @@ export const useSharedVariablesStore = defineStore('sharedVariables', {
     sortBy: 'alpha', // alpha, date, usage
     clickBehavior: 'select', // select, edit, IO
     isDragging: false,
+    contextIndex: 0,
   }),
   actions: {
     // fetch the names of active effects or generators

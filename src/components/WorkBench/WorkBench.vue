@@ -15,7 +15,8 @@
               put: true,
               revertClone: true
             }"
-            :delay="0"
+            :delay="50"
+            :delayOnTouchOnly="false"
             @start="startColumnDrag"
             @end="endColumnDrag"
             :animation="300"
@@ -34,6 +35,7 @@
                   <GeneratorComponent
                     :channel="index"
                     :isSelected="isSelected(index, 9)"
+                    :context="whichContext(index, 9)"
                     @click="handleClick(index, 9)"
                     @dblclick="handleDoubleClick(index, 9)"
                   />
@@ -85,6 +87,7 @@
                       :channel="channelIndex"
                       :effectNumber="index"
                       :isSelected="isSelected(channelIndex, index)"
+                      :context="whichContext(channelIndex, index)"
                       @dblclick="handleDoubleClick(channelIndex, index)"
                       @click="handleClick(channelIndex, index)"
                     />
@@ -126,6 +129,7 @@
                 :channel="9"
                 :effectNumber="index"
                 :isSelected="isSelected(9, index)"
+                :context="whichContext(9, index)"
                 @click="handleClick(9, index)"
                 @dblclick="handleDoubleClick(9, index)"
               />
@@ -143,6 +147,36 @@
         <TrashZone />
       </div>
     </div>
+    <div class="absolute bottom-4 left-20 flex flex-row text-white gap-4">
+        <div
+          @click="sharedVariables.contextIndex = 0"
+          class="p-12 rounded bg-red-500"
+          :class="[
+            sharedVariables.contextIndex == 0 ? 'border-3 border-white' : '',
+          ]"
+        />
+        <div
+          @click="sharedVariables.contextIndex = 1"
+          class="p-12 rounded bg-green-500"
+          :class="[
+            sharedVariables.contextIndex == 1 ? 'border-3 border-white' : '',
+          ]"
+        />
+        <div
+          @click="sharedVariables.contextIndex = 2"
+          class="p-12 rounded bg-orange-500"
+          :class="[
+            sharedVariables.contextIndex == 2 ? 'border-3 border-white' : '',
+          ]"
+        />
+        <div
+          @click="sharedVariables.contextIndex = 3"
+          class="p-12 rounded bg-blue-500"
+          :class="[
+            sharedVariables.contextIndex == 3 ? 'border-3 border-white' : '',
+          ]"
+        />
+      </div>
   </template>
 </template>
 
@@ -233,19 +267,35 @@ function newGenerator(channelIndex: number) {
 
 // select an effect or generator to change its parameters with the MIDI Controller
 function selectParameters(channelIndex: number, index: number) {
+  const contextIndex = sharedVariables.contextIndex
   if (index !== undefined && index !== null) {
-    presentState.select(channelIndex, index)
+    presentState.select(contextIndex, channelIndex, index)
   } else {
     // if a generator is selected, we give it the index 9
-    presentState.select(channelIndex, 9)
+    presentState.select(contextIndex, channelIndex, 9)
   }
 }
 
 // check if an effect or generator is selected
 function isSelected(channelIndex: number, effectIndex: number) {
+  console.log(presentState.context[0][0], presentState.context[0][1])
   return (
-    presentState.context[0] === channelIndex && presentState.context[1] === effectIndex
+    presentState.context[0][0] === channelIndex && presentState.context[0][1] === effectIndex
   )
+}
+
+function whichContext(channelIndex: number, effectIndex: number) {
+  if (presentState.context[0][0] === channelIndex && presentState.context[0][1] === effectIndex) {
+    return 0
+  } else if (presentState.context[1][0] === channelIndex && presentState.context[1][1] === effectIndex) {
+    return 1
+  } else if (presentState.context[2][0] === channelIndex && presentState.context[2][1] === effectIndex) {
+    return 2
+  } else if (presentState.context[3][0] === channelIndex && presentState.context[3][1] === effectIndex) {
+    return 3
+  } else {
+    return 4
+  }
 }
 
 // copy a channel

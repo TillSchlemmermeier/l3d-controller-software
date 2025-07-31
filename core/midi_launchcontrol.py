@@ -2,6 +2,8 @@ import time as time
 from rtmidi.midiutil import open_midiinput,open_midioutput, open_midiport
 from midi_translation import class_midi_translation
 from UltraDict import UltraDict
+import numpy as np
+
 
 class class_launchcontrol:
     def __init__(self):
@@ -31,85 +33,82 @@ class class_launchcontrol:
 
     def event(self, event, data=None):
         message, deltatime = event
-        print("Received MIDI message:", message)
+        # print("Received MIDI message:", message)
 
         # cc messages
         if message[0] == 176:
             # global brightness
-            if message[1] == 62:
-                self.midi_translation.update_fixed(8, 'brightness', message[2])
+            if message[1] == 36:
+               self.midi_translation.update_fixed(8, 'brightness', message[2])
 
-            # channel brightness
-            elif message[1] == 5:
-                self.midi_translation.update_fixed(0, 'brightness', message[2])
-            elif message[1] == 6:
-                self.midi_translation.update_fixed(1, 'brightness', message[2])
-            elif message[1] == 7:
-                self.midi_translation.update_fixed(2, 'brightness', message[2])
-            elif message[1] == 8:
-                self.midi_translation.update_fixed(3, 'brightness', message[2])
-            elif message[1] == 9:
-                self.midi_translation.update_fixed(4, 'brightness', message[2])
-            elif message[1] == 10:
-                self.midi_translation.update_fixed(5, 'brightness', message[2])
-            elif message[1] == 11:
-                self.midi_translation.update_fixed(6, 'brightness', message[2])
-            elif message[1] == 12:
-                self.midi_translation.update_fixed(7, 'brightness', message[2])
+            # channel brightnes
+            brightness = np.array([5,6,7,8,9,10,11,12])
+            fade = np.array([29,30,31,32,33,34,35])
+            oneshots = np.array([45,46,47,48,49,50,51, 52])
+
+            if message[1] in brightness:
+                self.midi_translation.update_fixed(np.where(message[1] == brightness)[0][0], 'brightness', message[2])
 
             # channel fade
-            elif message[1] == 29:
-                self.midi_translation.update_fixed(0, 'fade', message[2])
-            elif message[1] == 30:
-                self.midi_translation.update_fixed(1, 'fade', message[2])
-            elif message[1] == 31:
-                self.midi_translation.update_fixed(2, 'fade', message[2])
-            elif message[1] == 32:
-                self.midi_translation.update_fixed(3, 'fade', message[2])
-            elif message[1] == 33:
-                self.midi_translation.update_fixed(4, 'fade', message[2])
-            elif message[1] == 34:
-                self.midi_translation.update_fixed(5, 'fade', message[2])
-            elif message[1] == 35:
-                self.midi_translation.update_fixed(6, 'fade', message[2])
-            elif message[1] == 36:
-                self.midi_translation.update_fixed(7, 'fade', message[2])
+            elif message[1] in fade:
+                self.midi_translation.update_fixed(np.where(message[1] == fade)[0][0], 'fade', message[2])
+
+            if message[1] in oneshots:
+                self.midi_translation.oneshot(np.where(message[1] == oneshots)[0][0]+1)
+                # self.midi_translation.update_fixed(np.where(message[1] == oneshots)[0][0], 'oneshot', message[2]+1)
 
             # parameters
             elif message[1] == 13:
-                self.midi_translation.update_context(0, message[2])
+                self.midi_translation.update_context(0, 0, message[2])
             elif message[1] == 14:
-                self.midi_translation.update_context(1, message[2])
+                self.midi_translation.update_context(0, 1, message[2])
             elif message[1] == 15:
-                self.midi_translation.update_context(2, message[2])
+                self.midi_translation.update_context(0, 2, message[2])
             elif message[1] == 16:
-                self.midi_translation.update_context(3, message[2])
+                self.midi_translation.update_context(0, 3, message[2])
             elif message[1] == 17:
-                self.midi_translation.update_context(4, message[2])
+                self.midi_translation.update_context(1, 0, message[2])
             elif message[1] == 18:
-                self.midi_translation.update_context(5, message[2])
+                self.midi_translation.update_context(1, 1, message[2])
             elif message[1] == 19:
-                self.midi_translation.update_context(6, message[2])
+                self.midi_translation.update_context(1, 2, message[2])
             elif message[1] == 20:
-                self.midi_translation.update_context(7, message[2])
+                self.midi_translation.update_context(1, 3, message[2])
+            elif message[1] == 21:
+                self.midi_translation.update_context(2, 0, message[2])
+            elif message[1] == 22:
+                self.midi_translation.update_context(2, 1, message[2])
+            elif message[1] == 23:
+                self.midi_translation.update_context(2, 2, message[2])
+            elif message[1] == 24:
+                self.midi_translation.update_context(2, 3, message[2])
+            elif message[1] == 25:
+                self.midi_translation.update_context(3, 0, message[2])
+            elif message[1] == 26:
+                self.midi_translation.update_context(3, 1, message[2])
+            elif message[1] == 27:
+                self.midi_translation.update_context(3, 2, message[2])
+            elif message[1] == 28:
+                self.midi_translation.update_context(3, 3, message[2])
 
             # channel IO
-            elif message[1] == 37:
-                self.midi_translation.toggle_fixed(0, 'IO')
-            elif message[1] == 38:
-                self.midi_translation.toggle_fixed(1, 'IO')
-            elif message[1] == 39:
-                self.midi_translation.toggle_fixed(2, 'IO')
-            elif message[1] == 40:
-                self.midi_translation.toggle_fixed(3, 'IO')
-            elif message[1] == 41:
-                self.midi_translation.toggle_fixed(4, 'IO')
-            elif message[1] == 42:
-                self.midi_translation.toggle_fixed(5, 'IO')
-            elif message[1] == 43:
-                self.midi_translation.toggle_fixed(6, 'IO')
-            elif message[1] == 44:
-                self.midi_translation.toggle_fixed(7, 'IO')
+            if message[2] > 0:
+                if message[1] == 37:
+                    self.midi_translation.toggle_fixed(0, 'IO')
+                elif message[1] == 38:
+                    self.midi_translation.toggle_fixed(1, 'IO')
+                elif message[1] == 39:
+                    self.midi_translation.toggle_fixed(2, 'IO')
+                elif message[1] == 40:
+                    self.midi_translation.toggle_fixed(3, 'IO')
+                elif message[1] == 41:
+                    self.midi_translation.toggle_fixed(4, 'IO')
+                elif message[1] == 42:
+                    self.midi_translation.toggle_fixed(5, 'IO')
+                elif message[1] == 43:
+                    self.midi_translation.toggle_fixed(6, 'IO')
+                elif message[1] == 44:
+                    self.midi_translation.toggle_fixed(7, 'IO')
 
         # nt messages
         # elif message[0] == 144:

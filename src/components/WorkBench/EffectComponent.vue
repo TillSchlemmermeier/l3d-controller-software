@@ -17,7 +17,11 @@
         class="relative p-3 rounded-xl shadow-md shadow-zinc-900 transition-all duration-200 overflow-hidden"
         :class="[
           { 'shadow-lg scale-120 ring-2': isSelected },
-          { 'grayscale': !thisEffect.IO }
+          { 'grayscale': !thisEffect.IO },
+          { 'border-3 border-red-500': context == 0 },
+          { 'border-3 border-green-500': context == 1 },
+          { 'border-3 border-orange-500': context == 2 },
+          { 'border-3 border-blue-500': context == 3 }
         ]"
       >
         <!-- Gradient Background -->
@@ -125,6 +129,11 @@ const props = defineProps({
     required: false,
     default: false,
   },
+  context: {
+    type: Number,
+    required: false,
+    default: 4
+  }
 })
 
 const presentState = usePresentStateStore()

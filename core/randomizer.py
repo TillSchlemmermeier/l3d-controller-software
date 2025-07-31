@@ -115,8 +115,8 @@ class Randomizer:
 
         else:
             # If selected_only is True, use only the currently selected element
-            channel = self.state['context'][0]
-            element = self.state['context'][1]
+            channel = self.state['context'][0][0]
+            element = self.state['context'][0][1]
 
             if channel >= self.state['numberOfChannels']:
                 return

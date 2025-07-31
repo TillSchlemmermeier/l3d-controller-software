@@ -32,7 +32,7 @@ export interface PresentState {
   s2l_normalize: boolean
   s2l_gain: number
   s2l_update: boolean
-  context: number[]
+  context: number[][]
   oneshot: number
   crossfade_active: boolean
   numberOfChannels: number

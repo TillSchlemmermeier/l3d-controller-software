@@ -143,12 +143,12 @@ const sharedVariables = useSharedVariablesStore()
 const activeOneshot = ref(0)
 
 const isSelected = computed(() => {
-  const [section, index] = presentState.context
+  const [section, index] = presentState.context[0]
   return section === 10 && index === 1
 })
 
 function selectDashboard() {
-  presentState.select(10, 1)
+  presentState.select(0, 10, 1)
 }
 
 const gradientBackground = (param: boolean) => {

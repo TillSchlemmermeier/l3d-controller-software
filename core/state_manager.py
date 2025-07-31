@@ -218,7 +218,9 @@ class StateManager:
         with self.state.lock:
             self.state['s2l_normalize'] = True
 
-    def update_context(self, channel, index):
+    def update_context(self, context_index: int, channel, index):
         with self.state.lock:
-            self.state['context'] = [channel, index]
+            context = self.state['context']
+            context[context_index] = [channel, index]
+            self.state['context'] = context
             self.state['midi_update'] = 1

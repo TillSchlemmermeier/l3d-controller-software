@@ -170,11 +170,11 @@ const chartAreaBorder = {
 };
 
 function selectSpectrum() {
-  presentState.select(10, 0)
+  presentState.select(0, 10, 0)
 }
 
 const isSelected = computed(() => {
-  const [section, index] = presentState.context
+  const [section, index] = presentState.context[0]
   return section === 10 && index === 0
 })
 

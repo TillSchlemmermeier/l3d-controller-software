@@ -192,8 +192,10 @@ class rendering_engine:
                     if 9 in state:
                         snapshot[9] = dict(state[9])
 
+                    self.should_send = snapshot['IO']
+
                 break
-            except AssertionError as e:
+            except Exception as e:
                 print(f"[CORE] Error accessing shared state: {e}")
                 retry_count += 1
                 if retry_count == 3:
@@ -201,7 +203,6 @@ class rendering_engine:
                     break
                 time.sleep(0.001 * retry_count)
 
-        self.should_send = snapshot['IO']
 
         # loop through channels
         for i in range(snapshot['numberOfChannels']):

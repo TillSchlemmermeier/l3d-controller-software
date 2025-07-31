@@ -14,13 +14,14 @@ class class_midi_translation:
         self.state_diff = {}
         self.api_endpoint = "http://localhost:8000/api"
         
-    def update_context(self, midi_index, midi_value):
+    def update_context(self, context_index, midi_index, midi_value):
         midi_index = int(midi_index)
         midi_value = round((float(midi_value) / 127.0), 2)
         try:
             with self.state.lock:  # Single lock block for all operations
-                channel = self.state['context'][0]
-                index = self.state['context'][1]
+                channel = self.state['context'][context_index][0] # channel is 0, 1, 2, 3, ...
+                                                   # channel 9 is gloa
+                index = self.state['context'][context_index][1]   # index 9 is generator, 0 first effect, ...
                 
                 if channel <= 9:
                     this_channel = self.state[channel]
@@ -96,8 +97,8 @@ class class_midi_translation:
 
     def get_context_midi_values(self):
         with self.state.lock:
-            channel = self.state['context'][0]
-            index = self.state['context'][1]
+            channel = self.state['context'][0][0]
+            index = self.state['context'][0][1]
             if channel <= 9:
                 this_channel = self.state[channel]
                 if index < 10:
@@ -165,7 +166,7 @@ class class_midi_translation:
     def oneshot(self, midi_index):
         print("Oneshot triggered with index:", midi_index)
         midi_index = int(midi_index)
-        self.state['oneshot'] = midi_index
+        self.state['oneshot'] = midi_index + 2
         requests.get(f"{self.api_endpoint}/update_key/oneshot") 
 
 

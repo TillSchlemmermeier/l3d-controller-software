@@ -17,7 +17,7 @@ export const usePresentStateStore = defineStore('presentState', {
     s2l_normalize: false,
     s2l_gain: 0,
     s2l_update: false,
-    context: [],
+    context: [[0,9]],
     oneshot: 0,
     crossfade_active: false,
     numberOfChannels: 0,
@@ -49,8 +49,8 @@ export const usePresentStateStore = defineStore('presentState', {
       await window.ipcRenderer.restartBackend()
     },
 
-    async select(channelIndex: number, elementIndex: number) {
-      const url = `${baseUrl}/select/${channelIndex}/${elementIndex}`
+    async select(contextIndex: number, channelIndex: number, elementIndex: number) {
+      const url = `${baseUrl}/select/${contextIndex}/${channelIndex}/${elementIndex}`
       await this.callBackend(url)
     },
 

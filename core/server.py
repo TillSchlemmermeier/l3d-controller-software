@@ -320,9 +320,9 @@ class WebSocketAPIServer:
             return {'message': 'Effect toggled'}
         
         # select a new context for the midi-controller
-        @self.app.get('/api/select/{channelIndex}/{elementIndex}')
-        async def select(channelIndex: int, elementIndex: int):
-            self.state_manager.update_context(channelIndex, elementIndex)
+        @self.app.get('/api/select/{contextIndex}/{channelIndex}/{elementIndex}')
+        async def select(contextIndex: int, channelIndex: int, elementIndex: int):
+            self.state_manager.update_context(contextIndex, channelIndex, elementIndex)
             await update_state()
             return {"message": "Selected"}
 
