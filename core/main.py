@@ -1,4 +1,7 @@
-##!/usr/bin/python3
+#!/usr/bin/python3
+import logging
+import sys
+from datetime import datetime
 from UltraDict import UltraDict
 import multiprocessing as mp
 from time import time, sleep
@@ -16,6 +19,54 @@ from state_manager import StateManager
 import pickle
 import argparse
 import os
+
+def setup_complete_logging():
+    os.makedirs('logs', exist_ok=True)
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    log_filename = f'logs/l3d_controller_{timestamp}.log'
+
+    # Open log file for writing
+    log_file = open(log_filename, 'w', buffering=1)  # Line buffered
+
+    # Create tee objects with all required methods
+    class TeeOutput:
+        def __init__(self, file_obj, original_stream):
+            self.file = file_obj
+            self.original = original_stream
+
+        def write(self, text):
+            self.file.write(text)
+            self.original.write(text)
+
+        def flush(self):
+            self.file.flush()
+            self.original.flush()
+
+        def isatty(self):
+            """Check if the original stream is a TTY"""
+            return self.original.isatty()
+
+        def fileno(self):
+            """Return file descriptor of original stream"""
+            return self.original.fileno()
+
+        def __getattr__(self, name):
+            """Delegate any other attributes to the original stream"""
+            return getattr(self.original, name)
+
+    # Redirect stdout and stderr
+    sys.stdout = TeeOutput(log_file, sys.__stdout__)
+    sys.stderr = TeeOutput(log_file, sys.__stderr__)
+
+    # Also setup structured logging
+    logging.basicConfig(
+        level=logging.INFO,
+        format='%(asctime)s - %(processName)s - %(levelname)s - %(message)s',
+        stream=sys.stdout
+    )
+
+    print(f"L3D Controller started - Log file: {log_filename}")
+    return log_filename, log_file
 
 def autopilot():
     # Validate all presets
@@ -43,14 +94,13 @@ def autopilot():
             
         sleep(0.1)
 
-
 def server():
-    print('...starting gui server')
+    logging.info('Starting GUI server')
     server = WebSocketAPIServer()
     server.run()
 
 def midi_devices(state):
-    print('...starting midi thread')
+    logging.info('...starting midi thread')
     launchcontrol = class_launchcontrol()
     # akai = class_akai()
     # fighter = class_fighter()
@@ -71,11 +121,10 @@ def midi_devices(state):
     # root.mainloop()
 
 def rendering(state):
-    print('...waiting for server...')
-    # Wait for server to be ready
+    logging.info('Waiting for server...')
     sleep(2)
 
-    print('...starting rendering thread')
+    logging.info('Starting rendering thread')
     frame_renderer = rendering_engine()
     session = requests.Session()  # Reuse connection
 
@@ -100,14 +149,17 @@ def rendering(state):
 
 def backup_state(state):
     while True:
-        sleep(30)  # New backup every 30 seconds
-        with state.lock:
-            state_copy = dict(state)
+        try:
+            sleep(30)  # New backup every 30 seconds
+            with state.lock:
+                state_copy = dict(state)
 
-        backup_file = os.path.join(f"state_backup.pkl")
-        with open(backup_file, 'wb') as f:  # Note: 'wb' for binary write
-            pickle.dump(state_copy, f)
-        print("State backup created")
+            backup_file = os.path.join(f"state_backup.pkl")
+            with open(backup_file, 'wb') as f:  # 'wb' for binary write
+                pickle.dump(state_copy, f)
+            logging.info("State backup created")
+        except Exception as e:
+            logging.error(f"Backup error: {e}")
 
 
 def restore_from_backup(state):
@@ -123,8 +175,11 @@ def restore_from_backup(state):
     channel_indices = list(range(state['numberOfChannels'])) + [9]
     for channel_key in channel_indices:
         StateManager().update_channel(channel_key)
+    logging.info("State restored from backup")
 
 if __name__ == '__main__':
+    log_file_path, log_file_handle = setup_complete_logging()
+
     parser = argparse.ArgumentParser()
     parser.add_argument('--restore', action='store_true')
     args = parser.parse_args()
@@ -221,4 +276,7 @@ if __name__ == '__main__':
     shared_cube_memory.close()
     shared_cube_memory.unlink()
 
-    print('done')
+
+    logging.info('Application shutdown complete')
+    if log_file_handle:
+        log_file_handle.close()
