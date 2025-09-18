@@ -8,30 +8,45 @@
       @click="$emit('click')"
       @dblclick="$emit('dblclick')"
       :class="{ 
-        'z-10 opacity-100': isSelected && thisEffect.IO, 
-        'z-0 opacity-90': !isSelected && thisEffect.IO,
+        'z-10 opacity-100': hasContext && thisEffect.IO,
+        'z-0 opacity-90': !hasContext && thisEffect.IO,
         'z-0 opacity-50': !thisEffect.IO 
       }"
     >
+      <!-- Ring overlay (only for context effects) -->
       <div
-        class="relative p-3 rounded-xl shadow-md shadow-zinc-900 transition-all duration-200 overflow-hidden"
+        v-if="hasContext"
+        class="absolute ring-3 ring-offset-3 ring-offset-zinc-700 inset-0 rounded-xl pointer-events-none animate-pulse"
+        :class="getRingClasses"
+      ></div>
+
+      <div
+        class="relative p-3 rounded-xl shadow-md shadow-zinc-900 transition-all duration-200"
         :class="[
-          { 'shadow-lg scale-120 ring-2': isSelected },
-          { 'grayscale': !thisEffect.IO },
-          { 'border-3 border-red-500': context == 0 },
-          { 'border-3 border-green-500': context == 1 },
-          { 'border-3 border-orange-500': context == 2 },
-          { 'border-3 border-blue-500': context == 3 }
+          { 'grayscale': !thisEffect.IO }
         ]"
       >
         <!-- Gradient Background -->
         <div 
-          class="absolute inset-0"
+          class="absolute inset-0 rounded-xl"
           :class="[
             getColors.gradient,
             { 'backdrop-blur-sm': !thisEffect.IO }
           ]"
         ></div>
+
+        <!-- Context number overlay -->
+        <div
+          v-if="hasContext"
+          class="absolute inset-0 flex items-center justify-center pointer-events-none select-none overflow-hidden"
+        >
+          <div
+            class="text-[120px] font-black leading-none opacity-15 mix-blend-multiply"
+            :class="contextNumberClasses"
+          >
+            {{ props.context + 1 }}
+          </div>
+        </div>
         
         <div class="relative z-10">
           <!-- Effect Name Header -->
@@ -41,7 +56,7 @@
                   { 'border-opacity-50': !thisEffect.IO }
                 ]">
             <div class="text-lg font-bold text-center tracking-wide capitalize"
-              :class="[getColors.text, { 'blur-[0.7px]': !thisEffect.IO }]">
+              :class="[getHeaderTextStyle(), { 'blur-[0.7px]': !thisEffect.IO }]">
               {{ thisEffect.name.replace(/^e_/, '').replace(/_/g, ' ') }}
             </div>
           </div>
@@ -64,7 +79,7 @@
                 </div>
   
                 <div 
-                  v-if="isSelected"
+                  v-if="hasContext"
                   class="relative w-3 h-3" 
                 >
                   <svg 
@@ -113,7 +128,7 @@
 <script setup lang="ts">
 import { computed, ref, watch, nextTick } from 'vue'
 import { usePresentStateStore } from '../../stores/presentState'
-import { getColorsByName } from '../../utils/colors'
+import { getColorsByName, getContextColorSet } from '../../utils/colors'
 
 const props = defineProps({
   channel: {
@@ -123,11 +138,6 @@ const props = defineProps({
   effectNumber: {
     type: Number,
     required: true,
-  },
-  isSelected: {
-    type: Boolean,
-    required: false,
-    default: false,
   },
   context: {
     type: Number,
@@ -154,8 +164,8 @@ const getColors = computed(() => {
   return getColorsByName(thisEffect.value?.name || '')
 })
 
-watch(() => props.isSelected, (newVal) => {
-  if (newVal) {
+watch(() => props.context, (newVal, oldVal) => {
+  if (oldVal === 4 && newVal < 4) {
     loadProgressCircles.value = true
     initialFill.value = true
     nextTick(() => {
@@ -165,5 +175,28 @@ watch(() => props.isSelected, (newVal) => {
       initialFill.value = false
     }, 500)
   }
+})
+
+const hasContext = computed(() => {
+  return props.context !== 4
+})
+
+const getRingClasses = computed(() => {
+  if (props.context === 4) return ''
+
+  const contextColorSet = getContextColorSet(props.context)
+  return contextColorSet?.ring || ''
+})
+
+const getHeaderTextStyle = (): string => {
+  if (props.context === 4) return getColors.value.text
+
+  const contextColorSet = getContextColorSet(props.context)
+  return contextColorSet?.text || getColors.value.text
+}
+
+const contextNumberClasses = computed(() => {
+  const baseTextColor = getColors.value.text
+  return `${baseTextColor.replace('text-', 'text-')}/20`
 })
 </script>

@@ -4,47 +4,55 @@
   </template>
   <template v-else>
     <div 
+      class="relative mt-2 group z-10"
       @click="$emit('click')" 
       @dblclick="$emit('dblclick')"
-      class="relative"
-      :class="{ 'z-10 opacity-100': isSelected, 'z-0 opacity-90': !isSelected }"
     >
-      <div 
-        class="relative p-4 rounded-xl overflow-hidden backdrop-blur-sm shadow-lg shadow-zinc-900 transition-all duration-200"
-        :class="[
-          `shadow-${colors.text}/10`,
-          { 'scale-120 ring-2': isSelected },
-          { [colors.border]: isSelected },
-          { 'border-3 border-red-500': context == 0 },
-          { 'border-3 border-green-500': context == 1 },
-          { 'border-3 border-orange-500': context == 2 },
-          { 'border-3 border-blue-500': context == 3 }
-        ]"
-      >
+      <!-- Ring overlay (only for context generators) -->
+      <div
+        v-if="hasContext"
+        class="absolute ring-3 ring-offset-3 ring-offset-zinc-700 inset-0 rounded-xl pointer-events-none animate-pulse"
+        :class="getRingClasses"
+      ></div>
+
+      <div class="relative p-4 rounded-xl shadow-lg shadow-zinc-900 transition-all duration-200">
         <!-- Gradient Background -->
         <div 
-          class="absolute inset-0 opacity-90"
+          class="absolute inset-0 rounded-xl"
           :class="colors.gradient"
         ></div>
-        
+
+        <!-- Context number overlay -->
+        <div 
+          v-if="hasContext"
+          class="absolute inset-0 flex items-center justify-center pointer-events-none select-none overflow-hidden"
+        >
+          <div 
+            class="text-[120px] font-black leading-none opacity-15 mix-blend-multiply"
+            :class="contextNumberClasses"
+          >
+            {{ props.context + 1 }}
+          </div>
+        </div>
+
         <!-- Glass effect overlay -->
-        <div class="absolute inset-0 bg-white opacity-10"></div>
+        <div class="absolute inset-0 bg-white opacity-10 rounded-xl"></div>
         
-        <!-- Content -->
         <div class="relative z-10">
           <!-- Generator Name Header -->
           <div 
             class="border-b pb-2 mb-3"
-            :class="colors.border + '/50'"
+            :class="colors.border"
           >
             <div 
               class="text-xl text-center font-extrabold tracking-wide capitalize drop-shadow-sm"
-              :class="colors.text"
+              :class="getHeaderTextStyle()"
             >
               {{ thisGenerator.name.replace(/^g_/, '').replace(/_/g, ' ') }}
             </div>
           </div>
     
+          <!-- Parameters Grid -->
           <div class="grid grid-cols-2">
             <template
               v-for="_, index in (thisGenerator.params.length / 4)"
@@ -58,13 +66,14 @@
               </div>
               <div class="flex items-center justify-end gap-2">
                 <div 
-                  class="text-right text-sm font-bold text-zinc-900" 
+                  class="text-right text-sm font-bold" 
+                  :class="colors.text"
                 >
                   {{ thisGenerator.params[4 * index + 2] }}
                 </div>
                 <!-- Circular Progress -->
                 <div 
-                  v-if="isSelected"
+                  v-if="hasContext"
                   class="relative w-3 h-3 flex-shrink-0" 
                 >
                   <svg 
@@ -90,7 +99,7 @@
                       stroke="currentColor"
                       stroke-width="4"
                       :style="{
-                        strokeDasharray: `${loadProgressCircles ? 0 : thisGenerator.params[4 * index + 3] * 88}, 88`,
+                        strokeDasharray: `${loadProgressCircles ? 0 : Number(thisGenerator.params[4 * index + 3]) * 88}, 88`,
                         strokeDashoffset: 0
                       }"
                       :class="[
@@ -111,19 +120,14 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref, watch, nextTick } from 'vue'
+import { onMounted, ref, watch, nextTick, computed } from 'vue'
 import { usePresentStateStore } from '../../stores/presentState'
-import { getGeneratorColors } from '../../utils/colors'
+import { getGeneratorColors, getContextColorSet } from '../../utils/colors'
 
 const props = defineProps({
   channel: {
     type: Number,
     required: true,
-  },
-  isSelected: {
-    type: Boolean,
-    required: false,
-    default: false,
   },
   context: {
     type: Number,
@@ -146,7 +150,7 @@ onMounted(async () => {
     console.log('Generator loaded:', thisGenerator.value)
     loading.value = false
   }
-  if (props.isSelected) {
+  if (props.context < 4) {
     loadProgressCircles.value = true
     nextTick(() => {
       loadProgressCircles.value = false
@@ -165,8 +169,8 @@ watch(
   { deep: true }
 )
 
-watch(() => props.isSelected, (newVal) => {
-  if (newVal) {
+watch(() => props.context, (newVal, oldVal) => {
+  if (oldVal === 4 && newVal < 4) {
     loadProgressCircles.value = true
     initialFill.value = true
     nextTick(() => {
@@ -178,6 +182,28 @@ watch(() => props.isSelected, (newVal) => {
   }
 })
 
+const hasContext = computed(() => {
+  return props.context !== 4
+})
+
+const getRingClasses = computed(() => {
+  if (props.context === 4) return ''
+  
+  const contextColorSet = getContextColorSet(props.context)
+  return contextColorSet?.ring || ''
+})
+
+const getHeaderTextStyle = (): string => {
+  if (props.context === 4) return colors.text
+  
+  const contextColorSet = getContextColorSet(props.context)
+  return contextColorSet?.text || colors.text
+}
+
+const contextNumberClasses = computed(() => {
+  const baseTextColor = colors.text
+  return `${baseTextColor.replace('text-', 'text-')}/20`
+})
 </script>
 
 <style scoped>

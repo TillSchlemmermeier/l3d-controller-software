@@ -13,6 +13,15 @@ interface ComponentColors {
   bg: string
 }
 
+export interface ContextColorSet {
+  bg: string
+  text: string
+  bgInactive: string
+  textInactive: string
+  border: string
+  ring: string
+}
+
 export const gradientSets: GradientSet[] = [
   // Generator colors
   {
@@ -106,7 +115,7 @@ export function getColorsByName(name: string): ComponentColors {
 
 export function getGeneratorColors(): ComponentColors {
   return {
-    gradient: 'bg-gradient-to-br from-slate-500 to-zinc-200',
+    gradient: 'bg-gradient-to-br from-slate-500 to-zinc-200 grayscale',
     text: 'text-slate-900',
     border: 'border-slate-200',
     bg: 'bg-slate-50'
@@ -120,4 +129,57 @@ export function getEffectColors(): ComponentColors {
     border: 'border-slate-300',
     bg: 'bg-slate-50'
   }
+}
+
+export const contextColors: Record<number, ContextColorSet> = {
+  0: { // White context
+    bg: 'bg-white',
+    text: 'text-zinc-950 font-extrabold',
+    bgInactive: 'bg-white/80',
+    textInactive: 'text-zinc-900',
+    border: 'border-white',
+    ring: 'ring-white'
+  },
+  1: { // Cyan context
+    bg: 'bg-cyan-400',
+    text: 'text-zinc-950 font-extrabold',
+    bgInactive: 'bg-cyan-600',
+    textInactive: 'text-zinc-900',
+    border: 'border-zinc-300',
+    ring: 'ring-cyan-400'
+  },
+  2: { // Yellow context
+    bg: 'bg-yellow-400',
+    text: 'text-zinc-950 font-extrabold',
+    bgInactive: 'bg-yellow-600',
+    textInactive: 'text-white',
+    border: 'border-zinc-500',
+    ring: 'ring-yellow-400'
+  },
+  3: { // Pink context
+    bg: 'bg-pink-400',
+    text: 'text-zinc-950 font-extrabold',
+    bgInactive: 'bg-pink-600',
+    textInactive: 'text-white',
+    border: 'border-zinc-900',
+    ring: 'ring-pink-400'
+  },
+}
+
+export function getContextColors(contextIndex: number): { bg: string, text: string } {
+  const context = contextColors[contextIndex]
+  if (!context) return { bg: '', text: '' }
+
+  return {
+    bg: context.bg,
+    text: context.text
+  }
+}
+
+export function getContextColorSet(contextIndex: number): ContextColorSet | null {
+  return contextColors[contextIndex] || null
+}
+
+export function getAllContextColors(): ContextColorSet[] {
+  return Object.values(contextColors)
 }
