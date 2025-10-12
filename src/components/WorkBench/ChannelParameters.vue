@@ -41,7 +41,7 @@
 
 <script setup lang="ts">
 import { computed } from 'vue'
-import { usePresentStateStore } from '../../stores/presentState'
+import { useCoreStateStore } from '../../stores/coreState'
 import brightnessEmptyIcon from '../../assets/icons/brightness_empty.svg'
 import fadeIcon from '../../assets/icons/fade.svg'
 
@@ -52,20 +52,20 @@ const props = defineProps({
   },
 })
 
-const presentState = usePresentStateStore()
+const coreState = useCoreStateStore()
 
 const channelParameters = computed(() => {
-  return presentState.getChannelParameters(props.channel)
+  return coreState.getChannelParameters(props.channel)
 })
 
 const textColor = computed(() => {
-  return presentState.channels[props.channel].IO 
+  return coreState.channels[props.channel].IO
     ? 'text-zinc-900' 
     : 'text-zinc-800'
 })
 
 const gradientBackground = computed(() => {
-  return presentState.channels[props.channel].IO
+  return coreState.channels[props.channel].IO
     ? 'bg-gradient-to-br from-emerald-600 to-green-400'
     : 'bg-gradient-to-br from-rose-500 to-red-400'
 })

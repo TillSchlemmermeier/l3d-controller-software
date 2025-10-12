@@ -5,8 +5,6 @@
   <template v-else>
     <div 
       class="relative mt-2 group z-10"
-      @click="$emit('click')" 
-      @dblclick="$emit('dblclick')"
     >
       <!-- Ring overlay (only for context generators) -->
       <div
@@ -121,8 +119,8 @@
 
 <script setup lang="ts">
 import { onMounted, ref, watch, nextTick, computed } from 'vue'
-import { usePresentStateStore } from '../../stores/presentState'
-import { getGeneratorColors, getContextColorSet } from '../../utils/colors'
+import { useCoreStateStore } from '../../stores/coreState'
+import { getGeneratorColors, getContextColorSet } from '../../utils/colorSchemes'
 
 const props = defineProps({
   channel: {
@@ -136,7 +134,7 @@ const props = defineProps({
   }
 })
 
-const presentState = usePresentStateStore()
+const coreState = useCoreStateStore()
 const thisGenerator = ref()
 const loading = ref(true)
 const colors = getGeneratorColors()
@@ -144,10 +142,8 @@ const loadProgressCircles = ref(true)
 const initialFill = ref(true)
 
 onMounted(async () => {
-  thisGenerator.value = presentState.channels[props.channel]?.generator
-  console.log(thisGenerator.value)
+  thisGenerator.value = coreState.channels[props.channel]?.generator
   if (thisGenerator.value) {
-    console.log('Generator loaded:', thisGenerator.value)
     loading.value = false
   }
   if (props.context < 4) {
@@ -159,7 +155,7 @@ onMounted(async () => {
 })
 
 watch(
-  () => presentState.channels[props.channel]?.generator,
+  () => coreState.channels[props.channel]?.generator,
   (newVal) => {
     thisGenerator.value = newVal
     if (newVal) {

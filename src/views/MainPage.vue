@@ -7,26 +7,19 @@
         </div>
         <div
           class="col-span-1"
-          @dblclick="sharedVariables.admin = !sharedVariables.admin"
+          @dblclick="uiState.admin = !uiState.admin"
         ></div>
       </div>
-      <WorkBench class="pl-6" />
+      <WorkBench />
     </div>
     <div class="w-[500px] h-full flex flex-col">
       <CubePreview />
       <SoundSpectrum />
       <Dashboard class="flex-1" />
     </div>
-    <div class="h-full w-[436px] bg-black">
-      <div v-show="sharedVariables.admin">
-        <ConsoleOutput
-          class="m-2 w-[420]"
-        />
-      </div>
-      <!-- <div v-else class="bg-black w-[466px] h-[1440px]"></div> -->
-    </div>
+    <SideBar />
     <PresetDialog
-      v-if="sharedVariables.dialogOpen"
+      v-if="uiState.dialogOpen"
       :channel-preview-ref="channelPreviewRef!"
       @close="closeDialog"
     />
@@ -36,28 +29,28 @@
 <script setup lang="ts">
 import { onMounted, ref, nextTick } from 'vue'
 import WorkBench from '../components/WorkBench/WorkBench.vue'
-import Dashboard from '../components/Dashboard.vue'
+import Dashboard from '../components/Dashboard/Dashboard.vue'
 import CubePreview from '../components/CubePreview.vue'
 import ChannelPreview from '../components/ChannelPreview.vue'
 import SoundSpectrum from '../components/SoundSpectrum.vue'
-import ConsoleOutput from '../components/ConsoleOutput.vue'
 import PresetDialog from '../components/PresetDialog/PresetDialog.vue'
-import { useSharedVariablesStore } from '../stores/sharedVariables'
-import { usePresentStateStore } from '../stores/presentState'
+import SideBar from '../components/SideBar/SideBar.vue'
+import { useUiStateStore } from '../stores/uiState'
+import { useCoreStateStore } from '../stores/coreState'
 
-const sharedVariables = useSharedVariablesStore()
-const presentState = usePresentStateStore()
+const uiState = useUiStateStore()
+const coreState = useCoreStateStore()
 
 const channelPreviewRef = ref<InstanceType<typeof ChannelPreview> | null>(null)
 
 onMounted(async() => {
   await nextTick()
   console.log('MainPage is mounted')
-  presentState.initializeIPC()
-  presentState.requestStateUpdate()
+  coreState.initializeIPC()
+  coreState.requestStateUpdate()
 })
 
 function closeDialog() {
-  sharedVariables.dialogOpen = false
+  uiState.dialogOpen = false
 }
 </script>

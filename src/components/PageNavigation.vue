@@ -36,7 +36,7 @@
 import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { RouteNames } from '../router/RouteNames'
-import { useSharedVariablesStore } from '../stores/sharedVariables'
+import { useUiStateStore } from '../stores/uiState'
 import admin from '../assets/icons/admin.svg'
 import io from '../assets/icons/io.svg'
 import edit from '../assets/icons/edit.svg'
@@ -44,7 +44,7 @@ import home from '../assets/icons/home.svg'
 import blank from '../assets/icons/blank.svg'
 import midi_edit from '../assets/icons/midi_edit.svg'
 
-const sharedVariables = useSharedVariablesStore()
+const uiState = useUiStateStore()
 const router = useRouter()
 const selectedItem = ref<string>('Home')
 
@@ -54,10 +54,10 @@ function handleClick(item: { label: string; action: () => void }) {
 }
 const menuItems = computed(() => [
   { icon: home, label: 'Home', action: () => goTo(RouteNames.MAIN_PAGE) },
-  { icon: midi_edit, label: 'Select', action: () => sharedVariables.clickBehavior = 'select' },
-  { icon: edit, label: 'Edit', action: () => sharedVariables.clickBehavior = 'edit' },
-  { icon: io, label: 'IO', action: () => sharedVariables.clickBehavior = 'IO' },
-  ...(sharedVariables.admin
+  { icon: midi_edit, label: 'Select', action: () => uiState.clickBehavior = 'select' },
+  { icon: edit, label: 'Edit', action: () => uiState.clickBehavior = 'edit' },
+  { icon: io, label: 'IO', action: () => uiState.clickBehavior = 'IO' },
+  ...(uiState.admin
     ? [{ icon: admin, label: 'Admin', action: () => goTo(RouteNames.ADMIN_VIEW) }]
     : [{ icon: blank, label: 'Dummy', action: () => console.log('DUMMY CLICKED') }]
   ),

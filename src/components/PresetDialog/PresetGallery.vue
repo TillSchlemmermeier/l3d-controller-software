@@ -20,7 +20,7 @@
       >
       <div class="aspect-square relative">
         <img 
-          :src="`src/assets/previews/${sharedVariables.selectedElement}_p_${preset.name}.gif`" 
+          :src="`src/assets/previews/${uiState.selectedElement}_p_${preset.name}.gif`" 
           class="w-full h-full object-cover"
           draggable="false"
           v-show="!gifLoadingErrors.get(preset.name)"
@@ -53,14 +53,14 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
-import { useSharedVariablesStore } from '../../stores/sharedVariables'
+import { useUiStateStore } from '../../stores/uiState'
 import { Preset } from '../../types/types'
 
 const emit = defineEmits<{
   (e: 'select', value: string): void
 }>()
 
-const sharedVariables = useSharedVariablesStore()
+const uiState = useUiStateStore()
 const gifLoadingErrors = ref(new Map<string, boolean>())
 const presetGallery = ref<HTMLElement | null>(null)
 const isDragging = ref(false)
@@ -75,7 +75,7 @@ function formatName(name: string): string {
 
 const sortedPresets = computed(() => {
   gifLoadingErrors.value.clear()
-  const presets = [...sharedVariables.overlayPresets] as Preset[]
+  const presets = [...uiState.overlayPresets] as Preset[]
   console.log(presets)
   
   // Remove 'basic' preset before sorting
@@ -83,7 +83,7 @@ const sortedPresets = computed(() => {
   const basicPreset = basicIndex !== -1 ? presets.splice(basicIndex, 1)[0] : null
   
   // Sort remaining presets based on selected method
-  switch (sharedVariables.sortBy) {
+  switch (uiState.sortBy) {
     case 'alpha':
       presets.sort((a, b) => a.name.localeCompare(b.name))
       break

@@ -1,6 +1,8 @@
 <template>
   <div>
-    <div ref="scatterplot"></div>
+    <div
+      @click="handleRotateCube"
+      ref="scatterplot"></div>
   </div>
 </template>
 
@@ -11,6 +13,8 @@ import * as THREE from 'three'
 const scatterplot = ref<HTMLDivElement | null>(null)
 const colors = ref<number[]>([])
 const geometry = ref<THREE.BufferGeometry | null>(null)
+const rotateCube = ref(false)
+const pointsRef = ref<THREE.Points | null>(null)
 
 function setupScene() {
   const scene = new THREE.Scene()
@@ -73,6 +77,14 @@ function handleCubeData(message: any) {
   )
 }
 
+function handleRotateCube() {
+  rotateCube.value = !rotateCube.value
+  if (pointsRef.value) {
+    pointsRef.value.rotation.y = 0
+    pointsRef.value.rotation.z = 0
+  }
+}
+
 onMounted(() => {
   if (!window.ipcRenderer) {
     console.error('Electron API not available')
@@ -107,13 +119,16 @@ onMounted(() => {
   })
   
   const points = new THREE.Points(geometry.value, material)
+  pointsRef.value = points
   scene.add(points)
 
   // Animation loop
   const animate = () => {
     requestAnimationFrame(animate)
-    // points.rotation.x += 0.001
-    // points.rotation.y += 0.01
+    if (rotateCube.value) {
+      points.rotation.y += 0.01
+      points.rotation.z += 0.005
+    }
     renderer.render(scene, camera)
   }
   animate()

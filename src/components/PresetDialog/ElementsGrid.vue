@@ -3,15 +3,15 @@
     class="flex flex-row flex-wrap gap-3 mx-auto"
   >
     <template 
-      v-if="sharedVariables.dialogType == 'generator' || 
-            sharedVariables.dialogType == 'effect'"
+      v-if="uiState.dialogType == 'generator' ||
+            uiState.dialogType == 'effect'"
     >
       <template v-for="element in sortedItems" :key="element">
         <button
           @click="$emit('select', element.name)"
           class="group w-28 aspect-square rounded-lg shadow-sm ring-1 ring-zinc-500/50"
           :class="[
-            element.name === sharedVariables.selectedElement 
+            element.name === uiState.selectedElement
               ? 'bg-gradient-to-br from-zinc-500 to-zinc-400' 
               : 'bg-gradient-to-br from-zinc-400 to-zinc-300'
           ]"
@@ -26,18 +26,18 @@
     </template>
     <!-- For channel and global presets show cards with preview -->
     <template v-else>
-      <template v-for="element in sharedVariables.overlayPresets" :key="element">
+      <template v-for="element in uiState.overlayPresets" :key="element">
         <button
           :data-preset="element"
           @click="() => {
-            sharedVariables.selectedElement = element.name;
+            uiState.selectedElement = element.name;
             $emit('load', element.name)
           }"
           class="relative flex-none w-28 rounded-lg overflow-hidden bg-zinc-300"
         >
           <div class="aspect-square">
             <img 
-              :src="`src/assets/previews/${sharedVariables.dialogType}_p_${element.name}.gif`"
+              :src="`src/assets/previews/${uiState.dialogType}_p_${element.name}.gif`"
               class="w-full h-full object-cover"
               draggable="false"
             />
@@ -55,7 +55,7 @@
     <!-- Toggle between generator and channel presets if we are creating a new channel-->
     <div v-if="newChannel">
       <button
-        v-if="sharedVariables.dialogType === 'generator'"
+        v-if="uiState.dialogType === 'generator'"
         @click="$emit('changeType')"
         class="w-28 aspect-square rounded-lg bg-gradient-to-br from-zinc-500 to-zinc-400 shadow-sm ring-1 ring-zinc-800/50"
       >
@@ -64,7 +64,7 @@
         </span>
       </button>
       <button
-        v-else="sharedVariables.dialogType === 'channel'"
+        v-else="uiState.dialogType === 'channel'"
         @click="$emit('changeType')"
         class="w-28 aspect-square rounded-lg bg-gradient-to-br from-zinc-500 to-zinc-400 shadow-sm ring-1 ring-zinc-800/50"
       >
@@ -76,13 +76,13 @@
 
     <!-- Save Preset Button -->
     <button
-      v-if="!newChannel && sharedVariables.admin == true"
+      v-if="!newChannel && uiState.admin == true"
       @click="$emit('toggleKeyboard')"
       class="group w-28 aspect-square rounded-lg bg-gradient-to-br from-zinc-700 to-zinc-500 shadow-sm ring-1 ring-zinc-800/50"
     >
       <div class="flex h-full flex-col items-center justify-center p-3">
         <span class="text-m text-center font-semibold text-zinc-300 break-words w-full capitalize">
-          Save {{ sharedVariables.dialogType }} Preset
+          Save {{ uiState.dialogType }} Preset
         </span>
       </div>
     </button>
@@ -92,7 +92,7 @@
 
 <script setup lang="ts">
 import { computed } from 'vue'
-import { useSharedVariablesStore } from '../../stores/sharedVariables'
+import { useUiStateStore } from '../../stores/uiState'
 
 defineProps<{
   newChannel: boolean
@@ -105,7 +105,7 @@ defineEmits<{
   (e: 'toggleKeyboard'): void
 }>()
 
-const sharedVariables = useSharedVariablesStore()
+const uiState = useUiStateStore()
 
 function formatName(name: string): string {
   return name.replace(/^[gae]_/, '').replace(/_/g, ' ')
@@ -118,9 +118,9 @@ interface ElementItem {
 }
 
 const sortedItems = computed(() => {
-  const items = [...sharedVariables.overlayItems] as ElementItem[]
+  const items = [...uiState.overlayItems] as ElementItem[]
   
-  switch (sharedVariables.sortBy) {
+  switch (uiState.sortBy) {
     case 'alpha':
       return items.sort((a, b) => a.name.localeCompare(b.name))
     case 'date':

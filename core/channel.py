@@ -10,6 +10,7 @@ for generator in generators:
 for effect in effects:
     exec(f'from effects.{effect} import *')
 
+from effects.e_color_manager import e_color_manager
 
 class class_channel:
     '''Class for a channel'''
@@ -18,6 +19,7 @@ class class_channel:
         self.id = id
         self.generator = None
         self.effects = []
+        self.color_effect = e_color_manager()
 
         print(f'Channel {self.id} initialised')
         
@@ -74,5 +76,12 @@ class class_channel:
                         channelstate[i]['params'][4*k:4*k+3] = effect_state[k][:3]
                     channelstate[i]['update'] = False
                     channel_updated = True
+
+        if 8 in channelstate:
+            if channelstate[8]['update']:
+                world = self.color_effect(world, channelstate[8])
+                channelstate[8]['update'] = False
+            else:
+                world = self.color_effect(world)
 
         return world, channelstate if channel_updated else None

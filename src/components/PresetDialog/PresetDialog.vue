@@ -70,8 +70,8 @@
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
-import { usePresentStateStore } from '../../stores/presentState'
-import { useSharedVariablesStore } from '../../stores/sharedVariables'
+import { useCoreStateStore } from '../../stores/coreState'
+import { useUiStateStore } from '../../stores/uiState'
 import DialogHeader from './Header.vue'
 import PresetGallery from './PresetGallery.vue'
 import ElementsGrid from './ElementsGrid.vue'
@@ -86,8 +86,8 @@ const props = defineProps({
     default: null
   }
 })
-const presentState = usePresentStateStore()
-const sharedVariables = useSharedVariablesStore()
+const coreState = useCoreStateStore()
+const uiState = useUiStateStore()
 
 const showDialog = ref(true)
 const showElements = ref(true)
@@ -104,7 +104,7 @@ const isSuccess = ref(false)
 const emit = defineEmits(['close'])
 
 const close = () => {
-  sharedVariables.selectedElement = ''
+  uiState.selectedElement = ''
   showDialog.value = false
   setTimeout(() => emit('close'), 300) // Wait for animation to complete
 }
@@ -132,14 +132,13 @@ function handleKeyboardSave(name: string) {
 
 async function loadPreset(preset_name: string) {
   if (preset_name) {
-    await presentState.load(preset_name)
-    // update values for midi interface
-    if (sharedVariables.dialogType === 'effect') {
-      await presentState.select(sharedVariables.channelIndex, sharedVariables.effectIndex)
-    } else if (sharedVariables.dialogType === 'generator' || sharedVariables.dialogType === 'channel') {
-      await presentState.select(sharedVariables.channelIndex, 9)
-    } else if (sharedVariables.dialogType === 'global') {
-      await presentState.select(0, 9)
+    await coreState.load(preset_name)
+    if (uiState.dialogType === 'effect') {
+      await coreState.select(0, uiState.channelIndex, uiState.effectIndex)
+    } else if (uiState.dialogType === 'generator' || uiState.dialogType === 'channel') {
+      await coreState.select(0, uiState.channelIndex, 9)
+    } else if (uiState.dialogType === 'global') {
+      await coreState.select(0, 0, 9)
     }
     setTimeout(() => close(), 50)
   }
@@ -152,14 +151,14 @@ async function recordGif() {
   showFrameSelector.value = true
   capturedFrames.value = []
 
-  if (sharedVariables.dialogType === 'global') {
+  if (uiState.dialogType === 'global') {
     capturedFrames.value = await props.channelPreviewRef.captureCombinedView(
       (frame: string) => {
         capturedFrames.value.push(frame)
       }
     )
   } else {
-    const channelIndex = sharedVariables.channelIndex
+    const channelIndex = uiState.channelIndex
     console.log('Channel index:', channelIndex)
     
     try {
@@ -211,7 +210,7 @@ async function savePreset(startFrame: number, endFrame: number, gif: boolean = t
     }
 
     // Save the Preset
-    const response = await presentState.save(presetName.value, gifData)
+    const response = await coreState.save(presetName.value, gifData)
     console.log(response)
     if (response.status == 200) { 
       console.log('Save successful:', response.message)
@@ -230,7 +229,7 @@ async function savePreset(startFrame: number, endFrame: number, gif: boolean = t
       
       if (confirmOverwrite) {
         // Try saving again with force flag
-        const overwriteResponse = await presentState.save(presetName.value, gifData, true)
+        const overwriteResponse = await coreState.save(presetName.value, gifData, true)
         if (overwriteResponse.status === 200) {
           showFrameSelector.value = false
           isSuccess.value = true
@@ -249,36 +248,36 @@ async function savePreset(startFrame: number, endFrame: number, gif: boolean = t
 }
 
 async function fetchPresets(element: string) {
-  if (element === sharedVariables.selectedElement) {
+  if (element === uiState.selectedElement) {
     loadPreset('basic')
     close()
   } else {
-    sharedVariables.selectedElement = element
-    await sharedVariables.fetchPresets()
+    uiState.selectedElement = element
+    await uiState.fetchPresets()
     showPresets.value = true
   }
 }
 
 function newChannelTypeSwitch() {
-  if (sharedVariables.dialogType === 'generator') {
-    sharedVariables.dialogType = 'channel'
+  if (uiState.dialogType === 'generator') {
+    uiState.dialogType = 'channel'
     showPresets.value = false
-  } else if (sharedVariables.dialogType === 'channel') {
-    sharedVariables.dialogType = 'generator'
+  } else if (uiState.dialogType === 'channel') {
+    uiState.dialogType = 'generator'
   }
   populateOverlayElements()
 }
 
 async function populateOverlayElements() {
-  if (sharedVariables.dialogType === 'newChannel') {
-    sharedVariables.dialogType = 'generator'
+  if (uiState.dialogType === 'newChannel') {
+    uiState.dialogType = 'generator'
     newChannel.value = true
   }
-  if (sharedVariables.dialogType === 'generator' || sharedVariables.dialogType === 'effect') {
-    await sharedVariables.fetchActiveElements()
+  if (uiState.dialogType === 'generator' || uiState.dialogType === 'effect') {
+    await uiState.fetchActiveElements()
   } else {
-    sharedVariables.selectedElement = 'presets'
-    await sharedVariables.fetchPresets()
+    uiState.selectedElement = 'presets'
+    await uiState.fetchPresets()
   }
 }
 

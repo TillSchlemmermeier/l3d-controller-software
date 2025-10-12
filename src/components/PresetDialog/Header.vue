@@ -4,24 +4,24 @@
     <div class="flex gap-4">
       <button 
         class="rounded-lg px-2 py-1 transition-all duration-150 active:scale-70"
-        :class="{ 'bg-zinc-500/30': sharedVariables.sortBy === 'alpha' }"
-        @click="sharedVariables.sortBy = 'alpha'"
+        :class="{ 'bg-zinc-500/30': uiState.sortBy === 'alpha' }"
+        @click="uiState.sortBy = 'alpha'"
         title="Sort alphabetically"
       >
         <img :src="sortAscendingLetters" class="w-7 h-7"/>
       </button>
       <button 
         class="rounded-lg px-2 py-1 transition-all duration-150 active:scale-70"
-        :class="{ 'bg-zinc-500/30': sharedVariables.sortBy === 'usage' }"
-        @click="sharedVariables.sortBy = 'usage'"
+        :class="{ 'bg-zinc-500/30': uiState.sortBy === 'usage' }"
+        @click="uiState.sortBy = 'usage'"
         title="Sort by usage"
       >
         <img :src="sortAscendingNumbers" class="w-7 h-7"/>
       </button>
       <button 
         class="rounded-lg px-2 py-1 transition-all duration-150 active:scale-70"
-        :class="{ 'bg-zinc-500/30': sharedVariables.sortBy === 'date' }"
-        @click="sharedVariables.sortBy = 'date'"
+        :class="{ 'bg-zinc-500/30': uiState.sortBy === 'date' }"
+        @click="uiState.sortBy = 'date'"
         title="Sort by date"
       >
         <img :src="calendarWeek" class="w-7 h-7"/>
@@ -30,7 +30,7 @@
 
     <!-- Centered title -->
     <h2 class="flex-1 text-2xl text-zinc-900 text-center uppercase tracking-wider font-bold">
-      {{ sharedVariables.dialogType }}
+      {{ uiState.dialogType }}
     </h2>
 
     <!-- Close button (right) -->
@@ -50,12 +50,12 @@
 
 
 <script setup lang="ts">
-import { useSharedVariablesStore } from '../../stores/sharedVariables';
+import { useUiStateStore } from '../../stores/uiState';
 import calendarWeek from '../../assets/icons/calendar-week.svg'
 import sortAscendingLetters from '../../assets/icons/sort-a-z.svg'
 import sortAscendingNumbers from '../../assets/icons/sort-0-9.svg'
 
-const sharedVariables = useSharedVariablesStore();
+const uiState = useUiStateStore();
 
 defineEmits<{
   (e: 'close'): void

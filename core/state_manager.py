@@ -1,5 +1,6 @@
 from UltraDict import UltraDict
 from copy import deepcopy
+import json
 
 class StateManager:
     def __init__(self):
@@ -26,6 +27,8 @@ class StateManager:
                 channel[9]['update'] = 1
             for i in range(channel['numberOfEffects']):
                 channel[i]['update'] = 1
+            if 8 in channel:
+                channel[8]['update'] = 1
             self.state[channel_key] = channel
 
         self._safe_state_operation(_update)
@@ -193,6 +196,25 @@ class StateManager:
             channel = self.state[channel_index]
             channel[effect_index]['IO'] = not channel[effect_index]['IO']
             self.state[channel_index] = channel
+
+    def update_color_manager(self, channel_index: int, color_data: dict) -> bool:
+        """Update color manager settings for a specific channel"""
+        try:
+            with self.state.lock:
+                channel = self.state[channel_index]
+                channel[8] = color_data.copy()
+                channel[8]['update'] = 1
+                self.state[channel_index] = channel
+                print(f"Updated color manager for channel {channel_index} with data: {color_data}")
+
+                # Set MIDI update flag
+                self.state['midi_update'] = 1
+
+                return True
+
+        except Exception as e:
+            print(f"Error updating color manager: {e}")
+            return False
 
     def toggle_autopilot(self):
         """Toggle autopilot mode"""

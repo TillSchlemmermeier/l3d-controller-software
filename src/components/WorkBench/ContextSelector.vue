@@ -38,17 +38,17 @@
 
 <script setup lang="ts">
 import { computed } from 'vue'
-import { useSharedVariablesStore } from '../../stores/sharedVariables'
-import { getAllContextColors } from '../../utils/colors'
+import { useUiStateStore } from '../../stores/uiState'
+import { getAllContextColors } from '../../utils/colorSchemes'
 
 
-const sharedVariables = useSharedVariablesStore()
+const uiState = useUiStateStore()
 
 const contexts = computed(() => getAllContextColors())
 
-const isActive = (index: number) => sharedVariables.contextIndex === index
+const isActive = (index: number) => uiState.contextIndex === index
 
 const selectContext = (index: number) => {
-  sharedVariables.contextIndex = index
+  uiState.contextIndex = index
 }
 </script>

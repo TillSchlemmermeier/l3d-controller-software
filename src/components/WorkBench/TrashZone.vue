@@ -1,4 +1,4 @@
-<template v-if="presentState.channels.length < 8">
+<template v-if="coreState.channels.length < 8">
   <div class="w-full flex justify-center">
     <div class="relative w-34 h-36">
       <!-- Trash icon background -->
@@ -11,8 +11,9 @@
         }"
         class="absolute inset-0 bg-slate-100 border-2 rounded-2xl transition-all duration-300 shadow-lg shadow-black"
         :class="{
-          'opacity-10': !sharedVariables.isDragging,
-          'opacity-20 scale-110': sharedVariables.isDragging
+          'opacity-10': !uiState.isDragging,
+          'opacity-20 scale-110': uiState.isDragging,
+          'ring-red-700 ring-6 ring-offset-3 ring-offset-zinc-700 animate-bounce opacity-100': uiState.deleteActive
         }"
       />
       
@@ -38,52 +39,52 @@
 <script setup lang="ts">
 import { computed, ref, nextTick } from 'vue'
 import draggable from 'vuedraggable'
-import { usePresentStateStore } from '../../stores/presentState'
-import { useSharedVariablesStore } from '../../stores/sharedVariables'
+import { useCoreStateStore } from '../../stores/coreState'
+import { useUiStateStore } from '../../stores/uiState'
 import trashIcon from '../../assets/icons/trash.png'
 
-const presentState = usePresentStateStore()
-const sharedVariables = useSharedVariablesStore()
+const coreState = useCoreStateStore()
+const uiState = useUiStateStore()
 const trashZone = ref(['trash'])
 const trashIconUrl = ref(trashIcon)
 const backgroundImage = computed(() => `url(${trashIconUrl.value})`)
 
 
 function removeItem(event: { item: HTMLElement; oldIndex: number }) {
-  // sharedVariables.isSelected = [-1, -1]
+  // uiState.isSelected = [-1, -1]
   event.item.remove()
   trashZone.value.pop()
   
-  if (sharedVariables.lastTypeDragged === 'channel') {
-    presentState.removeChannel(event.oldIndex)
+  if (uiState.lastTypeDragged === 'channel') {
+    coreState.removeChannel(event.oldIndex)
     // Force re-render of channel components
     nextTick(() => {
       // Temporarily remove and reattach channels to force Vue to re-evaluate templates
-      const tempChannels = [...presentState.channels]
-      presentState.channels = []
+      const tempChannels = [...coreState.channels]
+      coreState.channels = []
       nextTick(() => {
-        presentState.channels = tempChannels
+        coreState.channels = tempChannels
       })
     })
-  } else if (sharedVariables.lastTypeDragged === 'effect') {
-    if (sharedVariables.draggedChannelIndex === 9) {
+  } else if (uiState.lastTypeDragged === 'effect') {
+    if (uiState.draggedChannelIndex === 9) {
       // Handle global effects
-      presentState.removeEffect(9, event.oldIndex)
+      coreState.removeEffect(9, event.oldIndex)
       nextTick(() => {
-        const tempGlobalEffects = [...presentState.globalEffects]
-        presentState.globalEffects = []
+        const tempGlobalEffects = [...coreState.globalEffects]
+        coreState.globalEffects = []
         nextTick(() => {
-          presentState.globalEffects = tempGlobalEffects
+          coreState.globalEffects = tempGlobalEffects
         })
       })
     } else {
       // Handle channel effects
-      presentState.removeEffect(sharedVariables.draggedChannelIndex, event.oldIndex)
+      coreState.removeEffect(uiState.draggedChannelIndex, event.oldIndex)
       nextTick(() => {
-        const tempEffects = [...presentState.channels[sharedVariables.draggedChannelIndex].effects]
-        presentState.channels[sharedVariables.draggedChannelIndex].effects = []
+        const tempEffects = [...coreState.channels[uiState.draggedChannelIndex].effects]
+        coreState.channels[uiState.draggedChannelIndex].effects = []
         nextTick(() => {
-          presentState.channels[sharedVariables.draggedChannelIndex].effects = tempEffects
+          coreState.channels[uiState.draggedChannelIndex].effects = tempEffects
         })
       })
     }

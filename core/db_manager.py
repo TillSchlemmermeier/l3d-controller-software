@@ -49,6 +49,17 @@ class DatabaseManager:
                     UNIQUE(element_id, name)
                 );
             ''')
+
+            cursor.execute('''
+                CREATE TABLE IF NOT EXISTS gradients (
+                    id INTEGER PRIMARY KEY,
+                    type TEXT NOT NULL,
+                    subtype TEXT,
+                    data TEXT NOT NULL,
+                    request_count INTEGER DEFAULT 0,
+                    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+                );
+            ''')
           
             conn.commit()
 
@@ -459,7 +470,7 @@ class DatabaseManager:
 
                     if type == 'effect':
                         preset_data['IO'] = 1
-                    
+
                     cursor.execute('''
                         INSERT INTO presets (element_id, name, data)
                         VALUES (?, 'basic', ?)
@@ -473,7 +484,117 @@ class DatabaseManager:
                     print(f"Error creating element or preset: {e}")
                     conn.rollback()  # Rollback the entire transaction
                     return False
-                    
+
         except Exception as e:
             print(f"Error connecting to database: {e}")
             return False
+
+
+    def save_gradient(self, gradient_type: str, data: str,  subtype: str = None):
+        """Save a gradient to the database"""
+        try:
+            with self.get_db_connection() as conn:
+                cursor = conn.cursor()
+
+                cursor.execute('''
+                    INSERT OR REPLACE INTO gradients (type, subtype, data)
+                    VALUES (?, ?, ?)
+                ''', (
+                    gradient_type,
+                    subtype,
+                    data,
+                ))
+
+                conn.commit()
+                return True, "Gradient saved successfully"
+
+        except Exception as e:
+            print(f"Error saving gradient: {e}")
+            return False, f"Error saving gradient: {e}"
+
+
+    def get_all_gradients(self):
+        """Get all gradients from the database"""
+        try:
+            with self.get_db_connection() as conn:
+                cursor = conn.cursor()
+
+                cursor.execute('''
+                    SELECT
+                        id,
+                        type,
+                        subtype,
+                        data,
+                        request_count,
+                        strftime('%Y-%m-%d %H:%M:%S', created_at) as created_at
+                    FROM gradients
+                    ORDER BY request_count DESC, id ASC
+                ''')
+
+                gradients = []
+                for row in cursor.fetchall():
+                    gradients.append({
+                        'id': row[0],
+                        'type': row[1],
+                        'subtype': row[2],
+                        'data': row[3],
+                        'request_count': row[4],
+                        'created_at': row[5]
+                    })
+
+                return gradients
+
+        except Exception as e:
+            print(f"Error retrieving gradients: {e}")
+            return []
+
+
+    def delete_gradient(self, gradient_id: int) -> bool:
+        """Delete a gradient by id"""
+        try:
+            with self.get_db_connection() as conn:
+                cursor = conn.cursor()
+
+                cursor.execute('''
+                    DELETE FROM gradients
+                    WHERE id = ?
+                ''', (gradient_id,))
+
+                success = cursor.rowcount > 0
+                conn.commit()
+
+                return success
+
+        except Exception as e:
+            print(f"Error deleting gradient: {e}")
+            return False
+
+
+    def get_gradient_by_id(self, gradient_id: int):
+        """Get gradient data by its ID and increment request count"""
+        try:
+            with self.get_db_connection() as conn:
+                cursor = conn.cursor()
+
+                cursor.execute('''
+                    SELECT data
+                    FROM gradients
+                    WHERE id = ?
+                ''', (gradient_id,))
+
+                row = cursor.fetchone()
+                if row:
+                    # Increment request count
+                    cursor.execute('''
+                        UPDATE gradients
+                        SET request_count = request_count + 1
+                        WHERE id = ?
+                    ''', (gradient_id,))
+
+                    conn.commit()
+                    return row[0]
+                return None
+
+        except Exception as e:
+            print(f"Error retrieving gradient data: {e}")
+            return None

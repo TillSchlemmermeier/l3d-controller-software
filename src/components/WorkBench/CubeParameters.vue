@@ -18,21 +18,21 @@
                 class="w-3 h-3 rounded-full transition-all duration-200"
                 :style="{
                   background: `conic-gradient(
-                    rgb(39 39 42) ${presentState.brightness * 360}deg,
-                    transparent ${presentState.brightness * 360}deg
+                    rgb(39 39 42) ${coreState.brightness * 360}deg,
+                    transparent ${coreState.brightness * 360}deg
                   )`
                 }"
               ></div>
             </div>
           </div>
           <div class="text-lg font-medium w-12 text-right">
-            {{ (presentState.brightness * 100).toFixed(0) }}%
+            {{ (coreState.brightness * 100).toFixed(0) }}%
           </div>
         </div>
         <div class="flex flex-col items-center">
           <img :src="fadeIcon" class="w-8 h-8 opacity-90" />
           <div class="text-lg font-medium w-12 text-right">
-            {{ (presentState.fade * 100).toFixed(0) }}%
+            {{ (coreState.fade * 100).toFixed(0) }}%
           </div>
         </div>
       </div>
@@ -42,20 +42,20 @@
 
 <script setup lang="ts">
 import { computed } from 'vue'
-import { usePresentStateStore } from '../../stores/presentState'
+import { useCoreStateStore } from '../../stores/coreState'
 import brightnessEmptyIcon from '../../assets/icons/brightness_empty.svg'
 import fadeIcon from '../../assets/icons/fade.svg'
 
-const presentState = usePresentStateStore()
+const coreState = useCoreStateStore()
 
 const textColor = computed(() => {
-  return presentState.IO 
+  return coreState.IO
     ? 'text-zinc-900' 
     : 'text-zinc-800'
 })
 
 const gradientBackground = computed(() => {
-  return presentState.IO
+  return coreState.IO
     ? 'bg-gradient-to-br from-emerald-500 to-green-400'
     : 'bg-gradient-to-br from-rose-500 to-red-400'
 })

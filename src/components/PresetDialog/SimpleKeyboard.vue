@@ -80,48 +80,55 @@ watch(
 
 .simple-keyboard.hg-theme-default {
   background: oklch(0.705 0.015 286.067);
+  padding: 1rem;
+  width: 80%;
+  box-sizing: border-box;
 }
 
 .simple-keyboard.hg-theme-default .hg-row {
-  margin-bottom: 0.5rem;
+  display: flex;
+  gap: 0.25rem;
+  justify-content: center;
+  position: relative;
 }
 
 .simple-keyboard.hg-theme-default .hg-button {
-  height: 70px !important;
+  flex: 1 1 0;
+  min-width: 2.5rem;
+  min-height: 4.4rem;
   font-size: 1.5rem !important;
-  margin: 0.25rem;
   border-radius: 0.5rem;
   background: rgb(63 63 70) !important;
   color: rgb(244 244 245) !important;
+  margin: 0;
+  padding: 0.5rem 0.75rem;
+  box-sizing: border-box;
+  transition: background 0.2s, border 0.2s;
 }
 
 .simple-keyboard.hg-theme-default .hg-button:active {
   background: rgb(82 82 91) !important;
-  border-width: 0.25rem;
-  border-color: rgb(244 244 245) 
+  border-width: 0.15rem;
+  border-color: rgb(244 244 245);
 }
 
-.simple-keyboard.hg-theme-default .hg-button.hg-standardBtn {
-  height: 70px !important;
-}
-
-.simple-keyboard.hg-theme-default .hg-button-enter {
-  height: 157px !important;
+.simple-keyboard.hg-theme-default .hg-button.hg-button-enter {
   position: absolute;
-  left: 2024px;
-  top: 331px;
-  width: 190px !important;
-}
-
-.simple-keyboard.hg-theme-default .hg-button.hg-button-bksp,
-.simple-keyboard.hg-theme-default .hg-button.hg-button-enter
-{
+  right: 0.25rem;
+  bottom: -4.6rem; /* Adjust based on button height/gap */
+  min-width: 9rem;
+  min-height: 8.8rem; /* Height of two rows */
+  font-size: 2rem !important;
   background: rgb(82 82 91) !important;
+  z-index: 2;
+  border-radius: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
+.simple-keyboard.hg-theme-default .hg-row:nth-child(3),
 .simple-keyboard.hg-theme-default .hg-row:nth-child(4) {
-  padding-right: 210px; /* Enter key width + margin */
-}.simple-keyboard.hg-theme-default .hg-row:nth-child(3) {
-  padding-right: 210px; /* Enter key width + margin */
+  padding-right: 10rem; /* Same as min-width of Enter button */
 }
 </style>

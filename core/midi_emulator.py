@@ -358,7 +358,7 @@ class MidiControllerEmulator:
     def update_knob_value(self, value, index):
         self.knob_values[index] = int(round(float(value)))
         # print(f"Knob {index} value: {self.knob_values[index]}")
-        self.midi_translation.update_context(index, self.knob_values[index])
+        self.midi_translation.update_context(0, index, self.knob_values[index])
         self.knobs[index].value_label.config(text=str(self.knob_values[index]))
 
     def handle_state_button(self, state):

@@ -1,4 +1,4 @@
-from fastapi import FastAPI, WebSocket, File, UploadFile, Form
+from fastapi import FastAPI, Request, WebSocket, File, UploadFile, Form
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 import uvicorn
@@ -7,6 +7,7 @@ from UltraDict import UltraDict
 from typing import List
 import multiprocessing as mp
 import numpy as np
+import json
 from starlette.websockets import WebSocketDisconnect
 from pathlib import Path
 from db_manager import DatabaseManager
@@ -271,6 +272,68 @@ class WebSocketAPIServer:
                 status_code=200,
                 content={"message": "Preset saved successfully"}
             )
+
+        # load a gradient from DB
+        @self.app.get('/api/load-gradient/{gradientId}/{channelIndex}')
+        async def load_gradient(gradientId: int, channelIndex: int):
+            gradient_data = self.db.get_gradient_by_id(gradientId)
+            color_data = ({
+                'gradient': json.loads(gradient_data),
+                'gradientType': 'linear',
+                'speed': 0,
+                'sectionStart': 0,
+                'sectionWidth': 100,
+                'rotateSpeedY': 0,
+                'rotateSpeedZ': 0,
+                'soundToLightOptions': []
+            })
+            return await update_color_manager(channelIndex, color_data)
+
+        # update color manager settings
+        @self.app.post('/api/color-manager/{channel}')
+        async def update_color_manager(channel: int, color_data: dict):
+            success = self.state_manager.update_color_manager(channel, color_data)
+
+            if success:
+                await update_element(channel, 8)
+
+                return JSONResponse(
+                    status_code=200,
+                    content={"message": "Color manager updated successfully"}
+                )
+            else:
+                return JSONResponse(
+                    status_code=500,
+                    content={"message": "Failed to update color manager"}
+                )
+
+        # load all gradients in UI
+        @self.app.get('/api/get-gradient-presets')
+        async def get_gradient_presets():
+            gradients = self.db.get_all_gradients()
+            return JSONResponse(content=gradients)
+
+        # save a custom gradient to DB
+        @self.app.post('/api/save-gradient')
+        async def save_gradient(request: Request):
+            data = await request.json()
+            subtype = data.get('subtype')
+            gradient_data = data.get('gradientString')
+
+            success = self.db.save_gradient('custom', gradient_data, subtype)
+            if success:
+                return JSONResponse(status_code=200, content={"message": "Gradient saved successfully"})
+            else:
+                return JSONResponse(status_code=400, content={"message": "Failed to save gradient"})
+
+        # delete a gradient from DB
+        @self.app.get('/api/delete-gradient/{id}')
+        async def delete_gradient(id: int):
+            success = self.db.delete_gradient(id)
+            if success:
+                return JSONResponse(status_code=200, content={"message": "Gradient deleted successfully"})
+            else:
+                return JSONResponse(status_code=400, content={"message": "Failed to delete gradient"})
 
         # remove an effect or a channel
         @self.app.get('/api/remove/{type}/{channelIndex}/{effectIndex}')

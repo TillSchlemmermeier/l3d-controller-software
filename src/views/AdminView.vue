@@ -113,46 +113,46 @@
             </div>
 
             <!-- Element Info -->
-            <div v-if="selectedType === 'element' && sharedVariables.elementInfo" class="space-y-2">
+            <div v-if="selectedType === 'element' && uiState.elementInfo" class="space-y-2">
               <div class="w-48 h-48 rounded-lg overflow-hidden">
                 <img 
-                  :src="`src/assets/previews/${sharedVariables.selectedElement}_p_basic.gif`"
+                  :src="`src/assets/previews/${uiState.selectedElement}_p_basic.gif`"
                   class="w-full h-full object-cover"
-                  @error="gifLoadingErrors.set(sharedVariables.presetInfo.name, true)"
-                  v-show="!gifLoadingErrors.get(sharedVariables.presetInfo.name)"
+                  @error="gifLoadingErrors.set(uiState.presetInfo.name, true)"
+                  v-show="!gifLoadingErrors.get(uiState.presetInfo.name)"
                   loading="lazy"
                 />
               </div>
               <div>
                 <span class="text-zinc-400">Name:</span>
-                <span class="font-medium ml-2">{{ sharedVariables.elementInfo.name }}</span>
+                <span class="font-medium ml-2">{{ uiState.elementInfo.name }}</span>
               </div>
               <div>
                 <span class="text-zinc-400">Type:</span>
-                <span class="font-medium ml-2">{{ sharedVariables.elementInfo.type }}</span>
+                <span class="font-medium ml-2">{{ uiState.elementInfo.type }}</span>
               </div>
               <div>
                 <span class="text-zinc-400">Created:</span>
-                <span class="font-medium ml-2">{{ new Date(sharedVariables.elementInfo.created).toLocaleDateString() }}</span>
+                <span class="font-medium ml-2">{{ new Date(uiState.elementInfo.created).toLocaleDateString() }}</span>
               </div>
               <div>
                 <span class="text-zinc-400">Usage Count:</span>
-                <span class="font-medium ml-2">{{ sharedVariables.elementInfo.usageCount }}</span>
+                <span class="font-medium ml-2">{{ uiState.elementInfo.usageCount }}</span>
               </div>
               <div>
                 <span class="text-zinc-400">Status:</span>
                 <span 
                   class="ml-2 px-2 py-0.5 rounded-full text-md font-medium"
-                  :class="sharedVariables.elementInfo.isActive ? 'bg-emerald-500/20 text-emerald-300' : 'bg-red-500/20 text-red-300'"
+                  :class="uiState.elementInfo.isActive ? 'bg-emerald-500/20 text-emerald-300' : 'bg-red-500/20 text-red-300'"
                 >
-                  {{ sharedVariables.elementInfo.isActive ? 'Active' : 'Inactive' }}
+                  {{ uiState.elementInfo.isActive ? 'Active' : 'Inactive' }}
                 </span>
               </div>
               <button>
                 <span class="font-medium ml-2 text-red-500 hover:text-red-400 transition-colors cursor-pointer"
                   @click="handleToggleElement()"
                 >
-                  <span v-if="sharedVariables.elementInfo.isActive" class="text-red-500 hover:text-red-400">
+                  <span v-if="uiState.elementInfo.isActive" class="text-red-500 hover:text-red-400">
                     DEACTIVATE
                   </span>
                   <span v-else class="text-green-500 hover:text-green-400">
@@ -170,50 +170,50 @@
             </div>
 
             <!-- Preset Info -->
-            <div v-else-if="selectedType === 'preset' && sharedVariables.presetInfo" class="space-y-3">
+            <div v-else-if="selectedType === 'preset' && uiState.presetInfo" class="space-y-3">
               <div class="w-52 h-48 rounded-lg overflow-hidden">
                 <img 
-                  :src="`src/assets/previews/${sharedVariables.selectedElement}_p_${sharedVariables.presetInfo.name}.gif`"
+                  :src="`src/assets/previews/${uiState.selectedElement}_p_${uiState.presetInfo.name}.gif`"
                   class="w-full h-full object-cover"
-                  @error="gifLoadingErrors.set(sharedVariables.presetInfo.name, true)"
-                  v-show="!gifLoadingErrors.get(sharedVariables.presetInfo.name)"
+                  @error="gifLoadingErrors.set(uiState.presetInfo.name, true)"
+                  v-show="!gifLoadingErrors.get(uiState.presetInfo.name)"
                   loading="lazy"
                 />
               </div>
               <div>
                 <span class="text-zinc-400">Name:</span>
-                <span class="font-medium ml-2">{{ sharedVariables.presetInfo.name }}</span>
+                <span class="font-medium ml-2">{{ uiState.presetInfo.name }}</span>
               </div>
               <div>
                 <span class="text-zinc-400">Element:</span>
-                <span class="font-medium ml-2">{{ sharedVariables.presetInfo.elementName }}</span>
+                <span class="font-medium ml-2">{{ uiState.presetInfo.elementName }}</span>
               </div>
               <div>
                 <span class="text-zinc-400">Created:</span>
-                <span class="font-medium ml-2">{{ new Date(sharedVariables.presetInfo.created).toLocaleDateString() }}</span>
+                <span class="font-medium ml-2">{{ new Date(uiState.presetInfo.created).toLocaleDateString() }}</span>
               </div>
               <div>
                 <span class="text-zinc-400">Usage Count:</span>
-                <span class="font-medium ml-2">{{ sharedVariables.presetInfo.usageCount || 0 }}</span>
+                <span class="font-medium ml-2">{{ uiState.presetInfo.usageCount || 0 }}</span>
               </div>
               <div class="border-t border-zinc-700 pt-3 mt-3">
                 <h4 class="text-zinc-400 font-medium mb-2">Parameters</h4>
                 <div class="space-y-2">
-                  <div v-for="(value, key) in sharedVariables.presetInfo.data" :key="key" class="flex justify-between">
+                  <div v-for="(value, key) in uiState.presetInfo.data" :key="key" class="flex justify-between">
                     <span class="text-zinc-400">{{ key }}:</span>
                     <span class="font-medium">{{ typeof value === 'number' ? value.toFixed(2) : value }}</span>
                   </div>
                 </div>
               </div>
-              <button v-if="sharedVariables.presetInfo.name !== 'basic'">
+              <button v-if="uiState.presetInfo.name !== 'basic'">
                 <span class="text-zinc-400">Delete Preset</span>
                 <span class="font-medium ml-2 text-red-500 hover:text-red-400 transition-colors cursor-pointer"
-                  @click="deletePreset(sharedVariables.presetInfo.name)"
+                  @click="deletePreset(uiState.presetInfo.name)"
                 >
                   DELETE
                 </span>
               </button>
-              <button v-if="sharedVariables.presetInfo.name !== 'basic'">
+              <button v-if="uiState.presetInfo.name !== 'basic'">
                 <span class="text-zinc-400">Rename Preset</span>
                 <span class="font-medium ml-2 text-red-500 hover:text-red-400 transition-colors cursor-pointer"
                   @click="showRenamePreset = true"
@@ -244,12 +244,12 @@
           <div v-if="['Generator', 'Effect'].includes(activeTab)" class="mb-6">
             <div class="flex flex-wrap gap-4">
               <button
-                v-for="element in sharedVariables.adminElements"
+                v-for="element in uiState.adminElements"
                 :key="element.name"
                 @click="handleElementClick(element)"
                 class="p-6 rounded-lg transition-all text-center"
                 :class="[
-                  sharedVariables.selectedElement === element.name ? 'bg-emerald-600' : 'bg-zinc-700 hover:bg-zinc-600',
+                  uiState.selectedElement === element.name ? 'bg-emerald-600' : 'bg-zinc-700 hover:bg-zinc-600',
                   element.active ? 'opacity-100' : 'opacity-50']"
               >
                 {{ element.name }}
@@ -259,16 +259,16 @@
 
           <!-- Preset Grid -->
           <div v-if="showPresets" class="mt-6">
-            <h2 class="text-xl mb-4">Presets for {{ sharedVariables.selectedElement }}</h2>
+            <h2 class="text-xl mb-4">Presets for {{ uiState.selectedElement }}</h2>
             <div class="flex flex-row flex-wrap gap-4">
               <div
-                v-for="preset in sharedVariables.overlayPresets"
+                v-for="preset in uiState.overlayPresets"
                 :key="preset.name"
                 @click="handlePresetClick(preset.name)"
                 class="bg-zinc-800 p-1 rounded-lg relative group w-24 h-24"
               >
                 <img 
-                  :src="`src/assets/previews/${sharedVariables.selectedElement}_p_${preset.name}.gif`" 
+                  :src="`src/assets/previews/${uiState.selectedElement}_p_${preset.name}.gif`"
                   class="object-cover"
                   draggable="false"
                   v-show="!gifLoadingErrors.get(preset.name)"
@@ -300,14 +300,14 @@
 
 <script setup lang="ts">
 import { ref, onUnmounted, watch, nextTick } from 'vue'
-import { useSharedVariablesStore } from '../stores/sharedVariables'
+import { useUiStateStore } from '../stores/uiState'
 
 const tabs = ['Generator', 'Effect', 'Channel', 'Global']
 const activeTab = ref('Generator')
 const showPresets = ref(false)
 const gifLoadingErrors = ref(new Map<string, boolean>())
 const selectedType = ref<'element' | 'preset' | null>(null)
-const sharedVariables = useSharedVariablesStore()
+const uiState = useUiStateStore()
 const showAddElementDialog = ref(false)
 const newElementName = ref('')
 const inputRef = ref<HTMLInputElement | null>(null)
@@ -321,23 +321,23 @@ async function changeType(type: string) {
   activeTab.value = type
   selectedType.value = null
   showPresets.value = false
-  sharedVariables.dialogType = type.toLowerCase()
-  sharedVariables.fetchAllElements()
+  uiState.dialogType = type.toLowerCase()
+  uiState.fetchAllElements()
 }
 
 async function handleElementClick(element: any) {
-  sharedVariables.selectedElement = element.name
+  uiState.selectedElement = element.name
   selectedType.value = 'element'
-  sharedVariables.fetchElementInfo()
-  sharedVariables.fetchPresets()
+  uiState.fetchElementInfo()
+  uiState.fetchPresets()
   showPresets.value = true
   gifLoadingErrors.value.clear() // Clear previous error states
 }
 
 async function handlePresetClick(preset: string) {
-  sharedVariables.selectedPreset = preset
+  uiState.selectedPreset = preset
   selectedType.value = 'preset'
-  sharedVariables.fetchPresetInfo()
+  uiState.fetchPresetInfo()
 }
 
 
@@ -349,17 +349,17 @@ async function deletePreset(presetName: string) {
   }
   
   if (!confirm(`Are you sure you want to delete preset "${presetName}"?`)) return
-  sharedVariables.deletePreset()
-  sharedVariables.fetchPresets()
+  uiState.deletePreset()
+  uiState.fetchPresets()
 }
 
 
 async function handleAddElement() {
   if (newElementName.value) {
-    await sharedVariables.addElement(saveType.value, newElementName.value)
+    await uiState.addElement(saveType.value, newElementName.value)
     showAddElementDialog.value = false
     newElementName.value = ''
-    sharedVariables.fetchAllElements()
+    uiState.fetchAllElements()
     // Show message for 2 seconds
     showAddMessage.value = true
     setTimeout(() => {
@@ -370,31 +370,31 @@ async function handleAddElement() {
 
 async function handleNewPresetName() {
   if (newPresetName.value) {
-    await sharedVariables.renamePreset(newPresetName.value)
+    await uiState.renamePreset(newPresetName.value)
     showRenamePreset.value = false
     newPresetName.value = ''
-    sharedVariables.fetchPresets()
+    uiState.fetchPresets()
   }
 }
 
 async function handleDeleteElement() {
-  if (!confirm(`Are you sure you want to delete "${sharedVariables.selectedElement}"? This will also delete all associated presets.`)) {
+  if (!confirm(`Are you sure you want to delete "${uiState.selectedElement}"? This will also delete all associated presets.`)) {
     return
   }
-  sharedVariables.deleteElement()
-  sharedVariables.fetchAllElements()
+  uiState.deleteElement()
+  uiState.fetchAllElements()
 }
 
 async function handleToggleElement() {
-  sharedVariables.toggleElementActive()
-  sharedVariables.fetchAllElements()
-  sharedVariables.fetchElementInfo()
+  uiState.toggleElementActive()
+  uiState.fetchAllElements()
+  uiState.fetchElementInfo()
 }
 
 
 async function handlePresetConsistencyCheck() {
   if (confirm('Are you sure you want to check all presets?')) {
-    const results = await sharedVariables.checkPresetConsistency()
+    const results = await uiState.checkPresetConsistency()
     console.log(results)
     // Show message for 2 seconds
     showValidationMessage.value = true

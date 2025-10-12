@@ -31,6 +31,8 @@ export default defineConfig({
         '**/assets/previews/**',  // Ignore preview GIFs
         '**/*.db',  // ignore database files
         '**/*.pkl',  // ignore pickle files
+        '**/*.log',  // ignore log files
+        '**/*.py',  // ignore python files
       ]
     },
     // hmr: false,  // Disable HMR completely

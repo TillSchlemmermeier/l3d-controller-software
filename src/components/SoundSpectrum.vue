@@ -1,18 +1,24 @@
 <template>
-  <div 
-    class="w-[500px] h-[425px] bg-black p-2 border-2" 
-    :class="{ 'border-red-600': isSelected, 'border-transparent': !isSelected }"
+  <div
+    class="p-1"
+    :style="isSelected
+      ? 'background: radial-gradient(circle, red 80%, black 100%)'
+      : 'background: black'"
   >
-    <canvas ref="chart" @click="selectSpectrum"></canvas>
-  </div>
+      <div
+        class="w-[492px] h-[425px] bg-black p-2 border-2"
+      >
+        <canvas ref="chart" @click="selectSpectrum"></canvas>
+      </div>
+    </div>
 </template>
 
 <script setup lang="ts">
 import { onMounted, ref, onUnmounted, watch, computed } from 'vue'
 import { Chart, ChartConfiguration } from 'chart.js/auto'
-import { usePresentStateStore } from '../stores/presentState'
+import { useCoreStateStore } from '../stores/coreState'
 
-const presentState = usePresentStateStore()
+const coreState = useCoreStateStore()
 const chart = ref<HTMLCanvasElement | null>(null)
 let chartInstance: Chart | null = null
 let freqAxis: number[] = []
@@ -132,8 +138,8 @@ function updateSpectrum(newData: number[]) {
 }
 
 function updateSelectorsAndThresholds() {
-  const selectors = presentState.s2l_values.map((value: number) => (value ** 2) * 10000)
-  const thresholds = presentState.s2l_thresholds
+  const selectors = coreState.s2l_values.map((value: number) => (value ** 2) * 10000)
+  const thresholds = coreState.s2l_thresholds
 
   selectors.forEach((freq: number, i: number) => {
     updateSelectorLine(freq, i)
@@ -170,11 +176,11 @@ const chartAreaBorder = {
 };
 
 function selectSpectrum() {
-  presentState.select(0, 10, 0)
+  coreState.select(0, 10, 0)
 }
 
 const isSelected = computed(() => {
-  const [section, index] = presentState.context[0]
+  const [section, index] = coreState.context[0]
   return section === 10 && index === 0
 })
 
@@ -200,8 +206,8 @@ onMounted(() => {
 })
 
 watch(() => [
-  presentState.s2l_values,
-  presentState.s2l_thresholds
+  coreState.s2l_values,
+  coreState.s2l_thresholds
 ], () => {
   updateSelectorsAndThresholds()
 })

@@ -13,10 +13,10 @@
 
 <script setup lang="ts">
 import { onMounted, ref, onUnmounted, watch } from 'vue'
-import { usePresentStateStore } from '../stores/presentState'
+import { useCoreStateStore } from '../stores/coreState'
 import * as THREE from 'three'
 
-const presentState = usePresentStateStore()
+const coreState = useCoreStateStore()
 const channelLength = ref(0)
 const isCapturing = ref(true)
 const capturingGlobalPreset = ref(false)
@@ -200,7 +200,7 @@ onMounted(() => {
 })
 
 watch(
-  () => presentState.channels.length,
+  () => coreState.channels.length,
   (newLength) => {
     if (newLength < channelLength.value) {
       for (let i = newLength; i < channelLength.value; i++) {

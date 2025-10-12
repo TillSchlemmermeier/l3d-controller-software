@@ -1,3 +1,19 @@
+export interface SelectedRegion {
+  start: number // 0-100
+  end: number // 0-100
+}
+
+export interface GradientPreset {
+  id: number
+  type: string
+  subtype?: string
+  data: Array<[number, string]>
+  request_count: number
+  created_at: string
+}
+
+export type SortOption = 'first' | 'last' | 'none' | 'subtype' | 'mean' | 'random' | 'date' | 'usage'
+
 export interface Effect {
   name: string
   IO: number
@@ -11,6 +27,18 @@ export interface Generator {
   params: Array<string | number | boolean>
 }
 
+export interface Color {
+  gradient: Array<[number, string]>,
+  gradientType: 'linear' | 'radial',
+  sectionWidth: number,
+  sectionStart: number,
+  speed: number,
+  rotateSpeedY: number,
+  rotateSpeedZ: number,
+  soundToLightOptions: string[],
+  update: boolean
+}
+
 export interface Channel {
   IO: number
   brightness: number
@@ -18,9 +46,10 @@ export interface Channel {
   numberOfEffects: number
   generator: Generator
   effects: Effect[]
+  color?: Color
 }
 
-export interface PresentState {
+export interface coreState {
   IO: boolean
   brightness: number
   fade: number

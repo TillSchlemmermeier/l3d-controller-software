@@ -5,8 +5,6 @@
   <template v-else>
     <div 
       class="relative mt-2 group"
-      @click="$emit('click')"
-      @dblclick="$emit('dblclick')"
       :class="{ 
         'z-10 opacity-100': hasContext && thisEffect.IO,
         'z-0 opacity-90': !hasContext && thisEffect.IO,
@@ -127,8 +125,8 @@
 
 <script setup lang="ts">
 import { computed, ref, watch, nextTick } from 'vue'
-import { usePresentStateStore } from '../../stores/presentState'
-import { getColorsByName, getContextColorSet } from '../../utils/colors'
+import { useCoreStateStore } from '../../stores/coreState'
+import { getColorsByName, getContextColorSet } from '../../utils/colorSchemes'
 
 const props = defineProps({
   channel: {
@@ -146,16 +144,15 @@ const props = defineProps({
   }
 })
 
-const presentState = usePresentStateStore()
+const coreState = useCoreStateStore()
 const loadProgressCircles = ref(true)
 const initialFill = ref(true)
 
 const thisEffect = computed(() => {
   if (props.channel === 9) {
-    console.log(presentState.globalEffects[props.effectNumber])
-    return presentState.globalEffects[props.effectNumber]
+    return coreState.globalEffects[props.effectNumber]
   }
-  return presentState.channels[props.channel].effects[props.effectNumber]
+  return coreState.channels[props.channel].effects[props.effectNumber]
 })
 
 const loading = computed(() => !thisEffect.value)

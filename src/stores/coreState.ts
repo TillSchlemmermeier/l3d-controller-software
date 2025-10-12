@@ -1,11 +1,11 @@
 import { defineStore } from 'pinia'
-import { useSharedVariablesStore } from './sharedVariables'
-import { PresentState } from '../types/types'
+import { useUiStateStore } from './uiState'
+import { coreState } from '../types/types'
 
 const baseUrl = 'http://0.0.0.0:8000/api'
 
-export const usePresentStateStore = defineStore('presentState', {
-  state: (): PresentState => ({
+export const useCoreStateStore = defineStore('coreState', {
+  state: (): coreState => ({
     IO: false,
     brightness: 0,
     fade: 0,
@@ -26,7 +26,7 @@ export const usePresentStateStore = defineStore('presentState', {
   }),
 
   getters: {
-    getChannelParameters: (state: PresentState) => (channelIndex: number) => {
+    getChannelParameters: (state: coreState) => (channelIndex: number) => {
       const channel = state.channels[channelIndex]
       return {
         IO: channel.IO,
@@ -81,8 +81,8 @@ export const usePresentStateStore = defineStore('presentState', {
 
     // load a new channel, generator, effect or global effect
     async load(preset_name: string) {
-      const sharedVariables = useSharedVariablesStore()
-      const url = `${baseUrl}/load/${sharedVariables.dialogType}/${preset_name}/${sharedVariables.channelIndex}/${sharedVariables.effectIndex}/${sharedVariables.selectedElement}`
+      const uiState = useUiStateStore()
+      const url = `${baseUrl}/load/${uiState.dialogType}/${preset_name}/${uiState.channelIndex}/${uiState.effectIndex}/${uiState.selectedElement}`
       await this.callBackend(url)
     },
 
@@ -123,20 +123,20 @@ export const usePresentStateStore = defineStore('presentState', {
     
     // delete a generator, effect, channel or global preset
     async delete(preset: string, element?: string) {
-      const sharedVariables = useSharedVariablesStore()
-      const url = `${baseUrl}/delete/${sharedVariables.dialogType}/${preset}/${element}`
+      const uiState = useUiStateStore()
+      const url = `${baseUrl}/delete/${uiState.dialogType}/${preset}/${element}`
       await this.callBackend(url)
     },
 
     // save a generator, effect, channel or global preset
     async save(presetName: string, preview?: string, force: boolean = false) {
-      const sharedVariables = useSharedVariablesStore()
+      const uiState = useUiStateStore()
       
       let formData = new FormData()
       formData.append('preset', presetName)
-      formData.append('type', sharedVariables.dialogType)
-      formData.append('channel', sharedVariables.channelIndex.toString())
-      formData.append('index', sharedVariables.effectIndex.toString())
+      formData.append('type', uiState.dialogType)
+      formData.append('channel', uiState.channelIndex.toString())
+      formData.append('index', uiState.effectIndex.toString())
       formData.append('force', force.toString())
       
       if (preview) {
@@ -156,6 +156,38 @@ export const usePresentStateStore = defineStore('presentState', {
       }
     },
 
+    async updateColorManager(channel: number, colorData: {
+      gradient: Array<[number, string]>,
+      gradientType: 'linear' | 'radial',
+      sectionWidth: number,
+      sectionStart: number,
+      speed: number,
+      rotateSpeedY: number,
+      rotateSpeedZ: number,
+      soundToLightOptions: string[]
+    }) {
+      const url = `${baseUrl}/color-manager/${channel}`
+      try {
+        const response = await fetch(url, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(colorData)
+        })
+        const data = await response.json()
+        console.log('Color manager updated:', data.message)
+      } catch (error) {
+        console.error('Error updating color manager:', error)
+      }
+    },
+
+    async loadGradient(gradientId: number) {
+      const uiState = useUiStateStore()
+      const url = `${baseUrl}/load-gradient/${gradientId}/${uiState.channelIndex}`
+      await this.callBackend(url)
+    },
+
     // make API call
     async callBackend(url: string) {
       console.log('fetching data from', url)
@@ -164,7 +196,7 @@ export const usePresentStateStore = defineStore('presentState', {
           method: 'GET',
         })
         const data = await response.json()
-        console.log(data.message)
+        console.log(data)
       } catch (error) {
         console.error('error', error)
       }
@@ -174,6 +206,7 @@ export const usePresentStateStore = defineStore('presentState', {
       window.ipcRenderer.onWebSocketConnected(() => {
         console.log('WebSocket connected, requesting state update')
         this.requestStateUpdate()
+        console.log('Initial state loaded')
       })
       window.ipcRenderer.onStateData((message: any) => {
         this.$state = this.parseState(message)
@@ -198,6 +231,8 @@ export const usePresentStateStore = defineStore('presentState', {
       } else {
         if (index === 9) {
           this.channels[channel].generator = section
+        } else if (index === 8) {
+          this.channels[channel].color = section
         } else {
           this.channels[channel].effects[index] = section
         }
@@ -215,9 +250,9 @@ export const usePresentStateStore = defineStore('presentState', {
       }
     },
 
-     parseState(data: Record<string, any>): PresentState {
+     parseState(data: Record<string, any>): coreState {
       const { numberOfChannels, ...rest } = data
-      const parsedState: Partial<PresentState> = { ...rest }
+      const parsedState: Partial<coreState> = { ...rest }
     
       // Transform channels
       parsedState.channels = Array.from({ length: numberOfChannels }, (_, i) => {
@@ -234,7 +269,8 @@ export const usePresentStateStore = defineStore('presentState', {
           fade: channel.fade,
           numberOfEffects: numberOfEffects,
           effects,
-          generator: channel[9]
+          generator: channel[9],
+          color: channel[8]
         }
       })
 
@@ -244,7 +280,7 @@ export const usePresentStateStore = defineStore('presentState', {
           (_, i) => data[9][i]
         )
     
-      return parsedState as PresentState
+      return parsedState as coreState
     }
   },
 });

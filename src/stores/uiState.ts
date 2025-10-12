@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia'
-import { ElementInfo, PresetInfo, adminElement, Preset } from '../types/types.ts'
+import { ElementInfo, PresetInfo, adminElement, Preset, GradientPreset, SortOption } from '../types/types.ts'
 
-export const useSharedVariablesStore = defineStore('sharedVariables', {
+export const useUiStateStore = defineStore('uiState', {
   state: () => ({
     draggedChannelIndex: 0,
     lastTypeDragged: 'channel',
@@ -12,6 +12,7 @@ export const useSharedVariablesStore = defineStore('sharedVariables', {
     overlayItems: [],
     overlayPresets: [] as Preset[],
     adminElements: [] as adminElement[],
+    gradientPresets: [] as GradientPreset[],
     selectedElement: '',
     elementInfo: {} as ElementInfo,
     selectedPreset: '',
@@ -19,9 +20,12 @@ export const useSharedVariablesStore = defineStore('sharedVariables', {
     newChannel: false,
     admin: true,
     sortBy: 'alpha', // alpha, date, usage
+    sortGradientsBy: 'subtype' as SortOption,
     clickBehavior: 'select', // select, edit, IO
     isDragging: false,
     contextIndex: 0,
+    deleteActive: false,
+    sidebarOption: 'console', // console, colors, palette
   }),
   actions: {
     // fetch the names of active effects or generators
@@ -89,6 +93,28 @@ export const useSharedVariablesStore = defineStore('sharedVariables', {
       this.selectedPreset = newName
     },
 
+    async fetchGradientPresets() {
+      const url = `get-gradient-presets`
+      const gradients = await this.fetchFromBackend(url)
+      this.gradientPresets = gradients.map((preset: any) => ({
+        ...preset,
+        data: JSON.parse(preset.data) as Array<[number, string]>
+      }))
+    },
+
+    async saveGradientPreset(gradientArray: Array<[number, string]>, subtype: string) {
+      const url = `save-gradient`
+      const gradientString = JSON.stringify(gradientArray)
+      await this.postToBackend(url, { subtype, gradientString })
+      this.fetchGradientPresets()
+    },
+
+    async deleteGradientPreset(id: number) {
+      const url = `delete-gradient/${id}`
+      await this.fetchFromBackend(url)
+      this.fetchGradientPresets()
+    },
+
     async checkPresetConsistency() {
       const url = `validate-presets`
       const response = await this.fetchFromBackend(url)
@@ -96,7 +122,7 @@ export const useSharedVariablesStore = defineStore('sharedVariables', {
       return response
     },
 
-    // make API call
+    // make GET call
     async fetchFromBackend(url: string) {
       console.log('fetching data from', url)
       try {
@@ -109,5 +135,24 @@ export const useSharedVariablesStore = defineStore('sharedVariables', {
         console.error('error', error)
       }
     },
+
+    // make POST call
+    async postToBackend(url: string, data: any) {
+      console.log('posting data to', url)
+      try {
+        const response = await fetch(`http://0.0.0.0:8000/api/${url}`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data),
+        })
+        const result = await response.json()
+        return result
+      } catch (error) {
+        console.error('error', error)
+      }
+    }
   },
+
 })
