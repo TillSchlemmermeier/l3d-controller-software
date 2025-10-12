@@ -4,9 +4,9 @@ from scipy.ndimage import shift
 class e_translation():
 
     def __init__(self):
-        self.xspeed = 0
-        self.yspeed = 0
-        self.zspeed = 0
+        self.xspeed = 0.5
+        self.yspeed = 0.5
+        self.zspeed = 0.5
         self.step = 0
         self.mode = 'wrap'  # 'wrap', 'disappear' or 'projection'
         self.x_counter = 0

@@ -178,7 +178,6 @@ const oldIndex = ref(0)
 const newIndex = ref(0)
 const newChannel = ref([])
 
-const lastClickTime = ref(0)
 function handleClick(index: number, element_id: number) {
   uiState.channelIndex = index
   if(uiState.deleteActive) {
@@ -205,9 +204,6 @@ function handleClick(index: number, element_id: number) {
         newEffect(index, element_id)
       }
     } else if (uiState.clickBehavior == 'IO') {
-      const now = Date.now()
-      if (now - lastClickTime.value < 300) return  // Debounce, otherwise somehow executed twice
-      lastClickTime.value = now
       if (element_id == 9) {
         selectParameters(index, element_id)
       } else {
@@ -356,10 +352,15 @@ function generateGradientCSS(gradientData: Array<[number, string]>): string {
 
 <style>
   .sortable-chosen {
-    transform: scale(1.1);
+    transform: scale(1.05);
     opacity: 0.9;
     z-index: 50;
     cursor: grabbing;
+    transition: transform 0s, opacity 0s;
+  }
+
+  :not(.sortable-chosen) {
+    transition: transform 0.1s 0.1s, opacity 0.1s 0.1s; /* 0.1s delay before shrinking */
   }
 
   .sortable-ghost {

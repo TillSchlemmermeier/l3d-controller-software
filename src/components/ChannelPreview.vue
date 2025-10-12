@@ -44,11 +44,11 @@ async function captureFrames(channelIndex: number, onFrameCapture: (frame: strin
   console.log('Capturing frames for channel:', channelIndex)
   const frames: string[] = []
   isCapturing.value = true
-  
-  // Use 33.33ms for 30fps (1000ms / 30fps ≈ 33.33ms)
-  const frameInterval = 33.33
 
-  // Capture 120 frames (4 seconds at 30fps)
+  // Use 40ms for 25fps (1000ms / 25fps = 40ms)
+  const frameInterval = 40
+
+  // Capture 120 frames (4 seconds at 25fps)
   for (let i = 0; i < 120 && isCapturing.value; i++) {
     renderers[channelIndex].render(scenes[channelIndex], cameras[channelIndex])
     const frame = captureFrame(renderers[channelIndex])
