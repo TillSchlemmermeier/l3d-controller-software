@@ -1,0 +1,45 @@
+<!-- Create a simple test page -->
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    .test-area {
+      width: 300px;
+      height: 300px;
+      border: 2px solid black;
+      position: relative;
+      touch-action: none;
+    }
+    .dot {
+      width: 10px;
+      height: 10px;
+      background: red;
+      border-radius: 50%;
+      position: absolute;
+    }
+  </style>
+</head>
+<body>
+  <div class="test-area" id="testArea"></div>
+  <div id="info"></div>
+  
+  <script>
+    const testArea = document.getElementById('testArea')
+    const info = document.getElementById('info')
+    
+    testArea.addEventListener('touchmove', (e) => {
+      e.preventDefault()
+      const touch = e.touches[0]
+      const rect = testArea.getBoundingClientRect()
+      
+      const dot = document.createElement('div')
+      dot.className = 'dot'
+      dot.style.left = (touch.clientX - rect.left - 5) + 'px'
+      dot.style.top = (touch.clientY - rect.top - 5) + 'px'
+      testArea.appendChild(dot)
+      
+      info.textContent = `Touch: ${touch.clientX}, ${touch.clientY}, Time: ${performance.now()}`
+    }, { passive: false })
+  </script>
+</body>
+</html>
