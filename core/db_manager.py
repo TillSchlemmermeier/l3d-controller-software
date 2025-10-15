@@ -3,6 +3,7 @@ from contextlib import contextmanager
 import json
 import os
 import numpy as np
+from sqlalchemy import JSON
 
 
 class DatabaseManager:
@@ -144,6 +145,66 @@ class DatabaseManager:
                 }
                 for row in cursor.fetchall()
             ]
+
+
+    def get_all_presets(self, element_type: str, element_name: str) -> list:
+        """Get all presets containing a specific element, including channel and global presets"""
+        presets = []
+
+        # Get direct element presets (generator/effect presets)
+        direct_presets = self.get_preset_names(element_type, element_name)
+        for preset in direct_presets:
+            presets.append({
+                **preset,  # name, created_at, request_count
+                'type': element_type
+            })
+
+        # Get channel presets containing this element
+        channel_presets = self.get_preset_names('channel', 'presets')
+        for preset in channel_presets:
+            data = self.get_preset('channel', 'presets', preset['name'], False)
+
+            # Check if element is in this channel preset
+            if element_type == 'generator' and data[9]['name'] == element_name:
+                presets.append({**preset, 'type': 'channel'})
+            elif element_type == 'effect':
+                for i in range(data.get('numberOfEffects', 0)):
+                    if data.get(str(i), {}).get('name') == element_name:
+                        presets.append({**preset, 'type': 'channel'})
+                        break
+
+        # Get global presets containing this element
+        global_presets = self.get_preset_names('global', 'presets')
+        for preset in global_presets:
+            data = self.get_preset('global', 'presets', preset['name'], False)
+            found = False
+
+            # Check regular channels
+            for i in range(data.get('numberOfChannels', 0)):
+                channel = data[i]
+                print(channel)
+                if element_type == 'generator' and channel[9]['name'] == element_name:
+                    found = True
+                    break
+                elif element_type == 'effect':
+                    for j in range(channel.get('numberOfEffects', 0)):
+                        if channel.get(str(j), {}).get('name') == element_name:
+                            found = True
+                            break
+                    if found:
+                        break
+
+            # Check global effects channel
+            if not found and element_type == 'effect' and 9 in data:
+                for i in range(data[9].get('numberOfEffects', 0)):
+                    if data[9].get(str(i), {}).get('name') == element_name:
+                        found = True
+                        break
+
+            if found:
+                presets.append({**preset, 'type': 'global'})
+
+        return presets
 
 
     def get_preset_names(self, type: str, element: str):

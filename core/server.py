@@ -67,6 +67,12 @@ class WebSocketAPIServer:
             element = self.db.get_element_info(type, element_name)
             return JSONResponse(content=element)
 
+        # get a list with all the preset names and types for an element
+        @self.app.get('/api/get-all-presets/{type}/{element_name}')
+        async def get_all_presets(type, element_name):
+            presets = self.db.get_all_presets(type, element_name)
+            return JSONResponse(content=presets)
+
         # get a list with all the preset names for a given generator or effect
         @self.app.get('/api/get-presets/{type}/{element_name}')
         async def get_presets(type, element_name):

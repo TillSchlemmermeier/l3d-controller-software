@@ -230,7 +230,7 @@ function handleDoubleClick(index: number, element_id: number) {
 
 // open the selection dialog for generators, effects or presets
 function toggleDialog(type: string, channelIndex: number, effectIndex?: number) {
-  uiState.dialogType = type
+  uiState.elementType = type
   uiState.channelIndex = channelIndex
   if (effectIndex !== undefined && effectIndex !== null) {
     uiState.effectIndex = effectIndex
@@ -240,7 +240,7 @@ function toggleDialog(type: string, channelIndex: number, effectIndex?: number) 
 
 // open the dialog to add a new effect to a channel
 function newEffect(channelIndex: number, effectIndex: number) {
-  uiState.dialogType = 'effect'
+  uiState.elementType = 'effect'
   uiState.channelIndex = channelIndex
   uiState.effectIndex = effectIndex
   uiState.dialogOpen = true
@@ -248,7 +248,7 @@ function newEffect(channelIndex: number, effectIndex: number) {
 
 // open the dialog to add a new generator to a channel
 function newGenerator(channelIndex: number) {
-  uiState.dialogType = 'generator'
+  uiState.elementType = 'generator'
   uiState.channelIndex = channelIndex
   uiState.effectIndex = 9
   uiState.dialogOpen = true

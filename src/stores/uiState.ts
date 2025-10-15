@@ -1,17 +1,18 @@
 import { defineStore } from 'pinia'
-import { ElementInfo, PresetInfo, adminElement, Preset, GradientPreset, SortOption } from '../types/types.ts'
+import { ElementInfo, PresetInfo, AdminElements, Preset, GradientPreset, SortOption, AdminPresets } from '../types/types.ts'
 
 export const useUiStateStore = defineStore('uiState', {
   state: () => ({
     draggedChannelIndex: 0,
     lastTypeDragged: 'channel',
     dialogOpen: false,
-    dialogType: 'generator',
+    elementType: 'generator',
     channelIndex: 0,
     effectIndex: 0,
     overlayItems: [],
     overlayPresets: [] as Preset[],
-    adminElements: [] as adminElement[],
+    adminElements: [] as AdminElements[],
+    adminPresets: [] as AdminPresets[],
     gradientPresets: [] as GradientPreset[],
     selectedElement: '',
     elementInfo: {} as ElementInfo,
@@ -30,44 +31,51 @@ export const useUiStateStore = defineStore('uiState', {
   actions: {
     // fetch the names of active effects or generators
     async fetchActiveElements() {
-      const url = `get-active-elements/${this.dialogType}`
+      const url = `get-active-elements/${this.elementType}`
       this.overlayItems = await this.fetchFromBackend(url)
     },
 
     // fetch the names of all available effects or generators
     async fetchAllElements() {
-      const url = `get-element-names/${this.dialogType}`
+      const url = `get-element-names/${this.elementType}`
       this.adminElements = await this.fetchFromBackend(url)
+    },
+
+    // fetch the names of element, channel and global presets containing the element
+    async fetchAllPresets() {
+      const url = `get-all-presets/${this.elementType}/${this.selectedElement}`
+      this.adminPresets = await this.fetchFromBackend(url)
+      console.log('fetched all presets', this.adminPresets)
     },
 
     // fetch the list of presets for an element
     async fetchPresets() {
-      const url = `get-presets/${this.dialogType}/${this.selectedElement}`
+      const url = `get-presets/${this.elementType}/${this.selectedElement}`
       this.overlayPresets = await this.fetchFromBackend(url)
     },
 
     // fetch all available info from the database for the selected element
     async fetchElementInfo() {
-      const url = `get-element-info/${this.dialogType}/${this.selectedElement}`
+      const url = `get-element-info/${this.elementType}/${this.selectedElement}`
       this.elementInfo = await this.fetchFromBackend(url)
     },
 
     // fetch all available info from the database for the selected preset
     async fetchPresetInfo() {
-      const url = `get-preset-info/${this.dialogType}/${this.selectedElement}/${this.selectedPreset}`
+      const url = `get-preset-info/${this.elementType}/${this.selectedElement}/${this.selectedPreset}`
       this.presetInfo = await this.fetchFromBackend(url)
     },
 
     // delete a preset
     async deletePreset() {
-      const url = `delete-preset/${this.dialogType}/${this.selectedElement}/${this.selectedPreset}`
+      const url = `delete-preset/${this.elementType}/${this.selectedElement}/${this.selectedPreset}`
       const response = await this.fetchFromBackend(url)
       console.log('delete response', response)
     },
 
     // delete an element
     async deleteElement() {
-      const url = `delete-element/${this.dialogType}/${this.selectedElement}`
+      const url = `delete-element/${this.elementType}/${this.selectedElement}`
       const response = await this.fetchFromBackend(url)
       console.log('delete response', response)
     },
@@ -81,13 +89,13 @@ export const useUiStateStore = defineStore('uiState', {
 
     // toggle active status of generator or effect
     async toggleElementActive() {
-      const url = `toggle-element-active/${this.dialogType}/${this.selectedElement}`
+      const url = `toggle-element-active/${this.elementType}/${this.selectedElement}`
       const response = await this.fetchFromBackend(url)
       console.log('toggle response', response)
     },
 
     async renamePreset(newName: string) {
-      const url = `rename-preset/${this.dialogType}/${this.selectedElement}/${this.selectedPreset}/${newName}`
+      const url = `rename-preset/${this.elementType}/${this.selectedElement}/${this.selectedPreset}/${newName}`
       const response = await this.fetchFromBackend(url)
       console.log('rename response', response)
       this.selectedPreset = newName

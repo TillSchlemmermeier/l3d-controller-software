@@ -30,7 +30,7 @@
 
     <!-- Centered title -->
     <h2 class="flex-1 text-2xl text-zinc-900 text-center uppercase tracking-wider font-bold">
-      {{ uiState.dialogType }}
+      {{ uiState.elementType }}
     </h2>
 
     <!-- Close button (right) -->

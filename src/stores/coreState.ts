@@ -82,7 +82,7 @@ export const useCoreStateStore = defineStore('coreState', {
     // load a new channel, generator, effect or global effect
     async load(preset_name: string) {
       const uiState = useUiStateStore()
-      const url = `${baseUrl}/load/${uiState.dialogType}/${preset_name}/${uiState.channelIndex}/${uiState.effectIndex}/${uiState.selectedElement}`
+      const url = `${baseUrl}/load/${uiState.elementType}/${preset_name}/${uiState.channelIndex}/${uiState.effectIndex}/${uiState.selectedElement}`
       await this.callBackend(url)
     },
 
@@ -124,7 +124,7 @@ export const useCoreStateStore = defineStore('coreState', {
     // delete a generator, effect, channel or global preset
     async delete(preset: string, element?: string) {
       const uiState = useUiStateStore()
-      const url = `${baseUrl}/delete/${uiState.dialogType}/${preset}/${element}`
+      const url = `${baseUrl}/delete/${uiState.elementType}/${preset}/${element}`
       await this.callBackend(url)
     },
 
@@ -134,7 +134,7 @@ export const useCoreStateStore = defineStore('coreState', {
       
       let formData = new FormData()
       formData.append('preset', presetName)
-      formData.append('type', uiState.dialogType)
+      formData.append('type', uiState.elementType)
       formData.append('channel', uiState.channelIndex.toString())
       formData.append('index', uiState.effectIndex.toString())
       formData.append('force', force.toString())

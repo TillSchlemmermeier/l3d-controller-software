@@ -98,7 +98,11 @@ export interface PresetInfo {
   created: string
 }
 
-export interface adminElement {
+export interface AdminElements {
   name: string
   active: boolean
+}
+export interface AdminPresets {
+  type: string
+  name: string
 }

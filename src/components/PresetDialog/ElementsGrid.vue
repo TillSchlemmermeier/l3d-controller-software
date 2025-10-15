@@ -3,8 +3,8 @@
     class="flex flex-row flex-wrap gap-3 mx-auto"
   >
     <template 
-      v-if="uiState.dialogType == 'generator' ||
-            uiState.dialogType == 'effect'"
+      v-if="uiState.elementType == 'generator' ||
+            uiState.elementType == 'effect'"
     >
       <template v-for="element in sortedItems" :key="element">
         <button
@@ -37,7 +37,7 @@
         >
           <div class="aspect-square">
             <img 
-              :src="`src/assets/previews/${uiState.dialogType}_p_${element.name}.gif`"
+              :src="`src/assets/previews/${uiState.elementType}_p_${element.name}.gif`"
               class="w-full h-full object-cover"
               draggable="false"
             />
@@ -55,7 +55,7 @@
     <!-- Toggle between generator and channel presets if we are creating a new channel-->
     <div v-if="newChannel">
       <button
-        v-if="uiState.dialogType === 'generator'"
+        v-if="uiState.elementType === 'generator'"
         @click="$emit('changeType')"
         class="w-28 aspect-square rounded-lg bg-gradient-to-br from-zinc-500 to-zinc-400 shadow-sm ring-1 ring-zinc-800/50"
       >
@@ -64,7 +64,7 @@
         </span>
       </button>
       <button
-        v-else="uiState.dialogType === 'channel'"
+        v-else="uiState.elementType === 'channel'"
         @click="$emit('changeType')"
         class="w-28 aspect-square rounded-lg bg-gradient-to-br from-zinc-500 to-zinc-400 shadow-sm ring-1 ring-zinc-800/50"
       >
@@ -82,7 +82,7 @@
     >
       <div class="flex h-full flex-col items-center justify-center p-3">
         <span class="text-m text-center font-semibold text-zinc-300 break-words w-full capitalize">
-          Save {{ uiState.dialogType }} Preset
+          Save {{ uiState.elementType }} Preset
         </span>
       </div>
     </button>

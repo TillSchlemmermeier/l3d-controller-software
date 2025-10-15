@@ -133,11 +133,11 @@ function handleKeyboardSave(name: string) {
 async function loadPreset(preset_name: string) {
   if (preset_name) {
     await coreState.load(preset_name)
-    if (uiState.dialogType === 'effect') {
+    if (uiState.elementType === 'effect') {
       await coreState.select(0, uiState.channelIndex, uiState.effectIndex)
-    } else if (uiState.dialogType === 'generator' || uiState.dialogType === 'channel') {
+    } else if (uiState.elementType === 'generator' || uiState.elementType === 'channel') {
       await coreState.select(0, uiState.channelIndex, 9)
-    } else if (uiState.dialogType === 'global') {
+    } else if (uiState.elementType === 'global') {
       await coreState.select(0, 0, 9)
     }
     setTimeout(() => close(), 50)
@@ -151,7 +151,7 @@ async function recordGif() {
   showFrameSelector.value = true
   capturedFrames.value = []
 
-  if (uiState.dialogType === 'global') {
+  if (uiState.elementType === 'global') {
     capturedFrames.value = await props.channelPreviewRef.captureCombinedView(
       (frame: string) => {
         capturedFrames.value.push(frame)
@@ -259,21 +259,21 @@ async function fetchPresets(element: string) {
 }
 
 function newChannelTypeSwitch() {
-  if (uiState.dialogType === 'generator') {
-    uiState.dialogType = 'channel'
+  if (uiState.elementType === 'generator') {
+    uiState.elementType = 'channel'
     showPresets.value = false
-  } else if (uiState.dialogType === 'channel') {
-    uiState.dialogType = 'generator'
+  } else if (uiState.elementType === 'channel') {
+    uiState.elementType = 'generator'
   }
   populateOverlayElements()
 }
 
 async function populateOverlayElements() {
-  if (uiState.dialogType === 'newChannel') {
-    uiState.dialogType = 'generator'
+  if (uiState.elementType === 'newChannel') {
+    uiState.elementType = 'generator'
     newChannel.value = true
   }
-  if (uiState.dialogType === 'generator' || uiState.dialogType === 'effect') {
+  if (uiState.elementType === 'generator' || uiState.elementType === 'effect') {
     await uiState.fetchActiveElements()
   } else {
     uiState.selectedElement = 'presets'
