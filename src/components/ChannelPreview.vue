@@ -194,6 +194,10 @@ onMounted(() => {
     console.error('Electron API not available')
     return
   }
+
+  // ensure channelLength is initialized
+  channelLength.value = coreState.channels.length
+
   // WebSocket data handling
   window.ipcRenderer.onCubeData(handleCubeData)
   initializeRenderers()

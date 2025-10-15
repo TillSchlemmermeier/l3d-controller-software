@@ -81,7 +81,12 @@ contextBridge.exposeInMainWorld('ipcRenderer', {
 
   // Cleanup
   removeWebSocketListener: () => {
-    console.log('Removing websocket listener')
+    console.log('Removing all websocket listeners')
+    ipcRenderer.removeAllListeners(CHANNELS.CUBE)
+    ipcRenderer.removeAllListeners(CHANNELS.SPECTRUM)
+    // ipcRenderer.removeAllListeners(CHANNELS.STATE)
+    // ipcRenderer.removeAllListeners(CHANNELS.STATE_SECTION)
+    // ipcRenderer.removeAllListeners(CHANNELS.STATE_KEY)
     ipcRenderer.removeAllListeners(CHANNELS.WS_DATA)
   }
 })
