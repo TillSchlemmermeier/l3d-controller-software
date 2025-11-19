@@ -27,31 +27,28 @@ class g_wave():
         self.lastvalue = 0
 
     def return_state(self):
-        if 4 > self.channel >= 0:
-            channel = str(self.channel)
-        elif self.channel == 4:
-            channel = "Trigger"
-        else:
-            channel = 'noS2L'
-
         return [
             ['sigma', 'sigma', round(self.sigma,2)],
             ['speed', 'speed', round(self.speed,2)],
-            ['channel', 'channel', channel],
+            ['channel', 'channel', self.channel],
         ]
     
     def __call__(self, args):
+        # === PARAMETERS START ===
         self.sigma = args[0]*1.4+0.2
         self.speed = args[1]*2.5+0.4
-        self.channel = int(args[2]*5)-1
+        self.channel = ['noS2L', 0, 1, 2, 3, 'Trigger'][int(args[2]*5)]
+        # === PARAMETERS END ===
+
+        runtime_speed = self.speed
 
         # check if S2L is activated
-        if 4 > self.channel >= 0:
+        if isinstance(self.channel, int):
             current_volume = float(str(self.sound_values.buf[self.channel*8:self.channel*8+8],'utf-8'))
             self.sigma = current_volume * 1.4 + 0.2
 
         #check for trigger
-        elif self.channel == 4:
+        elif self.channel == 'Trigger':
             current_volume = int(float(str(self.sound_values.buf[32:40],'utf-8')))
             if current_volume > self.lastvalue:
                 self.lastvalue = current_volume
@@ -90,7 +87,7 @@ class g_wave():
 
         # factor to account for different corner/face speeds
         if direction < 5:
-            self.speed /= 1.44
+            runtime_speed /= 1.44
 
 
         if direction == 1: #x+
@@ -135,7 +132,7 @@ class g_wave():
         world[2,:,:,:]=world[0,:,:,:]
 
 
-        self.counter += self.speed
+        self.counter += runtime_speed
 
 
         return np.clip(world, 0, 1)

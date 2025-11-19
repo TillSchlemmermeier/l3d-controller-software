@@ -28,43 +28,34 @@ class g_sound_lines():
 
         self.counter = 1
         self.reset = 20
-        self.randomcolor = 0
+        self.randomcolor = False
         self.spectrum = 0
         # s2l
         self.sound_values = shared_memory.SharedMemory(name = "global_s2l_memory")
         self.lastvalue = 0
+        self.channel = 0
 
     def return_state(self):
-        if 4 > self.channel:
-            channel = str(self.channel)
-        else:
-            channel = 'Trigger'
-
-        if self.randomcolor == 0:
-            color = 'off'
-        else:
-            color = 'on'
-
         return [
             ['number', 'number', round(self.number,2)],
             ['Wait', 'reset', round(self.reset,2)],
-            ['Color', 'randomcolor', color],
-            ['Channel', 'channel', channel],
+            ['Color', 'randomcolor', 'On' if self.randomcolor else 'Off'],
+            ['Channel', 'channel', self.channel],
         ]
     
     def __call__(self, args):
-
-        # process parameters
+        # === PARAMETERS START ===
         self.number = int(args[0]*15)
         self.reset = args[1]*20+1
-        self.randomcolor = int(round(args[2]))
-        self.channel = int(args[3]*4)
+        self.randomcolor = args[2] > 0.5
+        self.channel = [0, 1, 2, 3, 'Trigger'][int(args[3]*4)]
+        # === PARAMETERS END ===
 
         # now we can world with the sound
         world = np.zeros([3, 10, 10, 10])
 
-        if self.channel == 4:
-            current_volume = int(float(str(self.sound_values.buf[self.channel*8:self.channel*8+8],'utf-8')))
+        if self.channel == 'Trigger':
+            current_volume = int(float(str(self.sound_values.buf[32:40],'utf-8')))
             if current_volume > self.lastvalue:
                 self.lastvalue = current_volume
                 self.spectrum = uniform(0,1)
@@ -76,7 +67,7 @@ class g_sound_lines():
                 for line in self.lines:
                     world[:, line[0], line[1], line[2]] = current_volume
 
-                    if self.randomcolor == 1:
+                    if self.randomcolor:
                         low = np.clip(self.spectrum - 0.08, 0, 1)
                         high = np.clip(self.spectrum + 0.08, 0, 1)
                         color = hsv_to_rgb(uniform(low, high), 1, 1)
@@ -84,14 +75,14 @@ class g_sound_lines():
                             world[i, :, :, :] *= color[i]
 
 
-        elif self.channel < 4:
+        else:
             current_volume = float(str(self.sound_values.buf[self.channel*8:self.channel*8+8],'utf-8'))
 
             # get lines
             for line in self.lines:
                 world[:, line[0], line[1], line[2]] = current_volume
 
-                if self.randomcolor == 1:
+                if self.randomcolor:
                     low = np.clip(self.spectrum - 0.08, 0, 1)
                     high = np.clip(self.spectrum + 0.08, 0, 1)
                     color = hsv_to_rgb(uniform(low, high), 1, 1)

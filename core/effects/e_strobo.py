@@ -8,42 +8,27 @@ class e_strobo():
         self.on = 1
         self.off = 1
         self.mode = 'rectangular'
-        self.trigger = False
+        self.trigger = 'Off'
         self.sound_values = shared_memory.SharedMemory(name = "global_s2l_memory")
         self.counter = 0
         self.lastvalue = 0
 
     def return_state(self):
-        if self.trigger:
-            trigger = "On"
-        else:
-            trigger = "Off"
-
         return [
             ['On', 'on', round(self.on,1)],
             ['Off', 'off', round(self.off,1)],
             ['Mode', 'mode', self.mode],
-            ['Trigger', 'trigger', trigger],
+            ['Trigger', 'trigger', 'On' if self.trigger else 'Off'],
         ]
 
 
     def __call__(self, world, args):
-        # process parameters
+        # === PARAMETERS START ===
         self.on = int(args[0]*9)+1
         self.off = int(args[1]*9)+1
-        if args[2] <= 0.25:
-            self.mode = 'rectangle'
-        elif 0.25 < args[2] <= 0.5:
-            self.mode = 'ramp'
-        elif 0.5 < args[2] <= 0.75:
-            self.mode = 'down ramp'
-        else:
-            self.mode = 'triangle'
-
-        if args[3] > 0.1:
-            self.trigger = True
-        else:
-            self.trigger = False
+        self.mode = ['rectangle', 'ramp', 'down ramp', 'triangle'][round(args[2]*3)]
+        self.trigger = args[3] > 0.5
+        # === PARAMETERS END ===
 
         # apply manipulation
         if self.trigger:

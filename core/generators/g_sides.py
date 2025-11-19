@@ -31,35 +31,20 @@ class g_sides():
         self.safeworld = np.zeros([3, 10, 10, 10])
 
     def return_state(self):
-        if 4 > self.channel >= 0:
-            channel = str(self.channel)
-        elif self.channel == 4:
-            channel = "Trigger"
-        else:
-            channel = 'noS2L'
-
-        if self.randomcolor:
-            color = 'On'
-        else:
-            color = 'Off'
-
         return [
             ['Size', 'size', round(self.size,2)],
             ['Wait', 'reset', round(self.reset,2)],
-            ['Color', 'randomcolor', color],
-            ['Channel', 'channel', channel],
+            ['Color', 'randomcolor', 'On' if self.randomcolor else 'Off'],
+            ['Channel', 'channel', self.channel],
         ]
 
     def __call__(self, args):
+        # === PARAMETERS START ===
         self.size = round(args[0]*4)
         self.reset = int(args[1]*10+1)
-        if args[2] > 0.5:
-            self.randomcolor = True
-        else:
-            self.randomcolor = False
-
-        self.channel = int(args[3]*5)-1
-
+        self.randomcolor = args[2] > 0.5
+        self.channel = ['noS2L', 0, 1, 2, 3, 'Trigger'][int(args[3]*5)]
+        # === PARAMETERS END ===
 
 
         # create world
@@ -74,14 +59,14 @@ class g_sides():
         size = self.size
 
         # check if S2L is activated
-        if 4 > self.channel >= 0:
+        if isinstance(self.channel, int):
             current_volume = float(str(self.sound_values.buf[self.channel*8:self.channel*8+8],'utf-8'))
             if current_volume > 0:
                 # select side
                 self.side = randint(0, 5)
 
         #check for trigger
-        elif self.channel == 4:
+        elif self.channel == 'Trigger':
             current_volume = int(float(str(self.sound_values.buf[32:40],'utf-8')))
             if current_volume > self.lastvalue:
                 self.lastvalue = current_volume
@@ -131,7 +116,7 @@ class g_sides():
 
         self.safeworld = world
 
-        if self.channel < 4:
+        if self.channel != 'Trigger':
             self.counter += 1
         else:
             self.counter = 0

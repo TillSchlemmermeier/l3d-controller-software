@@ -22,10 +22,12 @@ class g_stacking():
         ]
     
     def __call__(self, args):
+        # === PARAMETERS START ===
         self.n = int(args[0]*200)+1
         self.lifetime = int(args[1]*50) + 5
-        world = np.zeros([3, 10, 10, 10])
+        # === PARAMETERS END ===
 
+        world = np.zeros([3, 10, 10, 10])
         # append new leds at top
         # for i in range(self.n):
         #     self.drops.append(led(9))

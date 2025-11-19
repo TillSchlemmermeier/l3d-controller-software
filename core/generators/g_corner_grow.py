@@ -35,9 +35,11 @@ class g_corner_grow():
         ]
 
     def __call__(self, args):
+        # === PARAMETERS START ===
         self.mode = ['sync', 'seq', 'random'][int(round(args[0]*2))]
         self.waiting = int(args[1]*50)+1
         self.trigger = args[2] >= 0.5
+        # === PARAMETERS END ===
 
         # create world
         world = np.zeros([3, 10, 10, 10])

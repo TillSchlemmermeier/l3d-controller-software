@@ -35,51 +35,31 @@ class g_sphere:
 
     #Strings for GUI
     def return_state(self):
-        if self.oscillate < 0.3:
-            osci = 'sin'
-        elif self.oscillate > 0.7:
-            osci = 'implode'
-        else:
-            osci = 'explode'
-
-        if 4 > self.channel >= 0:
-            channel = str(self.channel)
-            osci = str(round(self.oscillate/2,2))
-        elif self.channel == 4:
-            channel = "Trigger"
-        elif self.channel == 5:
-            channel = 'Trigger2'
-        else:
-            channel = 'noS2L'
-
-        # return [Display Name, Viariable Name, Display Value] for each parameter
-        if 4 > self.channel >= 0:
-            return [
-                ['maxsize', 'maxsize', round(self.maxsize,2)],
-                ['speed', 'growspeed', round(self.growspeed,2)],
-                ['smooth', 'oscillate', osci],
-                ['channel', 'channel', channel],    
-            ]
-        else:
-            return [
-                ['maxsize', 'maxsize', round(self.maxsize,2)],
-                ['speed', 'growspeed', round(self.growspeed,2)],
-                ['shape', 'oscillate', osci],
-                ['channel', 'channel', channel],    
-            ]
+        return [
+            ['maxsize', 'maxsize', round(self.maxsize,2)],
+            ['speed', 'growspeed', round(self.growspeed,2)],
+            [
+                'smooth' if isinstance(self.channel, int) else 'shape',
+                'oscillate',
+                round(self.smooth,2) if isinstance(self.channel, int) else self.oscillate
+            ],
+            ['channel', 'channel', self.channel],
+        ]
         
     def __call__(self, args):
+        # === PARAMETERS START ===
         self.maxsize = args[0]*10
         self.growspeed = args[1]
-        self.oscillate = args[2]
-        self.channel = int(args[3]*6)-1
+        self.oscillate = ['sin', 'explode', 'implode'][round(args[2]*2)]
+        self.channel = ['noS2L', 0, 1, 2, 3, 'Trigger', 'Trigger2'][int(args[3]*6)]
+        # === PARAMETERS END ===
 
-        self.smooth = self.oscillate / 2
+        self.smooth = args[2] / 2
 
         world = np.zeros([3, 10, 10, 10])
 
         # check if S2L is activated
-        if 4 > self.channel >= 0:
+        if isinstance(self.channel, int):
             current_volume = float(str(self.sound_values.buf[self.channel*8:self.channel*8+8],'utf-8'))
             current_volume = (1-self.smooth) * current_volume + self.smooth * self.last_value
 
@@ -94,8 +74,8 @@ class g_sphere:
 
 
         #check for trigger
-        elif self.channel >= 4:
-            if self.channel == 4:
+        elif self.channel in ['Trigger', 'Trigger2']:
+            if self.channel == 'Trigger':
                 current_volume = int(float(str(self.sound_values.buf[32:40],'utf-8')))
             else:
                 current_volume = int(float(str(self.sound_values.buf[40:48],'utf-8')))
@@ -108,7 +88,7 @@ class g_sphere:
                 self.lastosci = 0
 
             # oscillates between 0 and 1
-            if self.oscillate < 0.3:
+            if self.oscillate == 'sin':
                 if self.sintrigger:
                     osci = 0
                 else:
@@ -119,7 +99,7 @@ class g_sphere:
                         if osci > self.lastosci:
                             self.sintrigger = True
 
-            elif self.oscillate > 0.7:
+            elif self.oscillate == 'implode':
                 if self.trigger:
                     osci = 0
                 else:
@@ -143,9 +123,9 @@ class g_sphere:
 
         else:
             # oscillates between 0 and 1
-            if self.oscillate < 0.3:
+            if self.oscillate == 'sin':
                 osci = np.sin(self.step*self.growspeed)*0.5 + 0.5
-            elif self.oscillate > 0.7:
+            elif self.oscillate == 'implode':
                 osci = sawtooth(self.step*self.growspeed, 0)*0.5 + 0.5
             else:
                 osci = sawtooth(self.step*self.growspeed)*0.5 + 0.5

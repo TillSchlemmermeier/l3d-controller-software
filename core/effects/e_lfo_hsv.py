@@ -22,12 +22,12 @@ class e_lfo_hsv():
         ]
     
     def __call__(self, world, args):
-        # process parameters
-        self.speed = args[3]*3+1E-2
-
+        # === PARAMETERS START ===
         self.amount_h = round(args[0]*0.5, 1)
         self.amount_s = round(args[1]*2 - 1.0, 1)
         self.amount_v = round(args[2]*1.8 - 0.9, 1)
+        self.speed = args[3]*3+1E-2
+        # === PARAMETERS END ===
 
         current_volume = np.sin(0.1*self.speed * self.counter)+1
 

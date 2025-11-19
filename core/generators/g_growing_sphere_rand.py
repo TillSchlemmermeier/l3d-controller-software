@@ -31,34 +31,20 @@ class g_growing_sphere_rand():
         self.stop = False
 
     def return_state(self):
-        if self.oscillate < 0.3:
-            osci = 'sin'
-        elif self.oscillate > 0.7:
-            osci = 'implode'
-        else:
-            osci = 'explode'
-
-        if self.trigger:
-            trigger = 'On'
-        else:
-            trigger = 'Off'
-
         return [
             ['maxsize', 'maxsize', round(self.maxsize,2)],
             ['speed', 'growspeed', round(self.growspeed,2)],
-            ['shape', 'oscillate', osci],
-            ['S2L Trigger', 'trigger', trigger],
+            ['shape', 'oscillate', self.oscillate],
+            ['S2L Trigger', 'trigger', 'On' if self.trigger else 'Off'],
         ]
     
-
     def __call__(self, args):
+        # === PARAMETERS START ===
         self.maxsize = args[0]*15
         self.growspeed = args[1]*2
-        self.oscillate = args[2]
-        if args[3] > 0.2:
-            self.trigger = True
-        else:
-            self.trigger = False
+        self.oscillate = ['sin', 'explode', 'implode'][round(args[2]*2)]
+        self.trigger = args[3] > 0.2
+        # === PARAMETERS END ===
 
         world = np.zeros([3, 10, 10, 10])
 
@@ -76,9 +62,9 @@ class g_growing_sphere_rand():
                 self.step = 0
 
         # oscillates between 0 and 1
-        if self.oscillate < 0.3:
+        if self.oscillate == 'sin':
             osci = 1 - (np.cos(self.step*self.growspeed)*0.5 + 0.5)
-        elif self.oscillate > 0.7:
+        elif self.oscillate == 'implode':
             osci = sawtooth(self.step*self.growspeed, 0)*0.5 + 0.5
         else:
             osci = sawtooth(self.step*self.growspeed)*0.5 + 0.5

@@ -19,9 +19,11 @@ class g_sound_ellipsoid():
         ]
 
     def __call__(self, args):
+        # === PARAMETERS START ===
         self.xsize = args[0]*7+1.0
         self.ysize = args[1]*7+1.0
         self.zsize = args[2]*7+1.0
+        # === PARAMETERS END ===
 
         volume1 = float(str(self.sound_values.buf[0:8],'utf-8'))
         volume2 = float(str(self.sound_values.buf[8:16],'utf-8'))

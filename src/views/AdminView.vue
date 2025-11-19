@@ -154,7 +154,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch } from 'vue'
+import { ref } from 'vue'
 import { useUiStateStore } from '../stores/uiState'
 import AddElementDialog from '../components/AdminSection/AddElementDialog.vue'
 import StatusMessage from '../components/AdminSection/StatusMessage.vue'

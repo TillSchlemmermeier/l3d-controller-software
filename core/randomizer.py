@@ -1,7 +1,7 @@
 import random
-from typing import List, Dict, Optional
 from db_manager import DatabaseManager
 from state_manager import StateManager
+import json
 
 
 class Randomizer:
@@ -18,11 +18,17 @@ class Randomizer:
             self._randomize_global()
         elif mode == 'all_channels':
             self._randomize_all_channels()
-        elif mode == 'single_channel':
-            self._randomize_single_channel()
         elif mode == 'all_elements':
             self._randomize_all_elements()
-        elif mode == 'single_element':
+        elif mode == 'random_channel':
+            self._randomize_single_channel()
+        elif mode == 'random_channel_elements':
+            self._randomize_all_elements(randomize=True)
+        elif mode == 'selected_channel':
+            self._randomize_single_channel(selected_only=True)
+        elif mode == 'selected_channel_elements':
+            self._randomize_all_elements(selected_only=True)
+        elif mode == 'random_element':
             self._randomize_single_element()
         elif mode == 'selected_element':
             self._randomize_single_element(True)
@@ -46,19 +52,22 @@ class Randomizer:
             preset_data = self.db.get_preset('channel', 'presets', preset['name'], False)
             self.state_manager.load_channel(i, preset_data)
 
-    def _randomize_single_channel(self) -> None:
+    def _randomize_single_channel(self, selected_only: bool = False) -> None:
         """Load random preset for random channel"""
-        if self.state['numberOfChannels'] == 0:
-            return
-            
-        channel_idx = random.randint(0, self.state['numberOfChannels'] - 1)
+        if selected_only:
+            channel_idx = self.state['context'][0][0]
+            if channel_idx >= self.state['numberOfChannels']:
+                return
+        else:
+            channel_idx = random.randint(0, self.state['numberOfChannels'] - 1)
+
         presets = self.db.get_preset_names('channel', 'presets')
         if presets:
             preset = random.choice(presets)
             preset_data = self.db.get_preset('channel', 'presets', preset['name'], False)
             self.state_manager.load_channel(channel_idx, preset_data)
 
-    def _randomize_all_elements(self) -> None:
+    def _randomize_all_elements(self, selected_only: bool = False, randomize: bool = False) -> None:
         """Load random generators/effects for all slots"""
         active_generators = self.db.get_active_elements('generator')
         active_effects = self.db.get_active_elements('effect')
@@ -66,8 +75,19 @@ class Randomizer:
         if not active_generators or not active_effects:
             return
 
+        if selected_only:
+            channel_idx = self.state['context'][0][0]
+            if channel_idx >= self.state['numberOfChannels']:
+                return
+            channels_to_randomize = [channel_idx]
+        elif randomize:
+            channel_idx = random.randint(0, self.state['numberOfChannels'] - 1)
+            channels_to_randomize = [channel_idx]
+        else:
+            channels_to_randomize = range(self.state['numberOfChannels'])
+
         # Randomize each channel
-        for channel_idx in range(self.state['numberOfChannels']):
+        for channel_idx in channels_to_randomize:
             # Randomize generator
             generator = random.choice(active_generators)
             generator_presets = self.db.get_preset_names('generator', generator['name'])
@@ -84,6 +104,9 @@ class Randomizer:
                     preset = random.choice(effect_presets)
                     preset_data = self.db.get_preset('effect', effect['name'], preset['name'], False)
                     self.state_manager.load_effect(channel_idx, effect_idx, preset_data)
+            # Randomize color
+            self._randomize_color(channel_idx)
+
 
     def _randomize_single_element(self, selected_only: bool = False) -> None:
         """Load random preset for random element in state"""
@@ -110,6 +133,13 @@ class Randomizer:
                         'index': effect_idx
                     })
 
+            # Add color element (index 8)
+            if 8 in channel:
+                elements_in_channel.append({
+                    'channel': channel_idx,
+                    'index': 8,
+                })
+
             if not elements_in_channel:
                 return
 
@@ -130,34 +160,80 @@ class Randomizer:
         selected_element = random.choice(elements_in_channel)
 
         # 4. Get new random element from database based on type
-        if selected_element['index'] == 9:
-            # For generator
-            active_generators = self.db.get_active_elements('generator')
-            if not active_generators:
-                return
-            new_element = random.choice(active_generators)
-            element_type = 'generator'
+        if selected_element['index'] == 8:
+            # For color element
+            self._randomize_color(selected_element['channel'])
         else:
-            # For effect
-            active_effects = self.db.get_active_elements('effect')
-            if not active_effects:
+            if selected_element['index'] == 9:
+                # For generator
+                active_generators = self.db.get_active_elements('generator')
+                if not active_generators:
+                    return
+                new_element = random.choice(active_generators)
+                element_type = 'generator'
+
+            else:
+                # For effect
+                active_effects = self.db.get_active_elements('effect')
+                if not active_effects:
+                    return
+                new_element = random.choice(active_effects)
+                element_type = 'effect'
+
+            # 5. Get random preset for the new element
+            presets = self.db.get_preset_names(element_type, new_element['name'])
+            if not presets:
                 return
-            new_element = random.choice(active_effects)
-            element_type = 'effect'
 
-        # 5. Get random preset for the new element
-        presets = self.db.get_preset_names(element_type, new_element['name'])
-        if not presets:
-            return
+            preset = random.choice(presets)
+            preset_data = self.db.get_preset(element_type, new_element['name'], preset['name'], False)
 
-        preset = random.choice(presets)
-        preset_data = self.db.get_preset(element_type, new_element['name'], preset['name'], False)
+            if not preset_data:
+                return
 
-        if not preset_data:
-            return
+            # 6. Load the preset
+            if element_type == 'generator':
+                self.state_manager.load_generator(selected_element['channel'], preset_data)
+            else:
+                self.state_manager.load_effect(selected_element['channel'], selected_element['index'], preset_data)
 
-        # 6. Load the preset
-        if element_type == 'generator':
-            self.state_manager.load_generator(selected_element['channel'], preset_data)
-        else:
-            self.state_manager.load_effect(selected_element['channel'], selected_element['index'], preset_data)
+
+    def _randomize_color(self, channel_idx: int) -> None:
+        """Randomize color gradient for a channel"""
+        # Random gradient type
+        gradient_types = ['linear', 'radial']
+        gradient_type = random.choice(gradient_types)
+
+        gradients = self.db.get_all_gradients()
+        gradient_string = random.choice(gradients)['data']
+        gradient = json.loads(gradient_string)
+        print("Selected gradient:", gradient)
+
+        # Random speeds (-100 to 100)
+        speed = random.randint(0, 100)
+        rotate_speed_y = random.randint(-100, 100)
+        rotate_speed_z = random.randint(-100, 100)
+
+        # Random section (0-100)
+        section_start = random.randint(0, 80)
+        section_width = random.randint(20, 100 - section_start)
+
+        # Sound to Light Options
+        s2l_options = ['startVal', 'endVal', 'startSat', 'endSat', 'regionWidth', 'regionStart', 'speed', 'rotateY', 'rotateZ']
+        k = random.randint(0, len(s2l_options) - 1)
+        s2l = random.sample(s2l_options, k)
+
+        color_data = {
+            'gradient': gradient,
+            'gradientType': gradient_type,
+            'speed': speed,
+            'sectionStart': section_start,
+            'sectionWidth': section_width,
+            'rotateSpeedY': rotate_speed_y,
+            'rotateSpeedZ': rotate_speed_z,
+            'soundToLightOptions': s2l,
+            'update': True
+        }
+
+        # Update via state manager
+        self.state_manager.update_color_manager(channel_idx, color_data)

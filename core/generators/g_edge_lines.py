@@ -13,22 +13,16 @@ class g_edge_lines():
         self.speed = 1
 
     def return_state(self):
-        if self.trigger:
-            trigger = 'On'
-        else:
-            trigger = 'Off'
-
         return [
             ['speed', 'speed', self.speed],
-            ['Trigger', 'trigger', trigger],
+            ['Trigger', 'trigger', 'On' if self.trigger else 'Off'],
         ]
 
     def __call__(self, args):
+        # === PARAMETERS START ===
         self.speed = int(1+2*args[0])
-        if args[1] > 0.2:
-            self.trigger = True
-        else:
-            self.trigger = False
+        self.trigger = args[1] > 0.2
+        # === PARAMETERS END ===
 
         world = np.zeros([3, 10, 10, 10])
 

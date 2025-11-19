@@ -21,40 +21,27 @@ class g_cube():
         self.growsize = 0
         # s2l
         self.sound_values = shared_memory.SharedMemory(name = "global_s2l_memory")
-        self.channel = 4
+        self.channel = 'Trigger'
         self.lastvalue = 0
         self.counter = 0
         self.speed = 0
         self.step = 0
 
     def return_state(self):
-        if self.sides == False:
-            sides = 'Off'
-        else:
-            sides = 'On'
-
-        if 4 > self.channel >= 0:
-            channel = str(self.channel)
-        elif self.channel == 4:
-            channel = "Trigger"
-        else:
-            channel = 'noS2L'
-
         return [
             ['size', 'size', self.size],
-            ['surface', 'sides', sides],
-            ['channel', 'channel', channel],
+            ['surface', 'sides', 'On' if self.sides else 'Off'],
+            ['channel', 'channel', self.channel],
             ['speed', 'speed', round(11 - self.speed,2)],
         ]
     
     def __call__(self, args):
+        # === PARAMETERS START ===
         self.size = round(args[0]*4)
-        if args[1] < 0.5:
-            self.sides = False
-        else:
-            self.sides = True
-        self.channel = int(args[2]*5)-1
+        self.sides = args[1] > 0.5
+        self.channel = ['noS2L', 0, 1, 2, 3, 'Trigger'][int(args[2]*5)]
         self.speed = 11 - int(args[3]*10)
+        # === PARAMETERS END ===
 
         # create world
         world = np.zeros([3, 10, 10, 10])
@@ -65,7 +52,7 @@ class g_cube():
             tempworld[:, :, :] = -1.0
 
         # check if S2L is activated
-        if 4 > self.channel >= 0:
+        if isinstance(self.channel, int):
             current_volume = float(str(self.sound_values.buf[self.channel*8:self.channel*8+8],'utf-8'))
 
             # apply threshold
@@ -80,7 +67,7 @@ class g_cube():
                 self.growsize = 0
 
         #check for trigger
-        elif self.channel == 4:
+        elif self.channel == 'Trigger':
             current_volume = int(float(str(self.sound_values.buf[32:40],'utf-8')))
             if current_volume > self.lastvalue:
                 self.lastvalue = current_volume

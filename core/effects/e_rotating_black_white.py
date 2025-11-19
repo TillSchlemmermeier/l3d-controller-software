@@ -35,11 +35,12 @@ class e_rotating_black_white():
         ]
 
     def __call__(self, world, args):
-		# parse input
+		# === PARAMETERS START ===
         self.xspeed = args[0]*15+0.01
         self.yspeed = args[1]*15
         self.zspeed = args[2]*15
         self.broad = args[3]
+        # === PARAMETERS END ===
 
         if self.broad == 0:
             for i in range(10):

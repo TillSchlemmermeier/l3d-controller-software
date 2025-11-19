@@ -31,25 +31,22 @@ class g_squares():
         self.stop = False
 
     def return_state(self):
-        if self.trigger:
-            trigger = 'On'
-        else:
-            trigger = 'Off'
-
         return [
-            ['speed', 'size', round(self.speed,2)],
+            ['speed', 'speed', round(self.speed,2)],
             ['dir', 'dir', self.dir],
             ['type', 'type', self.type],
-            ['Trigger', 'trigger', trigger],
+            ['Trigger', 'trigger', 'On' if self.trigger else 'Off'],
             ['pause', 'pause', round(self.pause, 2)],
         ]
     
     def __call__(self, args):
+        # === PARAMETERS START ===
         self.speed = int(args[0]*8) + 1
         self.dir = ['X', 'Y', 'Z'][int(round(args[1]*2))]
         self.type = ['cos', 'up', 'down'][int(round(args[2]*2))]
         self.trigger = args[3] >= 0.5
         self.pause = int(round((args[4]* 30) + 1))
+        # === PARAMETERS END ===
 
         world = np.zeros([3, 10, 10, 10])
 

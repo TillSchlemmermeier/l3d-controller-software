@@ -1,54 +1,47 @@
-
 import numpy as np
 from multiprocessing import shared_memory
 
 class e_break_fade():
+    '''Effect: Fade during beat breaks, optional S2L brightness during beats'''
 
     def __init__(self):
-        # parameters
-        self.amount = 1.0
-        self.channel = 1
-        self.sound_values = shared_memory.SharedMemory(name = "global_s2l_memory")
-        self.lastworld = np.zeros([3,10,10,10])
-        self.counter = 0
-        self.countermax = 0
-        self.invert = True
+        self.fade = 0.0
+        self.s2l = 0.0
+        self.timeout = 15  # frames without trigger before fading starts
+        self.sound_values = shared_memory.SharedMemory(name="global_s2l_memory")
+        self.lastworld = np.zeros([3, 10, 10, 10])
+        self.lastvalue = 0
+        self.frames_since_trigger = 0
 
     def return_state(self):
-        return []
+        return [
+            ['fade in break', 'fade', round(self.fade, 2)],
+            ['s2l in beat', 's2l', round(self.s2l, 2)],
+        ]
 
     def __call__(self, world, args):
+        # === PARAMETERS START ===
+        self.fade = args[0]
+        self.s2l = args[1]
+        # === PARAMETERS END ===
 
-        current_volume = float(str(self.sound_values.buf[self.channel*8:self.channel*8+8],'utf-8'))
+        current_volume = int(float(str(self.sound_values.buf[32:40], 'utf-8')))
 
-        if self.invert:
-            newlength = np.clip(int(7 * (current_volume) * self.amount), 0.01, 10)
-
-            if newlength < self.counter:
-                self.counter = 0
-                self.countermax = newlength
-
-            for i in range(3):
-                world[i, :, :, :] += (0.9-(self.counter)/(self.countermax+0.001))*self.lastworld[i, :, :, :]
-                self.lastworld[i, :, :, :] = np.clip(world[i, :, :, :], 0, 1)
-
-            self.counter += 1
-
-
+        if current_volume > self.lastvalue:
+            self.lastvalue = current_volume
+            self.frames_since_trigger = 0
         else:
-            newlength = int(10 * current_volume * self.amount)
+            self.frames_since_trigger += 1
 
-            if newlength > self.counter:
-                # triggered, if sound is louder than counter
-                # -> reset counter
-                self.counter = newlength
-                self.countermax = self.counter
+        # in break
+        if self.frames_since_trigger >= self.timeout:
+            world = world + self.lastworld * self.fade
+        # during beats
+        else:
+            if self.s2l:
+                current_volume = float(str(self.sound_values.buf[0:8], 'utf-8'))
+                world *= 1 - (current_volume * self.s2l)
 
-            for i in range(3):
-                world[i, :, :, :] += ((self.counter)/(self.countermax + 1 ))*self.lastworld[i, :, :, :]
-                self.lastworld[i, :, :, :] = np.clip(world[i, :, :, :], 0, 1)
-
-            if self.counter > 0:
-                self.counter -= 1
+        self.lastworld[:, :, :, :] = world[:, :, :, :]
 
         return np.clip(world, 0, 1)

@@ -10,21 +10,18 @@ class e_randomizer():
         self.sound_values = shared_memory.SharedMemory(name = "global_s2l_memory")
 
     def return_state(self):
-        if self.channel >= 0:
-            channel = str(self.channel)
-        else:
-            channel = 'noS2L'
-            
         return [
             ['amount', 'amount', round(self.amount,1)],
-            ['channel', 'channel', channel],
+            ['channel', 'channel', self.channel],
         ]
     
     def __call__(self, world, args):
+        # === PARAMETERS START ===
         self.amount = args[0]
-        self.channel = int(args[1]*4)-1
+        self.channel = ['noS2L', 0, 1, 2, 3][round(args[1]*4)]
+        # === PARAMETERS END ===
 
-        if self.channel < 0 :
+        if self.channel == 'noS2L':
             r = np.random.normal(0, self.amount, [10,10,10])
         else:
             current_volume = float(str(self.sound_values.buf[self.channel*8:self.channel*8+8],'utf-8'))

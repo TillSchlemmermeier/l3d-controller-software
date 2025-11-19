@@ -10,11 +10,9 @@ class g_circles_revis():
 
     def __init__(self):
         self.number = 1
-        self.sound_values = shared_memory.SharedMemory(name = "global_s2l_memory")
         self.soundsize = 1
         self.lastvalue = 0
         self.counter = 0
-        self.channel = 0
         self.counter_total = 0
         self.mode = 'out'
         self.speed = 1
@@ -84,27 +82,18 @@ class g_circles_revis():
         self.sizes[5] = self.size5
 
     def return_state(self):
-        if 4 > self.channel >= 0:
-            channel = str(self.channel)
-        elif self.channel == 4:
-            channel = "Trigger"
-        else:
-            channel = 'noS2L'
-
         return [
             ['mode', 'mode', self.mode],
             ['speed', 'speed', self.speed],
             ['pause', 'pause', self.pause],
-            ['channel', 'channel', channel],
         ]
     
     def __call__(self, args):
-
-        if args[0] < 0.5:
-            self.mode = 'out'
-
+        # === PARAMETERS START ===
+        self.mode = 'out'
         self.speed = int(args[1]*5) + 1
         self.pause = int(args[2]*10)
+        # === PARAMETERS END ===
 
         world = np.zeros([3, 10, 10, 10])
 

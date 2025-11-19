@@ -60,52 +60,26 @@ class g_cube_edges():
         self.lastvalue = 0
 
     def return_state(self):
-        if self.trigger:
-            trigger = 'On'
-        else:
-            trigger = 'Off'
-
-        if 100 > self.wait_frames > 5:
-            multi = str(round(self.wait_frames,2))
-        elif self.wait_frames >= 100:
-            multi = 'Trigger'
-        else:
-            multi = 'Off'
-
         return [
             ['speed', 'speed', round(self.speed,2)],
-            ['number', 'number', round(self.number,2)],
-            ['wait', 'wait_frames', multi],
-            ['Trigger', 'trigger', trigger],
+            ['number', 'number', round(self.number,2) if self.wait_frames <= 5 else '-'],
+            ['mode', 'wait_frames', 'Single' if self.wait_frames <= 5 else f'All/{self.wait_frames}'],
+            ['Trigger', 'trigger', 'On' if self.trigger else 'Off'],
         ]
 
     def __call__(self, args):
+        # === PARAMETERS START ===
         self.speed = args[0]*2 + 0.4
         self.number = int(3*args[1])
+        self.wait_frames = int(args[2] * 99)
+        self.trigger = args[3] > 0.5
+        # === PARAMETERS END ===
+
         if self.number == 0:
             self.number = 1
-        self.wait_frames = int(args[2] * 100) + 5
-
-        if args[3] < 0.5:
-            self.trigger = False
-        else:
-            self.trigger = True
-
 
         # create world
         world = np.zeros([3, 10, 10, 10])
-
-        if not self.trigger:
-            if 100 > self.wait_frames > 5:
-                if self.counter > self.wait_frames:
-                    self.counter = 0
-            elif self.wait_frames >= 100:
-                pass
-
-            # choose new corner
-            elif self.counter > 19:
-                self.counter = 0
-                self.corner = choice(self.corner_list)
 
         #check for trigger
         if self.trigger:
@@ -114,6 +88,18 @@ class g_cube_edges():
                 self.lastvalue = current_volume
                 self.counter = 0
                 self.corner = choice(self.corner_list)
+
+        else:
+            # animate all corners
+            if self.wait_frames > 5:
+                if self.counter > self.wait_frames:
+                    self.counter = 0
+
+            # single corner, choose new corner
+            elif self.counter > 19:
+                self.counter = 0
+                self.corner = choice(self.corner_list)
+
 
         # create gaussian profile
         row = np.linspace(0, 19, 20)

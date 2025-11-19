@@ -15,13 +15,14 @@ class e_outer_shadow():
     def return_state(self):
         return [
             ['exponent', 'exponent', round(self.exponent,2)],
-            ['channel', 'channel', round(self.channel,2)],
+            ['channel', 'channel', self.channel],
         ]
 
     def __call__(self, world, args):
+        # === PARAMETERS START ===
         self.exponent = args[0]*4
         self.channel = int(args[1]*4)
-        # self.amount = args[2]
+        # === PARAMETERS END ===
 
         current_volume = np.clip(float(str(self.sound_values.buf[self.channel*8:self.channel*8+8],'utf-8')),0,5)
 

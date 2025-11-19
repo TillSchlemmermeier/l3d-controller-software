@@ -16,27 +16,23 @@ class e_bright_osci():
         self.channel = 4
 
     def return_state(self):
-        if self.channel >= 0:
-            channel = str(self.channel)
-        else:
-            channel = 'noS2L'
-
         return [
             ['speed', 'speed', round(self.speed,2)],
             ['shape', 'shape', round(self.shape,2)],
             ['amount', 'amount', round(self.amount,2)],
-            ['channel', 'channel', channel],
+            ['channel', 'channel', self.channel],
         ]
 
     def __call__(self, world, args):
-        # parsing input
-        self.speed   = args[0]*2-1
+        # === PARAMETERS START ===
+        self.speed   = args[0]
         self.shape   = args[1]*3+0.01
-        self.channel = int(args[3]*4)-1
         self.amount  = args[2]
+        self.channel = ['noS2L', 0, 1, 2, 3][round(args[3]*4)]
+        # === PARAMETERS END ===
 
         # check if s2l is activated
-        if self.channel >= 0:
+        if isinstance(self.channel, int):
             current_volume = 3*float(str(self.sound_values.buf[self.channel*8:self.channel*8+8],'utf-8'))
             #self.speed = current_volume
         else:

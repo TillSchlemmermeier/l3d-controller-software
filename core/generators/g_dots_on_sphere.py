@@ -40,10 +40,12 @@ class g_dots_on_sphere():
         ]
     
     def __call__(self, args):
+        # === PARAMETERS START ===
         self.number_of_dots = int(args[0]*8)+1
         self.number_of_frames =  int(args[1]*50)+5
         self.radius = 4-int(np.clip(args[2]*4,1,4))
         self.speed = args[3]*30+10
+        # === PARAMETERS END ===
 
         # generate empty world
         world = np.zeros([3, 10, 10, 10])

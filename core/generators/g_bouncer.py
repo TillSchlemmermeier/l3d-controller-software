@@ -11,24 +11,16 @@ class g_bouncer():
         self.step = 0
 
     def return_state(self):
-        if self.double:
-            text = 'double'
-        else:
-            text = 'single'
-
         return [
-            ['double', 'double', text],
+            ['mode', 'double', 'double' if self.double else 'single'],
             ['speed', 'speed', round(self.speed,2)],
         ]
     
-
     def __call__(self, args):
-        if args[0] > 0.5:
-            self.double = True
-        else:
-            self.double = False
-
+        # === PARAMETERS START ===
+        self.double = args[0] > 0.5
         self.speed = args[1]**2
+        # === PARAMETERS END ===
 
         # generate empty world
         world = np.zeros([3, 10, 10, 10])
@@ -41,7 +33,7 @@ class g_bouncer():
         world[1,:,:,:] = world[0,:,:,:]
         world[2,:,:,:] = world[0,:,:,:]
 
-        if self.double == True:
+        if self.double:
             tempworld = np.zeros([3, 10, 10, 10])
             tempworld[:, :, :, :] = world[:, :, :, :]
             world[:, :, :, :] += tempworld[:, :, :, ::-1]

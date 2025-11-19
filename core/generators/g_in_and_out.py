@@ -13,26 +13,23 @@ class g_in_and_out:
         self.channel = 0
 
     def return_state(self):
-        if self.channel >=0:
-            channel = str(self.channel)
-        else:
-            channel = 'noS2L'
-
         return [
             ['number', 'number', round(self.number,2)],
             ['fade in', 'fadespeed', round(self.fadespeed,2)],
-            ['channel', 'channel', channel],
+            ['channel', 'channel', self.channel],
         ]
     
     def __call__(self, args):
+        # === PARAMETERS START ===
         self.number = int(args[0]*10+1)
         self.fadespeed = 0.5*args[1]+0.01
-        self.channel = int(args[2]*4)-1
+        self.channel = ['noS2L', 0, 1, 2, 3][round(args[2]*4)]
+        # === PARAMETERS END ===
 
         world = np.zeros([3, 10, 10, 10])
 
         # check if S2L is activated
-        if self.channel >= 0:
+        if self.channel != 'noS2L':
             current_volume = float(str(self.sound_values.buf[self.channel*8:self.channel*8+8],'utf-8'))
             if current_volume > 0:
                 self.fadespeed = np.clip(current_volume / 2, 0, 0.5)

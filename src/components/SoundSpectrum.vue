@@ -76,7 +76,7 @@ function createSpectrumDataset() {
 
 function createSelectorDatasets() {
   return COLORS.map((color, i) => ({
-    label: `${i + 1}`,
+    label: `${i}`,
     data: [],
     borderColor: color,
     borderWidth: 5,

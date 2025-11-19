@@ -23,26 +23,20 @@ class g_orbiter():
         self.direction = 0
 
     def return_state(self):
-        if self.direction == 0:
-            dir = 'X'
-        elif self.direction == 1:
-            dir = 'Y'
-        else:
-            dir = 'Z'
-
         return [
             ['distance', 'distance', round(self.distance,2)],
             ['theta', 'theta', round(self.theta,2)],
             ['rho', 'rho', round(self.rho,2)],
-            ['dir', 'direction', dir],
+            ['dir', 'direction', self.direction],
         ]
 
-
     def __call__(self, args):
+        # === PARAMETERS START ===
         self.distance = args[0]*8
         self.theta = args[1]
         self.rho = args[2]
-        self.direction = round(args[3]*2)
+        self.direction = ['X', 'Y', 'Z'][round(args[3]*2)]
+        # === PARAMETERS END ===
 
         # generate empty world
         world = np.zeros([3, 10, 10, 10])
@@ -52,9 +46,9 @@ class g_orbiter():
         temp_theta = sawtooth(self.theta*self.step)*np.pi
         temp_rho = np.sin(self.rho*self.step)
 
-        if self.direction == 0:
+        if self.direction == 'X':
             [sx, sy, sz] = polar2z(temp_d, temp_theta, temp_rho)
-        elif self.direction == 1:
+        elif self.direction == 'Y':
             [sy, sx, sz] = polar2z(temp_d, temp_theta, temp_rho)
         else:
             [sy, sz, sx] = polar2z(temp_d, temp_theta, temp_rho)

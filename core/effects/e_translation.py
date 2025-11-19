@@ -34,10 +34,12 @@ class e_translation():
         ]
 
     def __call__(self, world, args):
+        # === PARAMETERS START ===
         self.xspeed = int((args[0] - 0.5) * 20)
         self.yspeed = int((args[1] - 0.5) * 20)
         self.zspeed = int((args[2] - 0.5) * 20)
-        self.mode = ['wrap', 'disappear', 'projection'][int(round(args[3]*2))]
+        self.mode = ['wrap', 'disappear', 'projection'][round(args[3]*2)]
+        # === PARAMETERS END ===
 
         # Reset shift and accumulators if speed is 0 or shift exceeds bounds
         if self.xspeed == 0 or abs(self.x_shift) > 8:

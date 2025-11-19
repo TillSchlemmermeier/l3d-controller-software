@@ -31,7 +31,9 @@ class g_falling():
         ]
     
     def __call__(self, args):
+        # === PARAMETERS START ===
         self.wait = int(args[0] * 10) + 1
+        # === PARAMETERS END ===
         world = np.zeros([3, 10, 10, 10])
 
         # Handle rotation transition

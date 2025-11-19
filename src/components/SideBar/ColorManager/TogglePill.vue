@@ -2,10 +2,10 @@
   <div class="relative flex bg-zinc-800 rounded-md p-1 w-full max-w-md mx-auto">
     <!-- Animated pill background -->
     <div
-      class="absolute top-1 left-1 h-[calc(100%-0.5rem)] w-1/2 bg-white rounded transition-all duration-300"
+      class="absolute top-1 h-[calc(100%-0.5rem)] bg-white rounded transition-all duration-300"
       :style="{
-        width: `${100 / options.length}%`,
-        left: `calc(${selectedIndex * (100 / options.length)}% + 0.25rem)`
+        width: `calc(${100 / options.length}% - 0.5rem)`,
+        left: `calc(${selectedIndex * (100 / options.length)}% + 0.25rem`
       }"
     ></div>
     <!-- Buttons -->

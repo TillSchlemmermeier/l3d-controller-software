@@ -49,18 +49,17 @@ class g_text():
         return [
             ['wait', 'wait', self.wait],
             ['mode', 'mode', self.mode],
-            ['string', 'strings', self.strings[self.current_text]],
+            ['string', 'current_text', self.strings[self.current_text]],
         ]
     
     def __call__(self, args):
-        # parsing input
+        # === PARAMETERS START ===
         self.wait = int(args[0]*10)+1
-        if args[1] > 0.5:
-            self.mode = 'moving'
-        else:
-            self.mode = 'static'
-
+        self.mode = ['static', 'moving'][round(args[1])]
         self.current_text = int((args[2]-0.01)*len(self.strings))
+        # === PARAMETERS END ===
+
+
         self.max = len(self.strings_img[self.current_text])
 
         # create empty world

@@ -1,5 +1,5 @@
 <template>
- <div class="h-screen w-[436px] bg-black">
+ <div class="h-screen w-[436px] bg-black select-none">
     <div class="flex justify-around bg-zinc-800 pt-1">
       <button 
         @click="uiState.sidebarOption = 'console'"

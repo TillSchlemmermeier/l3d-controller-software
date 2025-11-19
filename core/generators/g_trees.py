@@ -38,31 +38,27 @@ class g_trees():
             ['N LEDs', 'nled', round(self.nled,2)],
             ['speed', 'speed', round(self.speed,2)],
             ['wait', 'reset', round(self.reset,2)],
-            ['Trigger', 'trigger', trigger],
+            ['Trigger', 'trigger', self.trigger],
         ]
 
     def __call__(self, args):
+        # === PARAMETERS START ===
         self.nled = int(round(args[0]*4)+1)
         self.speed = 5-int((args[1]*4))
         self.reset = int(args[2]*5+1)
-        if args[3] < 0.3:
-            self.trigger = 0
-        elif 0.3 < args[3] < 0.6:
-            self.trigger = 1
-        else:
-            self.trigger = 2
-            #self.speed = 1
+        self.trigger = ['off', 'number', 'speed'][int(args[3]*2)]
+        # === PARAMETERS END ===
 
         world = np.zeros([3,10,10,10])
 
-        if self.trigger == 1:
+        if self.trigger == 'number':
             current_volume = int(float(str(self.sound_values.buf[32:40],'utf-8')))
             if current_volume > self.lastvalue:
                 self.lastvalue = current_volume
                 for i in range(self.nled):
                     self.flatworld[randint(0,3), 9, randint(0,9)] = 1.0
 
-        elif self.trigger == 2:
+        elif self.trigger == 'speed':
             current_volume = int(float(str(self.sound_values.buf[32:40],'utf-8')))
             if current_volume > self.lastvalue:
                 self.lastvalue = current_volume
@@ -88,7 +84,7 @@ class g_trees():
         world[1, :, :, :] = world[0, :, :, :]
         world[2, :, :, :] = world[0, :, :, :]
 
-        if self.trigger != 2:
+        if self.trigger != 'speed':
             if self.step % self.speed == 0:
                 self.flatworld = np.roll(self.flatworld, shift = -1, axis = 1)
                 self.flatworld = np.roll(self.flatworld, shift = randint(-1,1), axis = 2)

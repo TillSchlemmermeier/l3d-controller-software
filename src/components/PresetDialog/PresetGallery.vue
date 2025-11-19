@@ -31,7 +31,7 @@
             v-show="gifLoadingErrors.get(preset.name)"
             class="w-full h-full bg-black flex items-center justify-center p-2"
           >
-            <p class="text-zinc-200 text-lg text-center font-medium break-words">
+            <p class="w-full text-zinc-200 text-lg text-center font-medium break-words">
               {{ formatName(preset.name) }}
             </p>
           </div>

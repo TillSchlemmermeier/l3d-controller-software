@@ -8,17 +8,14 @@ class e_invert():
         self.oldworld = np.zeros([3, 10, 10, 10])
 
     def return_state(self):
-        # return [Display Name, Viariable Name, Display Value] for each parameter
         return [
-            ['ON', 'on', round(self.on,1)],
+            ['ON', 'on', str(self.on)],
         ]
 
     def __call__(self, world, args):
-		# parse input
-        if args[0] > 0.5:
-            self.on = True
-        else:
-            self.on = False
+        # === PARAMETERS START ===
+        self.on = args[0] > 0.5
+        # === PARAMETERS END ===
 
         if self.on:
             world *= -1

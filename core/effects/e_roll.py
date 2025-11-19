@@ -19,26 +19,18 @@ class e_roll():
         self.maxcounter = 4
 
     def return_state(self):
-        if self.keep:
-            keep = 'True'
-        else:
-            keep = 'False'
-
         return [
             ['freq', 'freq', round(self.freq,0)],
-            ['keep old', 'keep', keep],
+            ['keep old', 'keep', str(self.keep)],
             ['n frames', 'maxcounter', round(self.maxcounter,0)],
         ]
     
     def __call__(self, world, args):
-        # process parameters
+        # === PARAMETERS START ===
         self.freq = int(args[0]*10+1)
-        if args[1] > 0.5:
-            self.keep = True
-        else:
-            self.keep = False
-
+        self.keep = args[1] > 0.5
         self.maxcounter = int(args[2]*10+1)
+        # === PARAMETERS END ===
 
         current_volume = int(float(str(self.sound_values.buf[32:40],'utf-8')))
 

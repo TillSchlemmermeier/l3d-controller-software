@@ -27,39 +27,33 @@ class g_fountaine():
         self.size_change = 0
 
     def return_state(self):
-        if 4 > self.channel >=0:
-            channel = str(self.channel)
-        elif self.channel == 4:
-            channel = 'Trigger'
-        else:
-            channel = 'noS2L'
-
         return [
             ['speed', 'speed', round(self.speed,2)],
             ['thickness', 'thickness', round(self.thickness,2)],
             ['size change', 'size_change', round(self.size_change,2)],
-            ['channel', 'channel', channel],
+            ['channel', 'channel', self.channel],
         ]
     
-
     def __call__(self, args):
+        # === PARAMETERS START ===
         self.speed     = args[0]*2
         self.thickness  = args[1]*2+0.1
-        self.size_change = args[2] # round(args[2]-0.5,1)
-        self.channel = int(args[3]*5)-1
+        self.size_change = args[2]
+        self.channel = ['noS2L', 0, 1, 2, 3, 'Trigger'][int(args[3]*5)]
+        # === PARAMETERS END ===
 
         #def generate(self, step, dumpworld):
         world = np.zeros([3, 10, 10, 10])
 
         # check if S2L is activated
-        if 4 > self.channel >= 0:
+        if isinstance(self.channel, int):
             current_volume = float(str(self.sound_values.buf[self.channel*8:self.channel*8+8],'utf-8'))
             if current_volume > 0:
                 self.radius = current_volume * self.radius
             else:
                 self.radius = 0
 
-        elif self.channel == 4:
+        elif self.channel == 'Trigger':
             current_volume = int(float(str(self.sound_values.buf[32:40],'utf-8')))
             if current_volume > self.lastvalue:
                 self.lastvalue = current_volume

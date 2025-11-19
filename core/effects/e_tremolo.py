@@ -20,20 +20,12 @@ class e_tremolo():
             ['ampli', 'amplitude', round(self.amplitude,1)],
         ]
 
-
     def __call__(self, world, args):
-		# parse input
+		# === PARAMETERS START ===
         self.speed = args[0]*3
-        if args[1] < 0.25:
-            self.shape = 'sin'
-        elif args[1] >= 0.25 and args[1] < 0.5:
-            self.shape = 'square'
-        elif args[1] >= 0.5 and args[1] < 0.75:
-            self.shape = 'up'
-        else:
-            self.shape = 'down'
-
+        self.shape = ['sin', 'square', 'up', 'down'][round(args[1]*3)]
         self.amplitude = args[2]
+        # === PARAMETERS END ===
 
         # modulate brightness
         if self.shape == 'sin':

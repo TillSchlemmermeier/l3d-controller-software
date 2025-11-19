@@ -37,33 +37,23 @@ class g_growing_corner():
         self.mode = 'single'
 
     def return_state(self):
-        if self.trigger:
-            trigger = 'On'
-        else:
-            trigger = 'Off'
-
         return [
             ['maxsize', 'maxsize', round(self.maxsize,2)],
             ['speed', 'growspeed', round(55-self.growspeed,2)],
             ['mode', 'mode', self.mode],
-            ['Trigger', 'trigger', trigger],
+            ['Trigger', 'trigger', 'On' if self.trigger else 'Off'],
         ]
     
 
     def __call__(self, args):
+        # === PARAMETERS START ===
         self.maxsize = args[0]*18
         self.growspeed = 60 - (args[1]*50+5)
+        self.mode = ['single', 'double'][int(args[2])]
+        self.trigger = args[3] > 0.5
+        # === PARAMETERS END ===
+
         self.steps = int(self.maxsize/self.growspeed)
-
-        if args[3] < 0.5:
-            self.trigger = False
-        else:
-            self.trigger = True
-
-        if args[2] < 0.5:
-            self.mode = 'single'
-        else:
-            self.mode = 'double'
 
         world = np.zeros([3, 10, 10, 10])
 

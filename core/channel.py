@@ -2,8 +2,10 @@ from db_manager import DatabaseManager
 
 db = DatabaseManager()
 
-generators = [gen['name'] for gen in db.get_active_elements('generator')]
-effects = [eff['name'] for eff in db.get_active_elements('effect')]
+# generators = [gen['name'] for gen in db.get_active_elements('generator')]
+# effects = [eff['name'] for eff in db.get_active_elements('effect')]
+generators = [gen['name'] for gen in db.get_element_names('generator')]
+effects = [eff['name'] for eff in db.get_element_names('effect')]
 
 for generator in generators:
     exec(f'from generators.{generator} import *')

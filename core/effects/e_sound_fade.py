@@ -15,25 +15,18 @@ class e_sound_fade():
         self.invert = False
 
     def return_state(self):
-        if self.invert:
-            invert = 'On'
-        else:
-            invert = 'Off'
-
         return [
             ['amount', 'amount', round(self.amount,1)],
-            ['invert', 'invert', invert],
+            ['invert', 'invert', 'On' if self.invert else 'Off'],
             ['channel', 'channel', self.channel],
         ]
     
     def __call__(self, world, args):
-        # process parameters
+        # === PARAMETERS START ===
         self.amount = args[0]
         self.channel = int(args[2]*3)
-        if args[1] > 0.5:
-            self.invert = True
-        else:
-            self.invert = False
+        self.invert = args[1] > 0.5
+        # === PARAMETERS END ===
 
         current_volume = float(str(self.sound_values.buf[self.channel*8:self.channel*8+8],'utf-8'))
 

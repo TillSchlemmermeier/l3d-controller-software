@@ -3,15 +3,21 @@
     <button
       v-if="uiState.admin"
       @click="showSubtypePicker = !showSubtypePicker"
-      class="py-4 px-6 bg-zinc-800 text-white font-medium rounded-md flex items-center justify-center gap-2"
+      class="py-4 px-6 w-24 bg-zinc-800 text-white font-medium rounded-md flex items-center justify-center gap-2"
     >
       Save
     </button>
     <button
-      @click="onClear"
-      class="py-4 px-6 bg-zinc-800 text-white font-medium rounded-md flex items-center justify-center gap-2"
+      @click="emit('reset')"
+      class="py-4 px-6 w-24 bg-zinc-800 text-white font-medium rounded-md flex items-center justify-center gap-2"
     >
-      Clear
+      Reset Settings
+    </button>
+    <button
+      @click="emit('clear')"
+      class="py-4 px-6 w-24 bg-zinc-800 text-white font-medium rounded-md flex items-center justify-center gap-2"
+    >
+      Clear Gradient
     </button>
   </div>
 
@@ -61,6 +67,7 @@ const uiState = useUiStateStore()
 
 const emit = defineEmits<{
   (e: 'clear'): void
+  (e: 'reset'): void
   (e: 'save', collection: string): void
 }>()
 
@@ -96,10 +103,6 @@ watch(showSubtypePicker, (visible) => {
 onUnmounted(() => {
   document.removeEventListener('mousedown', handleOutsideClick)
 })
-
-function onClear() {
-  emit('clear')
-}
 
 function addSubtype() {
   if (newSubtype.value.trim() && !subtypes.value.includes(newSubtype.value.trim())) {

@@ -24,10 +24,11 @@ class g_grow():
         ]
 
     def __call__(self, args):
-        # parse arguments
+        # === PARAMETERS START ===
         self.branch = args[0]*0.5
         self.probecolor = int(args[1]+0.5)
         self.age = args[2]*0.1
+        # === PARAMETERS END ===
 
         # age world
         self.world = np.clip(self.world - self.age, 0, 1)

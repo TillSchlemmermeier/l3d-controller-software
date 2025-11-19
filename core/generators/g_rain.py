@@ -12,56 +12,46 @@ class g_rain():
         self.numbers = 1
         self.fade = 0.5
         self.lastworld = np.zeros([10, 10, 10])
-        self.direction = 0
+        self.direction = 'down'
         #s2l
         self.sound_values = shared_memory.SharedMemory(name = "global_s2l_memory")
-        self.channel = 0
+        self.channel = 'noS2L'
         self.lastvalue = 0
         self.counter = 0
 
     def return_state(self):
-        if self.direction == 0:
-            dir = 'down'
-        else:
-            dir = "up"
-
-        if 4 > self.channel >= 0:
-            channel = str(self.channel)
-        elif self.channel == 4:
-            channel = "Trigger"
-        else:
-            channel = 'noS2L'
-
         return [
             ['number', 'numbers', round(self.numbers,2)],
             ['fade', 'fade', round(self.fade,2)],
-            ['direction', 'direction', dir],
-            ['channel', 'channel', channel],
+            ['direction', 'direction', self.direction],
+            ['channel', 'channel', self.channel],
         ]
     
     def __call__(self, args):
+        # === PARAMETERS START ===
         self.numbers = int(args[0]*10 + 1)
         self.fade = args[1]
-        self.direction = round(args[2])
-        self.channel = int(args[3]*5)-1
+        self.direction = ['down', 'up'][round(args[2])]
+        self.channel = ['noS2L', 0, 1, 2, 3, 'Trigger'][int(args[3]*5)]
+        # === PARAMETERS END ===
 
         # create world
         world = np.zeros([3, 10, 10, 10])
 
         # move last world 1 step down
-        if self.direction == 0:
+        if self.direction == 'down':
             self.lastworld = np.roll(self.lastworld, axis = 0, shift=1)
             self.lastworld[ 0, :, :] = 0.0
 
             # check if S2L is activated
-            if 4 > self.channel >= 0:
+            if isinstance(self.channel, int):
                 current_volume = float(str(self.sound_values.buf[self.channel*8:self.channel*8+8],'utf-8'))
                 self.numbers = int(10 * current_volume)
                 for i in range(self.numbers):
                     world[0,0,randint(0, 9),randint(0, 9)] = 1.0
 
             #check for trigger
-            elif self.channel == 4:
+            elif self.channel == 'Trigger':
                 current_volume = int(float(str(self.sound_values.buf[32:40],'utf-8')))
                 if current_volume > self.lastvalue:
                     self.lastvalue = current_volume
@@ -82,7 +72,7 @@ class g_rain():
             self.lastworld[ 9, :, :] = 0.0
 
             # check if S2L is activated
-            if 4 > self.channel >= 0:
+            if isinstance(self.channel, int):
                 current_volume = float(str(self.sound_values.buf[self.channel*8:self.channel*8+8],'utf-8'))
                 self.numbers = int(10 * current_volume)
                 # turn on random leds in lower level
@@ -90,7 +80,7 @@ class g_rain():
                     world[0,9,randint(0, 9),randint(0, 9)] = 1.0
 
             #check for trigger
-            elif self.channel == 4:
+            elif self.channel == 'Trigger':
                 current_volume = int(float(str(self.sound_values.buf[32:40],'utf-8')))
                 if current_volume > self.lastvalue:
                     self.lastvalue = current_volume

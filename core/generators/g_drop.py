@@ -51,22 +51,19 @@ class g_drop():
         self.drops.append(self.drop())
         #s2l
         self.sound_values = shared_memory.SharedMemory(name = "global_s2l_memory")
-        self.channel = 0
+        self.channel = 'noS2L'
 
     def return_state(self):
-        if self.channel >=0:
-            channel = str(self.channel)
-        else:
-            channel = 'noS2L'
-
         return [
             ['speed', 'speed', round(self.speed,2)],
-            ['channel', 'channel', channel],
+            ['channel', 'channel', self.channel],
         ]
 
     def __call__(self, args):
+        # === PARAMETERS START ===
         self.speed = 12-int(args[0]*10 + 1)
-        self.channel = int(args[1]*4)-1
+        self.channel = ['noS2L', 0, 1, 2, 3][int(args[1]*4)]
+        # === PARAMETERS END ===
 
         # create world
         world = np.zeros([3, 10, 10, 10])
@@ -85,7 +82,7 @@ class g_drop():
             self.drops.append(self.drop())
 
         # check if S2L is activated
-        elif self.channel >= 0:
+        elif self.channel != 'noS2L':
             current_volume = float(str(self.sound_values.buf[self.channel*8:self.channel*8+8],'utf-8'))
             if current_volume > 0:
                 self.drops.append(self.drop())

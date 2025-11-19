@@ -23,43 +23,25 @@ class g_side_squares():
         self.number = 0
 
     def return_state(self):
-        if 4 > self.channel >= 0:
-            channel = str(self.channel)
-        elif self.channel == 4:
-            channel = "Trigger"
-        else:
-            channel = 'noS2L'
-
-        if self.inside == 0:
-            inside = 'Off'
-        else:
-            inside = 'On'
-
-        if self.channel < 0:
-            return [
-                ['inside', 'inside', inside],
-                ['channel', 'channel', channel],
-                ['', '', ''],
-                ['', '', ''],
-            ]
-        else:
-            return [
-                ['inside', 'inside', inside],
-                ['channel', 'channel', channel],
-                ['reset', 'sides', self.reset],
-                ['number', 'number', self.number],
-            ]
+        return [
+            ['inside', 'inside', 'On' if self.inside else 'Off'],
+            ['channel', 'channel', self.channel],
+            ['S2L reset', 'reset', '-' if self.channel == 'noS2L' else self.reset],
+            ['S2L number', 'number', '-' if self.channel == 'noS2L' else self.number],
+        ]
 
     def __call__(self, args):
-        self.inside = int(round(args[0]))
-        self.channel = int(args[1]*5)-1
+        # === PARAMETERS START ===
+        self.inside = args[0] > 0.5
+        self.channel = ['noS2L', 0, 1, 2, 3, 'Trigger'][int(args[1]*5)]
         self.reset = int(args[2]*9+1)
         self.number = int(args[3]*12 + 1)
+        # === PARAMETERS END ===
 
         world = np.zeros([3, 10, 10, 10])
 
         # check if S2L is activated
-        if 4 > self.channel >= 0:
+        if isinstance(self.channel, int):
             current_volume = float(str(self.sound_values.buf[self.channel*8:self.channel*8+8],'utf-8'))
             # get lines
             for i in range(len(self.lines)):
@@ -67,7 +49,7 @@ class g_side_squares():
                     world[0, :, :, :] += self.lines[i]*(current_volume-i*0.1)
 
         #check for trigger
-        elif self.channel == 4:
+        elif self.channel == 'Trigger':
             current_volume = int(float(str(self.sound_values.buf[32:40],'utf-8')))
             if current_volume > self.lastvalue:
                 self.lastvalue = current_volume
@@ -75,10 +57,10 @@ class g_side_squares():
 
             if self.steps > 0:
                 if self.counter <= 0:
-                    if self.inside == 0:
-                        self.dir = choice([0, 9])
-                    else:
+                    if self.inside:
                         self.dir = randint(0, 9)
+                    else:
+                        self.dir = choice([0, 9])
 
                     self.axis = randint(0, 2)
                     self.counter = 5
@@ -96,15 +78,15 @@ class g_side_squares():
         world[2:, :, :, :] = world[0, :, :, :]
 
 
-        if 4 > self.channel >= 0:
+        if isinstance(self.channel, int):
             if self.counter > self.reset:
                 self.lines = []
                 # reset lines
                 for i in range(self.number):
-                    if self.inside == 0:
-                        self.dir = choice([0, 9])
-                    else:
+                    if self.inside:
                         self.dir = randint(0, 9)
+                    else:
+                        self.dir = choice([0, 9])
 
                     self.lines.append(self.gen_slice(randint(0,2), self.dir, randint(0,4)))
 
@@ -112,12 +94,12 @@ class g_side_squares():
 
             self.counter += 1
 
-        elif self.channel < 0:
+        elif self.channel == 'noS2L':
             if self.counter <= 0:
-                if self.inside == 0:
-                    self.dir = choice([0, 9])
-                else:
+                if self.inside:
                     self.dir = randint(0, 9)
+                else:
+                    self.dir = choice([0, 9])
 
                 self.axis = randint(0, 2)
                 self.counter = 5

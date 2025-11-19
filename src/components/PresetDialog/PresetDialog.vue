@@ -281,8 +281,24 @@ async function populateOverlayElements() {
   }
 }
 
+function getElementName() {
+  if (uiState.elementType === 'effect') {
+    return coreState.channels[uiState.channelIndex].effects[uiState.effectIndex].name
+  } else if (uiState.elementType === 'generator') {
+    return coreState.channels[uiState.channelIndex].generator.name
+  }
+  return null
+}
+
 onMounted(async () => {
-  populateOverlayElements()
+  await populateOverlayElements()
+
+  const elementName = getElementName()
+  if (elementName) {
+    uiState.selectedElement = elementName
+    await uiState.fetchPresets()
+    showPresets.value = true
+  }
 })
 
 </script>

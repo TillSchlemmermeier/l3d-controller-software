@@ -18,25 +18,20 @@ class e_sound_hsv():
         self.mode = 'normal'
 
     def return_state(self):
-        if self.channel < 4:
-            channel = str(self.channel)
-        else:
-            channel = "Trigger"
-
         return [
             ['amount hue', 'amount_h', round(self.amount_h,1)],
             ['amount sat', 'amount_s', round(self.amount_s,1)],
             ['amount val', 'amount_v', round(self.amount_v,1)],
-            ['channel', 'channel', channel],
+            ['channel', 'channel', self.channel],
         ]
     
     def __call__(self, world, args):
-        # process parameters
-        self.channel = int(args[3]*3)
-
+        # === PARAMETERS START ===
         self.amount_h = round(args[0]*0.5, 1)
         self.amount_s = round(args[1]*2 - 1.0, 1)
         self.amount_v = round(args[2]*1.8 - 0.9, 1)
+        self.channel = int(args[3]*3)
+        # === PARAMETERS END ===
 
         # get sound
         current_volume = 0.2*float(str(self.sound_values.buf[self.channel*8:self.channel*8+8],'utf-8'))**4

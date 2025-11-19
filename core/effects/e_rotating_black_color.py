@@ -25,21 +25,20 @@ class e_rotating_black_color():
 
 
     def return_state(self):
-        RGBvalues = str(round(self.color[0]*10)) + ' ' + str(round(self.color[1]*10)) + ' ' + str(round(self.color[2]*10))
-        
         return [
             ['X speed', 'xspeed', round(self.xspeed,1)],
             ['Y speed', 'yspeed', round(self.yspeed,1)],
             ['Z speed', 'zspeed', round(self.zspeed,1)],
-            ['R G B', 'RGBvalues', RGBvalues],
+            ['R G B', 'hue', str(round(self.color[0]*10)) + ' ' + str(round(self.color[1]*10)) + ' ' + str(round(self.color[2]*10))],
         ]
     
     def __call__(self, world, args):
-		# parse input
+		# === PARAMETERS START ===
         self.xspeed = args[0]*15+0.01
         self.yspeed = args[1]*15
         self.zspeed = args[2]*15
         self.hue = args[3]
+        # === PARAMETERS END ===
 
         self.color = hsv_to_rgb(self.hue, 1, 1)
 

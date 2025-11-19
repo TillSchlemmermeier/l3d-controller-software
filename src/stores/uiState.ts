@@ -130,6 +130,11 @@ export const useUiStateStore = defineStore('uiState', {
       return response
     },
 
+    async clearGradient(channel: number) {
+      const url = `clear-gradient/${channel}`
+      await this.fetchFromBackend(url)
+    },
+
     // make GET call
     async fetchFromBackend(url: string) {
       console.log('fetching data from', url)

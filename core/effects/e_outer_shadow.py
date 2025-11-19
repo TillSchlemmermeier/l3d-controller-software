@@ -13,25 +13,20 @@ class e_outer_shadow():
         self.amount = 0.0
 
     def return_state(self):
-        if 4 > self.channel >=0:
-            channel = str(self.channel)
-        elif self.channel < 0:
-            channel = 'noS2L'
-        else:
-            channel = 'Trigger'
-
         return [
             ['exponent', 'exponent', round(self.exponent,2)],
             ['amount', 'amount', round(self.amount,2)],
-            ['channel', 'channel', channel],
+            ['channel', 'channel', str(self.channel)],
         ]
     
     def __call__(self, world, args):
+        # === PARAMETERS START ===
         self.exponent = args[0]*3+1
         self.amount = args[1]
-        self.channel = int(args[2]*5)-1
+        self.channel = ['noS2L', 0, 1, 2, 3, 'Trigger'][round(args[2]*5)]
+        # === PARAMETERS END ===
 
-        if self.channel >= 0:
+        if isinstance(self.channel, int):
             current_volume = np.clip(float(str(self.sound_values.buf[self.channel*8:self.channel*8+8],'utf-8')),0,5)
         else:
             current_volume = 1

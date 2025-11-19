@@ -13,28 +13,21 @@ class e_sound_strobo():
         self.amount = 1
 
     def return_state(self):
-        if self.channel < 4:
-            channel = str(self.channel)
-        else:
-            channel = "Trigger"
-
         return [
             ['amount', 'amount', round(self.amount,1)],
             ['mode', 'mode', self.mode],
-            ['channel', 'channel', channel],
+            ['channel', 'channel', self.channel],
         ]
     
     def __call__(self, world, args):
-        # process parameters
+        # === PARAMETERS START ===
         self.amount = int(args[0]*12)
-        if args[1] < 0.5:
-            self.mode = 'normal'
-        else:
-            self.mode = 'invert'
-        self.channel = int(args[2]*4)
+        self.mode = ['normal', 'invert'][round(args[1])]
+        self.channel = [0, 1, 2, 3, 'Trigger'][round(args[2]*4)]
+        # === PARAMETERS END ===
 
         # apply manipulation
-        if self.channel < 4:
+        if isinstance(self.channel, int):
             current_volume = float(str(self.sound_values.buf[self.channel*8:self.channel*8+8],'utf-8'))**4
             if current_volume > 0.5:
                 if self.counter == 0:
@@ -43,7 +36,7 @@ class e_sound_strobo():
                 else:
                     self.counter = 0
         else:
-            current_volume = int(float(str(self.sound_values.buf[self.channel*8:self.channel*8+8],'utf-8')))
+            current_volume = int(float(str(self.sound_values.buf[32:40],'utf-8')))
             if current_volume > self.lastvalue:
                 self.counter = 0
 

@@ -17,41 +17,30 @@ class e_mirror():
         self.sound_values = shared_memory.SharedMemory(name = "global_s2l_memory")
         self.counter = 0
         self.naxis = 1
-        self.trigger = False
+        self.trigger = 'Off'
         self.steps = 0
         self.mode = 'mirror'
 
     def return_state(self):
-        if self.trigger:
-            trigger = 'On'
-        else:
-            trigger = 'Off'
-
         return [
             ['# of axes', 'naxis', self.naxis],
             ['steps', 'steps', int(self.steps)],
             ['mode', 'mode', self.mode],
-            ['s2l trigger', 'trigger', trigger],
+            ['s2l trigger', 'trigger', 'On' if self.trigger else 'Off'],
         ]
 
     def __call__(self, world, args):
-        # parsing input
+        # === PARAMETERS START ===
         self.naxis = int(args[0]*2 +1)
         self.steps = int(args[1]*8)
-        if args[2] < 0.5:
-            self.mode = 'mirror'
-        else:
-            self.mode = 'point'
-
-        if args[3] > 0.5:
-            self.trigger = True
-        else:
-            self.trigger = False
+        self.mode = ['mirror', 'point'][round(args[2])]
+        self.trigger = args[3] > 0.5
+        # === PARAMETERS END ===
 
         tempworld = np.zeros([3, 10, 10, 10])
         tempworld[:, :, :, :] = world[:, :, :, :]
 
-
+        runtime_naxis = self.naxis
         if self.trigger:
             current_volume = int(float(str(self.sound_values.buf[32:40],'utf-8')))
 
@@ -62,20 +51,20 @@ class e_mirror():
             self.counter += 1
 
             if self.counter > self.steps:
-                self.naxis = 0
+                runtime_naxis = 0
 
         if self.mode == 'mirror':
 
-            if self.naxis == 1:
+            if runtime_naxis == 1:
                 world[:, :, :, :] += tempworld[:, ::-1, :, :]
-            elif self.naxis == 2:
+            elif runtime_naxis == 2:
                 world[:, :, :, :] += tempworld[:, :, ::-1, :]
                 world[:, :, :, :] += tempworld[:, :, :, ::-1]
-            elif self.naxis == 3:
+            elif runtime_naxis == 3:
                 world[:, :, :, :] += tempworld[:, ::-1, :, :]
                 world[:, :, :, :] += tempworld[:, :, ::-1, :]
                 world[:, :, :, :] += tempworld[:, :, :, ::-1]
-            elif self.naxis == 0:
+            elif runtime_naxis == 0:
                 pass
 
         else:

@@ -17,7 +17,7 @@
 
       <!-- Mode Toggle -->
       <TogglePill
-        class="mt-12"
+        class="mt-2"
         :options="[
           { value: 'edit', label: 'Edit Stops' },
           { value: 'select', label: 'Select Region' }
@@ -29,8 +29,8 @@
     
     <!-- Color Picker -->
     <ColorPicker
-    :selectedColor="selectedStop?.[1]"
-    @colorChange="handleColorChange"
+      :selectedColor="selectedStop?.[1]"
+      @colorChange="handleColorChange"
     />
     
     <!-- Delete Stop Button (Edit Mode Only) -->
@@ -112,6 +112,7 @@
     <ActionButtons
       @clear="clearGradient"
       @save="saveGradient"
+      @reset="resetSettings"
     />
   </div>
 </template>
@@ -250,20 +251,27 @@ const updateHSVFromColor = (colorString: string) => {
   lightness.value = hsv.v
 }
 
-function clearGradient() {
-  gradientStops.value = [
-    [0, '#FFFFFF'],
-    [100, '#FFFFFF']
-  ]
-  selectedStopIndex.value = 0
-  updateHSVFromColor('#FFFFFF')
+function resetSettings() {
   gradientType.value = 'linear'
-  selectedRegion.value = { start: 20, end: 80 }
+  selectedRegion.value = { start: 0, end: 100 }
   speed.value = 0
   rotateSpeedY.value = 0
   rotateSpeedZ.value = 0
   soundToLightOptions.value = []
   sendColorUpdate()
+}
+
+function clearGradient() {
+  const channelIndex = uiState.channelIndex
+  uiState.clearGradient(channelIndex)
+  // Alternative: instead of clearing, reset to default white gradient.
+  // gradientStops.value = [
+  //   [0, '#FFFFFF'],
+  //   [100, '#FFFFFF']
+  // ]
+  // selectedStopIndex.value = 0
+  // updateHSVFromColor('#FFFFFF')
+  // sendColorUpdate()
 }
 
 function saveGradient(subtype: string) {

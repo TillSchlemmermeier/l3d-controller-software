@@ -9,15 +9,16 @@ class e_compressor():
         self.factor = 1.0
 
     def return_state(self):
-        # return [Display Name, Viariable Name, Display Value] for each parameter
         return [
             ['Amount', 'amount', round(self.amount,1)],
             ['Smooth', 'smooth', round(self.smooth,1)],
         ]
 
     def __call__(self, world, args):
+        # === PARAMETERS START ===
         self.amount = args[0]
         self.smooth = args[1]
+        # === PARAMETERS END ===
 
         # get brightness
         brightness = np.sum(np.clip(world, 0, 1))        

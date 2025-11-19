@@ -32,15 +32,11 @@ class e_mean_up_down():
         ]
 
     def __call__(self, world, args):
-        # parsing input
+        # === PARAMETERS START ===
         self.amount = args[0]
         self.fade = args[1]
-
-        if args[2] > 0.5:
-            self.dir = 'up'
-        else:
-            self.dir = 'down'
-
+        self.dir = ['up', 'down'][round(args[2])]
+        # === PARAMETERS END ===
 
         if self.dir == 'up':
             fade = self.mean_up

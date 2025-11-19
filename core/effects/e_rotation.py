@@ -23,29 +23,30 @@ class e_rotation():
 
     def return_state(self):
         return [
-            ['X speed', 'xspeed', round(self.xspeed,1)],
-            ['Y speed', 'yspeed', round(self.yspeed,1)],
-            ['Z speed', 'zspeed', round(self.zspeed,1)],
+            ['X speed', 'xspeed', round(self.xspeed if self.xspeed < 10 else -20 + self.xspeed,1)],
+            ['Y speed', 'yspeed', round(self.yspeed if self.yspeed < 10 else -20 + self.yspeed,1)],
+            ['Z speed', 'zspeed', round(self.zspeed if self.zspeed < 10 else -20 + self.zspeed,1)],
             ['mode', 'mode', self.mode],
         ]
 
     def __call__(self, world, args):
+        # === PARAMETERS START ===
         self.xspeed = args[0]*20
         self.yspeed = args[1]*20
         self.zspeed = args[2]*20
-        if args[3] < 0.3:
-            self.mode = 'normal'
-        elif args[3] > 0.6:
-            self.mode = 'fixed'
-        else:
-            self.mode = 'trigger'
+        self.mode = ['normal', 'fixed', 'trigger'][round(args[3]*2)]
+        # === PARAMETERS END ===
+
+        runtime_xspeed = self.xspeed
+        runtime_yspeed = self.yspeed
+        runtime_zspeed = self.zspeed
 
         if self.xspeed > 10:
-            self.xspeed =  - 20 + self.xspeed
+            runtime_xspeed =  - 20 + self.xspeed
         if self.yspeed > 10:
-            self.yspeed = - 20 + self.yspeed
+            runtime_yspeed = - 20 + self.yspeed
         if self.zspeed > 10:
-            self.zspeed = - 20 + self.zspeed
+            runtime_zspeed = - 20 + self.zspeed
 
         if self.mode == 'trigger':
             current_volume = int(float(str(self.sound_values.buf[32:40],'utf-8')))
@@ -61,21 +62,21 @@ class e_rotation():
 
 #                self.counter += 1
 
-            self.xspeed *= self.old_xspeed
-            self.yspeed *= self.old_yspeed
-            self.zspeed *= self.old_zspeed
+            runtime_xspeed *= self.old_xspeed
+            runtime_yspeed *= self.old_yspeed
+            runtime_zspeed *= self.old_zspeed
 
         # rotate
         for i in range(3):
-            world[i, :, :, :] = rotate(world[i, :, :, :], self.step*self.xspeed,
+            world[i, :, :, :] = rotate(world[i, :, :, :], self.step*runtime_xspeed,
                               axes = (1,2), order = 1,
     	                      mode = 'nearest', reshape = False)
 
-            world[i, :, :, :] = rotate(world[i, :, :, :], self.step*self.yspeed,
+            world[i, :, :, :] = rotate(world[i, :, :, :], self.step*runtime_yspeed,
                               axes = (0,1), order = 1,
     	                      mode = 'nearest', reshape = False)
 
-            world[i, :, :, :] = rotate(world[i, :, :, :], self.step*self.zspeed,
+            world[i, :, :, :] = rotate(world[i, :, :, :], self.step*runtime_zspeed,
                               axes = (0,2), order = 1,
     	                      mode = 'nearest', reshape = False)
 

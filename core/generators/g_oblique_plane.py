@@ -40,32 +40,18 @@ class g_oblique_plane():
         self.counter = 1
 
     def return_state(self):
-        if self.trigger:
-            trigger = 'On'
-        else:
-            trigger = 'Off'
-
         return [
             ['speed', 'speed', round(self.speed,2)],
             ['modus', 'mode', self.mode],
-            ['Trigger', 'trigger', trigger],
+            ['Trigger', 'trigger', 'On' if self.trigger else 'Off'],
         ]
     
     def __call__(self, args):
+        # === PARAMETERS START ===
         self.speed = 20*args[0]
-        if args[1] > 0.75:
-            self.mode = 'forward'
-        elif args[1] > 0.5 and args[1] <= 0.75:
-            self.mode = 'chain'
-        elif args[1] > 0.25 and args[1] <= 0.5:
-            self.mode = 'circle'
-        else:
-            self.mode = 'random'
-
-        if args[2] > 0.1:
-            self.trigger = True
-        else:
-            self.trigger = False
+        self.mode = ['random', 'circle', 'chain', 'forward'][round(args[1]*3)]
+        self.trigger = args[2] > 0.1
+        # === PARAMETERS END ===
 
         # create world
         world = np.zeros([3, 10, 10, 10])

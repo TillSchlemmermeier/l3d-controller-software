@@ -24,11 +24,12 @@ class e_rotating_rainbow():
         ]
 
     def __call__(self, world, args):
-		# parse input
+        # === PARAMETERS START ===
         self.speed = args[0]*0.05
         self.gradient_length = 0.5-args[1]*0.5
         self.rotX = args[2]*15+0.01
         self.rotYZ = args[3]*15+0.01
+        # === PARAMETERS END ===
 
         # create gradient
         self.rainbowworld = np.zeros([3, 10, 10, 10])

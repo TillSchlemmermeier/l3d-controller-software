@@ -5,7 +5,6 @@ from random import randint
 
 class e_slicer():
 
-
     def __init__(self):
         # parameters
         self.slices = []
@@ -27,11 +26,11 @@ class e_slicer():
         ]
     
     def __call__(self, world, args):
-        # process parameters
-        # self.amount = args[0]*2
+        # === PARAMETERS START ===
         self.number = int(args[0]*3)+3
         self.channel = int(round(args[1]*3))
         self.frames = int(args[2]*10+5)
+        # === PARAMETERS END ===
 
         current_volume = float(str(self.sound_values.buf[self.channel*8:self.channel*8+8],'utf-8'))
         current_volume = np.clip(current_volume, 0, 1)

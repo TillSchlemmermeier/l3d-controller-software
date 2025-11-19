@@ -29,11 +29,12 @@ class e_rare_strobo():
         ]
 
     def __call__(self, world, args):
-        # parsing input
+        # === PARAMETERS START ===
         self.waiting_frames = int(args[0]*300)+50
         self.strobo_frames = int(args[1]*20)+2
         self.disp_prop = args[2]*0.5
-        self.mode = ['normal', 'invert'][int(round(args[3]))]
+        self.mode = ['normal', 'invert'][round(args[3])]
+        # === PARAMETERS END ===
 
         if self.state == 'wait':
             # waiting part

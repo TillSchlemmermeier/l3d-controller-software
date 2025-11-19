@@ -33,10 +33,12 @@ class g_growing_sphere_partial():
         ]
 
     def __call__(self, args):
+        # === PARAMETERS START ===
         self.maxsize = args[0]*10
         self.maxsize_variation = args[1]*2
         self.growspeed = args[2]
         self.growspeed_variation = args[3]*2
+        # === PARAMETERS END ===
 
         world = np.zeros([3, 10, 10, 10])
 

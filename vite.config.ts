@@ -33,6 +33,7 @@ export default defineConfig({
         '**/*.pkl',  // ignore pickle files
         '**/*.log',  // ignore log files
         '**/*.py',  // ignore python files
+        '**/*.txt',  // ignore text files
       ]
     },
     // hmr: false,  // Disable HMR completely

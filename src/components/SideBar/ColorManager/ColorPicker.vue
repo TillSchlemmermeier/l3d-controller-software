@@ -1,7 +1,7 @@
 <template>
   <div>
     <!-- Color Picker Section -->
-    <div class="px-6 pb-4 mt-2">
+    <div class="px-6 pb-4">
       <div class="flex items-center justify-between mb-2 text-xs text-zinc-400 uppercase font-bold tracking-wider">
         <div>Picker</div>
         <div>RGB({{ rgbValues.r }}, {{ rgbValues.g }}, {{ rgbValues.b }})</div>

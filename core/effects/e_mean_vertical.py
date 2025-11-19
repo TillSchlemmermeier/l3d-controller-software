@@ -16,8 +16,9 @@ class e_mean_vertical():
         ]
     
     def __call__(self, world, args):
-        # parsing input
+        # === PARAMETERS START ===
         self.amount = args[0]
+        # === PARAMETERS END ===
 
         for i in range(3):
             world[i, :, :, :] = (1-self.amount)*world[i, :, :, :] + self.amount*fftconvolve(world[i, :, :, :], self.mean, mode='same')

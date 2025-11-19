@@ -18,8 +18,10 @@ class g_random_grow():
         ]
 
     def __call__(self, args):
+        # === PARAMETERS START ===
         self.number = int(args[0]*20)+1
         self.speed = args[1]*0.1
+        # === PARAMETERS END ===
 
         for i in range(self.number):
             self.world[randint(0,9), randint(0,9), randint(0,9)] += choice([-0.2, 0.2])

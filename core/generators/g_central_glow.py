@@ -10,7 +10,6 @@ from multiprocessing import shared_memory
 
 class g_central_glow():
     def __init__(self):
-        self.amount = 1.0
         self.channel = 1
         self.sound_values = shared_memory.SharedMemory(name = "global_s2l_memory")
         self.size      = 1
@@ -22,28 +21,23 @@ class g_central_glow():
         self.counter   = 0
 
     def return_state(self):
-        if self.channel < 4:
-            return [
-                ['exponent', 'exponent', self.exponent],
-                ['channel', 'channel', self.channel],
-                ['limit', 'limit', round(self.compress,2)],
-                ['', '', '']
-            ]
-        else:
-            return [
-                ['exponent', 'exponent', self.exponent],
-                ['channel', 'channel', "LFO"],
-                ['amount', 'amount', round(self.compress,2)],
-                ['speed', 'speed', round(self.speed,2)],
-            ]
+        return [
+            ['exponent', 'exponent', self.exponent],
+            ['channel', 'channel', self.channel if self.channel < 4 else "LFO"],
+            ['amount', 'compress', round(self.compress,2)],
+            ['speed', 'speed', round(self.speed,2) if self.channel == 4 else '-'],
+        ]
 
 
     def __call__(self, args):
-        self.counter += 1
+        # === PARAMETERS START ===
         self.exponent = args[0]*2
-        self.channel  = int(args[1]*5)
+        self.channel  = int(args[1]*4)
         self.compress = args[2]*3+1
         self.speed = args[3]*0.5+0.01
+        # === PARAMETERS END ===
+
+        self.counter += 1
         world = np.zeros([3, 10, 10, 10])
 
         if 4 > self.channel:

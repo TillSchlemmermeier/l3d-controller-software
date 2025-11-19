@@ -20,26 +20,18 @@ class g_flash():
         self.lastvalue = 0
 
     def return_state(self):
-        if self.trigger:
-            channel = 'yes'
-        else:
-            channel = 'no'
-
         return [
             ['speed', 'speed', self.speed],
             ['wait', 'wait', self.wait],
-            ['trigger', 'trigger', channel],
+            ['trigger', 'trigger', 'yes' if self.trigger else 'no'],
         ]
     
-
     def __call__(self, args):
-
+        # === PARAMETERS START ===
         self.speed = int(round(args[0]*1))+1
         self.wait = int(round(args[1]*20))
-        if args[2] > 0.5:
-            self.trigger = True
-        else:
-            self.trigger = False
+        self.trigger = args[2] > 0.5
+        # === PARAMETERS END ===
 
         # create world
         world = np.zeros([3, 10, 10, 10])

@@ -37,12 +37,12 @@ class g_conway():
 
 
     def __call__(self, args):
+        # === PARAMETERS START ===
         self.speed = int(args[0]*6)+1
         self.wait = int(args[1]*50)+10
-        if args[2] < 0.5:
-            self.mode = 0
-        else:
-            self.mode = 1
+        self.mode = round(args[2])
+        # === PARAMETERS END ===
+
 
         # check for Trigger
         if self.mode == 1:

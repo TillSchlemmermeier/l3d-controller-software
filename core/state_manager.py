@@ -65,9 +65,9 @@ class StateManager:
         """Load a channel preset"""
         with self.state.lock:
             self.state[channel] = preset_data
+            self.state[channel]['IO'] = 0
             if channel == self.state['numberOfChannels']:
                 self.state['numberOfChannels'] += 1
-                self.state[channel]['IO'] = 0
             self.update_channel(channel)
             # update the values of the midi controller slider
             self.state['midi_update'] = 1
@@ -75,12 +75,16 @@ class StateManager:
     def load_global(self, preset_data: dict):
         """Load a global preset"""
         with self.state.lock:
-            for key, value in preset_data.items():
-                self.state[key] = value
+            # for key, value in preset_data.items():
+            #     self.state[key] = value
+            self.state["context"] = preset_data["context"]
+            self.state['numberOfChannels'] = preset_data['numberOfChannels']
+            self.state[9] = preset_data[9]
+            self.update_channel(9)
 
             for i in range(preset_data['numberOfChannels']):
+                self.state[i] = preset_data[i]
                 self.update_channel(i)
-            self.update_channel(9)
 
             # update the values of the midi controller slider
             self.state['midi_update'] = 1
@@ -216,6 +220,15 @@ class StateManager:
             print(f"Error updating color manager: {e}")
             return False
 
+    def clear_gradient(self, channel_index: int):
+        """Clear gradient settings for a specific channel"""
+        with self.state.lock:
+            channel = self.state[channel_index]
+            if 8 in channel:
+                del channel[8]
+                self.state[channel_index] = channel
+                print(f"Cleared gradient for channel {channel_index}")
+
     def toggle_autopilot(self):
         """Toggle autopilot mode"""
         with self.state.lock:
@@ -223,7 +236,7 @@ class StateManager:
 
     def autopilot_mode(self):
         """Change autopilot mode"""
-        modes = ['global', 'all_channels', 'single_channel', 'all_elements', 'single_element', 'selected_element']
+        modes = ['global', 'all_channels', 'all_elements', 'random_channel', 'random_channel_elements', 'selected_channel', 'selected_channel_elements', 'random_element', 'selected_element']
         with self.state.lock:
             current_mode = self.state.get('random', modes[0])
             current_index = modes.index(current_mode)

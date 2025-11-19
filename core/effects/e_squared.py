@@ -15,26 +15,22 @@ class e_squared():
         self.exponent = 1.0
         self.old_exponent = 1.0
         self.sound_values = shared_memory.SharedMemory(name = "global_s2l_memory")
-        self.channel = 4
+        self.channel = 'noS2L'
 
     def return_state(self):
-        if self.channel >= 0:
-            channel = str(self.channel)
-        else:
-            channel = 'noS2L'
-
         return [
             ['exponent', 'exponent', round(self.exponent,1)],
-            ['channel', 'channel', channel],
+            ['channel', 'channel', self.channel],
         ]
 
     def __call__(self, world, args):
-        # parsing input
+        # === PARAMETERS START ===
         self.exponent = 0.5 + args[0]*2
-        self.channel = int(args[1]*4)-1
+        self.channel = ['noS2L', 0, 1, 2, 3][round(args[1]*4)]
+        # === PARAMETERS END ===
 
         # check if s2l is activated
-        if self.channel >= 0:
+        if isinstance(self.channel, int):
             current_volume = float(str(self.sound_values.buf[self.channel*8:self.channel*8+8],'utf-8'))
             current_volume = np.clip(current_volume, 0, 1.24)
             new_exponent = 2.5 - current_volume * 2

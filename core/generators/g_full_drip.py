@@ -8,30 +8,23 @@ class g_full_drip():
     def __init__(self):
         self.drops = []
         self.n = 10
-        self.sound_values = shared_memory.SharedMemory(name = "global_s2l_memory")
-        self.channel = 0
         self.stop_pos = 9
 
         for i in range(50):
             self.drops.append(led())
 
     def return_state(self):
-        if self.channel >=0:
-            channel = str(self.channel)
-        else:
-            channel = 'noS2L'
-
-        return [
+            return [
             ['number', 'n', self.n],
             ['stop pos', 'stop_pos', self.stop_pos],
-            ['channel', 'channel', channel],
         ]
 
 
     def __call__(self, args):
+        # === PARAMETERS START ===
         self.n = int(args[0]*40)+1
         self.stop_pos = int(round(args[1]*10,0))
-        self.channel = int(args[2]*4)-1
+        # === PARAMETERS END ===
 
         world = np.zeros([3, 10, 10, 10])
 

@@ -17,7 +17,7 @@ class g_evolve():
         self.workers = []
 
         self.sound_values = shared_memory.SharedMemory(name = "global_s2l_memory")
-        self.channel = 0
+        self.trigger = False
 
         self.safeworld = np.zeros([3, 10, 10, 10])
 
@@ -25,31 +25,26 @@ class g_evolve():
             self.workers.append(worker(self.lifetime, self.width))
 
     def return_state(self):
-        if 4 > self.channel >=0:
-            channel = str(self.channel)
-        elif self.channel < 0:
-            channel = 'noS2L'
-        else:
-            channel = 'Trigger'
-
         return [
             ['number', 'number_of_workers', round(self.number_of_workers,2)],
             ['lifetime', 'lifetime', round(self.lifetime,2)],
             ['width', 'width', round(self.width,2)],
-            ['channel', 'channel', channel],
+            ['trigger', 'trigger', 'On' if self.trigger else 'Off'],
         ]
     
 
     def __call__(self, args):
+        # === PARAMETERS START ===
         self.number_of_workers = int((args[0])*20)+1
         self.lifetime = int(args[1]*100+1)
+        self.width = args[2]+1
+        self.trigger = args[3] > 0.5
+        # === PARAMETERS END ===
+
         # self.randomcolor = int(round(args[2]))
-        self.channel = int(args[3]*5)-1
 
-        self.width = 1+args[2]
-
-        if self.channel == 4 :
-            current_volume = int(float(str(self.sound_values.buf[self.channel*8:self.channel*8+8],'utf-8')))
+        if self.trigger:
+            current_volume = int(float(str(self.sound_values.buf[32:40],'utf-8')))
             if current_volume > self.lastvalue:
                 self.lastvalue = current_volume
                 # boost one worker

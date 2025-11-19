@@ -145,7 +145,7 @@ const props = defineProps({
 })
 
 const coreState = useCoreStateStore()
-const loadProgressCircles = ref(true)
+const loadProgressCircles = ref(false)
 const initialFill = ref(true)
 
 const thisEffect = computed(() => {

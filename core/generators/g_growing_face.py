@@ -37,26 +37,20 @@ class g_growing_face():
         self.run = False
 
     def return_state(self):
-        if self.trigger:
-            trigger = 'On'
-        else:
-            trigger = 'Off'
-
         return [
             ['maxsize', 'maxsize', round(self.maxsize,2)],
             ['speed', 'growspeed', round(47-self.growspeed,2)],
-            ['Trigger', 'trigger', trigger],
+            ['Trigger', 'trigger', 'On' if self.trigger else 'Off'],
         ]
 
     def __call__(self, args):
+        # === PARAMETERS START ===
         self.maxsize = args[0]*17
         self.growspeed = 55 - (args[1]*45+9)
-        self.steps = int(self.maxsize/self.growspeed)
+        self.trigger = args[2] > 0.5
+        # === PARAMETERS END ===
 
-        if args[2] < 0.5:
-            self.trigger = False
-        else:
-            self.trigger = True
+        self.steps = int(self.maxsize/self.growspeed)
 
 
         world = np.zeros([3, 10, 10, 10])

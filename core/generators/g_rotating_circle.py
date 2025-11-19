@@ -22,7 +22,7 @@ class g_rotating_circle():
         self.xspeed = 0
         self.yspeed = 1.0
         self.zspeed = 0
-        self.brigthness = 0.5
+        self.brightness = 0.5
 
     def return_state(self):
         return [
@@ -33,19 +33,12 @@ class g_rotating_circle():
         ]
 
     def __call__(self, args):
-        '''
-        self.number = int(args[0]*10)
-        if args[1] < 0.5:
-            self.mode = 'random'
-        else:
-            self.mode = 'tunnel'
-        '''
-
-#        self.channel = int(args[3]*5)-1
+#       # === PARAMETERS START ===
         self.xspeed = args[0]*2
         self.yspeed = args[1]*2
         self.zspeed = args[2]*2
         self.brightness = args[3]*0.5+0.5
+        # === PARAMETERS END ===
 
         # create world
         world1 = np.zeros([3, 10, 10, 10])

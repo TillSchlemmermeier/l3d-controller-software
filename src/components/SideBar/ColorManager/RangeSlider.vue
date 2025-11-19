@@ -1,6 +1,9 @@
 <template>
-  <div class="mb-6 flex-1">
-    <div class="flex items-center justify-between mb-2 text-xs text-zinc-400 uppercase font-bold tracking-wider">
+  <div class="mb-0 flex-1">
+    <div
+      v-if="showLabel"
+      class="flex items-center justify-between mb-2 text-xs text-zinc-400 uppercase font-bold tracking-wider"
+    >
       <div>{{ label }}</div>
       <div>{{ Math.round(modelValue) }}</div>
     </div>
@@ -19,7 +22,7 @@
         <!-- Slider handle -->
         <div 
           class="absolute top-1/2 -translate-y-1/2 w-10 h-10 bg-white rounded-full border-2 border-blue-500 shadow-lg cursor-grab active:cursor-grabbing"
-          :style="{ left: `calc(${((value - min) / (100 - min)) * 100}% - 20px)` }"
+          :style="{ left: `calc(${((value - min) / (100 - min)) * 100}% - 25px)` }"
         ></div>
       </div>
     </div>
@@ -31,8 +34,9 @@ import { computed, ref } from 'vue'
 
 interface Props {
   modelValue: number
-  label: string
+  label?: string
   min?: number
+  showLabel?: boolean
 }
 
 interface Emits {
@@ -41,7 +45,8 @@ interface Emits {
 }
 
 const props = withDefaults(defineProps<Props>(), {
-  min: 0
+  min: 0,
+  showLabel: true
 })
 
 const emit = defineEmits<Emits>()

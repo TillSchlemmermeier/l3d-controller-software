@@ -26,14 +26,16 @@ class g_pong():
             ['speed', 'speed', round(self.speed,2)],
             ['size', 'size', round(self.size,2)],
             ['side size', 'side_size', round(self.side_size,2)],
-            ['reset', 'eset_frame', round(self.reset_frame,2)],
+            ['reset', 'reset_frame', round(self.reset_frame,2)],
         ]
     
     def __call__(self, args):
+        # === PARAMETERS START ===
         self.speed = (args[0]+0.01)*2
         self.size = 10.2 - (args[1]+0.01)*10
         self.side_size = 6.12 - (args[2]+0.01)*6
         self.reset_frame = (args[3]+10)*10
+        # === PARAMETERS END ===
 
         world = np.zeros([3, 10, 10, 10])
 

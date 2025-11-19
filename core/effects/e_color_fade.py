@@ -26,35 +26,29 @@ class e_color_fade():
         self.color = [0,0,0]
 
     def return_state(self):
-        if 4 > self.channel >=0:
-            channel = str(self.channel)
-        elif self.channel < 0:
-            channel = 'noS2L'
-        else:
-            channel = 'Trigger'
-
         return [
             ['speed', 'speed', round(self.speed,2)],
             ['Color 1', 'color1', round(self.color1,1)],
             ['Color 2', 'color2', round(self.color2,1)],
-            ['channel', 'channel', channel],
+            ['channel', 'channel', self.channel],
         ]
 
     def __call__(self, world, args):
-        # parsing input
+        # === PARAMETERS START ===
         self.speed = args[0]
         self.color1 = args[1]
         self.color2 = args[2]
-        self.channel = int(args[3]*5)-1
+        self.channel = ['noS2L', 0, 1, 2, 3, 'Trigger'][round(args[3]*5)]
+        # === PARAMETERS END ===
 
         # check if s2l is activated
-        if 4 > self.channel >= 0:
+        if isinstance(self.channel, int):
             current_volume = np.clip(float(str(self.sound_values.buf[self.channel*8:self.channel*8+8],'utf-8')), 0, 1)
 
             self.step = (current_volume * np.pi) / self.speed
 
         # check if trigger is activated
-        elif self.channel > 4 :
+        elif self.channel == 'Trigger':
             current_volume = int(float(str(self.sound_values.buf[32:40],'utf-8')))
             #check if trigger has been activated
             if current_volume > self.lastvalue:

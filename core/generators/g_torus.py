@@ -24,36 +24,31 @@ class g_torus():
         self.lastvalue = 0
 
     def return_state(self):
-        if 4 > self.channel >=0:
-            channel = str(self.channel)
-        elif self.channel == 4:
-            channel = 'Trigger'
-        else:
-            channel = 'noS2L'
-
         return [
             ['radius', 'radius', round(self.radius,2)],
-            ['thickness', 'sides', round(self.thickness,2)],
-            ['channel', 'speed', channel],
+            ['thickness', 'thickness', round(self.thickness,2)],
+            ['channel', 'channel', self.channel],
         ]
     
     def __call__(self, args):
-        self.radius     = args[0]*8
-        self.thickness  = args[1]*3
-        self.channel = int(args[2]*5)-1
+        # === PARAMETERS START ===
+        self.radius = args[0]*8
+        self.thickness = args[1]*3
+        self.channel = ['noS2L', 0, 1, 2, 3, 'Trigger'][int(args[2]*5)]
+        # === PARAMETERS END ===
 
         #def generate(self, step, dumpworld):
         world = np.zeros([3, 10, 10, 10])
 
         # check if S2L is activated
-        if 4 > self.channel >= 0:
+        if isinstance(self.channel, int):
             current_volume = float(str(self.sound_values.buf[self.channel*8:self.channel*8+8],'utf-8'))
             if current_volume > 0:
                 self.radius = current_volume * self.radius
             else:
                 self.radius = 0
 
-        elif self.channel == 4:
+        elif self.channel == 'Trigger':
             current_volume = int(float(str(self.sound_values.buf[32:40],'utf-8')))
             if current_volume > self.lastvalue:
                 self.lastvalue = current_volume

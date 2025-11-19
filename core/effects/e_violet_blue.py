@@ -20,8 +20,9 @@ class e_violet_blue():
         ]
     
     def __call__(self, world, args):
-        # parsing input
+        # === PARAMETERS START ===
         self.speed = args[0]*0.1
+        # === PARAMETERS END ===
 
         self.red = np.sin(self.speed*step)
 

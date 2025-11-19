@@ -11,7 +11,6 @@ class e_sound_gradient():
 
         self.c1 = 0.1 # [0.1,0.0,0.0]
         self.c2 = 0.4 # [0.4,0.4,0.0]
-        self.balance = 1.0
 
         self.channel = 0
 
@@ -25,11 +24,11 @@ class e_sound_gradient():
         ]
     
     def __call__(self, world, args):
-        # parsing input
-        self.c1 = args[0] # hsv_to_rgb(c1,1,1)
-        self.c2 = args[1] # hsv_to_rgb(c2,1,1)
-        # self.balance = 1 - (2 * args[2])
+        # === PARAMETERS START ===
+        self.c1 = args[0]
+        self.c2 = args[1]
         self.channel = int(args[2]*3)
+        # === PARAMETERS END ===
 
         current_volume = float(str(self.sound_values.buf[self.channel*8:self.channel*8+8],'utf-8'))
         current_color = self.sigmoid(current_volume*10-4.5)*(self.c1-self.c2)+self.c2

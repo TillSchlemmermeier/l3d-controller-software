@@ -37,10 +37,11 @@ class e_rotating_gradient():
         ]
 
     def __call__(self, world, args):
-		# parse input
+        # === PARAMETERS START ===
         self.base_color = args[0]
         self.spread     = args[1]*0.5
         self.zspeed     = args[2]*15
+        # === PARAMETERS END ===
 
         # calculate color
         color1 = hsv_to_rgb(self.base_color, 1, 1)

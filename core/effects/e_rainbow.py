@@ -16,36 +16,30 @@ class e_rainbow():
         self.speed = 0.5
         self.color = [0.1,0.0,0.0]
         self.sound_values = shared_memory.SharedMemory(name = "global_s2l_memory")
-        self.Trigger = 0
+        self.trigger = 0
         self.lastvalue = 0
 
     def return_state(self):
-        if 0.2 > self.Trigger >= 0:
-            channel = "Off"
-        elif 0.8 > self.Trigger >= 0.2:
-            channel = "On"
-        else:
-            channel = "random"
-            
         # return [Display Name, Viariable Name, Display Value] for each parameter
         return [
             ['speed', 'speed', round(20*self.speed,2)],
-            ['S2L Trigger', 'Trigger', channel],
+            ['S2L trigger', 'trigger', self.trigger],
         ]
 
     def __call__(self, world, args):
-        # parsing input
+        # === PARAMETERS START ===
         self.speed = (args[0]**2)/50
-        self.Trigger = args[1]
+        self.trigger = ['Off', 'random', 'On'][int(args[1]*2)]
+        # === PARAMETERS END ===
 
         color = hsv_to_rgb(self.color[0], 1, 1)
 
         # check if s2l is activated
-        if self.Trigger >= 0.2:
+        if self.trigger == "On" or self.trigger == "random":
             current_volume = int(float(str(self.sound_values.buf[32:40],'utf-8')))
             if current_volume > self.lastvalue:
                 self.lastvalue = current_volume
-                if self.Trigger < 0.8:
+                if self.trigger == "random":
                     self.color[0] += self.speed * 2
                 else:
                     self.color[0] = random()

@@ -20,43 +20,31 @@ class g_shooting_star():
         self.lastvalue = 0
 
     def return_state(self):
-        if 4 > self.channel >= 0:
-            channel = str(self.channel)
-        elif self.channel == 4:
-            channel = "Trigger"
-        else:
-            channel = 'noS2L'
-
         return [
             ['wait frames', 'add_wait', self.add_wait],
             ['speed', 'steps', 20-self.steps],
             ['mode', 'mode', self.mode],
-            ['channel', 'channel', channel],
+            ['channel', 'channel', self.channel],
         ]
     
     def __call__(self, args):
+        # === PARAMETERS START ===
         self.add_wait = int(args[0]*10+1)
         self.steps = 20-int(args[1]*18)
-        if args[2] < 0.25:
-            self.mode = 'in'
-        elif args[2] > 0.25 and args[2] < 0.5:
-            self.mode = 'out'
-        elif args[2] > 0.5 and args[2] < 0.75:
-            self.mode = 'through'
-        else:
-            self.mode = 'top'
-        self.channel = int(args[3]*5)-1
+        self.mode = ['in', 'out', 'through', 'top'][int(args[2]*3)]
+        self.channel = ['noS2L', 0, 1, 2, 3, 'Trigger'][int(args[3]*5)]
+        # === PARAMETERS END ===
 
         world = np.zeros([3, 10, 10, 10])
 
         # check if S2L is activated
-        if 4 > self.channel >= 0:
+        if isinstance(self.channel, int):
             current_volume = float(str(self.sound_values.buf[self.channel*8:self.channel*8+8],'utf-8'))
             if current_volume > 0:
                 self.dot_list.insert(0, gen_line_2(self.steps, self.mode))
 
         #check for trigger
-        elif self.channel == 4:
+        elif self.channel == 'Trigger':
             current_volume = int(float(str(self.sound_values.buf[32:40],'utf-8')))
             if current_volume > self.lastvalue:
                 self.lastvalue = current_volume

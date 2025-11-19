@@ -169,7 +169,7 @@ class DatabaseManager:
                 presets.append({**preset, 'type': 'channel'})
             elif element_type == 'effect':
                 for i in range(data.get('numberOfEffects', 0)):
-                    if data.get(str(i), {}).get('name') == element_name:
+                    if data.get(i, {}).get('name') == element_name:
                         presets.append({**preset, 'type': 'channel'})
                         break
 
@@ -182,13 +182,12 @@ class DatabaseManager:
             # Check regular channels
             for i in range(data.get('numberOfChannels', 0)):
                 channel = data[i]
-                print(channel)
                 if element_type == 'generator' and channel[9]['name'] == element_name:
                     found = True
                     break
                 elif element_type == 'effect':
                     for j in range(channel.get('numberOfEffects', 0)):
-                        if channel.get(str(j), {}).get('name') == element_name:
+                        if channel.get(j, {}).get('name') == element_name:
                             found = True
                             break
                     if found:
@@ -197,7 +196,7 @@ class DatabaseManager:
             # Check global effects channel
             if not found and element_type == 'effect' and 9 in data:
                 for i in range(data[9].get('numberOfEffects', 0)):
-                    if data[9].get(str(i), {}).get('name') == element_name:
+                    if data[9].get(i, {}).get('name') == element_name:
                         found = True
                         break
 

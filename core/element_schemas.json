@@ -1,0 +1,3693 @@
+{
+  "generator.g_bouncer": {
+    "name": "g_bouncer",
+    "type": "generator",
+    "version": 1,
+    "parameters": [
+      {
+        "index": 0,
+        "variable_name": "double",
+        "display_label": "'mode'",
+        "display_value": "'double' if self.double else 'single'",
+        "assignment_code": "args[0] > 0.5",
+        "value_type": "boolean",
+        "categories": [],
+        "min_value": 0,
+        "max_value": 1
+      },
+      {
+        "index": 1,
+        "variable_name": "speed",
+        "display_label": "'speed'",
+        "display_value": "round(self.speed,2)",
+        "assignment_code": "args[1]**2",
+        "value_type": "numeric",
+        "categories": [],
+        "min_value": 0.0,
+        "max_value": 1.0
+      }
+    ]
+  },
+  "generator.g_central_glow": {
+    "name": "g_central_glow",
+    "type": "generator",
+    "version": 1,
+    "parameters": [
+      {
+        "index": 0,
+        "variable_name": "exponent",
+        "display_label": "'exponent'",
+        "display_value": "self.exponent",
+        "assignment_code": "args[0]*2",
+        "value_type": "numeric",
+        "categories": [],
+        "min_value": 0.0,
+        "max_value": 2.0
+      },
+      {
+        "index": 1,
+        "variable_name": "channel",
+        "display_label": "'channel'",
+        "display_value": "self.channel if self.channel < 4 else \"LFO\"",
+        "assignment_code": "int(args[1]*4)",
+        "value_type": "numeric",
+        "categories": [],
+        "min_value": 0,
+        "max_value": 4
+      },
+      {
+        "index": 2,
+        "variable_name": "compress",
+        "display_label": "'amount'",
+        "display_value": "round(self.compress,2)",
+        "assignment_code": "args[2]*3+1",
+        "value_type": "numeric",
+        "categories": [],
+        "min_value": 1.0,
+        "max_value": 4.0
+      },
+      {
+        "index": 3,
+        "variable_name": "speed",
+        "display_label": "'speed'",
+        "display_value": "round(self.speed,2) if self.channel == 4 else '-'",
+        "assignment_code": "args[3]*0.5+0.01",
+        "value_type": "numeric",
+        "categories": [],
+        "min_value": 0.01,
+        "max_value": 0.51
+      }
+    ]
+  },
+  "generator.g_circles": {
+    "name": "g_circles",
+    "type": "generator",
+    "version": 1,
+    "parameters": [
+      {
+        "index": 0,
+        "variable_name": "number",
+        "display_label": "'number'",
+        "display_value": "round(self.number,2)",
+        "assignment_code": "int(args[0]*10)",
+        "value_type": "numeric",
+        "categories": [],
+        "min_value": 0,
+        "max_value": 10
+      },
+      {
+        "index": 1,
+        "variable_name": "mode",
+        "display_label": "'mode'",
+        "display_value": "self.mode",
+        "assignment_code": "['random', 'tunnel'][round(args[1])]",
+        "value_type": "numeric",
+        "categories": [],
+        "min_value": 0.0,
+        "max_value": 1.0
+      },
+      {
+        "index": 2,
+        "variable_name": "channel",
+        "display_label": "'channel'",
+        "display_value": "self.channel",
+        "assignment_code": "['noS2L', 0, 1, 2, 3, 'Trigger'][int(args[2]*5)]",
+        "value_type": "category",
+        "categories": [
+          "noS2L",
+          0,
+          1,
+          2,
+          3,
+          "Trigger"
+        ],
+        "min_value": null,
+        "max_value": null
+      }
+    ]
+  },
+  "generator.g_circles_revis": {
+    "name": "g_circles_revis",
+    "type": "generator",
+    "version": 1,
+    "parameters": [
+      {
+        "index": 0,
+        "variable_name": "mode",
+        "display_label": "'mode'",
+        "display_value": "self.mode",
+        "assignment_code": "'out'",
+        "value_type": null,
+        "categories": [],
+        "min_value": null,
+        "max_value": null
+      },
+      {
+        "index": 1,
+        "variable_name": "speed",
+        "display_label": "'speed'",
+        "display_value": "self.speed",
+        "assignment_code": "int(args[1]*5) + 1",
+        "value_type": "numeric",
+        "categories": [],
+        "min_value": 1.0,
+        "max_value": 6.0
+      },
+      {
+        "index": 2,
+        "variable_name": "pause",
+        "display_label": "'pause'",
+        "display_value": "self.pause",
+        "assignment_code": "int(args[2]*10)",
+        "value_type": "numeric",
+        "categories": [],
+        "min_value": 0,
+        "max_value": 10
+      }
+    ]
+  },
+  "generator.g_conway": {
+    "name": "g_conway",
+    "type": "generator",
+    "version": 1,
+    "parameters": [
+      {
+        "index": 0,
+        "variable_name": "speed",
+        "display_label": "'speed'",
+        "display_value": "self.speed",
+        "assignment_code": "int(args[0]*6)+1",
+        "value_type": "numeric",
+        "categories": [],
+        "min_value": 1.0,
+        "max_value": 7.0
+      },
+      {
+        "index": 1,
+        "variable_name": "wait",
+        "display_label": "'wait'",
+        "display_value": "self.wait",
+        "assignment_code": "int(args[1]*50)+10",
+        "value_type": "numeric",
+        "categories": [],
+        "min_value": 10.0,
+        "max_value": 60.0
+      },
+      {
+        "index": 2,
+        "variable_name": "mode",
+        "display_label": "'mode'",
+        "display_value": "self.mode",
+        "assignment_code": "round(args[2])",
+        "value_type": "numeric",
+        "categories": [],
+        "min_value": 0.0,
+        "max_value": 1.0
+      }
+    ]
+  },
+  "generator.g_corner": {
+    "name": "g_corner",
+    "type": "generator",
+    "version": 1,
+    "parameters": [
+      {
+        "index": 0,
+        "variable_name": "size",
+        "display_label": "'GROESSE'",
+        "display_value": "round(self.size,2)",
+        "assignment_code": "int(args[0]*3 + 1)",
+        "value_type": "numeric",
+        "categories": [],
+        "min_value": 1.0,
+        "max_value": 4.0
+      },
+      {
+        "index": 1,
+        "variable_name": "randomcolor",
+        "display_label": "'color'",
+        "display_value": "'on' if self.randomcolor else 'off'",
+        "assignment_code": "args[1] > 0.5",
+        "value_type": "boolean",
+        "categories": [],
+        "min_value": 0,
+        "max_value": 1
+      },
+      {
+        "index": 2,
+        "variable_name": "channel",
+        "display_label": "'channel'",
+        "display_value": "self.channel",
+        "assignment_code": "['noS2L', 0, 1, 2, 3, 'Trigger'][int(args[2]*5)]",
+        "value_type": "category",
+        "categories": [
+          "noS2L",
+          0,
+          1,
+          2,
+          3,
+          "Trigger"
+        ],
+        "min_value": null,
+        "max_value": null
+      }
+    ]
+  },
+  "generator.g_corner_grow": {
+    "name": "g_corner_grow",
+    "type": "generator",
+    "version": 1,
+    "parameters": [
+      {
+        "index": 0,
+        "variable_name": "mode",
+        "display_label": "'mode'",
+        "display_value": "self.mode",
+        "assignment_code": "['sync', 'seq', 'random'][int(round(args[0]*2))]",
+        "value_type": "category",
+        "categories": [
+          "sync",
+          "seq",
+          "random"
+        ],
+        "min_value": null,
+        "max_value": null
+      },
+      {
+        "index": 1,
+        "variable_name": "waiting",
+        "display_label": "'waiting'",
+        "display_value": "round(self.waiting,2)",
+        "assignment_code": "int(args[1]*50)+1",
+        "value_type": "numeric",
+        "categories": [],
+        "min_value": 1.0,
+        "max_value": 51.0
+      },
+      {
+        "index": 2,
+        "variable_name": "trigger",
+        "display_label": "'trigger'",
+        "display_value": "self.trigger",
+        "assignment_code": "args[2] >= 0.5",
+        "value_type": "boolean",
+        "categories": [],
+        "min_value": 0,
+        "max_value": 1
+      }
+    ]
+  },
+  "generator.g_cube": {
+    "name": "g_cube",
+    "type": "generator",
+    "version": 1,
+    "parameters": [
+      {
+        "index": 0,
+        "variable_name": "size",
+        "display_label": "'size'",
+        "display_value": "self.size",
+        "assignment_code": "round(args[0]*4)",
+        "value_type": "numeric",
+        "categories": [],
+        "min_value": 0.0,
+        "max_value": 4.0
+      },
+      {
+        "index": 1,
+        "variable_name": "sides",
+        "display_label": "'surface'",
+        "display_value": "'On' if self.sides else 'Off'",
+        "assignment_code": "args[1] > 0.5",
+        "value_type": "boolean",
+        "categories": [],
+        "min_value": 0,
+        "max_value": 1
+      },
+      {
+        "index": 2,
+        "variable_name": "channel",
+        "display_label": "'channel'",
+        "display_value": "self.channel",
+        "assignment_code": "['noS2L', 0, 1, 2, 3, 'Trigger'][int(args[2]*5)]",
+        "value_type": "category",
+        "categories": [
+          "noS2L",
+          0,
+          1,
+          2,
+          3,
+          "Trigger"
+        ],
+        "min_value": null,
+        "max_value": null
+      },
+      {
+        "index": 3,
+        "variable_name": "speed",
+        "display_label": "'speed'",
+        "display_value": "round(11 - self.speed,2)",
+        "assignment_code": "11 - int(args[3]*10)",
+        "value_type": "numeric",
+        "categories": [],
+        "min_value": 0,
+        "max_value": 10
+      }
+    ]
+  },
+  "generator.g_cube_edges": {
+    "name": "g_cube_edges",
+    "type": "generator",
+    "version": 1,
+    "parameters": [
+      {
+        "index": 0,
+        "variable_name": "speed",
+        "display_label": "'speed'",
+        "display_value": "round(self.speed,2)",
+        "assignment_code": "args[0]*2 + 0.4",
+        "value_type": "numeric",
+        "categories": [],
+        "min_value": 0.4,
+        "max_value": 2.4
+      },
+      {
+        "index": 1,
+        "variable_name": "number",
+        "display_label": "'number'",
+        "display_value": "round(self.number,2)",
+        "assignment_code": "int(3*args[1])",
+        "value_type": "numeric",
+        "categories": [],
+        "min_value": 0.0,
+        "max_value": 1.0
+      },
+      {
+        "index": 2,
+        "variable_name": "wait_frames",
+        "display_label": "'wait'",
+        "display_value": "str(round(self.wait_frames,2))",
+        "assignment_code": "int(args[2] * 100) + 5",
+        "value_type": "numeric",
+        "categories": [],
+        "min_value": 5.0,
+        "max_value": 105.0
+      },
+      {
+        "index": 3,
+        "variable_name": "trigger",
+        "display_label": "'Trigger'",
+        "display_value": "'On' if self.trigger else 'Off'",
+        "assignment_code": "args[3] > 0.5",
+        "value_type": "boolean",
+        "categories": [],
+        "min_value": 0,
+        "max_value": 1
+      }
+    ]
+  },
+  "generator.g_cut": {
+    "name": "g_cut",
+    "type": "generator",
+    "version": 1,
+    "parameters": [
+      {
+        "index": 0,
+        "variable_name": "speed",
+        "display_label": "'speed'",
+        "display_value": "round(self.speed,2)",
+        "assignment_code": "args[0]*0.5 + 0.1",
+        "value_type": "numeric",
+        "categories": [],
+        "min_value": 0.1,
+        "max_value": 0.6
+      },
+      {
+        "index": 1,
+        "variable_name": "channel",
+        "display_label": "'channel'",
+        "display_value": "self.channel",
+        "assignment_code": "['noS2L', 0, 1, 2, 3, 'Trigger'][int(args[1]*5)]",
+        "value_type": "category",
+        "categories": [
+          "noS2L",
+          0,
+          1,
+          2,
+          3,
+          "Trigger"
+        ],
+        "min_value": null,
+        "max_value": null
+      }
+    ]
+  },
+  "generator.g_dots_on_sphere": {
+    "name": "g_dots_on_sphere",
+    "type": "generator",
+    "version": 1,
+    "parameters": [
+      {
+        "index": 0,
+        "variable_name": "number_of_dots",
+        "display_label": "'n dots'",
+        "display_value": "self.number_of_dots",
+        "assignment_code": "int(args[0]*8)+1",
+        "value_type": "numeric",
+        "categories": [],
+        "min_value": 1.0,
+        "max_value": 9.0
+      },
+      {
+        "index": 1,
+        "variable_name": "number_of_frames",
+        "display_label": "'n frames'",
+        "display_value": "self.number_of_frames",
+        "assignment_code": "int(args[1]*50)+5",
+        "value_type": "numeric",
+        "categories": [],
+        "min_value": 5.0,
+        "max_value": 55.0
+      },
+      {
+        "index": 2,
+        "variable_name": "radius",
+        "display_label": "'radius'",
+        "display_value": "self.radius",
+        "assignment_code": "4-int(np.clip(args[2]*4,1,4))",
+        "value_type": "numeric",
+        "categories": [],
+        "min_value": 0,
+        "max_value": 4
+      },
+      {
+        "index": 3,
+        "variable_name": "speed",
+        "display_label": "'speed'",
+        "display_value": "round(self.speed,2)",
+        "assignment_code": "args[3]*30+10",
+        "value_type": "numeric",
+        "categories": [],
+        "min_value": 10.0,
+        "max_value": 40.0
+      }
+    ]
+  },
+  "generator.g_drop": {
+    "name": "g_drop",
+    "type": "generator",
+    "version": 1,
+    "parameters": [
+      {
+        "index": 0,
+        "variable_name": "speed",
+        "display_label": "'speed'",
+        "display_value": "round(self.speed,2)",
+        "assignment_code": "12-int(args[0]*10 + 1)",
+        "value_type": "numeric",
+        "categories": [],
+        "min_value": 1.0,
+        "max_value": 11.0
+      },
+      {
+        "index": 1,
+        "variable_name": "channel",
+        "display_label": "'channel'",
+        "display_value": "self.channel",
+        "assignment_code": "['noS2L', 0, 1, 2, 3][int(args[1]*4)]",
+        "value_type": "category",
+        "categories": [
+          "noS2L",
+          0,
+          1,
+          2,
+          3
+        ],
+        "min_value": null,
+        "max_value": null
+      }
+    ]
+  },
+  "generator.g_edge_lines": {
+    "name": "g_edge_lines",
+    "type": "generator",
+    "version": 1,
+    "parameters": [
+      {
+        "index": 0,
+        "variable_name": "speed",
+        "display_label": "'speed'",
+        "display_value": "self.speed",
+        "assignment_code": "int(1+2*args[0])",
+        "value_type": "numeric",
+        "categories": [],
+        "min_value": 0.0,
+        "max_value": 1.0
+      },
+      {
+        "index": 1,
+        "variable_name": "trigger",
+        "display_label": "'Trigger'",
+        "display_value": "'On' if self.trigger else 'Off'",
+        "assignment_code": "args[1] > 0.2",
+        "value_type": "boolean",
+        "categories": [],
+        "min_value": 0,
+        "max_value": 1
+      }
+    ]
+  },
+  "generator.g_evolve": {
+    "name": "g_evolve",
+    "type": "generator",
+    "version": 1,
+    "parameters": [
+      {
+        "index": 0,
+        "variable_name": "number_of_workers",
+        "display_label": "'number'",
+        "display_value": "round(self.number_of_workers,2)",
+        "assignment_code": "int((args[0])*20)+1",
+        "value_type": "numeric",
+        "categories": [],
+        "min_value": 0.0,
+        "max_value": 1.0
+      },
+      {
+        "index": 1,
+        "variable_name": "lifetime",
+        "display_label": "'lifetime'",
+        "display_value": "round(self.lifetime,2)",
+        "assignment_code": "int(args[1]*100+1)",
+        "value_type": "numeric",
+        "categories": [],
+        "min_value": 1.0,
+        "max_value": 101.0
+      },
+      {
+        "index": 2,
+        "variable_name": "width",
+        "display_label": "'width'",
+        "display_value": "round(self.width,2)",
+        "assignment_code": "args[2]+1",
+        "value_type": "numeric",
+        "categories": [],
+        "min_value": 0.0,
+        "max_value": 1.0
+      },
+      {
+        "index": 3,
+        "variable_name": "trigger",
+        "display_label": "'trigger'",
+        "display_value": "'On' if self.trigger else 'Off'",
+        "assignment_code": "args[3] > 0.5",
+        "value_type": "boolean",
+        "categories": [],
+        "min_value": 0,
+        "max_value": 1
+      }
+    ]
+  },
+  "generator.g_falling": {
+    "name": "g_falling",
+    "type": "generator",
+    "version": 1,
+    "parameters": [
+      {
+        "index": 0,
+        "variable_name": "wait",
+        "display_label": "'wait'",
+        "display_value": "round(self.wait, 2)",
+        "assignment_code": "int(args[0] * 10) + 1",
+        "value_type": "numeric",
+        "categories": [],
+        "min_value": 1.0,
+        "max_value": 11.0
+      }
+    ]
+  },
+  "generator.g_flash": {
+    "name": "g_flash",
+    "type": "generator",
+    "version": 1,
+    "parameters": [
+      {
+        "index": 0,
+        "variable_name": "speed",
+        "display_label": "'speed'",
+        "display_value": "self.speed",
+        "assignment_code": "int(round(args[0]*1))+1",
+        "value_type": "numeric",
+        "categories": [],
+        "min_value": 1.0,
+        "max_value": 2.0
+      },
+      {
+        "index": 1,
+        "variable_name": "wait",
+        "display_label": "'wait'",
+        "display_value": "self.wait",
+        "assignment_code": "int(round(args[1]*20))",
+        "value_type": "numeric",
+        "categories": [],
+        "min_value": 0,
+        "max_value": 20
+      },
+      {
+        "index": 2,
+        "variable_name": "trigger",
+        "display_label": "'trigger'",
+        "display_value": "'yes' if self.trigger else 'no'",
+        "assignment_code": "args[2] > 0.5",
+        "value_type": "boolean",
+        "categories": [],
+        "min_value": 0,
+        "max_value": 1
+      }
+    ]
+  },
+  "generator.g_fountaine": {
+    "name": "g_fountaine",
+    "type": "generator",
+    "version": 1,
+    "parameters": [
+      {
+        "index": 0,
+        "variable_name": "speed",
+        "display_label": "'speed'",
+        "display_value": "round(self.speed,2)",
+        "assignment_code": "args[0]*2",
+        "value_type": "numeric",
+        "categories": [],
+        "min_value": 0.0,
+        "max_value": 2.0
+      },
+      {
+        "index": 1,
+        "variable_name": "thickness",
+        "display_label": "'thickness'",
+        "display_value": "round(self.thickness,2)",
+        "assignment_code": "args[1]*2+0.1",
+        "value_type": "numeric",
+        "categories": [],
+        "min_value": 0.1,
+        "max_value": 2.1
+      },
+      {
+        "index": 2,
+        "variable_name": "size_change",
+        "display_label": "'size change'",
+        "display_value": "round(self.size_change,2)",
+        "assignment_code": "args[2]",
+        "value_type": "numeric",
+        "categories": [],
+        "min_value": 0.0,
+        "max_value": 1.0
+      },
+      {
+        "index": 3,
+        "variable_name": "channel",
+        "display_label": "'channel'",
+        "display_value": "self.channel",
+        "assignment_code": "['noS2L', 0, 1, 2, 3, 'Trigger'][int(args[3]*5)]",
+        "value_type": "category",
+        "categories": [
+          "noS2L",
+          0,
+          1,
+          2,
+          3,
+          "Trigger"
+        ],
+        "min_value": null,
+        "max_value": null
+      }
+    ]
+  },
+  "generator.g_full_drip": {
+    "name": "g_full_drip",
+    "type": "generator",
+    "version": 1,
+    "parameters": [
+      {
+        "index": 0,
+        "variable_name": "n",
+        "display_label": "'number'",
+        "display_value": "self.n",
+        "assignment_code": "int(args[0]*40)+1",
+        "value_type": "numeric",
+        "categories": [],
+        "min_value": 1.0,
+        "max_value": 41.0
+      },
+      {
+        "index": 1,
+        "variable_name": "stop_pos",
+        "display_label": "'stop pos'",
+        "display_value": "self.stop_pos",
+        "assignment_code": "int(round(args[1]*10,0))",
+        "value_type": "numeric",
+        "categories": [],
+        "min_value": 0,
+        "max_value": 10
+      }
+    ]
+  },
+  "generator.g_grow": {
+    "name": "g_grow",
+    "type": "generator",
+    "version": 1,
+    "parameters": [
+      {
+        "index": 0,
+        "variable_name": "branch",
+        "display_label": "'branch'",
+        "display_value": "round(self.branch,2)",
+        "assignment_code": "args[0]*0.5",
+        "value_type": "numeric",
+        "categories": [],
+        "min_value": 0.0,
+        "max_value": 0.5
+      },
+      {
+        "index": 1,
+        "variable_name": "probecolor",
+        "display_label": "'probecolor'",
+        "display_value": "round(self.probecolor,2)",
+        "assignment_code": "int(args[1]+0.5)",
+        "value_type": "numeric",
+        "categories": [],
+        "min_value": 0.0,
+        "max_value": 1.0
+      },
+      {
+        "index": 2,
+        "variable_name": "age",
+        "display_label": "'age'",
+        "display_value": "round(self.age,2)",
+        "assignment_code": "args[2]*0.1",
+        "value_type": "numeric",
+        "categories": [],
+        "min_value": 0.0,
+        "max_value": 0.1
+      }
+    ]
+  },
+  "generator.g_growing_corner": {
+    "name": "g_growing_corner",
+    "type": "generator",
+    "version": 1,
+    "parameters": [
+      {
+        "index": 0,
+        "variable_name": "maxsize",
+        "display_label": "'maxsize'",
+        "display_value": "round(self.maxsize,2)",
+        "assignment_code": "args[0]*18",
+        "value_type": "numeric",
+        "categories": [],
+        "min_value": 0.0,
+        "max_value": 18.0
+      },
+      {
+        "index": 1,
+        "variable_name": "growspeed",
+        "display_label": "'speed'",
+        "display_value": "round(55-self.growspeed,2)",
+        "assignment_code": "60 - (args[1]*50+5)",
+        "value_type": "numeric",
+        "categories": [],
+        "min_value": 5.0,
+        "max_value": 55.0
+      },
+      {
+        "index": 2,
+        "variable_name": "mode",
+        "display_label": "'mode'",
+        "display_value": "self.mode",
+        "assignment_code": "['single', 'double'][int(args[2])]",
+        "value_type": "numeric",
+        "categories": [],
+        "min_value": 0.0,
+        "max_value": 1.0
+      },
+      {
+        "index": 3,
+        "variable_name": "trigger",
+        "display_label": "'Trigger'",
+        "display_value": "'On' if self.trigger else 'Off'",
+        "assignment_code": "args[3] > 0.5",
+        "value_type": "boolean",
+        "categories": [],
+        "min_value": 0,
+        "max_value": 1
+      }
+    ]
+  },
+  "generator.g_growing_face": {
+    "name": "g_growing_face",
+    "type": "generator",
+    "version": 1,
+    "parameters": [
+      {
+        "index": 0,
+        "variable_name": "maxsize",
+        "display_label": "'maxsize'",
+        "display_value": "round(self.maxsize,2)",
+        "assignment_code": "args[0]*17",
+        "value_type": "numeric",
+        "categories": [],
+        "min_value": 0.0,
+        "max_value": 17.0
+      },
+      {
+        "index": 1,
+        "variable_name": "growspeed",
+        "display_label": "'speed'",
+        "display_value": "round(47-self.growspeed,2)",
+        "assignment_code": "55 - (args[1]*45+9)",
+        "value_type": "numeric",
+        "categories": [],
+        "min_value": 9.0,
+        "max_value": 54.0
+      },
+      {
+        "index": 2,
+        "variable_name": "trigger",
+        "display_label": "'Trigger'",
+        "display_value": "'On' if self.trigger else 'Off'",
+        "assignment_code": "args[2] > 0.5",
+        "value_type": "boolean",
+        "categories": [],
+        "min_value": 0,
+        "max_value": 1
+      }
+    ]
+  },
+  "generator.g_growing_sphere_partial": {
+    "name": "g_growing_sphere_partial",
+    "type": "generator",
+    "version": 1,
+    "parameters": [
+      {
+        "index": 0,
+        "variable_name": "maxsize",
+        "display_label": "'maxsize'",
+        "display_value": "round(self.maxsize,2)",
+        "assignment_code": "args[0]*10",
+        "value_type": "numeric",
+        "categories": [],
+        "min_value": 0.0,
+        "max_value": 10.0
+      },
+      {
+        "index": 1,
+        "variable_name": "maxsize_variation",
+        "display_label": "'size var'",
+        "display_value": "round(self.maxsize_variation,2)",
+        "assignment_code": "args[1]*2",
+        "value_type": "numeric",
+        "categories": [],
+        "min_value": 0.0,
+        "max_value": 2.0
+      },
+      {
+        "index": 2,
+        "variable_name": "growspeed",
+        "display_label": "'speed'",
+        "display_value": "round(self.growspeed,2)",
+        "assignment_code": "args[2]",
+        "value_type": "numeric",
+        "categories": [],
+        "min_value": 0.0,
+        "max_value": 1.0
+      },
+      {
+        "index": 3,
+        "variable_name": "growspeed_variation",
+        "display_label": "'speed var'",
+        "display_value": "round(self.growspeed_variation,2)",
+        "assignment_code": "args[3]*2",
+        "value_type": "numeric",
+        "categories": [],
+        "min_value": 0.0,
+        "max_value": 2.0
+      }
+    ]
+  },
+  "generator.g_growing_sphere_rand": {
+    "name": "g_growing_sphere_rand",
+    "type": "generator",
+    "version": 1,
+    "parameters": [
+      {
+        "index": 0,
+        "variable_name": "maxsize",
+        "display_label": "'maxsize'",
+        "display_value": "round(self.maxsize,2)",
+        "assignment_code": "args[0]*15",
+        "value_type": "numeric",
+        "categories": [],
+        "min_value": 0.0,
+        "max_value": 15.0
+      },
+      {
+        "index": 1,
+        "variable_name": "growspeed",
+        "display_label": "'speed'",
+        "display_value": "round(self.growspeed,2)",
+        "assignment_code": "args[1]*2",
+        "value_type": "numeric",
+        "categories": [],
+        "min_value": 0.0,
+        "max_value": 2.0
+      },
+      {
+        "index": 2,
+        "variable_name": "oscillate",
+        "display_label": "'shape'",
+        "display_value": "self.oscillate",
+        "assignment_code": "['sin', 'explode', 'implode'][round(args[2]*2)]",
+        "value_type": "category",
+        "categories": [
+          "sin",
+          "explode",
+          "implode"
+        ],
+        "min_value": null,
+        "max_value": null
+      },
+      {
+        "index": 3,
+        "variable_name": "trigger",
+        "display_label": "'S2L Trigger'",
+        "display_value": "'On' if self.trigger else 'Off'",
+        "assignment_code": "args[3] > 0.2",
+        "value_type": "boolean",
+        "categories": [],
+        "min_value": 0,
+        "max_value": 1
+      }
+    ]
+  },
+  "generator.g_in_and_out": {
+    "name": "g_in_and_out",
+    "type": "generator",
+    "version": 1,
+    "parameters": [
+      {
+        "index": 0,
+        "variable_name": "number",
+        "display_label": "'number'",
+        "display_value": "round(self.number,2)",
+        "assignment_code": "int(args[0]*10+1)",
+        "value_type": "numeric",
+        "categories": [],
+        "min_value": 1.0,
+        "max_value": 11.0
+      },
+      {
+        "index": 1,
+        "variable_name": "fadespeed",
+        "display_label": "'fade in'",
+        "display_value": "round(self.fadespeed,2)",
+        "assignment_code": "0.5*args[1]+0.01",
+        "value_type": "numeric",
+        "categories": [],
+        "min_value": 0.0,
+        "max_value": 1.0
+      },
+      {
+        "index": 2,
+        "variable_name": "channel",
+        "display_label": "'channel'",
+        "display_value": "self.channel",
+        "assignment_code": "['noS2L', 0, 1, 2, 3][round(args[2]*4)]",
+        "value_type": "category",
+        "categories": [
+          "noS2L",
+          0,
+          1,
+          2,
+          3
+        ],
+        "min_value": null,
+        "max_value": null
+      }
+    ]
+  },
+  "generator.g_oblique_plane": {
+    "name": "g_oblique_plane",
+    "type": "generator",
+    "version": 1,
+    "parameters": [
+      {
+        "index": 0,
+        "variable_name": "speed",
+        "display_label": "'speed'",
+        "display_value": "round(self.speed,2)",
+        "assignment_code": "20*args[0]",
+        "value_type": "numeric",
+        "categories": [],
+        "min_value": 0.0,
+        "max_value": 1.0
+      },
+      {
+        "index": 1,
+        "variable_name": "mode",
+        "display_label": "'modus'",
+        "display_value": "self.mode",
+        "assignment_code": "['random', 'circle', 'chain', 'forward'][round(args[1]*3)]",
+        "value_type": "category",
+        "categories": [
+          "random",
+          "circle",
+          "chain",
+          "forward"
+        ],
+        "min_value": null,
+        "max_value": null
+      },
+      {
+        "index": 2,
+        "variable_name": "trigger",
+        "display_label": "'Trigger'",
+        "display_value": "'On' if self.trigger else 'Off'",
+        "assignment_code": "args[2] > 0.1",
+        "value_type": "boolean",
+        "categories": [],
+        "min_value": 0,
+        "max_value": 1
+      }
+    ]
+  },
+  "generator.g_orbiter": {
+    "name": "g_orbiter",
+    "type": "generator",
+    "version": 1,
+    "parameters": [
+      {
+        "index": 0,
+        "variable_name": "distance",
+        "display_label": "'distance'",
+        "display_value": "round(self.distance,2)",
+        "assignment_code": "args[0]*8",
+        "value_type": "numeric",
+        "categories": [],
+        "min_value": 0.0,
+        "max_value": 8.0
+      },
+      {
+        "index": 1,
+        "variable_name": "theta",
+        "display_label": "'theta'",
+        "display_value": "round(self.theta,2)",
+        "assignment_code": "args[1]",
+        "value_type": "numeric",
+        "categories": [],
+        "min_value": 0.0,
+        "max_value": 1.0
+      },
+      {
+        "index": 2,
+        "variable_name": "rho",
+        "display_label": "'rho'",
+        "display_value": "round(self.rho,2)",
+        "assignment_code": "args[2]",
+        "value_type": "numeric",
+        "categories": [],
+        "min_value": 0.0,
+        "max_value": 1.0
+      },
+      {
+        "index": 3,
+        "variable_name": "direction",
+        "display_label": "'dir'",
+        "display_value": "self.direction",
+        "assignment_code": "['X', 'Y', 'Z'][round(args[3]*2)]",
+        "value_type": "category",
+        "categories": [
+          "X",
+          "Y",
+          "Z"
+        ],
+        "min_value": null,
+        "max_value": null
+      }
+    ]
+  },
+  "generator.g_planes": {
+    "name": "g_planes",
+    "type": "generator",
+    "version": 1,
+    "parameters": [
+      {
+        "index": 0,
+        "variable_name": "speed",
+        "display_label": "'Speed'",
+        "display_value": "round(self.speed,2)",
+        "assignment_code": "int(args[0]*8)",
+        "value_type": "numeric",
+        "categories": [],
+        "min_value": 0,
+        "max_value": 8
+      },
+      {
+        "index": 1,
+        "variable_name": "dir",
+        "display_label": "'Direction'",
+        "display_value": "self.dir",
+        "assignment_code": "['X', 'Y', 'Z'][int(round(args[1]*2))]",
+        "value_type": "category",
+        "categories": [
+          "X",
+          "Y",
+          "Z"
+        ],
+        "min_value": null,
+        "max_value": null
+      },
+      {
+        "index": 2,
+        "variable_name": "type",
+        "display_label": "'Type'",
+        "display_value": "self.type",
+        "assignment_code": "['cos', 'down', 'up'][round(args[2]*2)]",
+        "value_type": "category",
+        "categories": [
+          "cos",
+          "down",
+          "up"
+        ],
+        "min_value": null,
+        "max_value": null
+      },
+      {
+        "index": 3,
+        "variable_name": "trigger",
+        "display_label": "'Trigger'",
+        "display_value": "'On' if self.trigger else 'Off'",
+        "assignment_code": "args[3] > 0.5",
+        "value_type": "boolean",
+        "categories": [],
+        "min_value": 0,
+        "max_value": 1
+      }
+    ]
+  },
+  "generator.g_pong": {
+    "name": "g_pong",
+    "type": "generator",
+    "version": 1,
+    "parameters": [
+      {
+        "index": 0,
+        "variable_name": "speed",
+        "display_label": "'speed'",
+        "display_value": "round(self.speed,2)",
+        "assignment_code": "(args[0]+0.01)*2",
+        "value_type": "numeric",
+        "categories": [],
+        "min_value": 0.0,
+        "max_value": 1.0
+      },
+      {
+        "index": 1,
+        "variable_name": "size",
+        "display_label": "'size'",
+        "display_value": "round(self.size,2)",
+        "assignment_code": "10.2 - (args[1]+0.01)*10",
+        "value_type": "numeric",
+        "categories": [],
+        "min_value": 0.0,
+        "max_value": 1.0
+      },
+      {
+        "index": 2,
+        "variable_name": "side_size",
+        "display_label": "'side size'",
+        "display_value": "round(self.side_size,2)",
+        "assignment_code": "6.12 - (args[2]+0.01)*6",
+        "value_type": "numeric",
+        "categories": [],
+        "min_value": 0.0,
+        "max_value": 1.0
+      },
+      {
+        "index": 3,
+        "variable_name": "reset_frame",
+        "display_label": "'reset'",
+        "display_value": "round(self.reset_frame,2)",
+        "assignment_code": "(args[3]+10)*10",
+        "value_type": "numeric",
+        "categories": [],
+        "min_value": 0.0,
+        "max_value": 1.0
+      }
+    ]
+  },
+  "generator.g_rain": {
+    "name": "g_rain",
+    "type": "generator",
+    "version": 1,
+    "parameters": [
+      {
+        "index": 0,
+        "variable_name": "numbers",
+        "display_label": "'number'",
+        "display_value": "round(self.numbers,2)",
+        "assignment_code": "int(args[0]*10 + 1)",
+        "value_type": "numeric",
+        "categories": [],
+        "min_value": 1.0,
+        "max_value": 11.0
+      },
+      {
+        "index": 1,
+        "variable_name": "fade",
+        "display_label": "'fade'",
+        "display_value": "round(self.fade,2)",
+        "assignment_code": "args[1]",
+        "value_type": "numeric",
+        "categories": [],
+        "min_value": 0.0,
+        "max_value": 1.0
+      },
+      {
+        "index": 2,
+        "variable_name": "direction",
+        "display_label": "'direction'",
+        "display_value": "self.direction",
+        "assignment_code": "['down', 'up'][round(args[2])]",
+        "value_type": "numeric",
+        "categories": [],
+        "min_value": 0.0,
+        "max_value": 1.0
+      },
+      {
+        "index": 3,
+        "variable_name": "channel",
+        "display_label": "'channel'",
+        "display_value": "self.channel",
+        "assignment_code": "['noS2L', 0, 1, 2, 3, 'Trigger'][int(args[3]*5)]",
+        "value_type": "category",
+        "categories": [
+          "noS2L",
+          0,
+          1,
+          2,
+          3,
+          "Trigger"
+        ],
+        "min_value": null,
+        "max_value": null
+      }
+    ]
+  },
+  "generator.g_random": {
+    "name": "g_random",
+    "type": "generator",
+    "version": 1,
+    "parameters": [
+      {
+        "index": 0,
+        "variable_name": "number_of_leds",
+        "display_label": "'N LED'",
+        "display_value": "round(self.number_of_leds,2)",
+        "assignment_code": "int((args[0])*20)",
+        "value_type": "numeric",
+        "categories": [],
+        "min_value": 0.0,
+        "max_value": 1.0
+      },
+      {
+        "index": 1,
+        "variable_name": "reset",
+        "display_label": "'Wait'",
+        "display_value": "round(self.reset,2)",
+        "assignment_code": "int(args[1]*10+1)",
+        "value_type": "numeric",
+        "categories": [],
+        "min_value": 1.0,
+        "max_value": 11.0
+      },
+      {
+        "index": 2,
+        "variable_name": "channel",
+        "display_label": "'channel'",
+        "display_value": "self.channel",
+        "assignment_code": "['noS2L', 0, 1, 2, 3, 'Trigger'][round(args[2]*5)]",
+        "value_type": "category",
+        "categories": [
+          "noS2L",
+          0,
+          1,
+          2,
+          3,
+          "Trigger"
+        ],
+        "min_value": null,
+        "max_value": null
+      }
+    ]
+  },
+  "generator.g_random_grow": {
+    "name": "g_random_grow",
+    "type": "generator",
+    "version": 1,
+    "parameters": [
+      {
+        "index": 0,
+        "variable_name": "number",
+        "display_label": "'number'",
+        "display_value": "round(self.number,2)",
+        "assignment_code": "int(args[0]*20)+1",
+        "value_type": "numeric",
+        "categories": [],
+        "min_value": 1.0,
+        "max_value": 21.0
+      },
+      {
+        "index": 1,
+        "variable_name": "speed",
+        "display_label": "'speed'",
+        "display_value": "round(self.speed,2)",
+        "assignment_code": "args[1]*0.1",
+        "value_type": "numeric",
+        "categories": [],
+        "min_value": 0.0,
+        "max_value": 0.1
+      }
+    ]
+  },
+  "generator.g_random_lines": {
+    "name": "g_random_lines",
+    "type": "generator",
+    "version": 1,
+    "parameters": [
+      {
+        "index": 0,
+        "variable_name": "number",
+        "display_label": "'dimensions'",
+        "display_value": "self.number+1",
+        "assignment_code": "int(args[0]*2)",
+        "value_type": "numeric",
+        "categories": [],
+        "min_value": 0,
+        "max_value": 2
+      },
+      {
+        "index": 1,
+        "variable_name": "length",
+        "display_label": "'length'",
+        "display_value": "round(self.length,2)",
+        "assignment_code": "int(args[1]*10)",
+        "value_type": "numeric",
+        "categories": [],
+        "min_value": 0,
+        "max_value": 10
+      },
+      {
+        "index": 2,
+        "variable_name": "reset",
+        "display_label": "'wait'",
+        "display_value": "round(self.reset,2)",
+        "assignment_code": "int(args[2]*10+1)",
+        "value_type": "numeric",
+        "categories": [],
+        "min_value": 1.0,
+        "max_value": 11.0
+      },
+      {
+        "index": 3,
+        "variable_name": "trigger",
+        "display_label": "'Trigger'",
+        "display_value": "'On' if self.trigger else 'Off'",
+        "assignment_code": "args[3] > 0.2",
+        "value_type": "boolean",
+        "categories": [],
+        "min_value": 0,
+        "max_value": 1
+      }
+    ]
+  },
+  "generator.g_rising_square": {
+    "name": "g_rising_square",
+    "type": "generator",
+    "version": 1,
+    "parameters": [
+      {
+        "index": 0,
+        "variable_name": "speed",
+        "display_label": "'speed'",
+        "display_value": "round(7-self.speed,2)",
+        "assignment_code": "7-int((args[0]*6))",
+        "value_type": "numeric",
+        "categories": [],
+        "min_value": 0,
+        "max_value": 6
+      },
+      {
+        "index": 1,
+        "variable_name": "random",
+        "display_label": "'color'",
+        "display_value": "'On' if self.random else 'Off'",
+        "assignment_code": "args[1] > 0.5",
+        "value_type": "boolean",
+        "categories": [],
+        "min_value": 0,
+        "max_value": 1
+      },
+      {
+        "index": 2,
+        "variable_name": "pause",
+        "display_label": "'pause'",
+        "display_value": "round(self.pause,2)",
+        "assignment_code": "int(round((args[2]+0.06)*30)+1)",
+        "value_type": "numeric",
+        "categories": [],
+        "min_value": 0.0,
+        "max_value": 1.0
+      },
+      {
+        "index": 3,
+        "variable_name": "channel",
+        "display_label": "'channel'",
+        "display_value": "self.channel",
+        "assignment_code": "['noS2L', 0, 1, 2, 3, 'Trigger'][round(args[3]*5)]",
+        "value_type": "category",
+        "categories": [
+          "noS2L",
+          0,
+          1,
+          2,
+          3,
+          "Trigger"
+        ],
+        "min_value": null,
+        "max_value": null
+      }
+    ]
+  },
+  "generator.g_rotate_plane": {
+    "name": "g_rotate_plane",
+    "type": "generator",
+    "version": 1,
+    "parameters": [
+      {
+        "index": 0,
+        "variable_name": "xspeed",
+        "display_label": "'xspeed'",
+        "display_value": "round(self.xspeed,2)",
+        "assignment_code": "20*args[0]",
+        "value_type": "numeric",
+        "categories": [],
+        "min_value": 0.0,
+        "max_value": 1.0
+      },
+      {
+        "index": 1,
+        "variable_name": "yspeed",
+        "display_label": "'yspeed'",
+        "display_value": "round(self.yspeed,2)",
+        "assignment_code": "20*args[1]",
+        "value_type": "numeric",
+        "categories": [],
+        "min_value": 0.0,
+        "max_value": 1.0
+      },
+      {
+        "index": 2,
+        "variable_name": "zspeed",
+        "display_label": "'zspeed'",
+        "display_value": "round(self.zspeed,2)",
+        "assignment_code": "20*args[2]",
+        "value_type": "numeric",
+        "categories": [],
+        "min_value": 0.0,
+        "max_value": 1.0
+      },
+      {
+        "index": 3,
+        "variable_name": "channel",
+        "display_label": "'channel'",
+        "display_value": "self.channel",
+        "assignment_code": "['noS2L', 0, 1, 2, 3, 'Trigger'][round(args[3]*5)]",
+        "value_type": "category",
+        "categories": [
+          "noS2L",
+          0,
+          1,
+          2,
+          3,
+          "Trigger"
+        ],
+        "min_value": null,
+        "max_value": null
+      }
+    ]
+  },
+  "generator.g_rotating_circle": {
+    "name": "g_rotating_circle",
+    "type": "generator",
+    "version": 1,
+    "parameters": [
+      {
+        "index": 0,
+        "variable_name": "xspeed",
+        "display_label": "'xpseed'",
+        "display_value": "round(self.xspeed,2)",
+        "assignment_code": "args[0]*2",
+        "value_type": "numeric",
+        "categories": [],
+        "min_value": 0.0,
+        "max_value": 2.0
+      },
+      {
+        "index": 1,
+        "variable_name": "yspeed",
+        "display_label": "'yspeed'",
+        "display_value": "round(self.yspeed,2)",
+        "assignment_code": "args[1]*2",
+        "value_type": "numeric",
+        "categories": [],
+        "min_value": 0.0,
+        "max_value": 2.0
+      },
+      {
+        "index": 2,
+        "variable_name": "zspeed",
+        "display_label": "'zspeed'",
+        "display_value": "round(self.zspeed,2)",
+        "assignment_code": "args[2]*2",
+        "value_type": "numeric",
+        "categories": [],
+        "min_value": 0.0,
+        "max_value": 2.0
+      },
+      {
+        "index": 3,
+        "variable_name": "brightness",
+        "display_label": "'brightness'",
+        "display_value": "round(self.brightness,2)",
+        "assignment_code": "args[3]*0.5+0.5",
+        "value_type": "numeric",
+        "categories": [],
+        "min_value": 0.5,
+        "max_value": 1.0
+      }
+    ]
+  },
+  "generator.g_shooting_star": {
+    "name": "g_shooting_star",
+    "type": "generator",
+    "version": 1,
+    "parameters": [
+      {
+        "index": 0,
+        "variable_name": "add_wait",
+        "display_label": "'wait frames'",
+        "display_value": "self.add_wait",
+        "assignment_code": "int(args[0]*10+1)",
+        "value_type": "numeric",
+        "categories": [],
+        "min_value": 1.0,
+        "max_value": 11.0
+      },
+      {
+        "index": 1,
+        "variable_name": "steps",
+        "display_label": "'speed'",
+        "display_value": "20-self.steps",
+        "assignment_code": "20-int(args[1]*18)",
+        "value_type": "numeric",
+        "categories": [],
+        "min_value": 0,
+        "max_value": 18
+      },
+      {
+        "index": 2,
+        "variable_name": "mode",
+        "display_label": "'mode'",
+        "display_value": "self.mode",
+        "assignment_code": "['in', 'out', 'through', 'top'][int(args[2]*3)]",
+        "value_type": "category",
+        "categories": [
+          "in",
+          "out",
+          "through",
+          "top"
+        ],
+        "min_value": null,
+        "max_value": null
+      },
+      {
+        "index": 3,
+        "variable_name": "channel",
+        "display_label": "'channel'",
+        "display_value": "self.channel",
+        "assignment_code": "['noS2L', 0, 1, 2, 3, 'Trigger'][int(args[3]*5)]",
+        "value_type": "category",
+        "categories": [
+          "noS2L",
+          0,
+          1,
+          2,
+          3,
+          "Trigger"
+        ],
+        "min_value": null,
+        "max_value": null
+      }
+    ]
+  },
+  "generator.g_side_squares": {
+    "name": "g_side_squares",
+    "type": "generator",
+    "version": 1,
+    "parameters": [
+      {
+        "index": 0,
+        "variable_name": "inside",
+        "display_label": "'inside'",
+        "display_value": "'On' if self.inside else 'Off'",
+        "assignment_code": "args[0] > 0.5",
+        "value_type": "boolean",
+        "categories": [],
+        "min_value": 0,
+        "max_value": 1
+      },
+      {
+        "index": 1,
+        "variable_name": "channel",
+        "display_label": "'channel'",
+        "display_value": "self.channel",
+        "assignment_code": "['noS2L', 0, 1, 2, 3, 'Trigger'][int(args[1]*5)]",
+        "value_type": "category",
+        "categories": [
+          "noS2L",
+          0,
+          1,
+          2,
+          3,
+          "Trigger"
+        ],
+        "min_value": null,
+        "max_value": null
+      },
+      {
+        "index": 2,
+        "variable_name": "reset",
+        "display_label": "'S2L reset'",
+        "display_value": "'-' if self.channel == 'noS2L' else self.reset",
+        "assignment_code": "int(args[2]*9+1)",
+        "value_type": "numeric",
+        "categories": [],
+        "min_value": 1.0,
+        "max_value": 10.0
+      },
+      {
+        "index": 3,
+        "variable_name": "number",
+        "display_label": "'S2L number'",
+        "display_value": "'-' if self.channel == 'noS2L' else self.number",
+        "assignment_code": "int(args[3]*12 + 1)",
+        "value_type": "numeric",
+        "categories": [],
+        "min_value": 1.0,
+        "max_value": 13.0
+      }
+    ]
+  },
+  "generator.g_sides": {
+    "name": "g_sides",
+    "type": "generator",
+    "version": 1,
+    "parameters": [
+      {
+        "index": 0,
+        "variable_name": "size",
+        "display_label": "'Size'",
+        "display_value": "round(self.size,2)",
+        "assignment_code": "round(args[0]*4)",
+        "value_type": "numeric",
+        "categories": [],
+        "min_value": 0.0,
+        "max_value": 4.0
+      },
+      {
+        "index": 1,
+        "variable_name": "reset",
+        "display_label": "'Wait'",
+        "display_value": "round(self.reset,2)",
+        "assignment_code": "int(args[1]*10+1)",
+        "value_type": "numeric",
+        "categories": [],
+        "min_value": 1.0,
+        "max_value": 11.0
+      },
+      {
+        "index": 2,
+        "variable_name": "randomcolor",
+        "display_label": "'Color'",
+        "display_value": "'On' if self.randomcolor else 'Off'",
+        "assignment_code": "args[2] > 0.5",
+        "value_type": "boolean",
+        "categories": [],
+        "min_value": 0,
+        "max_value": 1
+      },
+      {
+        "index": 3,
+        "variable_name": "channel",
+        "display_label": "'Channel'",
+        "display_value": "self.channel",
+        "assignment_code": "['noS2L', 0, 1, 2, 3, 'Trigger'][int(args[3]*5)]",
+        "value_type": "category",
+        "categories": [
+          "noS2L",
+          0,
+          1,
+          2,
+          3,
+          "Trigger"
+        ],
+        "min_value": null,
+        "max_value": null
+      }
+    ]
+  },
+  "generator.g_sinus": {
+    "name": "g_sinus",
+    "type": "generator",
+    "version": 1,
+    "parameters": [
+      {
+        "index": 0,
+        "variable_name": "freq1",
+        "display_label": "'FreqY'",
+        "display_value": "round(self.freq1,2)",
+        "assignment_code": "args[0]",
+        "value_type": "numeric",
+        "categories": [],
+        "min_value": 0.0,
+        "max_value": 1.0
+      },
+      {
+        "index": 1,
+        "variable_name": "freq2",
+        "display_label": "'FreqZ'",
+        "display_value": "round(self.freq2,2)",
+        "assignment_code": "args[1]",
+        "value_type": "numeric",
+        "categories": [],
+        "min_value": 0.0,
+        "max_value": 1.0
+      },
+      {
+        "index": 2,
+        "variable_name": "stepincrease",
+        "display_label": "'step'",
+        "display_value": "round(self.stepincrease,2)",
+        "assignment_code": "args[2]*0.5",
+        "value_type": "numeric",
+        "categories": [],
+        "min_value": 0.0,
+        "max_value": 0.5
+      },
+      {
+        "index": 3,
+        "variable_name": "channel",
+        "display_label": "'channel'",
+        "display_value": "str(self.channel)",
+        "assignment_code": "['noS2L', 0, 1, 2, 3, 'Trigger'][int(args[3]*5)]",
+        "value_type": "category",
+        "categories": [
+          "noS2L",
+          0,
+          1,
+          2,
+          3,
+          "Trigger"
+        ],
+        "min_value": null,
+        "max_value": null
+      }
+    ]
+  },
+  "generator.g_snake": {
+    "name": "g_snake",
+    "type": "generator",
+    "version": 1,
+    "parameters": [
+      {
+        "index": 0,
+        "variable_name": "turnprop",
+        "display_label": "'turn'",
+        "display_value": "round(self.turnprop,2)",
+        "assignment_code": "1-args[0]",
+        "value_type": "numeric",
+        "categories": [],
+        "min_value": 0.0,
+        "max_value": 1.0
+      },
+      {
+        "index": 1,
+        "variable_name": "channel",
+        "display_label": "'channel'",
+        "display_value": "self.channel",
+        "assignment_code": "['noS2L', 0, 1, 2, 3, 'Trigger'][int(args[1]*5)]",
+        "value_type": "category",
+        "categories": [
+          "noS2L",
+          0,
+          1,
+          2,
+          3,
+          "Trigger"
+        ],
+        "min_value": null,
+        "max_value": null
+      }
+    ]
+  },
+  "generator.g_sound_ellipsoid": {
+    "name": "g_sound_ellipsoid",
+    "type": "generator",
+    "version": 1,
+    "parameters": [
+      {
+        "index": 0,
+        "variable_name": "xsize",
+        "display_label": "'amount x'",
+        "display_value": "round(self.xsize)",
+        "assignment_code": "args[0]*7+1.0",
+        "value_type": "numeric",
+        "categories": [],
+        "min_value": 1.0,
+        "max_value": 8.0
+      },
+      {
+        "index": 1,
+        "variable_name": "ysize",
+        "display_label": "'amount y'",
+        "display_value": "round(self.ysize)",
+        "assignment_code": "args[1]*7+1.0",
+        "value_type": "numeric",
+        "categories": [],
+        "min_value": 1.0,
+        "max_value": 8.0
+      },
+      {
+        "index": 2,
+        "variable_name": "zsize",
+        "display_label": "'amount z'",
+        "display_value": "round(self.zsize)",
+        "assignment_code": "args[2]*7+1.0",
+        "value_type": "numeric",
+        "categories": [],
+        "min_value": 1.0,
+        "max_value": 8.0
+      }
+    ]
+  },
+  "generator.g_sound_lines": {
+    "name": "g_sound_lines",
+    "type": "generator",
+    "version": 1,
+    "parameters": [
+      {
+        "index": 0,
+        "variable_name": "number",
+        "display_label": "'number'",
+        "display_value": "round(self.number,2)",
+        "assignment_code": "int(args[0]*15)",
+        "value_type": "numeric",
+        "categories": [],
+        "min_value": 0,
+        "max_value": 15
+      },
+      {
+        "index": 1,
+        "variable_name": "reset",
+        "display_label": "'Wait'",
+        "display_value": "round(self.reset,2)",
+        "assignment_code": "args[1]*20+1",
+        "value_type": "numeric",
+        "categories": [],
+        "min_value": 1.0,
+        "max_value": 21.0
+      },
+      {
+        "index": 2,
+        "variable_name": "randomcolor",
+        "display_label": "'Color'",
+        "display_value": "'On' if self.randomcolor else 'Off'",
+        "assignment_code": "args[2] > 0.5",
+        "value_type": "boolean",
+        "categories": [],
+        "min_value": 0,
+        "max_value": 1
+      },
+      {
+        "index": 3,
+        "variable_name": "channel",
+        "display_label": "'Channel'",
+        "display_value": "self.channel",
+        "assignment_code": "[0, 1, 2, 3, 'Trigger'][int(args[3]*4)]",
+        "value_type": "category",
+        "categories": [
+          0,
+          1,
+          2,
+          3,
+          "Trigger"
+        ],
+        "min_value": null,
+        "max_value": null
+      }
+    ]
+  },
+  "generator.g_sound_sinus": {
+    "name": "g_sound_sinus",
+    "type": "generator",
+    "version": 1,
+    "parameters": [
+      {
+        "index": 0,
+        "variable_name": "speed",
+        "display_label": "'speed'",
+        "display_value": "round(self.speed,2)",
+        "assignment_code": "args[0]",
+        "value_type": "numeric",
+        "categories": [],
+        "min_value": 0.0,
+        "max_value": 1.0
+      }
+    ]
+  },
+  "generator.g_sphere": {
+    "name": "g_sphere",
+    "type": "generator",
+    "version": 1,
+    "parameters": [
+      {
+        "index": 0,
+        "variable_name": "maxsize",
+        "display_label": "'maxsize'",
+        "display_value": "round(self.maxsize,2)",
+        "assignment_code": "args[0]*10",
+        "value_type": "numeric",
+        "categories": [],
+        "min_value": 0.0,
+        "max_value": 10.0
+      },
+      {
+        "index": 1,
+        "variable_name": "growspeed",
+        "display_label": "'speed'",
+        "display_value": "round(self.growspeed,2)",
+        "assignment_code": "args[1]",
+        "value_type": "numeric",
+        "categories": [],
+        "min_value": 0.0,
+        "max_value": 1.0
+      },
+      {
+        "index": 2,
+        "variable_name": "oscillate",
+        "display_label": "'smooth' if isinstance(self.channel, int) else 'shape'",
+        "display_value": "round(self.smooth,2) if isinstance(self.channel, int) else self.oscillate",
+        "assignment_code": "['sin', 'explode', 'implode'][round(args[2]*2)]",
+        "value_type": "category",
+        "categories": [
+          "sin",
+          "explode",
+          "implode"
+        ],
+        "min_value": null,
+        "max_value": null
+      },
+      {
+        "index": 3,
+        "variable_name": "channel",
+        "display_label": "'channel'",
+        "display_value": "self.channel",
+        "assignment_code": "['noS2L', 0, 1, 2, 3, 'Trigger', 'Trigger2'][int(args[3]*6)]",
+        "value_type": "category",
+        "categories": [
+          "noS2L",
+          0,
+          1,
+          2,
+          3,
+          "Trigger",
+          "Trigger2"
+        ],
+        "min_value": null,
+        "max_value": null
+      }
+    ]
+  },
+  "generator.g_square_equalizer": {
+    "name": "g_square_equalizer",
+    "type": "generator",
+    "version": 1,
+    "parameters": [
+      {
+        "index": 0,
+        "variable_name": "amount[0]",
+        "display_label": "'amount 1'",
+        "display_value": "round(self.amount[0],2)",
+        "assignment_code": "args[0]*15",
+        "value_type": "numeric",
+        "categories": [],
+        "min_value": 0.0,
+        "max_value": 15.0
+      },
+      {
+        "index": 1,
+        "variable_name": "amount[1]",
+        "display_label": "'amount 2'",
+        "display_value": "round(self.amount[1],2)",
+        "assignment_code": "args[1]*15",
+        "value_type": "numeric",
+        "categories": [],
+        "min_value": 0.0,
+        "max_value": 15.0
+      },
+      {
+        "index": 2,
+        "variable_name": "amount[2]",
+        "display_label": "'amount 3'",
+        "display_value": "round(self.amount[2],2)",
+        "assignment_code": "args[2]*15",
+        "value_type": "numeric",
+        "categories": [],
+        "min_value": 0.0,
+        "max_value": 15.0
+      },
+      {
+        "index": 3,
+        "variable_name": "amount[3]",
+        "display_label": "'amount 4'",
+        "display_value": "round(self.amount[3],2)",
+        "assignment_code": "args[3]*15",
+        "value_type": "numeric",
+        "categories": [],
+        "min_value": 0.0,
+        "max_value": 15.0
+      }
+    ]
+  },
+  "generator.g_squares": {
+    "name": "g_squares",
+    "type": "generator",
+    "version": 1,
+    "parameters": [
+      {
+        "index": 0,
+        "variable_name": "speed",
+        "display_label": "'speed'",
+        "display_value": "round(self.speed,2)",
+        "assignment_code": "int(args[0]*8) + 1",
+        "value_type": "numeric",
+        "categories": [],
+        "min_value": 1.0,
+        "max_value": 9.0
+      },
+      {
+        "index": 1,
+        "variable_name": "dir",
+        "display_label": "'dir'",
+        "display_value": "self.dir",
+        "assignment_code": "['X', 'Y', 'Z'][int(round(args[1]*2))]",
+        "value_type": "category",
+        "categories": [
+          "X",
+          "Y",
+          "Z"
+        ],
+        "min_value": null,
+        "max_value": null
+      },
+      {
+        "index": 2,
+        "variable_name": "type",
+        "display_label": "'type'",
+        "display_value": "self.type",
+        "assignment_code": "['cos', 'up', 'down'][int(round(args[2]*2))]",
+        "value_type": "category",
+        "categories": [
+          "cos",
+          "up",
+          "down"
+        ],
+        "min_value": null,
+        "max_value": null
+      },
+      {
+        "index": 3,
+        "variable_name": "trigger",
+        "display_label": "'Trigger'",
+        "display_value": "'On' if self.trigger else 'Off'",
+        "assignment_code": "args[3] >= 0.5",
+        "value_type": "boolean",
+        "categories": [],
+        "min_value": 0,
+        "max_value": 1
+      },
+      {
+        "index": 4,
+        "variable_name": "pause",
+        "display_label": "'pause'",
+        "display_value": "round(self.pause, 2)",
+        "assignment_code": "int(round((args[4]* 30) + 1))",
+        "value_type": "numeric",
+        "categories": [],
+        "min_value": 1.0,
+        "max_value": 31.0
+      }
+    ]
+  },
+  "generator.g_stacking": {
+    "name": "g_stacking",
+    "type": "generator",
+    "version": 1,
+    "parameters": [
+      {
+        "index": 0,
+        "variable_name": "n",
+        "display_label": "'number'",
+        "display_value": "self.n",
+        "assignment_code": "int(args[0]*200)+1",
+        "value_type": "numeric",
+        "categories": [],
+        "min_value": 1.0,
+        "max_value": 201.0
+      },
+      {
+        "index": 1,
+        "variable_name": "lifetime",
+        "display_label": "'lifetime'",
+        "display_value": "self.lifetime",
+        "assignment_code": "int(args[1]*50) + 5",
+        "value_type": "numeric",
+        "categories": [],
+        "min_value": 5.0,
+        "max_value": 55.0
+      }
+    ]
+  },
+  "generator.g_torus": {
+    "name": "g_torus",
+    "type": "generator",
+    "version": 1,
+    "parameters": [
+      {
+        "index": 0,
+        "variable_name": "radius",
+        "display_label": "'radius'",
+        "display_value": "round(self.radius,2)",
+        "assignment_code": "args[0]*8",
+        "value_type": "numeric",
+        "categories": [],
+        "min_value": 0.0,
+        "max_value": 8.0
+      },
+      {
+        "index": 1,
+        "variable_name": "thickness",
+        "display_label": "'thickness'",
+        "display_value": "round(self.thickness,2)",
+        "assignment_code": "args[1]*3",
+        "value_type": "numeric",
+        "categories": [],
+        "min_value": 0.0,
+        "max_value": 3.0
+      },
+      {
+        "index": 2,
+        "variable_name": "channel",
+        "display_label": "'channel'",
+        "display_value": "self.channel",
+        "assignment_code": "['noS2L', 0, 1, 2, 3, 'Trigger'][int(args[2]*5)]",
+        "value_type": "category",
+        "categories": [
+          "noS2L",
+          0,
+          1,
+          2,
+          3,
+          "Trigger"
+        ],
+        "min_value": null,
+        "max_value": null
+      }
+    ]
+  },
+  "generator.g_trees": {
+    "name": "g_trees",
+    "type": "generator",
+    "version": 1,
+    "parameters": [
+      {
+        "index": 0,
+        "variable_name": "nled",
+        "display_label": "'N LEDs'",
+        "display_value": "round(self.nled,2)",
+        "assignment_code": "int(round(args[0]*4)+1)",
+        "value_type": "numeric",
+        "categories": [],
+        "min_value": 1.0,
+        "max_value": 5.0
+      },
+      {
+        "index": 1,
+        "variable_name": "speed",
+        "display_label": "'speed'",
+        "display_value": "round(self.speed,2)",
+        "assignment_code": "5-int((args[1]*4))",
+        "value_type": "numeric",
+        "categories": [],
+        "min_value": 0,
+        "max_value": 4
+      },
+      {
+        "index": 2,
+        "variable_name": "reset",
+        "display_label": "'wait'",
+        "display_value": "round(self.reset,2)",
+        "assignment_code": "int(args[2]*5+1)",
+        "value_type": "numeric",
+        "categories": [],
+        "min_value": 1.0,
+        "max_value": 6.0
+      },
+      {
+        "index": 3,
+        "variable_name": "trigger",
+        "display_label": "'Trigger'",
+        "display_value": "self.trigger",
+        "assignment_code": "['off', 'number', 'speed'][int(args[3]*2)]",
+        "value_type": "category",
+        "categories": [
+          "off",
+          "number",
+          "speed"
+        ],
+        "min_value": null,
+        "max_value": null
+      }
+    ]
+  },
+  "generator.g_wave": {
+    "name": "g_wave",
+    "type": "generator",
+    "version": 1,
+    "parameters": [
+      {
+        "index": 0,
+        "variable_name": "sigma",
+        "display_label": "'sigma'",
+        "display_value": "round(self.sigma,2)",
+        "assignment_code": "args[0]*1.4+0.2",
+        "value_type": "numeric",
+        "categories": [],
+        "min_value": 0.2,
+        "max_value": 1.5999999999999999
+      },
+      {
+        "index": 1,
+        "variable_name": "speed",
+        "display_label": "'speed'",
+        "display_value": "round(self.speed,2)",
+        "assignment_code": "args[1]*2.5+0.4",
+        "value_type": "numeric",
+        "categories": [],
+        "min_value": 0.4,
+        "max_value": 2.9
+      },
+      {
+        "index": 2,
+        "variable_name": "channel",
+        "display_label": "'channel'",
+        "display_value": "self.channel",
+        "assignment_code": "['noS2L', 0, 1, 2, 3, 'Trigger'][int(args[2]*5)]",
+        "value_type": "category",
+        "categories": [
+          "noS2L",
+          0,
+          1,
+          2,
+          3,
+          "Trigger"
+        ],
+        "min_value": null,
+        "max_value": null
+      }
+    ]
+  },
+  "effect.e_black_color_white": {
+    "name": "e_black_color_white",
+    "type": "effect",
+    "version": 1,
+    "parameters": [
+      {
+        "index": 0,
+        "variable_name": "color",
+        "display_label": "'color'",
+        "display_value": "round(self.color,1)",
+        "assignment_code": "args[0]",
+        "value_type": "numeric",
+        "categories": [],
+        "min_value": 0.0,
+        "max_value": 1.0
+      },
+      {
+        "index": 1,
+        "variable_name": "damping",
+        "display_label": "'damping'",
+        "display_value": "round(self.damping,1)",
+        "assignment_code": "args[1]*0.5",
+        "value_type": "numeric",
+        "categories": [],
+        "min_value": 0.0,
+        "max_value": 0.5
+      }
+    ]
+  },
+  "effect.e_break_fade": {
+    "name": "e_break_fade",
+    "type": "effect",
+    "version": 1,
+    "parameters": [
+      {
+        "index": 0,
+        "variable_name": "fade",
+        "display_label": "'fade in break'",
+        "display_value": "round(self.fade, 2)",
+        "assignment_code": "args[0]",
+        "value_type": "numeric",
+        "categories": [],
+        "min_value": 0.0,
+        "max_value": 1.0
+      },
+      {
+        "index": 1,
+        "variable_name": "s2l",
+        "display_label": "'s2l in beat'",
+        "display_value": "round(self.s2l, 2)",
+        "assignment_code": "args[1]",
+        "value_type": "numeric",
+        "categories": [],
+        "min_value": 0.0,
+        "max_value": 1.0
+      }
+    ]
+  },
+  "effect.e_bright_mod": {
+    "name": "e_bright_mod",
+    "type": "effect",
+    "version": 1,
+    "parameters": [
+      {
+        "index": 0,
+        "variable_name": "speed",
+        "display_label": "'speed'",
+        "display_value": "round(self.speed,2)",
+        "assignment_code": "args[0] * 0.1 + 0.001",
+        "value_type": "numeric",
+        "categories": [],
+        "min_value": 0.001,
+        "max_value": 0.101
+      },
+      {
+        "index": 1,
+        "variable_name": "amount",
+        "display_label": "'amount'",
+        "display_value": "round(self.amount,2)",
+        "assignment_code": "args[1]",
+        "value_type": "numeric",
+        "categories": [],
+        "min_value": 0.0,
+        "max_value": 1.0
+      },
+      {
+        "index": 2,
+        "variable_name": "channel",
+        "display_label": "'channel'",
+        "display_value": "self.channel",
+        "assignment_code": "['noS2L', 0, 1, 2, 3, 'Trigger'][round(args[2] * 5)]",
+        "value_type": "numeric",
+        "categories": [],
+        "min_value": 0.0,
+        "max_value": 5.0
+      }
+    ]
+  },
+  "effect.e_bright_osci": {
+    "name": "e_bright_osci",
+    "type": "effect",
+    "version": 1,
+    "parameters": [
+      {
+        "index": 0,
+        "variable_name": "speed",
+        "display_label": "'speed'",
+        "display_value": "round(self.speed,2)",
+        "assignment_code": "args[0]",
+        "value_type": "numeric",
+        "categories": [],
+        "min_value": 0.0,
+        "max_value": 1.0
+      },
+      {
+        "index": 1,
+        "variable_name": "shape",
+        "display_label": "'shape'",
+        "display_value": "round(self.shape,2)",
+        "assignment_code": "args[1]*3+0.01",
+        "value_type": "numeric",
+        "categories": [],
+        "min_value": 0.01,
+        "max_value": 3.01
+      },
+      {
+        "index": 2,
+        "variable_name": "amount",
+        "display_label": "'amount'",
+        "display_value": "round(self.amount,2)",
+        "assignment_code": "args[2]",
+        "value_type": "numeric",
+        "categories": [],
+        "min_value": 0.0,
+        "max_value": 1.0
+      },
+      {
+        "index": 3,
+        "variable_name": "channel",
+        "display_label": "'channel'",
+        "display_value": "self.channel",
+        "assignment_code": "['noS2L', 0, 1, 2, 3][round(args[3]*4)]",
+        "value_type": "category",
+        "categories": [
+          "noS2L",
+          0,
+          1,
+          2,
+          3
+        ],
+        "min_value": null,
+        "max_value": null
+      }
+    ]
+  },
+  "effect.e_brightness_wave": {
+    "name": "e_brightness_wave",
+    "type": "effect",
+    "version": 1,
+    "parameters": [
+      {
+        "index": 0,
+        "variable_name": "freq1",
+        "display_label": "'FreqY'",
+        "display_value": "round(self.freq1,2)",
+        "assignment_code": "args[0]",
+        "value_type": "numeric",
+        "categories": [],
+        "min_value": 0.0,
+        "max_value": 1.0
+      },
+      {
+        "index": 1,
+        "variable_name": "freq2",
+        "display_label": "'FreqZ'",
+        "display_value": "round(self.freq2,2)",
+        "assignment_code": "args[1]",
+        "value_type": "numeric",
+        "categories": [],
+        "min_value": 0.0,
+        "max_value": 1.0
+      },
+      {
+        "index": 2,
+        "variable_name": "stepincrease",
+        "display_label": "'step'",
+        "display_value": "round(self.stepincrease,2)",
+        "assignment_code": "args[2]*0.5",
+        "value_type": "numeric",
+        "categories": [],
+        "min_value": 0.0,
+        "max_value": 0.5
+      },
+      {
+        "index": 3,
+        "variable_name": "channel",
+        "display_label": "'channel'",
+        "display_value": "self.channel",
+        "assignment_code": "['noS2L', 0, 1, 2, 3, 'Trigger'][round(args[3]*5)]",
+        "value_type": "category",
+        "categories": [
+          "noS2L",
+          0,
+          1,
+          2,
+          3,
+          "Trigger"
+        ],
+        "min_value": null,
+        "max_value": null
+      }
+    ]
+  },
+  "effect.e_color_fade": {
+    "name": "e_color_fade",
+    "type": "effect",
+    "version": 1,
+    "parameters": [
+      {
+        "index": 0,
+        "variable_name": "speed",
+        "display_label": "'speed'",
+        "display_value": "round(self.speed,2)",
+        "assignment_code": "args[0]",
+        "value_type": "numeric",
+        "categories": [],
+        "min_value": 0.0,
+        "max_value": 1.0
+      },
+      {
+        "index": 1,
+        "variable_name": "color1",
+        "display_label": "'Color 1'",
+        "display_value": "round(self.color1,1)",
+        "assignment_code": "args[1]",
+        "value_type": "numeric",
+        "categories": [],
+        "min_value": 0.0,
+        "max_value": 1.0
+      },
+      {
+        "index": 2,
+        "variable_name": "color2",
+        "display_label": "'Color 2'",
+        "display_value": "round(self.color2,1)",
+        "assignment_code": "args[2]",
+        "value_type": "numeric",
+        "categories": [],
+        "min_value": 0.0,
+        "max_value": 1.0
+      },
+      {
+        "index": 3,
+        "variable_name": "channel",
+        "display_label": "'channel'",
+        "display_value": "self.channel",
+        "assignment_code": "['noS2L', 0, 1, 2, 3, 'Trigger'][round(args[3]*5)]",
+        "value_type": "category",
+        "categories": [
+          "noS2L",
+          0,
+          1,
+          2,
+          3,
+          "Trigger"
+        ],
+        "min_value": null,
+        "max_value": null
+      }
+    ]
+  },
+  "effect.e_compressor": {
+    "name": "e_compressor",
+    "type": "effect",
+    "version": 1,
+    "parameters": [
+      {
+        "index": 0,
+        "variable_name": "amount",
+        "display_label": "'Amount'",
+        "display_value": "round(self.amount,1)",
+        "assignment_code": "args[0]",
+        "value_type": "numeric",
+        "categories": [],
+        "min_value": 0.0,
+        "max_value": 1.0
+      },
+      {
+        "index": 1,
+        "variable_name": "smooth",
+        "display_label": "'Smooth'",
+        "display_value": "round(self.smooth,1)",
+        "assignment_code": "args[1]",
+        "value_type": "numeric",
+        "categories": [],
+        "min_value": 0.0,
+        "max_value": 1.0
+      }
+    ]
+  },
+  "effect.e_fade": {
+    "name": "e_fade",
+    "type": "effect",
+    "version": 1,
+    "parameters": [
+      {
+        "index": 0,
+        "variable_name": "amount",
+        "display_label": "'amount'",
+        "display_value": "round(self.amount, 1)",
+        "assignment_code": "args[0]",
+        "value_type": "numeric",
+        "categories": [],
+        "min_value": 0.0,
+        "max_value": 1.0
+      },
+      {
+        "index": 1,
+        "variable_name": "channel",
+        "display_label": "'channel'",
+        "display_value": "self.channel",
+        "assignment_code": "['noS2L', 0, 1, 2, 3][round(args[1]*4)]",
+        "value_type": "category",
+        "categories": [
+          "noS2L",
+          0,
+          1,
+          2,
+          3
+        ],
+        "min_value": null,
+        "max_value": null
+      },
+      {
+        "index": 2,
+        "variable_name": "invert",
+        "display_label": "'invert'",
+        "display_value": "'On' if self.invert else 'Off'",
+        "assignment_code": "args[2] > 0.5",
+        "value_type": "boolean",
+        "categories": [],
+        "min_value": 0,
+        "max_value": 1
+      }
+    ]
+  },
+  "effect.e_invert": {
+    "name": "e_invert",
+    "type": "effect",
+    "version": 1,
+    "parameters": [
+      {
+        "index": 0,
+        "variable_name": "on",
+        "display_label": "'ON'",
+        "display_value": "str(self.on)",
+        "assignment_code": "args[0] > 0.5",
+        "value_type": "boolean",
+        "categories": [],
+        "min_value": 0,
+        "max_value": 1
+      }
+    ]
+  },
+  "effect.e_lfo_hsv": {
+    "name": "e_lfo_hsv",
+    "type": "effect",
+    "version": 1,
+    "parameters": [
+      {
+        "index": 0,
+        "variable_name": "amount_h",
+        "display_label": "'amount hue'",
+        "display_value": "round(self.amount_h,1)",
+        "assignment_code": "round(args[0]*0.5, 1)",
+        "value_type": "numeric",
+        "categories": [],
+        "min_value": 0.0,
+        "max_value": 0.5
+      },
+      {
+        "index": 1,
+        "variable_name": "amount_s",
+        "display_label": "'amount sat'",
+        "display_value": "round(self.amount_s,1)",
+        "assignment_code": "round(args[1]*2 - 1.0, 1)",
+        "value_type": "numeric",
+        "categories": [],
+        "min_value": -1.0,
+        "max_value": 1.0
+      },
+      {
+        "index": 2,
+        "variable_name": "amount_v",
+        "display_label": "'amount val'",
+        "display_value": "round(self.amount_v,1)",
+        "assignment_code": "round(args[2]*1.8 - 0.9, 1)",
+        "value_type": "numeric",
+        "categories": [],
+        "min_value": -0.9,
+        "max_value": 0.9
+      },
+      {
+        "index": 3,
+        "variable_name": "speed",
+        "display_label": "'speed'",
+        "display_value": "round(self.speed,1)",
+        "assignment_code": "args[3]*3+1E-2",
+        "value_type": "numeric",
+        "categories": [],
+        "min_value": 1.0,
+        "max_value": 4.0
+      }
+    ]
+  },
+  "effect.e_mean": {
+    "name": "e_mean",
+    "type": "effect",
+    "version": 1,
+    "parameters": [
+      {
+        "index": 0,
+        "variable_name": "amount",
+        "display_label": "'amount'",
+        "display_value": "round(self.amount, 1)",
+        "assignment_code": "args[0]",
+        "value_type": "numeric",
+        "categories": [],
+        "min_value": 0.0,
+        "max_value": 1.0
+      },
+      {
+        "index": 1,
+        "variable_name": "direction",
+        "display_label": "'direction'",
+        "display_value": "self.direction",
+        "assignment_code": "['uniform', 'vertical', 'up', 'down'][int(args[1]*3)]",
+        "value_type": "category",
+        "categories": [
+          "uniform",
+          "vertical",
+          "up",
+          "down"
+        ],
+        "min_value": null,
+        "max_value": null
+      },
+      {
+        "index": 2,
+        "variable_name": "channel",
+        "display_label": "'channel'",
+        "display_value": "self.channel",
+        "assignment_code": "['Off', 0, 1, 2, 3][int(args[2]*4)]",
+        "value_type": "category",
+        "categories": [
+          "Off",
+          0,
+          1,
+          2,
+          3
+        ],
+        "min_value": null,
+        "max_value": null
+      }
+    ]
+  },
+  "effect.e_mirror": {
+    "name": "e_mirror",
+    "type": "effect",
+    "version": 1,
+    "parameters": [
+      {
+        "index": 0,
+        "variable_name": "naxis",
+        "display_label": "'# of axes'",
+        "display_value": "self.naxis",
+        "assignment_code": "int(args[0]*2 +1)",
+        "value_type": "numeric",
+        "categories": [],
+        "min_value": 1.0,
+        "max_value": 3.0
+      },
+      {
+        "index": 1,
+        "variable_name": "steps",
+        "display_label": "'steps'",
+        "display_value": "int(self.steps)",
+        "assignment_code": "int(args[1]*8)",
+        "value_type": "numeric",
+        "categories": [],
+        "min_value": 0,
+        "max_value": 8
+      },
+      {
+        "index": 2,
+        "variable_name": "mode",
+        "display_label": "'mode'",
+        "display_value": "self.mode",
+        "assignment_code": "['mirror', 'point'][round(args[2])]",
+        "value_type": "numeric",
+        "categories": [],
+        "min_value": 0.0,
+        "max_value": 1.0
+      },
+      {
+        "index": 3,
+        "variable_name": "trigger",
+        "display_label": "'s2l trigger'",
+        "display_value": "'On' if self.trigger else 'Off'",
+        "assignment_code": "args[3] > 0.5",
+        "value_type": "boolean",
+        "categories": [],
+        "min_value": 0,
+        "max_value": 1
+      }
+    ]
+  },
+  "effect.e_outer_shadow": {
+    "name": "e_outer_shadow",
+    "type": "effect",
+    "version": 1,
+    "parameters": [
+      {
+        "index": 0,
+        "variable_name": "exponent",
+        "display_label": "'exponent'",
+        "display_value": "round(self.exponent,2)",
+        "assignment_code": "args[0]*3+1",
+        "value_type": "numeric",
+        "categories": [],
+        "min_value": 1.0,
+        "max_value": 4.0
+      },
+      {
+        "index": 1,
+        "variable_name": "amount",
+        "display_label": "'amount'",
+        "display_value": "round(self.amount,2)",
+        "assignment_code": "args[1]",
+        "value_type": "numeric",
+        "categories": [],
+        "min_value": 0.0,
+        "max_value": 1.0
+      },
+      {
+        "index": 2,
+        "variable_name": "channel",
+        "display_label": "'channel'",
+        "display_value": "str(self.channel)",
+        "assignment_code": "['noS2L', 0, 1, 2, 3, 'Trigger'][round(args[2]*5)]",
+        "value_type": "category",
+        "categories": [
+          "noS2L",
+          0,
+          1,
+          2,
+          3,
+          "Trigger"
+        ],
+        "min_value": null,
+        "max_value": null
+      }
+    ]
+  },
+  "effect.e_random_brightness": {
+    "name": "e_random_brightness",
+    "type": "effect",
+    "version": 1,
+    "parameters": [
+      {
+        "index": 0,
+        "variable_name": "speed",
+        "display_label": "'speed'",
+        "display_value": "round(11 - self.speed,1)",
+        "assignment_code": "11 - int(args[0]*10)",
+        "value_type": "numeric",
+        "categories": [],
+        "min_value": 0,
+        "max_value": 10
+      },
+      {
+        "index": 1,
+        "variable_name": "trigger",
+        "display_label": "'trigger'",
+        "display_value": "str(self.trigger)",
+        "assignment_code": "args[1] > 0.1",
+        "value_type": "boolean",
+        "categories": [],
+        "min_value": 0,
+        "max_value": 1
+      }
+    ]
+  },
+  "effect.e_randomizer": {
+    "name": "e_randomizer",
+    "type": "effect",
+    "version": 1,
+    "parameters": [
+      {
+        "index": 0,
+        "variable_name": "amount",
+        "display_label": "'amount'",
+        "display_value": "round(self.amount,1)",
+        "assignment_code": "args[0]",
+        "value_type": "numeric",
+        "categories": [],
+        "min_value": 0.0,
+        "max_value": 1.0
+      },
+      {
+        "index": 1,
+        "variable_name": "channel",
+        "display_label": "'channel'",
+        "display_value": "self.channel",
+        "assignment_code": "['noS2L', 0, 1, 2, 3][round(args[1]*4)]",
+        "value_type": "category",
+        "categories": [
+          "noS2L",
+          0,
+          1,
+          2,
+          3
+        ],
+        "min_value": null,
+        "max_value": null
+      }
+    ]
+  },
+  "effect.e_rare_strobo": {
+    "name": "e_rare_strobo",
+    "type": "effect",
+    "version": 1,
+    "parameters": [
+      {
+        "index": 0,
+        "variable_name": "waiting_frames",
+        "display_label": "'Wait #'",
+        "display_value": "self.waiting_frames",
+        "assignment_code": "int(args[0]*300)+50",
+        "value_type": "numeric",
+        "categories": [],
+        "min_value": 50.0,
+        "max_value": 350.0
+      },
+      {
+        "index": 1,
+        "variable_name": "strobo_frames",
+        "display_label": "'Strobo #'",
+        "display_value": "self.strobo_frames",
+        "assignment_code": "int(args[1]*20)+2",
+        "value_type": "numeric",
+        "categories": [],
+        "min_value": 2.0,
+        "max_value": 22.0
+      },
+      {
+        "index": 2,
+        "variable_name": "disp_prop",
+        "display_label": "'MovProb'",
+        "display_value": "round(self.disp_prop,1)",
+        "assignment_code": "args[2]*0.5",
+        "value_type": "numeric",
+        "categories": [],
+        "min_value": 0.0,
+        "max_value": 0.5
+      },
+      {
+        "index": 3,
+        "variable_name": "mode",
+        "display_label": "'Mode'",
+        "display_value": "self.mode",
+        "assignment_code": "['normal', 'invert'][round(args[3])]",
+        "value_type": "numeric",
+        "categories": [],
+        "min_value": 0.0,
+        "max_value": 1.0
+      }
+    ]
+  },
+  "effect.e_roll": {
+    "name": "e_roll",
+    "type": "effect",
+    "version": 1,
+    "parameters": [
+      {
+        "index": 0,
+        "variable_name": "freq",
+        "display_label": "'freq'",
+        "display_value": "round(self.freq,0)",
+        "assignment_code": "int(args[0]*10+1)",
+        "value_type": "numeric",
+        "categories": [],
+        "min_value": 1.0,
+        "max_value": 11.0
+      },
+      {
+        "index": 1,
+        "variable_name": "keep",
+        "display_label": "'keep old'",
+        "display_value": "str(self.keep)",
+        "assignment_code": "args[1] > 0.5",
+        "value_type": "boolean",
+        "categories": [],
+        "min_value": 0,
+        "max_value": 1
+      },
+      {
+        "index": 2,
+        "variable_name": "maxcounter",
+        "display_label": "'n frames'",
+        "display_value": "round(self.maxcounter,0)",
+        "assignment_code": "int(args[2]*10+1)",
+        "value_type": "numeric",
+        "categories": [],
+        "min_value": 1.0,
+        "max_value": 11.0
+      }
+    ]
+  },
+  "effect.e_rotate_plane": {
+    "name": "e_rotate_plane",
+    "type": "effect",
+    "version": 1,
+    "parameters": [
+      {
+        "index": 0,
+        "variable_name": "xspeed",
+        "display_label": "'X speed'",
+        "display_value": "round(self.xspeed,2)",
+        "assignment_code": "20*args[0]",
+        "value_type": "numeric",
+        "categories": [],
+        "min_value": 0.0,
+        "max_value": 1.0
+      },
+      {
+        "index": 1,
+        "variable_name": "yspeed",
+        "display_label": "'Y speed'",
+        "display_value": "round(self.yspeed,2)",
+        "assignment_code": "20*args[1]",
+        "value_type": "numeric",
+        "categories": [],
+        "min_value": 0.0,
+        "max_value": 1.0
+      },
+      {
+        "index": 2,
+        "variable_name": "zspeed",
+        "display_label": "'Z speed'",
+        "display_value": "round(self.zspeed,2)",
+        "assignment_code": "20*args[2]",
+        "value_type": "numeric",
+        "categories": [],
+        "min_value": 0.0,
+        "max_value": 1.0
+      },
+      {
+        "index": 3,
+        "variable_name": "channel",
+        "display_label": "'channel'",
+        "display_value": "self.channel",
+        "assignment_code": "['noS2L', 0, 1, 2, 3, 'Trigger'][round(args[3]*5)]",
+        "value_type": "category",
+        "categories": [
+          "noS2L",
+          0,
+          1,
+          2,
+          3,
+          "Trigger"
+        ],
+        "min_value": null,
+        "max_value": null
+      }
+    ]
+  },
+  "effect.e_rotating_black_color": {
+    "name": "e_rotating_black_color",
+    "type": "effect",
+    "version": 1,
+    "parameters": [
+      {
+        "index": 0,
+        "variable_name": "xspeed",
+        "display_label": "'X speed'",
+        "display_value": "round(self.xspeed,1)",
+        "assignment_code": "args[0]*15+0.01",
+        "value_type": "numeric",
+        "categories": [],
+        "min_value": 0.01,
+        "max_value": 15.01
+      },
+      {
+        "index": 1,
+        "variable_name": "yspeed",
+        "display_label": "'Y speed'",
+        "display_value": "round(self.yspeed,1)",
+        "assignment_code": "args[1]*15",
+        "value_type": "numeric",
+        "categories": [],
+        "min_value": 0.0,
+        "max_value": 15.0
+      },
+      {
+        "index": 2,
+        "variable_name": "zspeed",
+        "display_label": "'Z speed'",
+        "display_value": "round(self.zspeed,1)",
+        "assignment_code": "args[2]*15",
+        "value_type": "numeric",
+        "categories": [],
+        "min_value": 0.0,
+        "max_value": 15.0
+      },
+      {
+        "index": 3,
+        "variable_name": "hue",
+        "display_label": "'R G B'",
+        "display_value": "str(round(self.color[0]*10)) + ' ' + str(round(self.color[1]*10)) + ' ' + str(round(self.color[2]*10))",
+        "assignment_code": "args[3]",
+        "value_type": "numeric",
+        "categories": [],
+        "min_value": 0.0,
+        "max_value": 1.0
+      }
+    ]
+  },
+  "effect.e_rotating_black_white": {
+    "name": "e_rotating_black_white",
+    "type": "effect",
+    "version": 1,
+    "parameters": [
+      {
+        "index": 0,
+        "variable_name": "xspeed",
+        "display_label": "'X speed'",
+        "display_value": "round(self.xspeed,1)",
+        "assignment_code": "args[0]*15+0.01",
+        "value_type": "numeric",
+        "categories": [],
+        "min_value": 0.01,
+        "max_value": 15.01
+      },
+      {
+        "index": 1,
+        "variable_name": "yspeed",
+        "display_label": "'Y speed'",
+        "display_value": "round(self.yspeed,1)",
+        "assignment_code": "args[1]*15",
+        "value_type": "numeric",
+        "categories": [],
+        "min_value": 0.0,
+        "max_value": 15.0
+      },
+      {
+        "index": 2,
+        "variable_name": "zspeed",
+        "display_label": "'Z speed'",
+        "display_value": "round(self.zspeed,1)",
+        "assignment_code": "args[2]*15",
+        "value_type": "numeric",
+        "categories": [],
+        "min_value": 0.0,
+        "max_value": 15.0
+      },
+      {
+        "index": 3,
+        "variable_name": "broad",
+        "display_label": "'broadening'",
+        "display_value": "round(self.broad, 1)",
+        "assignment_code": "args[3]",
+        "value_type": "numeric",
+        "categories": [],
+        "min_value": 0.0,
+        "max_value": 1.0
+      }
+    ]
+  },
+  "effect.e_rotating_fade": {
+    "name": "e_rotating_fade",
+    "type": "effect",
+    "version": 1,
+    "parameters": [
+      {
+        "index": 0,
+        "variable_name": "xspeed",
+        "display_label": "'X speed'",
+        "display_value": "round(self.xspeed,1)",
+        "assignment_code": "args[0]*15+0.01",
+        "value_type": "numeric",
+        "categories": [],
+        "min_value": 0.01,
+        "max_value": 15.01
+      },
+      {
+        "index": 1,
+        "variable_name": "yspeed",
+        "display_label": "'Y speed'",
+        "display_value": "round(self.yspeed,1)",
+        "assignment_code": "args[1]*15",
+        "value_type": "numeric",
+        "categories": [],
+        "min_value": 0.0,
+        "max_value": 15.0
+      },
+      {
+        "index": 2,
+        "variable_name": "zspeed",
+        "display_label": "'Z speed'",
+        "display_value": "round(self.zspeed,1)",
+        "assignment_code": "args[2]*15",
+        "value_type": "numeric",
+        "categories": [],
+        "min_value": 0.0,
+        "max_value": 15.0
+      },
+      {
+        "index": 3,
+        "variable_name": "amount",
+        "display_label": "'amount'",
+        "display_value": "round(self.amount,1)",
+        "assignment_code": "args[3]",
+        "value_type": "numeric",
+        "categories": [],
+        "min_value": 0.0,
+        "max_value": 1.0
+      }
+    ]
+  },
+  "effect.e_rotation": {
+    "name": "e_rotation",
+    "type": "effect",
+    "version": 1,
+    "parameters": [
+      {
+        "index": 0,
+        "variable_name": "xspeed",
+        "display_label": "'X speed'",
+        "display_value": "round(self.xspeed if self.xspeed < 10 else -20 + self.xspeed,1)",
+        "assignment_code": "args[0]*20",
+        "value_type": "numeric",
+        "categories": [],
+        "min_value": 0.0,
+        "max_value": 20.0
+      },
+      {
+        "index": 1,
+        "variable_name": "yspeed",
+        "display_label": "'Y speed'",
+        "display_value": "round(self.yspeed if self.yspeed < 10 else -20 + self.yspeed,1)",
+        "assignment_code": "args[1]*20",
+        "value_type": "numeric",
+        "categories": [],
+        "min_value": 0.0,
+        "max_value": 20.0
+      },
+      {
+        "index": 2,
+        "variable_name": "zspeed",
+        "display_label": "'Z speed'",
+        "display_value": "round(self.zspeed if self.zspeed < 10 else -20 + self.zspeed,1)",
+        "assignment_code": "args[2]*20",
+        "value_type": "numeric",
+        "categories": [],
+        "min_value": 0.0,
+        "max_value": 20.0
+      },
+      {
+        "index": 3,
+        "variable_name": "mode",
+        "display_label": "'mode'",
+        "display_value": "self.mode",
+        "assignment_code": "['normal', 'fixed', 'trigger'][round(args[3]*2)]",
+        "value_type": "category",
+        "categories": [
+          "normal",
+          "fixed",
+          "trigger"
+        ],
+        "min_value": null,
+        "max_value": null
+      }
+    ]
+  },
+  "effect.e_s2l": {
+    "name": "e_s2l",
+    "type": "effect",
+    "version": 1,
+    "parameters": [
+      {
+        "index": 0,
+        "variable_name": "amount",
+        "display_label": "'amount'",
+        "display_value": "round(self.amount,1)",
+        "assignment_code": "args[0]",
+        "value_type": "numeric",
+        "categories": [],
+        "min_value": 0.0,
+        "max_value": 1.0
+      },
+      {
+        "index": 1,
+        "variable_name": "channel",
+        "display_label": "'channel'",
+        "display_value": "self.channel",
+        "assignment_code": "[0, 1, 2, 3, 'Trigger', 'Trigger/2'][round(args[1]*5)]",
+        "value_type": "category",
+        "categories": [
+          0,
+          1,
+          2,
+          3,
+          "Trigger",
+          "Trigger/2"
+        ],
+        "min_value": null,
+        "max_value": null
+      },
+      {
+        "index": 2,
+        "variable_name": "mode",
+        "display_label": "'mode'",
+        "display_value": "self.mode",
+        "assignment_code": "['normal', 'invert'][round(args[2])]",
+        "value_type": "numeric",
+        "categories": [],
+        "min_value": 0.0,
+        "max_value": 1.0
+      },
+      {
+        "index": 3,
+        "variable_name": "decay",
+        "display_label": "'decay'",
+        "display_value": "round(self.decay,1)",
+        "assignment_code": "round(args[3]*0.5,2)",
+        "value_type": "numeric",
+        "categories": [],
+        "min_value": 0.0,
+        "max_value": 0.5
+      }
+    ]
+  },
+  "effect.e_slicer": {
+    "name": "e_slicer",
+    "type": "effect",
+    "version": 1,
+    "parameters": [
+      {
+        "index": 0,
+        "variable_name": "number",
+        "display_label": "'number'",
+        "display_value": "round(self.number,0)",
+        "assignment_code": "int(args[0]*3)+3",
+        "value_type": "numeric",
+        "categories": [],
+        "min_value": 3.0,
+        "max_value": 6.0
+      },
+      {
+        "index": 1,
+        "variable_name": "channel",
+        "display_label": "'channel'",
+        "display_value": "self.channel",
+        "assignment_code": "int(round(args[1]*3))",
+        "value_type": "numeric",
+        "categories": [],
+        "min_value": 0,
+        "max_value": 3
+      },
+      {
+        "index": 2,
+        "variable_name": "frames",
+        "display_label": "'n frames'",
+        "display_value": "self.frames",
+        "assignment_code": "int(args[2]*10+5)",
+        "value_type": "numeric",
+        "categories": [],
+        "min_value": 5.0,
+        "max_value": 15.0
+      }
+    ]
+  },
+  "effect.e_sound_hsv": {
+    "name": "e_sound_hsv",
+    "type": "effect",
+    "version": 1,
+    "parameters": [
+      {
+        "index": 0,
+        "variable_name": "amount_h",
+        "display_label": "'amount hue'",
+        "display_value": "round(self.amount_h,1)",
+        "assignment_code": "round(args[0]*0.5, 1)",
+        "value_type": "numeric",
+        "categories": [],
+        "min_value": 0.0,
+        "max_value": 0.5
+      },
+      {
+        "index": 1,
+        "variable_name": "amount_s",
+        "display_label": "'amount sat'",
+        "display_value": "round(self.amount_s,1)",
+        "assignment_code": "round(args[1]*2 - 1.0, 1)",
+        "value_type": "numeric",
+        "categories": [],
+        "min_value": -1.0,
+        "max_value": 1.0
+      },
+      {
+        "index": 2,
+        "variable_name": "amount_v",
+        "display_label": "'amount val'",
+        "display_value": "round(self.amount_v,1)",
+        "assignment_code": "round(args[2]*1.8 - 0.9, 1)",
+        "value_type": "numeric",
+        "categories": [],
+        "min_value": -0.9,
+        "max_value": 0.9
+      },
+      {
+        "index": 3,
+        "variable_name": "channel",
+        "display_label": "'channel'",
+        "display_value": "self.channel",
+        "assignment_code": "int(args[3]*3)",
+        "value_type": "numeric",
+        "categories": [],
+        "min_value": 0,
+        "max_value": 3
+      }
+    ]
+  },
+  "effect.e_squared": {
+    "name": "e_squared",
+    "type": "effect",
+    "version": 1,
+    "parameters": [
+      {
+        "index": 0,
+        "variable_name": "exponent",
+        "display_label": "'exponent'",
+        "display_value": "round(self.exponent,1)",
+        "assignment_code": "0.5 + args[0]*2",
+        "value_type": "numeric",
+        "categories": [],
+        "min_value": 0.0,
+        "max_value": 2.0
+      },
+      {
+        "index": 1,
+        "variable_name": "channel",
+        "display_label": "'channel'",
+        "display_value": "self.channel",
+        "assignment_code": "['noS2L', 0, 1, 2, 3][round(args[1]*4)]",
+        "value_type": "category",
+        "categories": [
+          "noS2L",
+          0,
+          1,
+          2,
+          3
+        ],
+        "min_value": null,
+        "max_value": null
+      }
+    ]
+  },
+  "effect.e_strobe": {
+    "name": "e_strobe",
+    "type": "effect",
+    "version": 1,
+    "parameters": [
+      {
+        "index": 0,
+        "variable_name": "channel",
+        "display_label": "'channel'",
+        "display_value": "self.channel",
+        "assignment_code": "['Off', 0, 1, 2, 3, 'Trigger'][round(args[0] * 5)]",
+        "value_type": "numeric",
+        "categories": [],
+        "min_value": 0.0,
+        "max_value": 5.0
+      },
+      {
+        "index": 1,
+        "variable_name": "duration",
+        "display_label": "'duration'",
+        "display_value": "round(self.duration, 1)",
+        "assignment_code": "int(args[1] * 11) + 1",
+        "value_type": "numeric",
+        "categories": [],
+        "min_value": 1.0,
+        "max_value": 12.0
+      },
+      {
+        "index": 2,
+        "variable_name": "interval",
+        "display_label": "'interval'",
+        "display_value": "round(self.interval, 1)",
+        "assignment_code": "int(args[2] * 11) + 1",
+        "value_type": "numeric",
+        "categories": [],
+        "min_value": 1.0,
+        "max_value": 12.0
+      },
+      {
+        "index": 3,
+        "variable_name": "waveform",
+        "display_label": "'waveform'",
+        "display_value": "self.waveform",
+        "assignment_code": "['rect', 'ramp', 'down', 'triangle'][round(args[3] * 3)]",
+        "value_type": "numeric",
+        "categories": [],
+        "min_value": 0.0,
+        "max_value": 3.0
+      },
+      {
+        "index": 4,
+        "variable_name": "invert",
+        "display_label": "'s2l invert'",
+        "display_value": "str(self.invert)",
+        "assignment_code": "args[4] > 0.5",
+        "value_type": "boolean",
+        "categories": [],
+        "min_value": 0,
+        "max_value": 1
+      },
+      {
+        "index": 5,
+        "variable_name": "iterations",
+        "display_label": "'# on trigger'",
+        "display_value": "self.iterations",
+        "assignment_code": "int(args[5] * 10) + 1",
+        "value_type": "numeric",
+        "categories": [],
+        "min_value": 1.0,
+        "max_value": 11.0
+      }
+    ]
+  },
+  "effect.e_translation": {
+    "name": "e_translation",
+    "type": "effect",
+    "version": 1,
+    "parameters": [
+      {
+        "index": 0,
+        "variable_name": "xspeed",
+        "display_label": "'X speed'",
+        "display_value": "self.xspeed",
+        "assignment_code": "int((args[0] - 0.5) * 20)",
+        "value_type": "numeric",
+        "categories": [],
+        "min_value": 0.0,
+        "max_value": 1.0
+      },
+      {
+        "index": 1,
+        "variable_name": "yspeed",
+        "display_label": "'Y speed'",
+        "display_value": "self.yspeed",
+        "assignment_code": "int((args[1] - 0.5) * 20)",
+        "value_type": "numeric",
+        "categories": [],
+        "min_value": 0.0,
+        "max_value": 1.0
+      },
+      {
+        "index": 2,
+        "variable_name": "zspeed",
+        "display_label": "'Z speed'",
+        "display_value": "self.zspeed",
+        "assignment_code": "int((args[2] - 0.5) * 20)",
+        "value_type": "numeric",
+        "categories": [],
+        "min_value": 0.0,
+        "max_value": 1.0
+      },
+      {
+        "index": 3,
+        "variable_name": "mode",
+        "display_label": "'mode'",
+        "display_value": "self.mode",
+        "assignment_code": "['wrap', 'disappear', 'projection'][round(args[3]*2)]",
+        "value_type": "category",
+        "categories": [
+          "wrap",
+          "disappear",
+          "projection"
+        ],
+        "min_value": null,
+        "max_value": null
+      }
+    ]
+  },
+  "effect.e_tremolo": {
+    "name": "e_tremolo",
+    "type": "effect",
+    "version": 1,
+    "parameters": [
+      {
+        "index": 0,
+        "variable_name": "speed",
+        "display_label": "'speed'",
+        "display_value": "round(self.speed,1)",
+        "assignment_code": "args[0]*3",
+        "value_type": "numeric",
+        "categories": [],
+        "min_value": 0.0,
+        "max_value": 3.0
+      },
+      {
+        "index": 1,
+        "variable_name": "shape",
+        "display_label": "'shape'",
+        "display_value": "self.shape",
+        "assignment_code": "['sin', 'square', 'up', 'down'][round(args[1]*3)]",
+        "value_type": "category",
+        "categories": [
+          "sin",
+          "square",
+          "up",
+          "down"
+        ],
+        "min_value": null,
+        "max_value": null
+      },
+      {
+        "index": 2,
+        "variable_name": "amplitude",
+        "display_label": "'ampli'",
+        "display_value": "round(self.amplitude,1)",
+        "assignment_code": "args[2]",
+        "value_type": "numeric",
+        "categories": [],
+        "min_value": 0.0,
+        "max_value": 1.0
+      }
+    ]
+  }
+}

@@ -35,11 +35,12 @@ class e_rotating_fade():
         ]
     
     def __call__(self, world, args):
-		# parse input
+        # === PARAMETERS START ===
         self.xspeed = args[0]*15+0.01
         self.yspeed = args[1]*15
         self.zspeed = args[2]*15
         self.amount = args[3]
+        # === PARAMETERS END ===
 
         # rotate
         newworld = rotate(self.colorworld, self.step*self.xspeed,

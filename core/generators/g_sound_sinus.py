@@ -19,7 +19,10 @@ class g_sound_sinus():
         ]
 
     def __call__(self, args):
+        # === PARAMETERS START ===
         self.speed = args[0]
+        # === PARAMETERS END ===
+
         world = np.zeros([3, 10, 10, 10])
 
         # get amplitudes

@@ -20,7 +20,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 
 interface SoundOption {
   value: string
@@ -51,6 +51,10 @@ const props = defineProps<Props>()
 const emit = defineEmits<Emits>()
 
 const selectedOptions = ref<string[]>([...props.modelValue])
+
+watch(() => props.modelValue, (newValue) => {
+  selectedOptions.value = [...newValue]
+}, { deep: true })
 
 function toggleOption(value: string) {
   const index = selectedOptions.value.indexOf(value)

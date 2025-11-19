@@ -27,10 +27,10 @@ class e_black_color_white():
         ]
     
     def __call__(self, world, args):
-        # process parameters
+        # === PARAMETERS START ===
         self.color   = args[0]
         self.damping = args[1]*0.5
-        #self.color   = hsv_to_rgb(args[0], 1, 1)
+        # === PARAMETERS END ===
 
 
         # get average brigthness

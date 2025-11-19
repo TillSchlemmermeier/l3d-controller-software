@@ -5,7 +5,6 @@ from multiprocessing import shared_memory
 class e_s2l():
 
     def __init__(self):
-        # parameters
         self.amount = 1.0
         self.channel = 1.0
         self.sound_values = shared_memory.SharedMemory(name = "global_s2l_memory")
@@ -17,52 +16,24 @@ class e_s2l():
         self.value = 0.0
 
     def return_state(self):
-        if self.channel < 4:
-            channel = str(self.channel)
-        elif self.channel == 4:
-            channel = "Trigger"
-        elif self.channel == 5:
-            channel = 'Trigger/2'
-        elif self.channel == 6:
-            channel = 'SIN 1'
-        elif self.channel == 7:
-            channel = 'SIN 2'
-        elif self.channel == 8:
-            channel = 'SAW 1'
-        elif self.channel == 9:
-            channel = 'SAW 2'
-
-        if self.decay == 0:
-            decay = 'off'
-        else:
-            decay = str(self.decay)
-
         return [
             ['amount', 'amount', round(self.amount,1)],
-            ['channel', 'channel', channel],
+            ['channel', 'channel', self.channel],
             ['mode', 'mode', self.mode],
-            ['decay', 'decay', decay],
+            ['decay', 'decay', round(self.decay,1)],
         ]
     
     def __call__(self, world, args):
-        # process parameters
+        # === PARAMETERS START ===
         self.amount = args[0]
-
-        # with lfo
-        # self.channel = int(args[1]*9)
-        # without lfo
-        self.channel = int(args[1]*5)
-
-        if args[2] > 0.5:
-            self.mode = 'invert'
-        else:
-            self.mode = 'normal'
-
+        self.channel = [0, 1, 2, 3, 'Trigger', 'Trigger/2'][round(args[1]*5)]
+        self.mode = ['normal', 'invert'][round(args[2])]
         self.decay = round(args[3]*0.5,2)
+        # === PARAMETERS END ===
 
 
         # modulate brightness with audio
-        if self.channel < 4 or self.channel > 5:
+        if isinstance(self.channel, int):
 
             current_volume = float(str(self.sound_values.buf[self.channel*8:self.channel*8+8],'utf-8'))**4
 
@@ -79,14 +50,14 @@ class e_s2l():
 
         else:
             # trigger normal
-            if self.channel == 4:
+            if self.channel == 'Trigger':
                 current_volume = int(float(str(self.sound_values.buf[32:40],'utf-8')))
                 if current_volume > self.lastvalue:
                     self.lastvalue = current_volume
                     self.counter = 0
 
             # trigger half
-            elif self.channel == 5:
+            elif self.channel == 'Trigger/2':
 
                 current_volume = int(float(str(self.sound_values.buf[40:48],'utf-8')))
                 if current_volume == 1:

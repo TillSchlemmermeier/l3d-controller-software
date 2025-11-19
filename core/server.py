@@ -98,6 +98,9 @@ class WebSocketAPIServer:
             PREVIEW_DIR = Path("../src/assets/previews")
             PREVIEW_DIR.mkdir(parents=True, exist_ok=True)
 
+            if type == 'channel' or type == 'global':
+                element = type
+
             old_file_path = PREVIEW_DIR / f"{element}_p_{old_preset}.gif"
             new_file_path = PREVIEW_DIR / f"{element}_p_{new_preset}.gif"
             print(f"Renaming {old_file_path} to {new_file_path}")
@@ -201,7 +204,15 @@ class WebSocketAPIServer:
             preset_data = self.db.get_preset(type, element, preset)
             if type == 'generator':
                 if channel not in self.state:
-                    this_channel = self.db.get_preset('channel', 'presets', 'blank')
+                    this_channel = {
+                        "IO":False,
+                        "brightness":1.0,
+                        "fade":0.0,
+                        "update":False,
+                        9:{"name":"blank"},
+                        "numberOfEffects":0
+                    }
+                    # this_channel = self.db.get_preset('channel', 'presets', 'blank')
                     self.state_manager.load_generator(channel, preset_data, this_channel)
                 else:
                     self.state_manager.load_generator(channel, preset_data)
@@ -341,6 +352,12 @@ class WebSocketAPIServer:
             else:
                 return JSONResponse(status_code=400, content={"message": "Failed to delete gradient"})
 
+        @self.app.get('/api/clear-gradient/{channelIndex}')
+        async def clear_gradient(channelIndex: int):
+            self.state_manager.clear_gradient(channelIndex)
+            await update_state()
+            return JSONResponse(status_code=200, content={"message": "Gradient cleared successfully"})
+
         # remove an effect or a channel
         @self.app.get('/api/remove/{type}/{channelIndex}/{effectIndex}')
         async def remove(type: str, channelIndex: int, effectIndex: int):
@@ -436,7 +453,7 @@ class WebSocketAPIServer:
             try:
                 await websocket.accept()
                 self.active_websockets.append(websocket)
-                print('websocket connected')
+                print(f"WebSocket connected. Total active: {len(self.active_websockets)}")
 
                 # Send initial message
                 await websocket.send_json({
@@ -455,8 +472,15 @@ class WebSocketAPIServer:
                 print(f"WebSocket error: {e}")
             finally:
                 # Clean up connection
-                if websocket in self.active_websockets:
+                try:
                     self.active_websockets.remove(websocket)
+                except ValueError:
+                    pass  # Already removed
+
+                try:
+                    await websocket.close()
+                except:
+                    pass
                     print('WebSocket disconnected')
 
         # update the value of a single key in the frontend
@@ -476,11 +500,12 @@ class WebSocketAPIServer:
         # update the value of a single element in the frontend
         @self.app.get('/api/update_element/{channel}/{element}')
         async def update_element(channel: int, element: int):
-            message = {
-                "type": "state_section",
-                "data": { channel: { element: self.state[channel][element] }}
-            }
-            return await stream_data(message)
+            with self.state.lock:
+                message = {
+                    "type": "state_section",
+                    "data": { channel: { element: self.state[channel][element] }}
+                }
+                return await stream_data(message)
 
         # update the whole state in the frontend
         @self.app.get('/api/update_state')

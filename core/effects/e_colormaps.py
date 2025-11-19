@@ -44,18 +44,12 @@ class e_colormaps():
             ['Length', 'length', round(self.length,2)],
         ]
     def __call__(self, world, args):
-        # parsing input
-        '''
-        if args[0] < 0.5:
-            self.mode = 'space'
-        else:
-            self.mode = 'time'
-        '''
-
+        # === PARAMETERS START ===
+        self.mode = 'space'
         self.map = list(self.gradient_lists.keys())[round(args[1]*len(self.gradient_lists)-1)]
-
         self.speed  = args[2]
         self.length = args[3]*4
+        # === PARAMETERS END ===
 
         if self.mode == 'space':
             '''

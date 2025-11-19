@@ -23,6 +23,7 @@ class g_letters():
 
     def __init__(self):
         self.char = 'a'
+        self.runtime_char = 'a'
         self.size = 12
         self.frame = []
         self.font = ImageFont.truetype("/usr/share/fonts/truetype/ubuntu/UbuntuMono-R.ttf", 13)
@@ -36,88 +37,78 @@ class g_letters():
         self.triggermode = 0
 
     def return_state(self):
-        if 4 > self.channel >= 0:
-            channel = str(self.channel)
-        elif self.channel == 4:
-            channel = "Trigger"
-        else:
-            channel = 'noS2L'
-            self.size = 12
-
-        if self.triggermode == 0:
-            mode = 'size'
-        elif self.triggermode == 1:
-            mode = 'countdow'
-        elif self.triggermode == 2:
-            mode = 'countup'
-        elif self.triggermode == 3:
-            mode = 'down+siz'
-        elif self.triggermode == 4:
-            mode = 'up+size'
-
-        if self.channel == 4:
-            return [
-                ['char', 'size', self.char],
-                ['beatstep', 'beatstep', round(self.beatstep,2)],
-                ['mode', 'triggermode', mode],
-                ['channel', 'channel', channel],
-            ]
-        else:
+        return [
             [
-                ['char', 'size', self.char],
-                ['', '', ''],
-                ['', '', ''],
-                ['channel', 'channel', channel],
-            ]
-
+                'char',
+                'size',
+                '-' if self.channel == 'Trigger' else self.char
+            ],
+            [
+                'trigger step',
+                'beatstep',
+                round(self.beatstep,2) if self.channel == 'Trigger' else '-'
+            ],
+            [
+                'trigger mode',
+                'triggermode',
+                self.triggermode if self.channel == 'Trigger' else '-'
+            ],
+            ['channel', 'channel', self.channel],
+        ]
 
     def __call__(self, args):
-        # parsing input
-        if self.channel != 4:
-            self.char = chr(int(args[0]*(122-48))+48)
+        # === PARAMETERS START ===
+        self.char = chr(int(args[0]*(122-48))+48)
         self.beatstep = int(args[1]*8)
-        self.triggermode = int(args[2]*4)
-        self.channel = int(args[3]*5)-1
+        self.triggermode = ['size', 'countdown', 'countup', 'down+size', 'up+size'][int(args[2]*4)]
+        self.channel = ['noS2L', 0, 1, 2, 3, 'Trigger'][round(args[3]*5)]
+        # === PARAMETERS END ===
 
         # create empty world
         world = np.zeros([3, 10, 10, 10])
+
+        if self.channel == 'noS2L':
+            self.size = 12
+
+        if self.channel != 'Trigger':
+            self.runtime_char = self.char
 
         self.font = ImageFont.truetype("/usr/share/fonts/truetype/ubuntu/UbuntuMono-R.ttf", self.size)
         img = Image.new(mode = 'L', size = (10, 10), color = (0))
 
 
         # check if S2L is activated
-        if 4 > self.channel >= 0:
+        if isinstance(self.channel, int):
             current_volume = float(str(self.sound_values.buf[self.channel*8:self.channel*8+8],'utf-8'))
             if current_volume > 0:
                 self.size = int(np.clip(current_volume * 30, 2, 30))
 
         # check for trigger
-        elif self.channel == 4:
+        elif self.channel == 'Trigger':
             current_volume = int(float(str(self.sound_values.buf[32:40],'utf-8')))
             if current_volume > self.lastvalue+self.beatstep:
                 self.lastvalue = current_volume
                 self.step = 0
 
                 # countdown or countdown with size mode
-                if self.triggermode == 1 or self.triggermode == 3:
+                if self.triggermode == 'countdown' or self.triggermode == 'down+size':
                     if self.counter > 8:
                         self.counter = 0
                     else:
                         self.counter += 1
 
-                    self.char = chr(57-self.counter)
+                    self.runtime_char = chr(57-self.counter)
 
                 # count up or count up with size mode
-                elif self.triggermode == 2 or self.triggermode == 4:
+                elif self.triggermode == 'countup' or self.triggermode == 'up+size':
                     if self.counter < 10:
-                        self.char = chr(48+self.counter)
+                        self.runtime_char = chr(48+self.counter)
                         self.counter += 1
                     else:
                         self.counter = 0
 
             # size mode or countdown/countup with size
-            if self.triggermode == 0 or self.triggermode > 2:
+            if self.triggermode in ['size', 'down+size', 'up+size']:
                 if self.step == 0:
                     self.size = 0
 
@@ -132,9 +123,9 @@ class g_letters():
 
 
         d = ImageDraw.Draw(img)
-        w, h = self.font.getsize(self.char)
+        w, h = self.font.getsize(self.runtime_char)
         # print(w,h,(10-w)/2,(10-h)/2)
-        d.text(((10-w)/2,(10-h)/2 -2), self.char,  font = self.font, fill=(255))
+        d.text(((10-w)/2,(10-h)/2 -2), self.runtime_char,  font = self.font, fill=(255))
         self.frame = np.array(img)[:, ::-1]/255.0
 
         if np.shape(self.frame)[0] == 10:

@@ -19,30 +19,26 @@ class e_gradient():
         self.sound_values = shared_memory.SharedMemory(name = "global_s2l_memory")
 
     def return_state(self):
-        if self.channel >= 0:
-            channel = str(self.channel)
-        else:
-            channel = 'noS2L'
-
         return [
             ['Color 1', 'c1', round(self.c1,1)],
             ['Color 2', 'c2', round(self.c2,1)],
             ['balance', 'balance', round(self.balance,1)],
-            ['channel', 'channel', channel],
+            ['channel', 'channel', self.channel],
         ]
 
     def __call__(self, world, args):
-        # parsing input
-        self.c1 = args[0] # hsv_to_rgb(c1,1,1)
-        self.c2 = args[1] # hsv_to_rgb(c2,1,1)
+        # === PARAMETERS START ===
+        self.c1 = args[0]
+        self.c2 = args[1]
         self.balance = 1 - (2 * args[2])
-        self.channel = int(args[3]*4)-1
+        self.channel = ['noS2L', 0, 1, 2, 3][round(args[3]*4)]
+        # === PARAMETERS END ===
 
 
         # generate color list
         x = np.array([0,1,2,3,4,5,6,7,8,9])
 
-        if self.channel >= 0:
+        if self.channel != 'noS2L':
             # sound modus
             current_volume = float(str(self.sound_values.buf[self.channel*8:self.channel*8+8],'utf-8'))
 

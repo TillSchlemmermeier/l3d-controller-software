@@ -17,26 +17,20 @@ class g_random_lines():
         self.lastvalue = 0
 
     def return_state(self):
-        if self.trigger:
-            trigger = 'On'
-        else:
-            trigger = "Off"
-
         return [
             ['dimensions', 'number', self.number+1],
             ['length', 'length', round(self.length,2)],
             ['wait', 'reset', round(self.reset,2)],
-            ['Trigger', 'trigger', trigger],
+            ['Trigger', 'trigger', 'On' if self.trigger else 'Off'],
         ]
     
     def __call__(self, args):
+        # === PARAMETERS START ===
         self.number = int(args[0]*2)
         self.length = int(args[1]*10)
         self.reset = int(args[2]*10+1)
-        if args[3] > 0.2:
-            self.trigger = True
-        else:
-            self.trigger = False
+        self.trigger = args[3] > 0.2
+        # === PARAMETERS END ===
 
         world = np.zeros([3, 10, 10, 10])
 

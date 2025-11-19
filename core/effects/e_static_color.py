@@ -30,12 +30,12 @@ class e_static_color():
 
 
     def __call__(self, world, args):
-
+        # === PARAMETERS START ===
         self.red   = args[0]
         self.green = args[1]
         self.blue  = args[2]
         self.hsv   = args[3]
-        #self.hsv[0]= args[3]
+        # === PARAMETERS END ===
 
         if self.hsv > 0:
         #if self.hsv[0] > 0:

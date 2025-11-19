@@ -19,9 +19,12 @@ class g_square_equalizer():
         ]
 
     def __call__(self, args):
-        # get arguments
-        for i in range(4):
-            self.amount[i] = args[i]*15
+        # === PARAMETERS START ===
+        self.amount[0] = args[0]*15
+        self.amount[1] = args[1]*15
+        self.amount[2] = args[2]*15
+        self.amount[3] = args[3]*15
+        # === PARAMETERS END ===
 
         world = np.zeros([3, 10, 10, 10])
 

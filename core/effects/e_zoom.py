@@ -16,9 +16,10 @@ class e_zoom():
         ]
     
     def __call__(self, world, args):
-		# parse input
+		# === PARAMETERS START ===
         self.amount = args[0]
         self.degree = int(args[1]*3+1)
+        # === PARAMETERS END ===
 
         zoomworld = np.zeros([3, 10, 10, 10])
 
