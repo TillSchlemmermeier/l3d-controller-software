@@ -171,38 +171,37 @@ class rendering_engine:
         """
 
         retry_count = 0
+        snapshot = None
         while retry_count < 3:
             try:
-                # Create copy of state to prevent UltraDict AssertionError
+                # Create copy of state to minimize UltraDict AssertionError
                 with state.lock:
-                    snapshot = {
-                        'numberOfChannels': state['numberOfChannels'],
-                        'IO': state['IO'],
-                        'brightness': state['brightness'],
-                        'oneshot': state['oneshot'],
-                        'crossfade_active': state['crossfade_active']
-                    }
-
-                    # Copy individual channel states
-                    for i in range(state['numberOfChannels']):
-                        if i in state:
-                            snapshot[i] = dict(state[i])
-
-                    # Copy global effects
-                    if 9 in state:
-                        snapshot[9] = dict(state[9])
-
+                    snapshot = dict(state)
                     self.should_send = snapshot['IO']
-
                 break
-            except Exception as e:
-                print(f"[CORE] Error accessing shared state: {e}")
-                retry_count += 1
-                if retry_count == 3:
-                    print(f"[CORE] State update failed after 3 attempts: {e}")
-                    break
-                time.sleep(0.001 * retry_count)
 
+            except AssertionError as e:
+                print(f"[CORE] UltraDict buffer corruption (attempt {retry_count + 1}/3)")
+                retry_count += 1
+                if retry_count >= 3:
+                    print(f"[CORE] Giving up after 3 attempts, skipping frame")
+                    return
+                # Wait for MIDI burst to finish
+                time.sleep(0.02 * retry_count)
+
+            except Exception as e:
+                import traceback
+                print(f"[CORE] Unexpected error (attempt {retry_count + 1}/3): {type(e).__name__}: {e}")
+                traceback.print_exc()
+                retry_count += 1
+                if retry_count >= 3:
+                    print(f"[CORE] Fatal error, skipping frame")
+                    return
+                time.sleep(0.02 * retry_count)
+
+        if snapshot is None:
+            print("[CORE] No valid snapshot created, skipping frame")
+            return
 
         # loop through channels
         for i in range(snapshot['numberOfChannels']):

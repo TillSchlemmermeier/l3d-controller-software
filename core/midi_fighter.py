@@ -1,16 +1,14 @@
 import time as time
 from rtmidi.midiutil import open_midiinput,open_midioutput, open_midiport
 from midi_translation import class_midi_translation
-from UltraDict import UltraDict
 
 class class_fighter:
-    def __init__(self):
+    def __init__(self, state):
         """initializes the MIDI fighter"""
         self.midiin, self.portname_in = open_midiinput('Fighter')
         self.midiout, self.portname_out = open_midioutput('Fighter')
         self.midiin.set_callback(self.event)
-        self.midi_translation = class_midi_translation()
-        self.state = UltraDict(name='state')
+        self.midi_translation = class_midi_translation(state)
         self.fighter_mapping = [0, 4, 8, 12, 1, 5, 9, 13, 2, 6, 10, 14, 3, 7, 11, 15]
 
     def event(self, event, data=None):

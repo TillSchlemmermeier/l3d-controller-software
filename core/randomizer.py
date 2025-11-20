@@ -5,10 +5,10 @@ import json
 
 
 class Randomizer:
-    def __init__(self):
+    def __init__(self, state):
         self.db = DatabaseManager()
-        self.state_manager = StateManager()
-        self.state = self.state_manager.state
+        self.state_manager = StateManager(state)
+        self.state = state
 
     def trigger(self) -> None:
         """Trigger random action based on current mode"""

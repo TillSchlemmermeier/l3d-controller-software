@@ -40,12 +40,11 @@ class g_conway():
         # === PARAMETERS START ===
         self.speed = int(args[0]*6)+1
         self.wait = int(args[1]*50)+10
-        self.mode = round(args[2])
+        self.mode = ['Continuous', 'Trigger'][round(args[2])]
         # === PARAMETERS END ===
 
 
-        # check for Trigger
-        if self.mode == 1:
+        if self.mode == 'Trigger':
             current_volume = int(float(str(self.sound_values.buf[32:40],'utf-8')))
             if current_volume > self.lastvalue:
 
@@ -68,7 +67,7 @@ class g_conway():
         if self.step % self.speed == 0:
             self.sides = self.life_step_1(self.sides)
 
-        if self.mode == 0:
+        if self.mode == 'Continuous':
             if self.step % self.wait == 0:
                 self.sides += np.random.randint(0, 2, [40,10])
                 # self.sides -= np.random.randint(0, 2, [40,10])

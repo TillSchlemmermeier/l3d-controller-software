@@ -64,10 +64,11 @@ class RotaryKnob(tk.Canvas):
         self.coords(self.indicator, center_x, center_y, end_x, end_y)
 
 class MidiControllerEmulator:
-    def __init__(self, root):
+    def __init__(self, root, state):
         self.root = root
+        self.state = state
         self.root.title("MIDI Controller Emulator")
-        self.midi_translation = class_midi_translation()
+        self.midi_translation = class_midi_translation(state)
 
         # Get screen dimensions and window size
         screen_width = 3840
@@ -229,7 +230,6 @@ class MidiControllerEmulator:
             value_label.grid(row=5, column=i, pady=5)
             slider.value_label = value_label
         
-        self.state = UltraDict(name='state')  # Add shared state
         # map initial values for brightness and fade
 
         self.update_fixed_midi()

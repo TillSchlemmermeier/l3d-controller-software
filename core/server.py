@@ -16,12 +16,13 @@ from randomizer import Randomizer
 
 
 class WebSocketAPIServer:
-    def __init__(self):
+    def __init__(self, state):
         self.app = FastAPI()
         self.db = DatabaseManager()
-        self.state_manager = StateManager()
+        self.state_manager = StateManager(state)
         self.init_routes()
-        self.state = UltraDict(name='state')
+        # self.state = UltraDict(name='state')
+        self.state = state
         self.active_websockets: List[WebSocket] = []
         self.shared_mem = mp.shared_memory.SharedMemory(name="cube_data")
         self.array = np.ndarray(
@@ -429,7 +430,7 @@ class WebSocketAPIServer:
         # trigger randomizer
         @self.app.get('/api/trigger-randomizer')
         async def trigger_randomizer():
-            Randomizer().trigger()
+            Randomizer(self.state).trigger()
             await update_state()
             return {"message": "Randomizer triggered"}
 

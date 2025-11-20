@@ -20,62 +20,13 @@ import pickle
 import argparse
 import os
 
-def setup_complete_logging():
-    os.makedirs('logs', exist_ok=True)
-    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    log_filename = f'logs/l3d_controller_{timestamp}.log'
-
-    # Open log file for writing
-    log_file = open(log_filename, 'w', buffering=1)  # Line buffered
-
-    # Create tee objects with all required methods
-    class TeeOutput:
-        def __init__(self, file_obj, original_stream):
-            self.file = file_obj
-            self.original = original_stream
-
-        def write(self, text):
-            self.file.write(text)
-            self.original.write(text)
-
-        def flush(self):
-            self.file.flush()
-            self.original.flush()
-
-        def isatty(self):
-            """Check if the original stream is a TTY"""
-            return self.original.isatty()
-
-        def fileno(self):
-            """Return file descriptor of original stream"""
-            return self.original.fileno()
-
-        def __getattr__(self, name):
-            """Delegate any other attributes to the original stream"""
-            return getattr(self.original, name)
-
-    # Redirect stdout and stderr
-    sys.stdout = TeeOutput(log_file, sys.__stdout__)
-    sys.stderr = TeeOutput(log_file, sys.__stderr__)
-
-    # Also setup structured logging
-    logging.basicConfig(
-        level=logging.INFO,
-        format='%(asctime)s - %(processName)s - %(levelname)s - %(message)s',
-        stream=sys.stdout
-    )
-
-    print(f"L3D Controller started - Log file: {log_filename}")
-    return log_filename, log_file
-
-def autopilot():
+def autopilot(state):
     # Validate all presets
     # print("Validating presets...")
     # if not validate_all_presets():
     #     print("WARNING: Some presets failed validation!")
     # pass
-
-    randomizer = Randomizer()
+    randomizer = Randomizer(state)
     starttime = time()
     
     while True:
@@ -94,16 +45,16 @@ def autopilot():
             
         sleep(0.1)
 
-def server():
+def server(state):
     logging.info('Starting GUI server')
-    server = WebSocketAPIServer()
+    server = WebSocketAPIServer(state)
     server.run()
 
 def midi_devices(state):
     logging.info('...starting midi thread')
-    launchcontrol = class_launchcontrol()
-    # akai = class_akai()
-    # fighter = class_fighter()
+    launchcontrol = class_launchcontrol(state)
+    # akai = class_akai(state)
+    # fighter = class_fighter(state)
     # fighter.update()
 
     while True:
@@ -117,12 +68,12 @@ def midi_devices(state):
 
     # use the following to activate on-screen midi emulator
     # root = tk.Tk()
-    # midi = MidiControllerEmulator(root)
+    # midi = MidiControllerEmulator(root, state)
     # root.mainloop()
 
 def rendering(state):
     logging.info('Waiting for server...')
-    sleep(2)
+    sleep(1)
 
     logging.info('Starting rendering thread')
     frame_renderer = rendering_engine()
@@ -174,12 +125,10 @@ def restore_from_backup(state):
 
     channel_indices = list(range(state['numberOfChannels'])) + [9]
     for channel_key in channel_indices:
-        StateManager().update_channel(channel_key)
+        StateManager(state).update_channel(channel_key)
     logging.info("State restored from backup")
 
 if __name__ == '__main__':
-    log_file_path, log_file_handle = setup_complete_logging()
-
     parser = argparse.ArgumentParser()
     parser.add_argument('--restore', action='store_true')
     args = parser.parse_args()
@@ -211,32 +160,21 @@ if __name__ == '__main__':
             "brightness": 0.9,
             "fade": 0.0,
             "update": True,
+            # generator element
             9: {
                 "name": "g_cube",
                 "update": True,
-                "params": ["size", "size", 3, 0.65, "surface", "sides", "Off", 0.45, "channel", "channel", "noS2l", 0.0, "speed", "speed", 3, 0.34]
+                "params": ['size', 'size', 4, 1.0, 'surface', 'sides', 'Off', 0.45, 'channel', 'channel', 'noS2L', 0.0, 'speed', 'speed', 0, 0.0]
             },
-            "numberOfEffects": 1,
-            0: {
-                "name": "e_rainbow",
-                "IO": True,
-                "update": 1,
-                "params": ["speed", "speed", 0.5, 0.1, "S2L Trigger", "Trigger", "Off", 0.1]
-            }
+            "numberOfEffects": 0,
         },
 
         # global effects channel
         9: {
-            "update": True,
-            "numberOfEffects": 1,
-            0: {
-                "name": "e_fade",
-                "IO": True,
-                "update": True,
-                "params": ["amount", "amount", 0.5, 0.5],
-            },
+            "update": False,
+            "numberOfEffects": 0,
       },
-    }, recurse=False, name=name, buffer_size=100000);
+    }, recurse=False, name=name, buffer_size=1024 * 1024);
 
     if args.restore:
         restore_from_backup(state)
@@ -255,12 +193,12 @@ if __name__ == '__main__':
         shared_cube_memory = mp.shared_memory.SharedMemory(name="cube_data")
 
     processes = [
-        mp.Process(target=server, name="WebSocket/API Server", args=[]),
-        mp.Process(target=sound_process, name="Sound Process", args=[]),
+        mp.Process(target=server, name="WebSocket/API Server", args=[state]),
+        mp.Process(target=sound_process, name="Sound Process", args=[state]),
         mp.Process(target=midi_devices, name="MIDI Devices", args=[state]),
         mp.Process(target=backup_state, name="State Backup", args=[state]),
         mp.Process(target=rendering, name="Renderer", args=[state]),
-        mp.Process(target=autopilot, name="Autopilot", args=[]),
+        mp.Process(target=autopilot, name="Autopilot", args=[state]),
     ]
 
     for proc in processes:
@@ -278,5 +216,3 @@ if __name__ == '__main__':
 
 
     logging.info('Application shutdown complete')
-    if log_file_handle:
-        log_file_handle.close()

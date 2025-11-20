@@ -4,14 +4,14 @@ from rtmidi.midiutil import open_midiinput,open_midioutput, open_midiport
 from midi_translation import class_midi_translation
 
 class class_akai:
-    def __init__(self):
+    def __init__(self, state):
         print('...starting AKAI MIDI controller')
         # open midi input
         self.midiin, self.portname_in = open_midiinput(port = 'MIDI Mix')
 
         # set callback
         self.midiin.set_callback(self.event)
-        self.midi_translation = class_midi_translation()
+        self.midi_translation = class_midi_translation(state)
 
     def event(self, event, data=None):
         """Call gets midi message and calls the mapping routine"""

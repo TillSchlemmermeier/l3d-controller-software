@@ -8,8 +8,7 @@ from scipy.interpolate import griddata
 from time import time, sleep
 from UltraDict import UltraDict
 
-def sound_process():
-    state = UltraDict(name='state')
+def sound_process(state):
     
     # initialize pyaudio
     sample_rate = 44100

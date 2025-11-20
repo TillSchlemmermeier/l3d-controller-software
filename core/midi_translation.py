@@ -5,8 +5,9 @@ from UltraDict import UltraDict
 
 class class_midi_translation:
 
-    def __init__(self):
-        self.state = UltraDict(name='state')
+    def __init__(self, state):
+        # self.state = UltraDict(name='state')
+        self.state = state
         self.slider_values = [0, 0, 0, 0]
         self.knob_values = [0, 0, 0, 0]
         self.state_a = {}

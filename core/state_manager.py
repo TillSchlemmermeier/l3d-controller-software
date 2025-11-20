@@ -3,8 +3,9 @@ from copy import deepcopy
 import json
 
 class StateManager:
-    def __init__(self):
-        self.state = UltraDict(name='state')
+    def __init__(self, state):
+        # self.state = UltraDict(name='state')
+        self.state = state
         self._max_retries = 3
 
     def _safe_state_operation(self, operation):
