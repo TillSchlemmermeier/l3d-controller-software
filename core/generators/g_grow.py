@@ -1,7 +1,6 @@
 # modules
 import numpy as np
-from random import randint, random
-from time import sleep
+from random import randint
 
 class g_grow():
 

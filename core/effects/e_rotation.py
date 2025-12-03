@@ -1,4 +1,5 @@
 # modules
+import struct
 import numpy as np
 from scipy.ndimage.interpolation import rotate
 from multiprocessing import shared_memory
@@ -49,7 +50,7 @@ class e_rotation():
             runtime_zspeed = - 20 + self.zspeed
 
         if self.mode == 'trigger':
-            current_volume = int(float(str(self.sound_values.buf[32:40],'utf-8')))
+            current_volume = struct.unpack('d', bytes(self.sound_values.buf[32:40]))[0]
             if current_volume > self.lastvalue:
                 self.lastvalue = current_volume+1
                 self.step = 0

@@ -1,4 +1,5 @@
 # modules
+import struct
 import numpy as np
 from colorsys import rgb_to_hsv, hsv_to_rgb
 from multiprocessing import shared_memory
@@ -30,7 +31,7 @@ class e_sound_gradient():
         self.channel = int(args[2]*3)
         # === PARAMETERS END ===
 
-        current_volume = float(str(self.sound_values.buf[self.channel*8:self.channel*8+8],'utf-8'))
+        current_volume = struct.unpack('d', bytes(self.sound_values.buf[self.channel*8:self.channel*8+8]))[0]
         current_color = self.sigmoid(current_volume*10-4.5)*(self.c1-self.c2)+self.c2
 
         # choose color according to x position

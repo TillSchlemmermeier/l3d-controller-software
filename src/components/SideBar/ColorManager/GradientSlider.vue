@@ -73,37 +73,38 @@
     </div>
 
     <!-- Width Control Slider -->
-    <div
-      v-if="mode === 'select'"
-      class="mt-3 flex items-center gap-3"
-    >
-      <!-- Minus Button -->
-      <button
-        @click.stop="adjustWidth(-5)"
-        class="w-12 h-10 bg-zinc-800 hover:bg-zinc-700 active:bg-zinc-600 rounded-lg flex items-center justify-center text-white text-2xl font-light transition-colors"
+    <div class="h-13 flex items-center justify-center pt-12">
+      <div
+        v-if="mode === 'select'"
+        class="w-97 flex items-center gap-6"
       >
-        −
-      </button>
+        <!-- Minus Button -->
+        <button
+          @click.stop="adjustWidth(-5)"
+          class="w-12 h-10 bg-zinc-800 active:bg-zinc-600 rounded-lg flex items-center justify-center text-white text-2xl font-light transition-colors"
+        >
+          −
+        </button>
 
-       <!-- Width Slider -->
-      <div class="ml-5 flex-1">
-        <RangeSlider
-          v-model="regionWidth"
-          :show-label="false"
-          :min="5"
-          @change="handleWidthChange"
-        />
+        <!-- Width Slider -->
+        <div class="flex-1">
+          <RangeSlider
+            v-model="regionWidth"
+            :show-label="false"
+            :min="5"
+            @change="handleWidthChange"
+          />
+        </div>
+
+        <!-- Plus Button -->
+        <button
+          @click.stop="adjustWidth(5)"
+          class="w-12 h-10 bg-zinc-800 active:bg-zinc-600 rounded-lg flex items-center justify-center text-white text-2xl font-light transition-colors"
+        >
+          +
+        </button>
       </div>
-      
-      <!-- Plus Button -->
-      <button
-        @click.stop="adjustWidth(5)"
-        class="w-12 h-10 ml-2 bg-zinc-800 hover:bg-zinc-700 active:bg-zinc-600 rounded-lg flex items-center justify-center text-white text-2xl font-light transition-colors"
-      >
-        +
-      </button>
     </div>
-    <div v-else class="py-6.5"></div>
   </div>
 </template>
 

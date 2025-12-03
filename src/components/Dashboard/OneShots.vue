@@ -1,10 +1,8 @@
 <template>
    <!-- Separation Line -->
-  <div class="col-span-4">
-    <hr class="border-t border-zinc-600 my-4">
-  </div>
+  <hr class="border-t border-zinc-600 my-4">
 
-  <div class="col-span-4 flex flex-row gap-1 justify-center overflow-x-auto">
+  <div class="flex flex-row gap-1 justify-center overflow-x-auto">
     <button 
       v-for="(oneshot, index) in oneshots" 
       :key="index"
@@ -88,7 +86,7 @@ const oneshots: Array<{ key: string; icon: string }> = [
 ]
 
 function handleGridClick(position: number) {
-  console.log(`Grid position ${position} clicked`)
+  coreState.fireOneShot(position)
 }
 
 watch(() => coreState.oneshot, (newValue) => {

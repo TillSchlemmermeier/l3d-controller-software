@@ -1,4 +1,5 @@
 import numpy as np
+import struct
 from multiprocessing import shared_memory
 
 class e_color_manager():
@@ -335,7 +336,7 @@ class e_color_manager():
         
         # Apply Sound to light
         if self.sound_to_light_options:
-            self.current_volume = float(str(self.sound_values.buf[self.channel*8:self.channel*8+8],'utf-8'))
+            self.current_volume = struct.unpack('d', bytes(self.sound_values.buf[self.channel*8:self.channel*8+8]))[0]
             self.current_volume = np.clip(self.current_volume, 0.0, 1.0)
             self._apply_sound_to_light(self.current_volume)
 

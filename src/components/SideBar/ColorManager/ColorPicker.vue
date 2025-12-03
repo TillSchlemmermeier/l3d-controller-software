@@ -1,7 +1,7 @@
 <template>
   <div>
     <!-- Color Picker Section -->
-    <div class="px-6 pb-4">
+    <div class="">
       <div class="flex items-center justify-between mb-2 text-xs text-zinc-400 uppercase font-bold tracking-wider">
         <div>Picker</div>
         <div>RGB({{ rgbValues.r }}, {{ rgbValues.g }}, {{ rgbValues.b }})</div>
@@ -21,7 +21,7 @@
     </div>
 
     <!-- Hue Slider -->
-    <div class="px-6 pb-4">
+    <div class="mt-6">
       <div 
         class="relative h-6 w-full rounded-md cursor-pointer hue-slider" 
         @click="updateHue"
@@ -29,7 +29,7 @@
         ref="hueSlider"
       >
         <div 
-          class="absolute h-8 w-2.5 -translate-x-1/2 -translate-y-1/2 top-1/2 rounded-full border-2 border-white ring-2 ring-black"
+          class="absolute h-8 w-3 -translate-x-1/2 -translate-y-1/2 top-1/2 rounded-full border-2 border-white ring-2 ring-black"
           :style="{ left: `${(currentHue / 360) * 100}%` }"
         ></div>
       </div>

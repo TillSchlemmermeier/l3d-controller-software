@@ -8,8 +8,7 @@
     "l3d": "vite",
     "start": "electron --trace-warnings .",
     "build": "vue-tsc && vite build && electron-builder",
-    "preview": "vite preview",
-    "conc": "concurrently --prefix \"[{name}]\" --names \"GUI\" \"npm run dev\""
+    "preview": "vite preview"
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.0.9",
@@ -17,23 +16,20 @@
     "bufferutil": "^4.0.9",
     "chart.js": "^4.4.8",
     "gifshot": "^0.4.5",
-    "lodash": "^4.17.21",
     "pinia": "^3.0.1",
+    "qrcode.vue": "^3.6.0",
     "simple-keyboard": "^3.8.39",
     "tailwindcss": "^4.0.9",
     "three": "^0.174.0",
-    "utf-8-validate": "^5.0.10",
     "vue": "^3.4.21",
     "vue-router": "^4.5.0",
     "vuedraggable": "^4.1.0",
     "ws": "^8.18.1"
   },
   "devDependencies": {
-    "@types/lodash": "^4.17.16",
     "@types/three": "^0.174.0",
     "@vitejs/plugin-vue": "^5.0.4",
     "@vue/cli-plugin-router": "~5.0.0",
-    "concurrently": "^9.1.2",
     "electron": "^30.0.1",
     "electron-builder": "^24.13.3",
     "tailwind-scrollbar": "^4.0.1",

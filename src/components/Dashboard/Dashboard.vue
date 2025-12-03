@@ -11,52 +11,39 @@
     >
       <div class="flex flex-row flex-wrap mb-4 gap-4">
         <DashboardButton
-          label="AUTO PILOT"
-          :subLabel="`${coreState.autopilot_time} s`"
-          :active="coreState.autopilot"
-          :onClick="coreState.toggleAutopilot"
-        />
-
-        <DashboardButton
-          label="CROSS FADE"
-          :active="coreState.crossfade_active"
-        />
-
-        <DashboardButton
-          label="MODE:"
-          :subLabel="coreState.random.replace(/_/g, ' ')"
-          :onClick="coreState.autopilotMode"
-        />
-
-        <DashboardButton
-          label="TRIGGER RANDOM"
-          :onClick="coreState.triggerRandomizer"
-        />
-
-        <DashboardButton
           label="NORM S2L"
           :onClick="coreState.normalize"
         />
-        
-        <DashboardButton
-        label="REBOOT UI"
-        :onClick="reloadUI"
-        />
-        
         <DashboardButton
         label="REBOOT CORE"
         :adminOnly="true"
         :onClick="coreState.rebootCore"
         />
 
+        <!-- <DashboardButton
+          label="REBOOT UI"
+          :onClick="reloadUI"
+        /> -->
+
+        <DashboardButton
+          label="UNDO RANDOM"
+          :onClick="coreState.undoRandom"
+        />
+
         <DashboardButton
           label="I/O CUBE"
           :adminOnly="true"
           :onClick="coreState.toggleCube"
+          :active="coreState.IO"
         />
+        <!-- <DashboardButton
+          label="CROSS FADE"
+          :active="coreState.crossfade_active"
+        /> -->
       </div>
 
-      <!-- OneShots: Pushed to the bottom -->
+      <RandomMode />
+
       <div class="mt-auto">
         <OneShots />
       </div>
@@ -69,6 +56,7 @@ import { computed } from 'vue'
 import { useCoreStateStore } from '../../stores/coreState'
 import DashboardButton from './DashboardButton.vue'
 import OneShots from './OneShots.vue'
+import RandomMode from './RandomMode.vue'
 
 const coreState = useCoreStateStore()
 

@@ -43,7 +43,7 @@ const backgroundClass = computed(() => {
   }
 })
 
-function handleClick() {
+const handleClick = () => {
   if (props.onClick) {
     props.onClick()
   }

@@ -2,7 +2,7 @@ import { app, BrowserWindow, ipcMain } from 'electron'
 import { fileURLToPath } from 'node:url'
 import path from 'node:path'
 import WebSocket from 'ws'
-import { exec, spawn } from 'child_process'
+import { exec, spawn, ChildProcess } from 'child_process'
 
 const APP_ROOT = path.join(path.dirname(fileURLToPath(import.meta.url)), '..')
 const VITE_DEV_SERVER_URL = process.env['VITE_DEV_SERVER_URL']
@@ -11,6 +11,7 @@ const PUBLIC_PATH = VITE_DEV_SERVER_URL ? path.join(APP_ROOT, 'public') : RENDER
 
 let ws: WebSocket | null = null
 let win: BrowserWindow | null = null
+let pythonProcess: ChildProcess | null = null
 let isQuitting = false
 let isProcessing = false;
 
@@ -27,20 +28,20 @@ function setupWebSocket(win: BrowserWindow) {
     win.webContents.send('ws-error', error.message)
   })
 
-  ws.on('message', (data: Buffer) => {
-    // drop messages to prevent memory buildup when app is out of focus
-    if (isProcessing) {
+  ws.on('message', (data: any, isBinary: boolean) => {
+    if (isProcessing) return
+
+    // Handle binary cube data separately
+    if (isBinary) {
+      isProcessing = true
+      win.webContents.send('cube_data_binary', data)
+      isProcessing = false
       return
     }
-    try {
-      isProcessing = true;
-      const message = JSON.parse(data.toString())
-      win?.webContents.send(message.type, message.data)
-    } catch (error) {
-      console.error('Failed to parse WebSocket message:', error)
-    } finally {
-      isProcessing = false;
-    }
+    isProcessing = true;
+    const message = JSON.parse(data.toString())
+    win.webContents.send(message.type, message.data)
+    isProcessing = false;
   })
 
   ws.on('close', () => {
@@ -57,39 +58,53 @@ function setupWebSocket(win: BrowserWindow) {
 
 function setupPythonProcess(restore = false) {
   const pythonPath = path.join(APP_ROOT, 'core')
-  const process = spawn('python3.12', ['-u', 'main.py', ...(restore ? ['--restore'] : [])], {
+  pythonProcess = spawn('python3.12', ['-u', 'main.py', ...(restore ? ['--restore'] : [])], {
     cwd: pythonPath,
     stdio: ['ignore', 'pipe', 'pipe']
   })
 
   // Set up console output handlers
-  process.stdout.on('data', (data: Buffer) => {
-    const lines = data.toString().split('\n')
-    lines.forEach(line => {
-      if (line.trim()) {
-        console.log(`[CORE] ${line}`)
+  if (pythonProcess.stdout) {
+    pythonProcess.stdout.on('data', (data: Buffer) => {
+      const lines = data.toString().split('\n')
+      lines.forEach(line => {
+        if (line.trim()) {
+          console.log(`[CORE] ${line}`)
+        }
+      })
+
+      if (win && !win.isDestroyed()) {
+        win.webContents.send('python-output', {
+          type: 'stdout',
+          data: data.toString()
+        })
       }
     })
-    win?.webContents.send('python-output', {
-      type: 'stdout',
-      data: data.toString()
-    })
-  })
+  }
 
-  process.stderr.on('data', (data: Buffer) => {
-    const lines = data.toString().split('\n')
-    lines.forEach(line => {
-      if (line.trim()) {
-        console.error(`[CORE] ${line}`)
+  if (pythonProcess.stderr) {
+    pythonProcess.stderr.on('data', (data: Buffer) => {
+      const lines = data.toString().split('\n')
+      lines.forEach(line => {
+        if (line.trim()) {
+          console.error(`[CORE] ${line}`)
+        }
+      })
+
+      if (win && !win.isDestroyed()) {
+        win.webContents.send('python-output', {
+          type: 'stderr',
+          data: data.toString()
+        })
       }
     })
-    win?.webContents.send('python-output', {
-      type: 'stderr',
-      data: data.toString()
-    })
+  }
+  // Clear reference when process exits
+  pythonProcess.on('exit', () => {
+    pythonProcess = null
   })
 
-  return process
+  return pythonProcess
 }
 
 function createWindow() {
@@ -120,21 +135,27 @@ function restartBackend() {
     ws.close()
     ws = null
   }
-  // Kill backend processes and restart
-  exec('killall python3.12', () => {
-    // Wait for processes to terminate
+  const startNewProcess = () => {
     setTimeout(() => {
       setupPythonProcess(true)
-      // reestablish WebSocket connection
       setTimeout(() => {
-        if (win) {
+        if (win && !win.isDestroyed()) {
           setupWebSocket(win)
           win.webContents.send('reinitialize-renderers')
         }
       }, 1500)
       console.log('Backend restarting...')
     }, 500)
-  })
+  }
+
+  // Gracefully kill the process
+  if (pythonProcess) {
+    pythonProcess.once('exit', startNewProcess)
+    pythonProcess.kill('SIGINT')
+  } else {
+    // Fallback if reference is lost
+    exec('killall python3.12', startNewProcess)
+  }
 }
 
 ipcMain.handle('restart-backend', () => {
@@ -149,14 +170,44 @@ app.on('window-all-closed', () => {
     ws.close()
     ws = null
   }
-  exec('killall python3.12')
-  win = null
-  app.quit()
+
+  if (pythonProcess) {
+    console.log('Sending SIGINT to Python...')
+
+    // 1. Listen for the process to actually exit
+    pythonProcess.once('exit', () => {
+      console.log('================================================')
+      console.log('Python process exited cleanly. Quitting Electron.')
+      win = null
+      app.quit()
+    })
+
+    // 2. Send the polite kill signal
+    pythonProcess.kill('SIGINT')
+
+    // 3. Safety net: Force quit if Python hangs for more than 2 seconds
+    setTimeout(() => {
+      console.log('Python took too long to close. Force quitting.')
+      app.quit()
+    }, 2000)
+
+  } else {
+    // Fallback if process is already dead
+    exec('killall python3.12', () => {
+      win = null
+      app.quit()
+    })
+  }
 })
 
 app.whenReady().then(() => {
   setupPythonProcess()
   win = createWindow()
   win.loadURL(VITE_DEV_SERVER_URL ?? path.join(RENDERER_DIST, 'index.html'))
-  setupWebSocket(win)
+  // wait 2 seconds before setting up WebSocket to allow backend to start
+  setTimeout(() => {
+    if (win) {
+      setupWebSocket(win)
+    }
+  }, 2000)
 })

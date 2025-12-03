@@ -43,6 +43,8 @@ import edit from '../assets/icons/edit.svg'
 import home from '../assets/icons/home.svg'
 import blank from '../assets/icons/blank.svg'
 import midi_edit from '../assets/icons/midi_edit.svg'
+import devices from '../assets/icons/devices.svg'
+// import plumbing from '../assets/icons/plumbing.svg'
 
 const uiState = useUiStateStore()
 const router = useRouter()
@@ -61,8 +63,11 @@ const menuItems = computed(() => [
     ? [{ icon: admin, label: 'Admin', action: () => goTo(RouteNames.ADMIN_VIEW) }]
     : [{ icon: blank, label: 'Dummy', action: () => console.log('DUMMY CLICKED') }]
   ),
+  ...(uiState.admin
+  ? [{ icon: devices, label: 'Remote', action: () => goTo(RouteNames.REMOTE_CONTROL) }]
+  : [{ icon: blank, label: 'Dummy', action: () => console.log('DUMMY CLICKED') }]
+),
   { icon: blank, label: '2nd', action: () => goTo(RouteNames.SECOND_PAGE) },
-  { icon: blank, label: 'Dummy', action: () => console.log('DUMMY CLICKED') },
   { icon: blank, label: 'Dummy2', action: () => console.log('DUMMY CLICKED') },
   { icon: blank, label: 'Dummy3', action: () => console.log('DUMMY CLICKED') },
   { icon: blank, label: 'Dummy4', action: () => console.log('DUMMY CLICKED') },

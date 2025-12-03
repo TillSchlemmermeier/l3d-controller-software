@@ -1,4 +1,4 @@
-
+import struct
 import numpy as np
 from multiprocessing import shared_memory
 from random import choice
@@ -32,7 +32,7 @@ class e_roll():
         self.maxcounter = int(args[2]*10+1)
         # === PARAMETERS END ===
 
-        current_volume = int(float(str(self.sound_values.buf[32:40],'utf-8')))
+        current_volume = struct.unpack('d', bytes(self.sound_values.buf[32:40]))[0]
 
         if current_volume > self.lastvalue:
             self.lastvalue = current_volume+self.freq

@@ -1,4 +1,5 @@
 import numpy as np
+import struct
 from multiprocessing import shared_memory
 
 class e_fade():
@@ -33,7 +34,7 @@ class e_fade():
             self.oldworld[:, :, :, :] = world[:, :, :, :]
             return np.clip(world, 0, 1)
 
-        current_volume = float(str(self.sound_values.buf[self.channel*8:self.channel*8+8], 'utf-8'))
+        current_volume = struct.unpack('d', bytes(self.sound_values.buf[self.channel*8:self.channel*8+8]))[0]
 
         if self.invert:
             # Fade out on sound

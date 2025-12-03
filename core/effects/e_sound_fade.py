@@ -1,4 +1,4 @@
-
+import struct
 import numpy as np
 from multiprocessing import shared_memory
 
@@ -28,7 +28,7 @@ class e_sound_fade():
         self.invert = args[1] > 0.5
         # === PARAMETERS END ===
 
-        current_volume = float(str(self.sound_values.buf[self.channel*8:self.channel*8+8],'utf-8'))
+        current_volume = struct.unpack('d', bytes(self.sound_values.buf[self.channel*8:self.channel*8+8]))[0]
 
         if self.invert:
             newlength = np.clip(int(7 * (current_volume) * self.amount), 0.01, 10)

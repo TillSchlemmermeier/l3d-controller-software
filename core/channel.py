@@ -22,15 +22,12 @@ class class_channel:
         self.generator = None
         self.effects = []
         self.color_effect = e_color_manager()
-
-        print(f'Channel {self.id} initialised')
         
     def update_channel(self, channelstate):
         # check if generator values need to be updated
         if channelstate[9]['update']:
             # check if generator changed
             if channelstate[9]['name'] != self.generator.__class__.__name__:
-                print(f'Update Generator from Channel {self.id}')
                 # if so, replace old generator with instance of the new one
                 exec('self.generator = ' + channelstate[9]['name'] + '()')
 
@@ -46,10 +43,8 @@ class class_channel:
                     exec('self.effects.append(' + channelstate[i]['name'] + '())')
                 # otherwise check if effect changed and if so, replace old effect with instance of the new one
                 elif channelstate[i]['name'] != self.effects[i].__class__.__name__:
-                    print(f'Update Effect {i} from Channel {self.id}')
                     exec('self.effects[i] = ' + channelstate[i]['name'] + '()')
 
-        print(f'Channel {self.id} Update Completed', channelstate)
         return channelstate
 
     def render_frame(self, channelstate):

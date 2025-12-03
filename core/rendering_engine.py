@@ -4,6 +4,7 @@ from world2vox_fortran import world2vox_f as world2vox
 import requests
 import serial
 import time
+import copy
 import multiprocessing as mp
 # load shots
 from oneshots.s_sides import *
@@ -89,8 +90,10 @@ class rendering_engine:
 
         # initialise channels
         self.channels = []
+        print('Initialising Channels...')
         for i in range(1,9):
             self.channels.append(class_channel(i))
+        print('Channels Initialised')
 
         # initialise shared memory
         self.shared_cube_memory = mp.shared_memory.SharedMemory(name="cube_data")
@@ -123,9 +126,10 @@ class rendering_engine:
         # Calculate elapsed time
         elapsed_time = time.time() - self.start_time
 
-        # Print the frequency every 10 seconds
-        if elapsed_time >= 10.0:
-            print(f"Run method executed {self.frame_count} times in the last 10 seconds")
+        # Print the frequency every 100 seconds
+        if elapsed_time >= 100.0:
+            # print(f"Run method executed {self.frame_count} times in the last 100 seconds")
+            print(f"Rendering engine running at {self.frame_count / 100} FPS")
             self.frame_count = 0
             self.start_time = time.time()
 
@@ -136,9 +140,6 @@ class rendering_engine:
         all_colors = np.concatenate([cube_colors_reshaped, channel_colors_reshaped], axis=0)  # Shape: (9, 1000, 3)
         # save to shared memory
         np.copyto(self.shared_cube_array, all_colors)
-
-        # reset cubeworld
-        self.cubeworld = np.zeros([3, 10, 10, 10])
 
 
     def send_frame(self):
@@ -174,9 +175,12 @@ class rendering_engine:
         snapshot = None
         while retry_count < 3:
             try:
-                # Create copy of state to minimize UltraDict AssertionError
+                # Create copy of state to prevent UltraDict AssertionError
                 with state.lock:
-                    snapshot = dict(state)
+                    state.apply_update()
+                    snapshot = copy.deepcopy(state.data)
+                    # shallow copy alternative:
+                    # snapshot = dict(state)
                     self.should_send = snapshot['IO']
                 break
 
@@ -229,6 +233,14 @@ class rendering_engine:
             self.channelworld[i, :, :, :] = new_world + this_channel['fade']*\
                                              self.channelworld[i, :, :, :]
 
+        # preserve old world if needed for fade effect
+        oldworld = None
+        if snapshot['fade'] > 0.01:
+            oldworld = self.cubeworld.copy()
+
+        # reset cubeworld
+        self.cubeworld = np.zeros([3, 10, 10, 10])
+
         # copy channels together
         for i in range(snapshot['numberOfChannels']):
             if snapshot[i]['IO']:
@@ -255,7 +267,7 @@ class rendering_engine:
 
         # detect whether a oneshot is fired
         if snapshot['oneshot'] > 0:
-            print('oneshot fired')
+            print(f"oneshot fired: {snapshot['oneshot']}")
             self.shot_state = snapshot['oneshot']
             self.shot = self.shot_list[int(self.shot_state)]()
             with state.lock:
@@ -268,8 +280,9 @@ class rendering_engine:
                 self.shot_state = 0
                 self.shot = s_blank()
 
-        # # Apply global fade
-        # self.cubeworld *= state['fade']
+        # Apply global fade
+        if oldworld is not None:
+            self.cubeworld += snapshot['fade'] * oldworld
 
         # adjust global brightness
         self.cubeworld *= snapshot['brightness']

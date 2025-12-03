@@ -1,5 +1,6 @@
 from multiprocessing import shared_memory
 import numpy as np
+import struct
 
 class e_strobe():
     '''
@@ -56,7 +57,7 @@ class e_strobe():
 
         # Trigger mode
         elif self.channel == 'Trigger':
-            current_volume = int(float(str(self.sound_values.buf[32:40], 'utf-8')))
+            current_volume = struct.unpack('d', bytes(self.sound_values.buf[32:40]))[0]
             if current_volume > self.lastvalue:
                 self.trigger_count = 0
                 self.lastvalue = current_volume
@@ -67,7 +68,7 @@ class e_strobe():
 
         # Frequency bands
         else:
-            current_volume = float(str(self.sound_values.buf[self.channel*8:self.channel*8+8], 'utf-8')) ** 4
+            current_volume = struct.unpack('d', bytes(self.sound_values.buf[self.channel*8:self.channel*8+8]))[0] ** 4
             should_flash = current_volume > 0.5
 
         if should_flash:

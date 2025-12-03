@@ -39,7 +39,7 @@ class Randomizer:
         if presets:
             preset = random.choice(presets)
             preset_data = self.db.get_preset('global', 'presets', preset['name'], False)
-            self.state_manager.load_global(preset_data)
+            self.state_manager.load_global(preset_data, False)
 
     def _randomize_all_channels(self) -> None:
         """Load random channel preset for each channel"""
@@ -57,7 +57,8 @@ class Randomizer:
         if selected_only:
             channel_idx = self.state['context'][0][0]
             if channel_idx >= self.state['numberOfChannels']:
-                return
+                self.state['numberOfChannels'] += 1
+                channel_idx = self.state['numberOfChannels'] - 1
         else:
             channel_idx = random.randint(0, self.state['numberOfChannels'] - 1)
 
@@ -207,7 +208,6 @@ class Randomizer:
         gradients = self.db.get_all_gradients()
         gradient_string = random.choice(gradients)['data']
         gradient = json.loads(gradient_string)
-        print("Selected gradient:", gradient)
 
         # Random speeds (-100 to 100)
         speed = random.randint(0, 100)
@@ -220,7 +220,8 @@ class Randomizer:
 
         # Sound to Light Options
         s2l_options = ['startVal', 'endVal', 'startSat', 'endSat', 'regionWidth', 'regionStart', 'speed', 'rotateY', 'rotateZ']
-        k = random.randint(0, len(s2l_options) - 1)
+        # Triangular distribution: Low = 0, High = 9 (exclusive), Mode (peak) = 1
+        k = int(random.triangular(0, 9, 1))
         s2l = random.sample(s2l_options, k)
 
         color_data = {

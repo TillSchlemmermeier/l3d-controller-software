@@ -1,4 +1,5 @@
 # modules
+import struct
 import numpy as np
 from multiprocessing import shared_memory
 
@@ -42,7 +43,7 @@ class e_mirror():
 
         runtime_naxis = self.naxis
         if self.trigger:
-            current_volume = int(float(str(self.sound_values.buf[32:40],'utf-8')))
+            current_volume = struct.unpack('d', bytes(self.sound_values.buf[32:40]))[0]
 
             if current_volume > self.lastvalue:
                 self.lastvalue = current_volume

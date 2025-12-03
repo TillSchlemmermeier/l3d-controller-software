@@ -135,6 +135,12 @@ export const useUiStateStore = defineStore('uiState', {
       await this.fetchFromBackend(url)
     },
 
+    async getNetwork() {
+      const url = `network-info`
+      const response = await this.fetchFromBackend(url)
+      return response
+    },
+
     // make GET call
     async fetchFromBackend(url: string) {
       console.log('fetching data from', url)

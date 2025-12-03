@@ -34,6 +34,7 @@ export default defineConfig({
         '**/*.log',  // ignore log files
         '**/*.py',  // ignore python files
         '**/*.txt',  // ignore text files
+        path.resolve(__dirname, 'mobile') + '/**',  // ignore mobile files
       ]
     },
     // hmr: false,  // Disable HMR completely

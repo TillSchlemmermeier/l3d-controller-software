@@ -1,4 +1,5 @@
 # modules
+import struct
 import numpy as np
 from random import randint
 from multiprocessing import shared_memory
@@ -83,7 +84,7 @@ class g_drop():
 
         # check if S2L is activated
         elif self.channel != 'noS2L':
-            current_volume = float(str(self.sound_values.buf[self.channel*8:self.channel*8+8],'utf-8'))
+            current_volume = struct.unpack('d', bytes(self.sound_values.buf[self.channel*8:self.channel*8+8]))[0]
             if current_volume > 0:
                 self.drops.append(self.drop())
                 self.step = 0

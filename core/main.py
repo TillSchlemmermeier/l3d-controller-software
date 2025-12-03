@@ -1,15 +1,12 @@
 #!/usr/bin/python3
-import logging
-import sys
-from datetime import datetime
+import struct
 from UltraDict import UltraDict
 import multiprocessing as mp
 from time import time, sleep
 import tkinter as tk
 import requests
+import socket
 from midi_emulator import MidiControllerEmulator
-from midi_akai import class_akai
-from midi_fighter import class_fighter
 from midi_launchcontrol import class_launchcontrol
 from rendering_engine import rendering_engine
 from s2l_engine import sound_process
@@ -19,6 +16,8 @@ from state_manager import StateManager
 import pickle
 import argparse
 import os
+import signal
+import sys
 
 def autopilot(state):
     # Validate all presets
@@ -46,12 +45,12 @@ def autopilot(state):
         sleep(0.1)
 
 def server(state):
-    logging.info('Starting GUI server')
+    print('Starting FastAPI server')
     server = WebSocketAPIServer(state)
     server.run()
 
 def midi_devices(state):
-    logging.info('...starting midi thread')
+    print('...starting midi thread')
     launchcontrol = class_launchcontrol(state)
     # akai = class_akai(state)
     # fighter = class_fighter(state)
@@ -72,12 +71,11 @@ def midi_devices(state):
     # root.mainloop()
 
 def rendering(state):
-    logging.info('Waiting for server...')
-    sleep(1)
-
-    logging.info('Starting rendering thread')
+    print('Starting rendering thread')
     frame_renderer = rendering_engine()
-    session = requests.Session()  # Reuse connection
+
+    udp_sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    udp_dest = ("127.0.0.1", 8001)
 
     frame_interval = 1/25  # 25 FPS
     next_frame = time()
@@ -87,7 +85,7 @@ def rendering(state):
         frame_renderer.run(state)
         
         # Send frame data
-        session.get("http://localhost:8000/api/update_cube")
+        udp_sock.sendto(b'trigger_cube_update', udp_dest)
 
         # Wait precisely until next frame
         next_frame += frame_interval
@@ -108,9 +106,9 @@ def backup_state(state):
             backup_file = os.path.join(f"state_backup.pkl")
             with open(backup_file, 'wb') as f:  # 'wb' for binary write
                 pickle.dump(state_copy, f)
-            logging.info("State backup created")
+            print("State backup created")
         except Exception as e:
-            logging.error(f"Backup error: {e}")
+            print(f"Backup error: {e}")
 
 
 def restore_from_backup(state):
@@ -126,7 +124,7 @@ def restore_from_backup(state):
     channel_indices = list(range(state['numberOfChannels'])) + [9]
     for channel_key in channel_indices:
         StateManager(state).update_channel(channel_key)
-    logging.info("State restored from backup")
+    print("State restored from backup")
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
@@ -167,6 +165,17 @@ if __name__ == '__main__':
                 "params": ['size', 'size', 4, 1.0, 'surface', 'sides', 'Off', 0.45, 'channel', 'channel', 'noS2L', 0.0, 'speed', 'speed', 0, 0.0]
             },
             "numberOfEffects": 0,
+            # color element
+            8: {
+                'gradient': [[0, '#FF9F3F'], [100, '#0080FF']],
+                'gradientType': 'linear',
+                'speed': 0,
+                'sectionStart': 0,
+                'sectionWidth': 100,
+                'rotateSpeedY': 50,
+                'rotateSpeedZ': 50,
+                'update': True
+            }
         },
 
         # global effects channel
@@ -181,9 +190,9 @@ if __name__ == '__main__':
 
     try:
         global_memory_s2l  = mp.shared_memory.SharedMemory(create = True,name = "global_s2l_memory", size = 512)
-        # Initialize buffer with zeros in string format
+        # Initialize buffer with zeros
         for i in range(0, 512, 8):
-            global_memory_s2l.buf[i:i+8] = '0.0'.encode('utf-8').ljust(8, b'\x00')
+            global_memory_s2l.buf[i:i+8] = struct.pack('d', 0.0)
     except FileExistsError:
         global_memory_s2l = mp.shared_memory.SharedMemory(name="global_s2l_memory")
 
@@ -201,18 +210,46 @@ if __name__ == '__main__':
         mp.Process(target=autopilot, name="Autopilot", args=[state]),
     ]
 
+    # Define a handler for graceful shutdown
+    def signal_handler(sig, frame):
+        # Only the main process should manage the child processes
+        if mp.current_process().name == 'MainProcess':
+            print(f"Received signal {sig}, shutting down...")
+            # Terminate all child processes
+            for proc in processes:
+                if proc.is_alive():
+                    proc.terminate()
+            sys.exit(0)
+        else:
+            # Child processes should just exit cleanly without trying to kill siblings
+            sys.exit(0)
+
+    # Register the signal handlers
+    signal.signal(signal.SIGINT, signal_handler)
+    signal.signal(signal.SIGTERM, signal_handler)
+
     for proc in processes:
         proc.start()
-        print(f'{proc.name}_Proc: {proc.pid}')
+        print(f'{proc.name} process started with PID {proc.pid}')
 
-    for proc in processes:
-        proc.join()
+    try:
+        for proc in processes:
+            proc.join()
+    except (KeyboardInterrupt, SystemExit):
+        print("Main process interrupted, stopping children...")
+    finally:
+        # Ensure all processes are definitely dead
+        for proc in processes:
+            if proc.is_alive():
+                proc.terminate()
+                proc.join(timeout=1.0)
 
-
-    global_memory_s2l.close()
-    global_memory_s2l.unlink()
-    shared_cube_memory.close()
-    shared_cube_memory.unlink()
-
-
-    logging.info('Application shutdown complete')
+        # Clean up shared memory
+        try:
+            global_memory_s2l.close()
+            global_memory_s2l.unlink()
+            shared_cube_memory.close()
+            shared_cube_memory.unlink()
+            print("Shared memory cleaned up")
+        except Exception as e:
+            print(f"Error cleaning up shared memory: {e}")

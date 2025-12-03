@@ -1,4 +1,5 @@
 # modules
+import struct
 import numpy as np
 from random import randint, choice
 from multiprocessing import shared_memory
@@ -95,13 +96,13 @@ class g_circles():
 
         # check if S2L is activated
         if isinstance(self.channel, int):
-            current_volume = float(str(self.sound_values.buf[self.channel*8:self.channel*8+8],'utf-8'))
+            current_volume = struct.unpack('d', bytes(self.sound_values.buf[self.channel*8:self.channel*8+8]))[0]
             runtime_number = int(10 * current_volume)
             self.soundsize =int(np.clip(3 * current_volume, 0, 3))
 
         # check for trigger
         elif self.channel == 'Trigger':
-            current_volume = int(float(str(self.sound_values.buf[32:40],'utf-8')))
+            current_volume = struct.unpack('d', bytes(self.sound_values.buf[32:40]))[0]
             if current_volume > self.lastvalue:
                 self.lastvalue = current_volume
                 self.counter = 8

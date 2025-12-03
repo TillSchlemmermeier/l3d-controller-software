@@ -1,3 +1,4 @@
+import struct
 import numpy as np
 from multiprocessing import shared_memory
 
@@ -30,7 +31,7 @@ class g_square_equalizer():
 
         # draw box
         for i in range(4):
-            current_volume = float(str(self.sound_values.buf[i*8:i*8+8],'utf-8'))
+            current_volume = struct.unpack('d', bytes(self.sound_values.buf[i*8:i*8+8]))[0]
             current_volume = np.clip(int(current_volume*self.amount[i]),0,9)
             if current_volume > self.pos[i]:
                 self.pos[i] = current_volume

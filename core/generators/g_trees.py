@@ -1,4 +1,5 @@
 # modules
+import struct
 import numpy as np
 from random import randint
 from multiprocessing import shared_memory
@@ -52,14 +53,14 @@ class g_trees():
         world = np.zeros([3,10,10,10])
 
         if self.trigger == 'number':
-            current_volume = int(float(str(self.sound_values.buf[32:40],'utf-8')))
+            current_volume = struct.unpack('d', bytes(self.sound_values.buf[32:40]))[0]
             if current_volume > self.lastvalue:
                 self.lastvalue = current_volume
                 for i in range(self.nled):
                     self.flatworld[randint(0,3), 9, randint(0,9)] = 1.0
 
         elif self.trigger == 'speed':
-            current_volume = int(float(str(self.sound_values.buf[32:40],'utf-8')))
+            current_volume = struct.unpack('d', bytes(self.sound_values.buf[32:40]))[0]
             if current_volume > self.lastvalue:
                 self.lastvalue = current_volume
                 for i in range(int(args[1]*4)+1):

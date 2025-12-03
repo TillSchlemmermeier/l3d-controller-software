@@ -1,6 +1,4 @@
-
 import numpy as np
-from multiprocessing import shared_memory
 from matplotlib import colors
 
 class e_lfo_hsv():

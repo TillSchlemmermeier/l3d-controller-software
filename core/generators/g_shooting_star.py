@@ -1,3 +1,4 @@
+import struct
 import numpy as np
 from random import uniform
 from generators.g_shooting_star_f import gen_shooting_star
@@ -39,13 +40,13 @@ class g_shooting_star():
 
         # check if S2L is activated
         if isinstance(self.channel, int):
-            current_volume = float(str(self.sound_values.buf[self.channel*8:self.channel*8+8],'utf-8'))
+            current_volume = struct.unpack('d', bytes(self.sound_values.buf[self.channel*8:self.channel*8+8]))[0]
             if current_volume > 0:
                 self.dot_list.insert(0, gen_line_2(self.steps, self.mode))
 
         #check for trigger
         elif self.channel == 'Trigger':
-            current_volume = int(float(str(self.sound_values.buf[32:40],'utf-8')))
+            current_volume = struct.unpack('d', bytes(self.sound_values.buf[32:40]))[0]
             if current_volume > self.lastvalue:
                 self.lastvalue = current_volume
                 self.dot_list.insert(0, gen_line_2(self.steps, self.mode))

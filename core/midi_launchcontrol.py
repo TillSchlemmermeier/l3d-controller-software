@@ -92,23 +92,22 @@ class class_launchcontrol:
                 self.midi_translation.update_context(3, 3, message[2])
 
             # channel IO
-            if message[2] > 0:
-                if message[1] == 37:
-                    self.midi_translation.toggle_fixed(0, 'IO')
-                elif message[1] == 38:
-                    self.midi_translation.toggle_fixed(1, 'IO')
-                elif message[1] == 39:
-                    self.midi_translation.toggle_fixed(2, 'IO')
-                elif message[1] == 40:
-                    self.midi_translation.toggle_fixed(3, 'IO')
-                elif message[1] == 41:
-                    self.midi_translation.toggle_fixed(4, 'IO')
-                elif message[1] == 42:
-                    self.midi_translation.toggle_fixed(5, 'IO')
-                elif message[1] == 43:
-                    self.midi_translation.toggle_fixed(6, 'IO')
-                elif message[1] == 44:
-                    self.midi_translation.toggle_fixed(7, 'IO')
+            if message[1] == 37:
+                self.midi_translation.toggle_fixed(0, 'IO')
+            elif message[1] == 38:
+                self.midi_translation.toggle_fixed(1, 'IO')
+            elif message[1] == 39:
+                self.midi_translation.toggle_fixed(2, 'IO')
+            elif message[1] == 40:
+                self.midi_translation.toggle_fixed(3, 'IO')
+            elif message[1] == 41:
+                self.midi_translation.toggle_fixed(4, 'IO')
+            elif message[1] == 42:
+                self.midi_translation.toggle_fixed(5, 'IO')
+            elif message[1] == 43:
+                self.midi_translation.toggle_fixed(6, 'IO')
+            elif message[1] == 44:
+                self.midi_translation.toggle_fixed(7, 'IO')
 
         # nt messages
         # elif message[0] == 144:

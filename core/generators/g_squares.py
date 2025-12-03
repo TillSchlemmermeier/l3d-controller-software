@@ -1,3 +1,4 @@
+import struct
 import numpy as np
 from scipy.signal import sawtooth
 from multiprocessing import shared_memory
@@ -52,7 +53,7 @@ class g_squares():
 
         #check for trigger
         if self.trigger:
-            current_volume = int(float(str(self.sound_values.buf[32:40],'utf-8')))
+            current_volume = struct.unpack('d', bytes(self.sound_values.buf[32:40]))[0]
             if current_volume > self.lastvalue:
                 self.lastvalue = current_volume
                 self.step = 0

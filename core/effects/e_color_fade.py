@@ -1,4 +1,5 @@
 # modules
+import struct
 import numpy as np
 from colorsys import hsv_to_rgb
 from multiprocessing import shared_memory
@@ -43,13 +44,13 @@ class e_color_fade():
 
         # check if s2l is activated
         if isinstance(self.channel, int):
-            current_volume = np.clip(float(str(self.sound_values.buf[self.channel*8:self.channel*8+8],'utf-8')), 0, 1)
+            current_volume = struct.unpack('d', bytes(self.sound_values.buf[self.channel*8:self.channel*8+8]))[0]
 
             self.step = (current_volume * np.pi) / self.speed
 
         # check if trigger is activated
         elif self.channel == 'Trigger':
-            current_volume = int(float(str(self.sound_values.buf[32:40],'utf-8')))
+            current_volume = struct.unpack('d', bytes(self.sound_values.buf[32:40]))[0]
             #check if trigger has been activated
             if current_volume > self.lastvalue:
                 self.step = 0

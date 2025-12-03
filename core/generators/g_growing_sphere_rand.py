@@ -1,4 +1,5 @@
 # modules
+import struct
 import numpy as np
 from scipy.signal import sawtooth
 from generators.g_genhsphere import gen_hsphere
@@ -49,7 +50,7 @@ class g_growing_sphere_rand():
         world = np.zeros([3, 10, 10, 10])
 
         if self.trigger:
-            current_volume = int(float(str(self.sound_values.buf[32:40],'utf-8')))
+            current_volume = struct.unpack('d', bytes(self.sound_values.buf[32:40]))[0]
             if current_volume > self.lastvalue:
                 self.lastvalue = current_volume
                 self.pos = [randint(0,9), randint(0,9), randint(0,9)]

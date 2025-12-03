@@ -1,4 +1,5 @@
 # modules
+import struct
 import numpy as np
 from scipy.signal import sawtooth
 from random import randint, choice
@@ -57,7 +58,7 @@ class g_growing_face():
 
         # check if s2l trigger is activated
         if self.trigger:
-            current_volume = int(float(str(self.sound_values.buf[32:40],'utf-8')))
+            current_volume = struct.unpack('d', bytes(self.sound_values.buf[32:40]))[0]
             if current_volume > self.lastvalue:
                 self.lastvalue = current_volume
                 self.run = True

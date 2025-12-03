@@ -1,14 +1,25 @@
-from UltraDict import UltraDict
 from copy import deepcopy
-import json
+import requests
+import threading
+import time
 
 class StateManager:
     def __init__(self, state):
-        # self.state = UltraDict(name='state')
         self.state = state
         self._max_retries = 3
+        self.history = []
+        self.max_history_size = 10
 
-    def _safe_state_operation(self, operation):
+        self.api_endpoint = "http://localhost:8000/api"
+        self.url = f"{self.api_endpoint}/get-state"
+
+        # --- Thread Management ---
+        self._stop_slow_load_event = threading.Event()
+        self._current_load_thread = None
+        self._thread_lock = threading.Lock()
+
+
+    def safe_state_operation(self, operation):
         """Safely execute a state operation with retries"""
         for attempt in range(self._max_retries):
             try:
@@ -19,6 +30,34 @@ class StateManager:
                     print(f"Failed after {self._max_retries} attempts: {e}")
                     raise
                 print(f"Retry attempt {attempt + 1} after error: {e}")
+
+    def save_state_for_undo(self):
+        """Saves a snapshot of the current state to history"""
+        with self.state.lock:
+            snapshot = deepcopy(dict(self.state))
+            self.history.append(snapshot)
+
+        if len(self.history) > self.max_history_size:
+            self.history.pop(0)
+
+    def undo_last_change(self) -> bool:
+        """Restores the last state from history"""
+        if not self.history:
+            print("No history to undo")
+            return False
+
+        previous_state = self.history.pop()
+
+        with self.state.lock:
+            self.state.clear()
+            self.state.update(previous_state)
+
+            self.state['midi_update'] = 1
+            for i in range(self.state.get('numberOfChannels', 0)):
+                self.update_channel(i)
+
+        print(f"State restored. History size: {len(self.history)}")
+        return True
 
     def update_channel(self, channel_key):
         def _update():
@@ -32,7 +71,7 @@ class StateManager:
                 channel[8]['update'] = 1
             self.state[channel_key] = channel
 
-        self._safe_state_operation(_update)
+        self.safe_state_operation(_update)
 
     def load_generator(self, channel: int, preset_data: dict, this_channel: dict = None):
         """Load a generator preset into a channel"""
@@ -66,29 +105,106 @@ class StateManager:
         """Load a channel preset"""
         with self.state.lock:
             self.state[channel] = preset_data
-            self.state[channel]['IO'] = 0
             if channel == self.state['numberOfChannels']:
                 self.state['numberOfChannels'] += 1
             self.update_channel(channel)
             # update the values of the midi controller slider
             self.state['midi_update'] = 1
 
-    def load_global(self, preset_data: dict):
+    def load_global(self, preset_data: dict, instant: bool = True):
         """Load a global preset"""
-        with self.state.lock:
-            # for key, value in preset_data.items():
-            #     self.state[key] = value
-            self.state["context"] = preset_data["context"]
-            self.state['numberOfChannels'] = preset_data['numberOfChannels']
-            self.state[9] = preset_data[9]
-            self.update_channel(9)
+        if instant:
+            with self.state.lock:
+                # for key, value in preset_data.items():
+                #     self.state[key] = value
+                self.state["context"] = preset_data["context"]
+                self.state['numberOfChannels'] = preset_data['numberOfChannels']
+                self.state[9] = preset_data[9]
+                self.update_channel(9)
 
-            for i in range(preset_data['numberOfChannels']):
-                self.state[i] = preset_data[i]
-                self.update_channel(i)
+                for i in range(preset_data['numberOfChannels']):
+                    self.state[i] = preset_data[i]
+                    self.update_channel(i)
 
-            # update the values of the midi controller slider
-            self.state['midi_update'] = 1
+                for i in range(self.state['numberOfChannels'], 8):
+                    if i in self.state:
+                        del self.state[i]
+
+                # update the values of the midi controller slider
+                self.state['midi_update'] = 1
+        else:
+            def slow_load_task():
+                try:
+                    # 1. Update global settings first
+                    if self._stop_slow_load_event.is_set(): return
+
+                    with self.state.lock:
+                        self.state["context"] = preset_data["context"]
+                        self.state[9] = preset_data[9]
+                        self.update_channel(9)
+
+                    # 2. Update channels one by one with delay
+                    for i in range(preset_data['numberOfChannels']):
+                        if self._stop_slow_load_event.is_set():
+                            print("Slow load aborted during channel update.")
+                            return
+
+                        channel_io = False
+                        with self.state.lock:
+                            self.state[i] = preset_data[i]
+                            channel_io = preset_data[i].get('IO', False)
+                            self.update_channel(i)
+                            self.state['numberOfChannels'] = max(self.state['numberOfChannels'], i + 1)
+
+                        requests.get(self.url)
+
+                        # Sleep in small chunks to allow faster interruption
+                        if channel_io:
+                            for _ in range(30):
+                                if self._stop_slow_load_event.is_set(): return
+                                time.sleep(0.1)
+
+                    # 3. Cleanup extra channels
+                    if self._stop_slow_load_event.is_set(): return
+
+                    print("Starting cleanup of extra channels")
+                    target_count = preset_data['numberOfChannels']
+                    current_max = 8
+
+                    for i in range(current_max, target_count - 1, -1):
+                        if self._stop_slow_load_event.is_set():
+                            print("Slow load aborted during cleanup.")
+                            return
+
+                        if i in self.state:
+                            with self.state.lock:
+                                print(f"Deleting extra channel {i}")
+                                del self.state[i]
+                                self.state['numberOfChannels'] = i
+                            requests.get(self.url)
+
+                            for _ in range(30):
+                                if self._stop_slow_load_event.is_set(): return
+                                time.sleep(0.1)
+                        else:
+                            # If channel doesn't exist, continue immediately
+                            pass
+
+                    if self._stop_slow_load_event.is_set(): return
+
+                    with self.state.lock:
+                        self.state['midi_update'] = 1
+                    requests.get(self.url)
+                    print("Cleanup complete. Final numberOfChannels:", self.state['numberOfChannels'])
+
+                except Exception as e:
+                    print(f"[CORE] Error in slow load task: {e}")
+
+            # Start the background thread
+            with self._thread_lock:
+                self._current_load_thread = threading.Thread(target=slow_load_task)
+                self._current_load_thread.daemon = True
+                self._current_load_thread.start()
 
     def remove_channel(self, channel_index: int) -> bool:
         """Remove a channel and shift others up"""
@@ -202,24 +318,40 @@ class StateManager:
             channel[effect_index]['IO'] = not channel[effect_index]['IO']
             self.state[channel_index] = channel
 
+    def update_global_key(self, key: str, value) -> bool:
+        """Update a specific global key """
+        with self.state.lock:
+            self.state[key] = value
+            self.state['midi_update'] = 1
+
+    def update_channel_key(self, channel_index: int, key: str, value) -> bool:
+        """Update a specific key in a channel"""
+        with self.state.lock:
+            channel = self.state[channel_index]
+            channel[key] = value
+            channel['update'] = 1
+            self.state[channel_index] = channel
+            self.state['midi_update'] = 1
+
+    def toggle_channel_key(self, channel_index: int, key: str) -> bool:
+        """Toggle a specific boolean key in a channel"""
+        with self.state.lock:
+            channel = self.state[channel_index]
+            channel[key] = not channel[key]
+            channel['update'] = 1
+            self.state[channel_index] = channel
+            self.state['midi_update'] = 1
+
     def update_color_manager(self, channel_index: int, color_data: dict) -> bool:
         """Update color manager settings for a specific channel"""
-        try:
-            with self.state.lock:
-                channel = self.state[channel_index]
-                channel[8] = color_data.copy()
-                channel[8]['update'] = 1
-                self.state[channel_index] = channel
-                print(f"Updated color manager for channel {channel_index} with data: {color_data}")
+        with self.state.lock:
+            channel = self.state[channel_index]
+            channel[8] = color_data.copy()
+            channel[8]['update'] = 1
+            self.state[channel_index] = channel
+            self.state['midi_update'] = 1
 
-                # Set MIDI update flag
-                self.state['midi_update'] = 1
-
-                return True
-
-        except Exception as e:
-            print(f"Error updating color manager: {e}")
-            return False
+            return True
 
     def clear_gradient(self, channel_index: int):
         """Clear gradient settings for a specific channel"""
@@ -235,9 +367,14 @@ class StateManager:
         with self.state.lock:
             self.state['autopilot'] = not self.state['autopilot']
 
-    def autopilot_mode(self):
+    def autopilot_mode(self, mode: str):
         """Change autopilot mode"""
-        modes = ['global', 'all_channels', 'all_elements', 'random_channel', 'random_channel_elements', 'selected_channel', 'selected_channel_elements', 'random_element', 'selected_element']
+        print('Setting autopilot mode to', mode)
+        if mode != "next":
+            with self.state.lock:
+                self.state['random'] = mode
+            return
+        modes = ['global', 'all_channels', 'all_elements', 'random_channel', 'random_channel_elements', 'random_element', 'selected_channel', 'selected_channel_elements', 'selected_element']
         with self.state.lock:
             current_mode = self.state.get('random', modes[0])
             current_index = modes.index(current_mode)
@@ -253,6 +390,11 @@ class StateManager:
         """Normalize s2l"""
         with self.state.lock:
             self.state['s2l_normalize'] = True
+
+    def fire_oneshot(self, oneshot_index: int):
+        """Fire a oneshot"""
+        with self.state.lock:
+            self.state['oneshot'] = oneshot_index
 
     def update_context(self, context_index: int, channel, index):
         with self.state.lock:

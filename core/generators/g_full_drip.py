@@ -1,7 +1,5 @@
 import numpy as np
-import scipy
 from random import randint
-from multiprocessing import shared_memory
 
 class g_full_drip():
 

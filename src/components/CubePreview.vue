@@ -11,7 +11,6 @@ import { onMounted, ref, onUnmounted } from 'vue'
 import * as THREE from 'three'
 
 const scatterplot = ref<HTMLDivElement | null>(null)
-const colors = ref<number[]>([])
 const geometry = ref<THREE.BufferGeometry | null>(null)
 const rotateCube = ref(false)
 const pointsRef = ref<THREE.Points | null>(null)
@@ -66,15 +65,19 @@ function createCircleTexture(): THREE.Texture {
 // Share texture across all renderers to save memory
 const circleTexture = createCircleTexture()
 
-function handleCubeData(message: any) {
-  // console.log(message)
-  colors.value = []
-  const combinedColors = message[0]
-  colors.value = combinedColors.flatMap(([r, g, b]: [number, number, number]) => [r, g, b])
-  geometry.value?.setAttribute(
-    'color', 
-    new THREE.Float32BufferAttribute(colors.value, 3)
-  )
+function handleCubeData(data: any) {
+  // data comes as a Uint8Array (Buffer), create a Float32 view on the buffer
+  const floatView = new Float32Array(data.buffer, data.byteOffset, data.byteLength / 4)
+
+  // Get the first 3000 floats, subarray creates a view, not a copy (very fast)
+  const combinedColors = floatView.subarray(0, 3000)
+
+  if (geometry.value) {
+    geometry.value.setAttribute(
+      'color',
+      new THREE.Float32BufferAttribute(combinedColors, 3)
+    )
+  }
 }
 
 function handleRotateCube() {

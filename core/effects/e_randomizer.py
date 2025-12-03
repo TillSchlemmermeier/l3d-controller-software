@@ -1,4 +1,5 @@
 # modules
+import struct
 import numpy as np
 from multiprocessing import shared_memory
 
@@ -24,7 +25,7 @@ class e_randomizer():
         if self.channel == 'noS2L':
             r = np.random.normal(0, self.amount, [10,10,10])
         else:
-            current_volume = float(str(self.sound_values.buf[self.channel*8:self.channel*8+8],'utf-8'))
+            current_volume = struct.unpack('d', bytes(self.sound_values.buf[self.channel*8:self.channel*8+8]))[0]
             r = np.random.normal(0, np.clip(current_volume,0,10)*self.amount*2, [10,10,10])
 
         world[0, :, :, :] = world[0, :, :, :]+r*world[0, :, :, :]

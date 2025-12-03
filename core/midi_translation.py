@@ -2,6 +2,7 @@ from copy import deepcopy
 import numpy as np
 import requests
 from UltraDict import UltraDict
+from threading import Timer
 
 class class_midi_translation:
 
@@ -14,6 +15,22 @@ class class_midi_translation:
         self.state_b = {}
         self.state_diff = {}
         self.api_endpoint = "http://localhost:8000/api"
+        self.session = requests.Session()
+
+    def _send_request(self, url):
+        """Helper to run in the thread"""
+        try:
+            self.session.get(url)
+        except:
+            pass
+
+    def trigger_update(self, url):
+        """
+        Waits 50ms (approx 1.2 frames) before sending the update.
+        This allows the rendering engine (running at 40ms/frame) to
+        process the change and update the display values in the state.
+        """
+        Timer(0.05, self._send_request, args=[url]).start()
         
     def update_context(self, context_index, midi_index, midi_value):
         midi_index = int(midi_index)
@@ -39,9 +56,9 @@ class class_midi_translation:
         # API calls outside the lock
         if channel <= 9:
             if index < 10:
-                requests.get(f"{self.api_endpoint}/update_element/{channel}/{index}")
+                self.trigger_update(f"{self.api_endpoint}/update_element/{channel}/{index}")
             elif index == 10:
-                requests.get(f"{self.api_endpoint}/update_key/{key}?channel={channel}")
+                self.trigger_update(f"{self.api_endpoint}/update_key/{key}?channel={channel}")
 
         elif channel == 10:
             if index == 0:
@@ -51,12 +68,12 @@ class class_midi_translation:
                     if midi_index < 4:
                         current_values[midi_index] = midi_value
                         self.state['s2l_values'] = current_values
-                        requests.get(f"{self.api_endpoint}/update_key/s2l_values") 
+                        self.trigger_update(f"{self.api_endpoint}/update_key/s2l_values")
 
                     elif midi_index >= 4:
                         current_thresholds[midi_index-4] = midi_value
                         self.state['s2l_thresholds'] = current_thresholds
-                        requests.get(f"{self.api_endpoint}/update_key/s2l_thresholds") 
+                        self.trigger_update(f"{self.api_endpoint}/update_key/s2l_thresholds")
                     self.state['s2l_update'] = True
 
             elif index == 1:
@@ -71,18 +88,7 @@ class class_midi_translation:
                     self.state[key] = int(midi_value * 180)
                 elif midi_index == 2:
                     key = 'random'
-                    if midi_value < 0.15:
-                        self.state[key] = 'global'
-                    elif midi_value < 0.3:
-                        self.state[key] = 'all_channels'
-                    elif midi_value < 0.45:
-                        self.state[key] = 'single_channel'
-                    elif midi_value < 0.6:
-                        self.state[key] = 'all_elements'
-                    elif midi_value < 0.8:
-                        self.state[key] = 'single_element'
-                    else:
-                        self.state[key] = 'selected_element'
+                    self.state[key]=['global', 'all_channels', 'all_elements', 'random_channel', 'random_channel_elements', 'selected_channel', 'selected_channel_elements', 'random_element', 'selected_element'][int(midi_value * 9)]
                 elif midi_index == 3:
                     key = 's2l_normalize'
                     self.state[key] = True
@@ -94,7 +100,7 @@ class class_midi_translation:
                 elif midi_index == 6:
                     pass
 
-                requests.get(f"{self.api_endpoint}/update_key/{key}") 
+                self.trigger_update(f"{self.api_endpoint}/update_key/{key}")
 
     def get_context_midi_values(self):
         with self.state.lock:
@@ -136,14 +142,14 @@ class class_midi_translation:
                 channel = self.state[midi_index]
                 channel[key] = midi_value
                 self.state[midi_index] = channel
-                requests.get(f"{self.api_endpoint}/update_key/{key}?channel={midi_index}") 
+                self.trigger_update(f"{self.api_endpoint}/update_key/{key}?channel={midi_index}")
 
             except:
                 pass
 
         if midi_index == 8:
             self.state[key] = midi_value
-            requests.get(f"{self.api_endpoint}/update_key/{key}") 
+            self.trigger_update(f"{self.api_endpoint}/update_key/{key}")
             
 
     def toggle_fixed(self, midi_index, key):
@@ -154,21 +160,21 @@ class class_midi_translation:
                 channel = self.state[midi_index]
                 channel[key] = not channel[key]
                 self.state[midi_index] = channel
-                requests.get(f"{self.api_endpoint}/update_key/{key}?channel={midi_index}") 
+                self.trigger_update(f"{self.api_endpoint}/update_key/{key}?channel={midi_index}")
 
             except:
                 pass
 
         if midi_index == 8:
             self.state[key] = not self.state[key]
-            requests.get(f"{self.api_endpoint}/update_key/{key}") 
+            self.trigger_update(f"{self.api_endpoint}/update_key/{key}")
 
 
     def oneshot(self, midi_index):
         print("Oneshot triggered with index:", midi_index)
         midi_index = int(midi_index)
         self.state['oneshot'] = midi_index + 2
-        requests.get(f"{self.api_endpoint}/update_key/oneshot") 
+        self.trigger_update(f"{self.api_endpoint}/update_key/oneshot")
 
 
     def save_state(self, button):
@@ -192,7 +198,7 @@ class class_midi_translation:
 
         crossfade_active = self.crossfade_active()
         self.state['crossfade_active'] = crossfade_active
-        requests.get(f"{self.api_endpoint}/update_key/crossfade_active") 
+        self.trigger_update(f"{self.api_endpoint}/update_key/crossfade_active")
 
         if self.state['crossfade_active']:
             self.state_diff = self.compare_states()
@@ -318,5 +324,5 @@ class class_midi_translation:
                     print(f"Error updating parameter {key}: {e}")
             
             # Notify frontend of parameter change
-            requests.get(f"{self.api_endpoint}/update_state")
+            self.trigger_update(f"{self.api_endpoint}/update_state")
 

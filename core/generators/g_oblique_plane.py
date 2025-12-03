@@ -1,5 +1,6 @@
 # modules
 import numpy as np
+import struct
 from scipy.ndimage.interpolation import rotate
 from multiprocessing import shared_memory
 from random import randint, choice
@@ -61,7 +62,7 @@ class g_oblique_plane():
         self.real_speed = self.step*self.speed
         if self.real_speed > 90:
             if self.trigger:
-                current_volume = int(float(str(self.sound_values.buf[32:40],'utf-8')))
+                current_volume = struct.unpack('d', bytes(self.sound_values.buf[32:40]))[0]
                 if current_volume > self.lastvalue:
                     self.lastvalue = current_volume
                     self.step = 0

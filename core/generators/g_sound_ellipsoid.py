@@ -1,5 +1,5 @@
 import numpy as np
-import os
+import struct
 from multiprocessing import shared_memory
 from generators.g_ellipsoid import gen_ellipsoid
 
@@ -25,9 +25,9 @@ class g_sound_ellipsoid():
         self.zsize = args[2]*7+1.0
         # === PARAMETERS END ===
 
-        volume1 = float(str(self.sound_values.buf[0:8],'utf-8'))
-        volume2 = float(str(self.sound_values.buf[8:16],'utf-8'))
-        volume3 = float(str(self.sound_values.buf[16:24],'utf-8'))
+        volume1 = struct.unpack('d', bytes(self.sound_values.buf[0:8]))[0]
+        volume2 = struct.unpack('d', bytes(self.sound_values.buf[8:16]))[0]
+        volume3 = struct.unpack('d', bytes(self.sound_values.buf[16:24]))[0]
 
         # create empty world
         world = np.zeros([3, 10, 10, 10])

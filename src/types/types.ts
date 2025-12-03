@@ -14,6 +14,8 @@ export interface GradientPreset {
 
 export type SortOption = 'first' | 'last' | 'none' | 'subtype' | 'mean' | 'random' | 'date' | 'usage'
 
+export type AutopilotMode = 'global' | 'all_channels' | 'all_elements' | 'random_channel' | 'random_channel_elements' | 'random_element' | 'selected_channel' | 'selected_channel_elements' | 'selected_element' | 'colors'
+
 export interface Effect {
   name: string
   IO: number

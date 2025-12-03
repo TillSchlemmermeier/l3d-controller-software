@@ -70,9 +70,15 @@
                 @click="uiState.channelIndex = channelIndex">
                 <div
                   v-if="channel.color?.gradient"
-                  class="h-6 w-full rounded border border-zinc-500"
+                  class="h-6 w-full rounded border border-zinc-500 relative"
                   :style="{ background: generateGradientCSS(channel.color.gradient) }"
-                />
+                >
+                  <!-- Animated ring overlay -->
+                  <div
+                    v-if="channelIndex === uiState.channelIndex"
+                    class="absolute inset-0 ring-3 ring-white ring-offset-3 ring-offset-zinc-700 rounded pointer-events-none animate-pulse"
+                  ></div>
+                </div>
                 <div
                   v-else
                   class="h-6 w-full rounded border border-zinc-600 bg-zinc-700"
@@ -89,7 +95,8 @@
                 :delay="50"
                 :delayOnTouchOnly="true"
                 :animation="300"
-                class="w-[162px]"
+                class="w-[162px] transition-all duration-200"
+                :class="{ 'min-h-[65vh] pb-20 bg-zinc-900/20 rounded-lg': uiState.isDragging }"
               >
                 <template #item="{ index }">
                   <div class="">
@@ -131,7 +138,8 @@
           :animation="300"
           :delay="50"
           :delayOnTouchOnly="true"
-          class=""
+          class="transition-all duration-200"
+          :class="{ 'min-h-[25vh] pb-20 bg-zinc-900/20 rounded-lg': uiState.isDragging }"
         >
           <template #item="{ index }">
             <div>

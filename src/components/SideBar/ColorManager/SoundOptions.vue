@@ -50,10 +50,10 @@ interface Emits {
 const props = defineProps<Props>()
 const emit = defineEmits<Emits>()
 
-const selectedOptions = ref<string[]>([...props.modelValue])
+const selectedOptions = ref<string[]>(Array.isArray(props.modelValue) ? [...props.modelValue] : [])
 
 watch(() => props.modelValue, (newValue) => {
-  selectedOptions.value = [...newValue]
+  selectedOptions.value = Array.isArray(newValue) ? [...newValue] : []
 }, { deep: true })
 
 function toggleOption(value: string) {

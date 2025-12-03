@@ -1,4 +1,4 @@
-
+import struct
 import numpy as np
 from multiprocessing import shared_memory
 from matplotlib import colors
@@ -34,7 +34,7 @@ class e_sound_hsv():
         # === PARAMETERS END ===
 
         # get sound
-        current_volume = 0.2*float(str(self.sound_values.buf[self.channel*8:self.channel*8+8],'utf-8'))**4
+        current_volume = 0.2*struct.unpack('d', bytes(self.sound_values.buf[self.channel*8:self.channel*8+8]))[0]**4
         if current_volume > self.lastvalue:
             self.lastvalue = np.clip(current_volume,0,1)
         else:

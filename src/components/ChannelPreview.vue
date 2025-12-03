@@ -118,23 +118,22 @@ function createCircleTexture(): THREE.Texture {
 const circleTexture = createCircleTexture()
 
 function updateGeometryColors(geometry: THREE.BufferGeometry, data: any) {
-  const colors = new Float32Array(1000 * 3)
-  for (let i = 0; i < 1000; i++) {
-    colors[i * 3] = data[i][0]     // R
-    colors[i * 3 + 1] = data[i][1] // G
-    colors[i * 3 + 2] = data[i][2] // B
-  }
-  geometry.setAttribute('color', new THREE.Float32BufferAttribute(colors, 3))
+  geometry.setAttribute('color', new THREE.Float32BufferAttribute(data, 3))
 }
 
-function handleCubeData(message: any) {
-  // Handle regular channels
+function handleCubeData(data: any) {
+  // data comes as a Uint8Array (Buffer), create a Float32 view on the buffer
+  const floatView = new Float32Array(data.buffer, data.byteOffset, data.byteLength / 4)
+
+  // The array structure is [Combined, Channel0, Channel1, ...], each block is 3000 floats (1000 pixels * 3 values)
   for (let index = 0; index < channelLength.value; index++) {
-    updateGeometryColors(geometries.value[index], message[index + 1])
+    const colors = floatView.subarray(3000 * (index + 1), 3000 * (index + 2))
+    updateGeometryColors(geometries.value[index], colors)
   }
-  // Handle combined view data only when capturing frames for gif
-  if (capturingGlobalPreset.value) {
-    updateGeometryColors(geometries.value[8], message[0])
+
+  // Handle combined view data (Index 0) only when capturing frames
+  if (capturingGlobalPreset.value && geometries.value[8]) {
+    updateGeometryColors(geometries.value[8], floatView.subarray(0, 3000))
   }
 }
 

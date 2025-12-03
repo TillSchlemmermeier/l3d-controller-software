@@ -1,5 +1,5 @@
 import numpy as np
-import scipy
+import struct
 from random import randint
 from multiprocessing import shared_memory
 
@@ -30,7 +30,7 @@ class g_in_and_out:
 
         # check if S2L is activated
         if self.channel != 'noS2L':
-            current_volume = float(str(self.sound_values.buf[self.channel*8:self.channel*8+8],'utf-8'))
+            current_volume = struct.unpack('d', bytes(self.sound_values.buf[self.channel*8:self.channel*8+8]))[0]
             if current_volume > 0:
                 self.fadespeed = np.clip(current_volume / 2, 0, 0.5)
                 self.leds.append(led(self.fadespeed))

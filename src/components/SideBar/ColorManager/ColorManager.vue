@@ -15,6 +15,20 @@
         @interactionEnd="sendColorUpdate"
       />
 
+      <!-- Delete Stop Button (Edit Mode Only) -->
+      <div class="h-10 flex items-center justify-center pb-2">
+        <button
+          v-if="mode === 'edit' && canDeleteStop(selectedStop)"
+          @click="deleteSelectedStop"
+          class="py-3 px-6 bg-zinc-800 text-white font-medium rounded-md flex items-center justify-center gap-2"
+        >
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+          </svg>
+          Delete Selected Stop
+        </button>
+      </div>
+
       <!-- Mode Toggle -->
       <TogglePill
         class="mt-2"
@@ -25,41 +39,25 @@
         v-model="mode"
         @update:model-value="sendColorUpdate"
       />
-    </div>
-    
-    <!-- Color Picker -->
-    <ColorPicker
-      :selectedColor="selectedStop?.[1]"
-      @colorChange="handleColorChange"
-    />
-    
-    <!-- Delete Stop Button (Edit Mode Only) -->
-    <div v-if="mode === 'edit'">
-      <button
-        v-if="canDeleteStop(selectedStop)"
-        @click="deleteSelectedStop"
-        class="mx-auto my-2 py-3 px-6 bg-zinc-800 text-white font-medium rounded-md flex items-center justify-center gap-2"
-      >
-        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
-        </svg>
-        Delete Selected Stop
-      </button>
-      <div v-else class="py-8" />
-    </div>
-    <div v-else class="py-8" />
 
-    <div class="px-6 pb-4">
+      <!-- Color Picker -->
+      <ColorPicker
+        class="mt-8"
+        :selectedColor="selectedStop?.[1]"
+        @colorChange="handleColorChange"
+      />
+
       <!-- Speed Slider -->
-      <RangeSlider 
+      <RangeSlider
         label="Speed"
-        class="mb-10"
+        class="mt-8"
         v-model="speed"
         @change="sendColorUpdate"
       />
 
       <!-- Gradient Type Toggle -->
       <TogglePill
+        class="mt-8"
         :options="[
           { value: 'linear', label: 'Linear' },
           { value: 'radial', label: 'Radial' }
@@ -81,28 +79,28 @@
       </TogglePill>
 
       <!-- Rotation Speed Sliders -->
-      <div v-if="gradientType === 'linear'" class="mt-10 flex flex-row gap-10 w-full">
-        <RangeSlider 
-          label="Rotate Speed Y"
-          v-model="rotateSpeedY"
-          :min=-100
-          @change="sendColorUpdate"
-        />
-        
-        <RangeSlider 
-          label="Rotate Speed Z"
-          v-model="rotateSpeedZ"
-          :min=-100
-          @change="sendColorUpdate"
-        />
+      <div class="h-20 mt-6">
+        <div v-if="gradientType === 'linear'" class="flex flex-row gap-10 w-full">
+          <RangeSlider
+            label="Rotate Speed Y"
+            v-model="rotateSpeedY"
+            :min=-100
+            @change="sendColorUpdate"
+          />
+
+          <RangeSlider
+            label="Rotate Speed Z"
+            v-model="rotateSpeedZ"
+            :min=-100
+            @change="sendColorUpdate"
+          />
+        </div>
       </div>
-      <div v-else class="mt-6 h-24" />
 
       <SoundOptions
         v-model="soundToLightOptions"
         @update:model-value="sendColorUpdate"
       />
-
 
       <!-- Copy From Other Channels -->
       <OtherChannels

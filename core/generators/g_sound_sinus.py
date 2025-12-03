@@ -1,4 +1,5 @@
 # modules
+import struct
 import numpy as np
 from multiprocessing import shared_memory
 
@@ -27,7 +28,7 @@ class g_sound_sinus():
 
         # get amplitudes
         for i in range(4):
-            self.amps[i] = float(str(self.sound_values.buf[i*8:i*8+8],'utf-8'))
+            self.amps[i] = struct.unpack('d', bytes(self.sound_values.buf[i*8:i*8+8]))[0]
 
         x = np.linspace(0, 11, 12)
         pos = self.amps[0]*np.sin(np.pi*x/11) #  + self.amps[1]*np.sin(2*np.pi*x/11)

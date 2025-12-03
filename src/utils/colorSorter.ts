@@ -48,8 +48,8 @@ export class ColorSorter {
   private static sortByField(gradients: GradientPreset[], sortBy: 'date' | 'usage') {
     return [...gradients].sort((a, b) => {
       if (sortBy === 'date') {
-        // Assuming created_at is a string in 'YYYY-MM-DD HH:MM:SS' format
-        return new Date(a.created_at).getTime() - new Date(b.created_at).getTime()
+        // Assuming created_at is a string in 'YYYY-MM-DD HH:MM:SS' format, newest first
+        return new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
       } else if (sortBy === 'usage') {
         // Sort by request_count descending (most used first)
         return b.request_count - a.request_count

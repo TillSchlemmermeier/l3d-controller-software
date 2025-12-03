@@ -1,6 +1,5 @@
 # modules
 import numpy as np
-from scipy.signal import sawtooth
 from PIL import Image, ImageDraw, ImageFont
 
 

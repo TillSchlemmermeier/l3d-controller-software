@@ -1,12 +1,10 @@
 # modules
 import numpy as np
 from random import randint, choice
-from multiprocessing import shared_memory
 
 class g_random_grow():
 
     def __init__(self):
-        self.sound_values = shared_memory.SharedMemory(name = "global_s2l_memory")
         self.world = np.zeros([10, 10, 10])
         self.number = 2
         self.speed = 0.1

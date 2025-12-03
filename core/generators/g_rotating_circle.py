@@ -1,7 +1,5 @@
 # modules
 import numpy as np
-from random import randint, choice
-from multiprocessing import shared_memory
 from scipy.ndimage.interpolation import rotate
 
 class g_rotating_circle():
@@ -11,7 +9,6 @@ class g_rotating_circle():
 
     def __init__(self):
         self.number = 1
-        self.sound_values = shared_memory.SharedMemory(name = "global_s2l_memory")
         self.soundsize = 1
         self.lastvalue = 0
         self.counter = 0

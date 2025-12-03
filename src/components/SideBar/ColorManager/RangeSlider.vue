@@ -21,8 +21,8 @@
         
         <!-- Slider handle -->
         <div 
-          class="absolute top-1/2 -translate-y-1/2 w-10 h-10 bg-white rounded-full border-2 border-blue-500 shadow-lg cursor-grab active:cursor-grabbing"
-          :style="{ left: `calc(${((value - min) / (100 - min)) * 100}% - 25px)` }"
+          class="absolute top-1/2 -translate-y-1/2 -translate-x-1/2 w-10 h-10 bg-white rounded-full border-2 border-blue-500 shadow-lg cursor-grab active:cursor-grabbing"
+          :style="{ left: `calc(${((value - min) / (100 - min)) * 100}%)` }"
         ></div>
       </div>
     </div>
@@ -61,9 +61,13 @@ const trackStyle = computed(() => {
   const handlePos = (value.value - props.min) / (100 - props.min) * 100
   
   if (value.value >= 0) {
-    return { left: `${zeroPos}%`, width: `${handlePos - zeroPos}%` }
+    const effectiveLeft = Math.max(0, zeroPos)
+    const effectiveWidth = handlePos - effectiveLeft
+    return { left: `${effectiveLeft}%`, width: `${effectiveWidth}%` }
   } else {
-    return { left: `${handlePos}%`, width: `${zeroPos - handlePos}%` }
+    const effectiveLeft = Math.max(0, handlePos)
+    const effectiveWidth = Math.max(0, zeroPos - effectiveLeft)
+    return { left: `${effectiveLeft}%`, width: `${effectiveWidth}%` }
   }
 })
 

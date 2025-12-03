@@ -1,6 +1,6 @@
 # modules
 import numpy as np
-from random import randint, uniform
+from random import uniform
 #from generators.g_sphere_f import gen_sphere
 from generators.gen_central_glow_f import gen_central_glow
 

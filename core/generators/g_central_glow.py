@@ -1,4 +1,5 @@
 # modules
+import struct
 import numpy as np
 from generators.gen_central_glow_f import gen_central_glow
 #import pyaudio
@@ -41,7 +42,7 @@ class g_central_glow():
         world = np.zeros([3, 10, 10, 10])
 
         if 4 > self.channel:
-            current_volume = np.clip(float(str(self.sound_values.buf[self.channel*8:self.channel*8+8],'utf-8')),0,3)
+            current_volume = np.clip(struct.unpack('d', bytes(self.sound_values.buf[self.channel*8:self.channel*8+8]))[0],0,3)
             current_volume = np.clip(current_volume, 0, self.compress)
 
         #check for trigger

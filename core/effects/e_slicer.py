@@ -1,4 +1,4 @@
-
+import struct
 import numpy as np
 from multiprocessing import shared_memory
 from random import randint
@@ -32,7 +32,7 @@ class e_slicer():
         self.frames = int(args[2]*10+5)
         # === PARAMETERS END ===
 
-        current_volume = float(str(self.sound_values.buf[self.channel*8:self.channel*8+8],'utf-8'))
+        current_volume = struct.unpack('d', bytes(self.sound_values.buf[self.channel*8:self.channel*8+8]))[0]
         current_volume = np.clip(current_volume, 0, 1)
 
         brightness = [0 for x in range(10)]

@@ -5,7 +5,7 @@ type EventCallback = (data: any) => void
 
 // Available channels
 const CHANNELS = {
-  CUBE: 'cube_data',
+  CUBE_BINARY: 'cube_data_binary',
   SPECTRUM: 'spectrum_data',
   STATE: 'state',
   STATE_SECTION: 'state_section',
@@ -54,10 +54,9 @@ contextBridge.exposeInMainWorld('ipcRenderer', {
   },
 
   // Data handlers
-  onCubeData: createEventHandler(
-    CHANNELS.CUBE,
-    'Registering Cube data handler'
-  ),
+  onCubeData: (callback: EventCallback) => {
+    ipcRenderer.on(CHANNELS.CUBE_BINARY, (_event, data) => callback(data))
+  },
   onSpectrumData: createEventHandler(
     CHANNELS.SPECTRUM,
     'Registering Spectrum data handler'
@@ -82,11 +81,8 @@ contextBridge.exposeInMainWorld('ipcRenderer', {
   // Cleanup
   removeWebSocketListener: () => {
     console.log('Removing all websocket listeners')
-    ipcRenderer.removeAllListeners(CHANNELS.CUBE)
+    ipcRenderer.removeAllListeners(CHANNELS.CUBE_BINARY)
     ipcRenderer.removeAllListeners(CHANNELS.SPECTRUM)
-    // ipcRenderer.removeAllListeners(CHANNELS.STATE)
-    // ipcRenderer.removeAllListeners(CHANNELS.STATE_SECTION)
-    // ipcRenderer.removeAllListeners(CHANNELS.STATE_KEY)
     ipcRenderer.removeAllListeners(CHANNELS.WS_DATA)
   }
 })

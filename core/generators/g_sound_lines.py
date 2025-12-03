@@ -1,4 +1,5 @@
 # modules
+import struct
 import numpy as np
 from random import randint, uniform
 from colorsys import hsv_to_rgb
@@ -55,7 +56,7 @@ class g_sound_lines():
         world = np.zeros([3, 10, 10, 10])
 
         if self.channel == 'Trigger':
-            current_volume = int(float(str(self.sound_values.buf[32:40],'utf-8')))
+            current_volume = struct.unpack('d', bytes(self.sound_values.buf[32:40]))[0]
             if current_volume > self.lastvalue:
                 self.lastvalue = current_volume
                 self.spectrum = uniform(0,1)
@@ -76,7 +77,7 @@ class g_sound_lines():
 
 
         else:
-            current_volume = float(str(self.sound_values.buf[self.channel*8:self.channel*8+8],'utf-8'))
+            current_volume = struct.unpack('d', bytes(self.sound_values.buf[self.channel*8:self.channel*8+8]))[0]
 
             # get lines
             for line in self.lines:

@@ -1,14 +1,21 @@
 <template>
   <div class="mt-8">
     <div class="text-xs text-zinc-400 uppercase font-bold tracking-wider mb-3">
-      Copy From Other Channel
+      <span>Copy </span>
+      <span
+        class="underline underline-offset-4"
+        @click="toggleCopyDirection"
+      >
+        {{ copyDirection }}
+      </span>
+      <span> Other Channel</span>
     </div>
       <div class="grid grid-cols-4 gap-2">
         <div
           v-for="(channel, index) in coreState.channels"
           :key="index"
           class="group cursor-pointer"
-          @click="loadGradientFromChannel(index)"
+          @click="handleChannelClick(index)"
         >
           <div 
             class="mb-2 w-20 h-16 rounded border border-zinc-500 flex items-center justify-center"
@@ -25,24 +32,35 @@
 </template>
 
 <script setup lang="ts">
+import { ref } from 'vue'
 import { useCoreStateStore } from '../../../stores/coreState'
 import { useUiStateStore } from '../../../stores/uiState'
 
 interface Emits {
-  (e: 'copiedFromChannel'): void
+  (e: 'channelCopied'): void
 }
 const emit = defineEmits<Emits>()
 
 const coreState = useCoreStateStore()
 const uiState = useUiStateStore()
 
-function loadGradientFromChannel(channelIndex: number) {
-  const sourceChannel = coreState.channels[channelIndex]
+const copyDirection = ref<'From' | 'To'>('From')
 
-  if (!sourceChannel?.color) return
+function toggleCopyDirection() {
+  copyDirection.value = copyDirection.value === 'From' ? 'To' : 'From'
+}
 
-  coreState.channels[uiState.channelIndex].color = { ...sourceChannel.color }
-  emit('copiedFromChannel')
+function handleChannelClick(channelIndex: number) {
+  if (copyDirection.value === 'From') {
+    const sourceChannel = coreState.channels[channelIndex]
+    if (!sourceChannel?.color) return
+    coreState.channels[uiState.channelIndex].color = { ...sourceChannel.color }
+  } else {
+    const currentChannel = coreState.channels[uiState.channelIndex]
+    if (!currentChannel?.color) return
+    coreState.channels[channelIndex].color = { ...currentChannel.color }
+  }
+  emit('channelCopied')
 }
 
 function generateChannelGradientCSS(colorData: any): string {

@@ -3,6 +3,7 @@ import numpy as np
 from scipy.signal import sawtooth
 from generators.g_genhsphere import gen_hsphere
 from multiprocessing import shared_memory
+import struct
 
 # fortran routine is in g_growing_sphere_f.f90
 
@@ -60,7 +61,7 @@ class g_sphere:
 
         # check if S2L is activated
         if isinstance(self.channel, int):
-            current_volume = float(str(self.sound_values.buf[self.channel*8:self.channel*8+8],'utf-8'))
+            current_volume = struct.unpack('d', bytes(self.sound_values.buf[self.channel*8:self.channel*8+8]))[0]
             current_volume = (1-self.smooth) * current_volume + self.smooth * self.last_value
 
             if self.growspeed < 1.0:
@@ -76,9 +77,9 @@ class g_sphere:
         #check for trigger
         elif self.channel in ['Trigger', 'Trigger2']:
             if self.channel == 'Trigger':
-                current_volume = int(float(str(self.sound_values.buf[32:40],'utf-8')))
+                current_volume = struct.unpack('d', bytes(self.sound_values.buf[32:40]))[0]
             else:
-                current_volume = int(float(str(self.sound_values.buf[40:48],'utf-8')))
+                current_volume = struct.unpack('d', bytes(self.sound_values.buf[40:48]))[0]
 
             if current_volume > self.lastvalue:
                 self.lastvalue = current_volume

@@ -1,11 +1,25 @@
 <template>
-  <div class="p-3 rounded-lg transition-all duration-200 flex relative overflow-hidden shadow-md shadow-zinc-900"
+  <div class="p-3 rounded-lg transition-all duration-200 flex relative overflow-hidden shadow-md shadow-zinc-900 bg-zinc-500"
        :class="[textColor]">
-    <div class="absolute inset-0 opacity-90"
+
+    <!-- <div class="absolute inset-0 opacity-90"
       :class="gradientBackground">
-    </div>
+    </div> -->
+
+    <div
+      class="absolute bottom-0 left-0 right-0 transition-all duration-200 ease-out"
+      :class="gradientBackground"
+      :style="{
+        height: `${channelParameters.brightness * 100}%`,
+        opacity: 0.9
+      }"
+    ></div>
+
     <div class="flex justify-between w-full z-10">
-      <div class="text-6xl font-bold">
+      <div
+        class="text-6xl font-bold p-1"
+        :class="channelParameters.brightness == 0 ? offText : textColor"
+      >
         {{ channel + 1 }}
       </div>
       <div class="flex flex-col gap-2">
@@ -62,6 +76,12 @@ const textColor = computed(() => {
   return coreState.channels[props.channel].IO
     ? 'text-zinc-900' 
     : 'text-zinc-800'
+})
+
+const offText = computed(() => {
+  return coreState.channels[props.channel].IO
+    ? 'text-emerald-600'
+    : 'text-rose-500'
 })
 
 const gradientBackground = computed(() => {

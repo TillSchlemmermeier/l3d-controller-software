@@ -1,5 +1,6 @@
 from multiprocessing import shared_memory
 import numpy as np
+import struct
 
 class e_strobo():
 
@@ -32,7 +33,7 @@ class e_strobo():
 
         # apply manipulation
         if self.trigger:
-            current_volume = int(float(str(self.sound_values.buf[32:40],'utf-8')))
+            current_volume = struct.unpack('d', bytes(self.sound_values.buf[32:40]))[0]
             if current_volume > self.lastvalue:
                 self.lastvalue = current_volume
                 self.counter = 0

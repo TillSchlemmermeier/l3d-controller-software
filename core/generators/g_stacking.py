@@ -1,14 +1,11 @@
 import numpy as np
-import scipy
 from random import randint
-from multiprocessing import shared_memory
 
 class g_stacking():
 
     def __init__(self):
         self.drops = []
         self.n = 10
-        self.sound_values = shared_memory.SharedMemory(name = "global_s2l_memory")
         self.channel = 0
         self.lifetime = 2
 

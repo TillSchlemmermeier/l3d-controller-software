@@ -1,4 +1,5 @@
 # modules
+import struct
 import numpy as np
 from effects.gen_outer_shadow_f import outer_shadow
 from multiprocessing import shared_memory
@@ -27,7 +28,7 @@ class e_outer_shadow():
         # === PARAMETERS END ===
 
         if isinstance(self.channel, int):
-            current_volume = np.clip(float(str(self.sound_values.buf[self.channel*8:self.channel*8+8],'utf-8')),0,5)
+            current_volume = np.clip(struct.unpack('d', bytes(self.sound_values.buf[self.channel*8:self.channel*8+8]))[0],0,5)
         else:
             current_volume = 1
 

@@ -1,6 +1,7 @@
 # modules
 import numpy as np
 from multiprocessing import shared_memory
+import struct
 
 class e_squared():
     '''
@@ -31,7 +32,7 @@ class e_squared():
 
         # check if s2l is activated
         if isinstance(self.channel, int):
-            current_volume = float(str(self.sound_values.buf[self.channel*8:self.channel*8+8],'utf-8'))
+            current_volume = struct.unpack('d', bytes(self.sound_values.buf[self.channel*8:self.channel*8+8]))[0]
             current_volume = np.clip(current_volume, 0, 1.24)
             new_exponent = 2.5 - current_volume * 2
 

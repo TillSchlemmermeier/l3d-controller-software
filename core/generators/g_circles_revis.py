@@ -1,7 +1,6 @@
 # modules
 import numpy as np
-from random import randint, choice
-from multiprocessing import shared_memory
+from random import choice
 
 class g_circles_revis():
     '''

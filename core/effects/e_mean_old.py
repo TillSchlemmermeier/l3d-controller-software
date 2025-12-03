@@ -1,4 +1,5 @@
 # modules
+import struct
 import numpy as np
 from scipy.signal import fftconvolve
 from scipy.signal.windows import gaussian
@@ -32,7 +33,7 @@ class e_mean():
 
         # check if s2l is activated
         if isinstance(self.channel, int):
-            current_volume = float(str(self.sound_values.buf[self.channel*8:self.channel*8+8],'utf-8'))
+            current_volume = struct.unpack('d', bytes(self.sound_values.buf[self.channel*8:self.channel*8+8]))[0]
 
             width = self.amount * float(str(self.sound_values.buf[self.channel*8:self.channel*8+8],'utf-8'))
 

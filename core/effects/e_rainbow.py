@@ -1,4 +1,5 @@
 # modules
+import struct
 import numpy as np
 from colorsys import hsv_to_rgb
 from multiprocessing import shared_memory
@@ -36,7 +37,7 @@ class e_rainbow():
 
         # check if s2l is activated
         if self.trigger == "On" or self.trigger == "random":
-            current_volume = int(float(str(self.sound_values.buf[32:40],'utf-8')))
+            current_volume = struct.unpack('d', bytes(self.sound_values.buf[32:40]))[0]
             if current_volume > self.lastvalue:
                 self.lastvalue = current_volume
                 if self.trigger == "random":

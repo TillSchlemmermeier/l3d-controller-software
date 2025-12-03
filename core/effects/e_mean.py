@@ -1,3 +1,4 @@
+import struct
 import numpy as np
 from scipy.ndimage import gaussian_filter
 from scipy.signal import fftconvolve
@@ -34,7 +35,7 @@ class e_mean():
         # === PARAMETERS END ===
 
         if isinstance(self.channel, int):
-            current_volume = float(str(self.sound_values.buf[self.channel*8:self.channel*8+8], 'utf-8'))
+            current_volume = struct.unpack('d', bytes(self.sound_values.buf[self.channel*8:self.channel*8+8]))[0]
             sigma = self.amount * current_volume
         else:
             sigma = self.amount

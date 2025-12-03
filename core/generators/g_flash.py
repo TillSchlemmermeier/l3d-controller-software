@@ -1,4 +1,5 @@
 # modules
+import struct
 import numpy as np
 from random import choice, randint
 from multiprocessing import shared_memory
@@ -36,7 +37,7 @@ class g_flash():
         # create world
         world = np.zeros([3, 10, 10, 10])
 
-        current_volume = int(float(str(self.sound_values.buf[32:40],'utf-8')))
+        current_volume = struct.unpack('d', bytes(self.sound_values.buf[32:40]))[0]
 
         # check if S2L is activated
         '''

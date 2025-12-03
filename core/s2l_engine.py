@@ -1,21 +1,31 @@
+import os
+import sys
 import numpy as np
 import pyaudio
-import requests
+import socket
+import json
 import multiprocessing as mp
 from scipy.fftpack import fft, fftfreq
 from scipy.ndimage.filters import uniform_filter1d
 from scipy.interpolate import griddata
 from time import time, sleep
-from UltraDict import UltraDict
+import struct
 
 def sound_process(state):
     
     # initialize pyaudio
     sample_rate = 44100
     buffer_size = int(44100/20)
-    print("\n \n \nInitializing PyAudio...")
-    p = pyaudio.PyAudio()
-    print("End of PyAudio initialization \n----------------------------- \n \n")
+
+    # Suppress stderr output from PyAudio initialization
+    devnull = os.open(os.devnull, os.O_WRONLY) # open /dev/null
+    original_stderr_fd = os.dup(sys.stderr.fileno()) # Save original stderr fd
+    os.dup2(devnull, sys.stderr.fileno()) # Redirect stderr to /dev/null
+    p = pyaudio.PyAudio() # Initialize PyAudio
+    os.dup2(original_stderr_fd, sys.stderr.fileno()) # Restore original stderr fd
+    os.close(original_stderr_fd) # Close the duplicated fd
+    os.close(devnull) # Close /dev/null fd
+
     sound_values = mp.shared_memory.SharedMemory(name = "global_s2l_memory")
 
     # find pipewire audio device (Nachfolger von pulseaudio)
@@ -67,6 +77,10 @@ def sound_process(state):
     # create LFOs
 
     lfo = [0.0, 0.0, 0.0, 0.0]
+
+    # === SETUP UDP SOCKET ===
+    udp_sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    udp_dest = ("127.0.0.1", 8001)
 
 
     def update():
@@ -133,9 +147,8 @@ def sound_process(state):
         # final data is the final processed spectrum
         final_data = (final_data - min[0])/(max[0] - min[0] + 0.001)
         
+        current_volumes = []
 
-        # this loop writes the current intensities for the
-        # different chosen frequencies to global array
         for i in range(len(selectors)):
             # get data for this frequency
             freq_ind = np.argmin(abs(freq_axis - selectors[i]))
@@ -145,34 +158,17 @@ def sound_process(state):
             if current_volume < thresholds[0]:
                 current_volume = 0.0
 
-            # apply gain, which can be controlled from
-            # a single poti from the midimix
+            # apply gain
             current_volume *= (state['s2l_gain']*4 + 1)
 
-            # write the processed sound signal for this
-            # frequency to sound_values
-            string = '{:8}'.format(current_volume)
-            bla = bytearray('{:.8}'.format(string[:8]),'utf-8')
-            sound_values.buf[i*8:i*8+8] =  bla
+            current_volumes.append(current_volume)
 
-            # process trigger
-            # i is checking for the lowest frequency
-            # works best if this is the kick
+            # process trigger (only for the first frequency)
             if i == 0:
-                # if loud enough and armed is true
-                # last_value is increased by 1
+                trigger_detected = 0.0
+                # if loud enough and armed is true, we detect a trigger
                 if current_volume > 0.5 and armed:
-                    last_value += 1
-                    string = '{:8}'.format(last_value)
-                    bla = bytearray('{:.8}'.format(string[:8]),'utf-8')
-                    sound_values.buf[32:40] = bla
-
-                    # trigger / 2
-                    if last_value % 2 == 0:
-                        string = '{:8}'.format(last_value)
-                        bla = bytearray('{:.8}'.format(string[:8]),'utf-8')
-                        sound_values.buf[40:48] = bla
-
+                    trigger_detected = 1.0
                     armed = False
                     starttime = time()
                 elif current_volume < 0.5 and not armed and time()-starttime > 0.3:
@@ -180,16 +176,29 @@ def sound_process(state):
                 else:
                     pass
 
+                # read from shared memory to get eventual changes from oneshot
+                last_value = struct.unpack('d', sound_values.buf[32:40])[0]
+                last_value += trigger_detected
+
+        # Add trigger values
+        current_volumes.append(last_value)
+
+        # Add trigger2 values
+        if last_value % 2 == 0:
+            current_volumes.append(last_value)
+        else:
+            current_volumes.append(last_value - 1)
+
+        # write the processed sound value for this frequency to shared memory
+        sound_values.buf[0:48] = struct.pack('6d', *current_volumes)
+
         # send data to frontend
         data = {
             "type": "spectrum_data",
             "data": final_data.tolist()
         }
-        requests.post(
-            "http://localhost:8000/api/stream", 
-            json = data, 
-            headers={"Content-Type": "application/json"}
-        )
+
+        udp_sock.sendto(json.dumps(data).encode('utf-8'), udp_dest)
 
     while True:
         update()

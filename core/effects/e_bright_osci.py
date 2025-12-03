@@ -1,6 +1,7 @@
 # modules
 import numpy as np
 from multiprocessing import shared_memory
+import struct
 
 class e_bright_osci():
     '''
@@ -33,7 +34,7 @@ class e_bright_osci():
 
         # check if s2l is activated
         if isinstance(self.channel, int):
-            current_volume = 3*float(str(self.sound_values.buf[self.channel*8:self.channel*8+8],'utf-8'))
+            current_volume = 3*struct.unpack('d', bytes(self.sound_values.buf[self.channel*8:self.channel*8+8]))[0]
             #self.speed = current_volume
         else:
             current_volume = self.speed

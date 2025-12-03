@@ -1,9 +1,9 @@
 # modules
+import struct
 import numpy as np
-from random import randint, uniform
-from colorsys import hsv_to_rgb
+from random import randint
 from multiprocessing import shared_memory
-from random import choice, randint
+from random import randint
 
 class g_evolve():
 
@@ -44,7 +44,8 @@ class g_evolve():
         # self.randomcolor = int(round(args[2]))
 
         if self.trigger:
-            current_volume = int(float(str(self.sound_values.buf[32:40],'utf-8')))
+
+            current_volume = struct.unpack('d', bytes(self.sound_values.buf[32:40]))[0]
             if current_volume > self.lastvalue:
                 self.lastvalue = current_volume
                 # boost one worker

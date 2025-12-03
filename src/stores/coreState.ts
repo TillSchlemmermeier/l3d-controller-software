@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 import { useUiStateStore } from './uiState'
-import { coreState } from '../types/types'
+import { coreState, AutopilotMode } from '../types/types'
 
 const baseUrl = 'http://0.0.0.0:8000/api'
 
@@ -69,13 +69,31 @@ export const useCoreStateStore = defineStore('coreState', {
       await this.callBackend(url)
     },
 
-    async autopilotMode() {
-      const url = `${baseUrl}/autopilot-mode`
+    async autopilotMode(mode?: AutopilotMode) {
+      const url_mode = mode ? mode : 'next'
+      const url = `${baseUrl}/autopilot-mode/${url_mode}`
       await this.callBackend(url)
     },
 
     async triggerRandomizer() {
       const url = `${baseUrl}/trigger-randomizer`
+      await this.callBackend(url)
+    },
+
+    async undoRandom() {
+      const url = `${baseUrl}/undo-random`
+      await this.callBackend(url)
+    },
+
+    async randomizeColor() {
+      const uiState = useUiStateStore()
+      const channelIndex = uiState.channelIndex
+      const url = `${baseUrl}/randomize-color/${channelIndex}`
+      await this.callBackend(url)
+    },
+
+    async fireOneShot(index: number) {
+      const url = `${baseUrl}/oneshot/${index}`
       await this.callBackend(url)
     },
 
