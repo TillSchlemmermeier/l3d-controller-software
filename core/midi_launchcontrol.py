@@ -44,7 +44,7 @@ class class_launchcontrol:
             # channel brightnes
             brightness = np.array([5,6,7,8,9,10,11,12])
             fade = np.array([29,30,31,32,33,34,35])
-            oneshots = np.array([45,46,47,48,49,50,51, 52])
+            oneshots = np.array([45,46,47,48,49,50,51,52])
 
             if message[1] in brightness:
                 self.midi_translation.update_fixed(np.where(message[1] == brightness)[0][0], 'brightness', message[2])
@@ -92,7 +92,7 @@ class class_launchcontrol:
                 self.midi_translation.update_context(3, 3, message[2])
 
             # channel IO
-            if message[1] == 37:
+            elif message[1] == 37:
                 self.midi_translation.toggle_fixed(0, 'IO')
             elif message[1] == 38:
                 self.midi_translation.toggle_fixed(1, 'IO')
@@ -108,6 +108,9 @@ class class_launchcontrol:
                 self.midi_translation.toggle_fixed(6, 'IO')
             elif message[1] == 44:
                 self.midi_translation.toggle_fixed(7, 'IO')
+
+            # elif message[1] == 60:
+            #     self.midi_translation.toggle_fixed(8, 'shift_activated')
 
         # nt messages
         # elif message[0] == 144:

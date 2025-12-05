@@ -37,6 +37,7 @@ import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { RouteNames } from '../router/RouteNames'
 import { useUiStateStore } from '../stores/uiState'
+import { useCoreStateStore } from '../stores/coreState'
 import admin from '../assets/icons/admin.svg'
 import io from '../assets/icons/io.svg'
 import edit from '../assets/icons/edit.svg'
@@ -47,6 +48,7 @@ import devices from '../assets/icons/devices.svg'
 // import plumbing from '../assets/icons/plumbing.svg'
 
 const uiState = useUiStateStore()
+const coreState = useCoreStateStore()
 const router = useRouter()
 const selectedItem = ref<string>('Home')
 
@@ -56,7 +58,8 @@ function handleClick(item: { label: string; action: () => void }) {
 }
 const menuItems = computed(() => [
   { icon: home, label: 'Home', action: () => goTo(RouteNames.MAIN_PAGE) },
-  { icon: midi_edit, label: 'Select', action: () => uiState.clickBehavior = 'select' },
+  // { icon: coreState.shift_activated ? io : midi_edit, label: 'Select', action: () => goTo(RouteNames.MAIN_PAGE) },
+  { icon: coreState.shift_activated ? io : midi_edit, label: 'Select', action: () => uiState.clickBehavior = 'select' },
   { icon: edit, label: 'Edit', action: () => uiState.clickBehavior = 'edit' },
   { icon: io, label: 'IO', action: () => uiState.clickBehavior = 'IO' },
   ...(uiState.admin

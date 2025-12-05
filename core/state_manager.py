@@ -1,7 +1,4 @@
 from copy import deepcopy
-import requests
-import threading
-import time
 
 class StateManager:
     def __init__(self, state):
@@ -12,11 +9,6 @@ class StateManager:
 
         self.api_endpoint = "http://localhost:8000/api"
         self.url = f"{self.api_endpoint}/get-state"
-
-        # --- Thread Management ---
-        self._stop_slow_load_event = threading.Event()
-        self._current_load_thread = None
-        self._thread_lock = threading.Lock()
 
 
     def safe_state_operation(self, operation):
@@ -113,15 +105,15 @@ class StateManager:
 
     def load_global(self, preset_data: dict, instant: bool = True):
         """Load a global preset"""
-        if instant:
-            with self.state.lock:
-                # for key, value in preset_data.items():
-                #     self.state[key] = value
-                self.state["context"] = preset_data["context"]
-                self.state['numberOfChannels'] = preset_data['numberOfChannels']
-                self.state[9] = preset_data[9]
-                self.update_channel(9)
+        with self.state.lock:
+            # for key, value in preset_data.items():
+            #     self.state[key] = value
+            self.state["context"] = preset_data["context"]
+            self.state[9] = preset_data[9]
+            self.update_channel(9)
 
+            if instant:
+                self.state['numberOfChannels'] = preset_data['numberOfChannels']
                 for i in range(preset_data['numberOfChannels']):
                     self.state[i] = preset_data[i]
                     self.update_channel(i)
@@ -130,81 +122,7 @@ class StateManager:
                     if i in self.state:
                         del self.state[i]
 
-                # update the values of the midi controller slider
-                self.state['midi_update'] = 1
-        else:
-            def slow_load_task():
-                try:
-                    # 1. Update global settings first
-                    if self._stop_slow_load_event.is_set(): return
-
-                    with self.state.lock:
-                        self.state["context"] = preset_data["context"]
-                        self.state[9] = preset_data[9]
-                        self.update_channel(9)
-
-                    # 2. Update channels one by one with delay
-                    for i in range(preset_data['numberOfChannels']):
-                        if self._stop_slow_load_event.is_set():
-                            print("Slow load aborted during channel update.")
-                            return
-
-                        channel_io = False
-                        with self.state.lock:
-                            self.state[i] = preset_data[i]
-                            channel_io = preset_data[i].get('IO', False)
-                            self.update_channel(i)
-                            self.state['numberOfChannels'] = max(self.state['numberOfChannels'], i + 1)
-
-                        requests.get(self.url)
-
-                        # Sleep in small chunks to allow faster interruption
-                        if channel_io:
-                            for _ in range(30):
-                                if self._stop_slow_load_event.is_set(): return
-                                time.sleep(0.1)
-
-                    # 3. Cleanup extra channels
-                    if self._stop_slow_load_event.is_set(): return
-
-                    print("Starting cleanup of extra channels")
-                    target_count = preset_data['numberOfChannels']
-                    current_max = 8
-
-                    for i in range(current_max, target_count - 1, -1):
-                        if self._stop_slow_load_event.is_set():
-                            print("Slow load aborted during cleanup.")
-                            return
-
-                        if i in self.state:
-                            with self.state.lock:
-                                print(f"Deleting extra channel {i}")
-                                del self.state[i]
-                                self.state['numberOfChannels'] = i
-                            requests.get(self.url)
-
-                            for _ in range(30):
-                                if self._stop_slow_load_event.is_set(): return
-                                time.sleep(0.1)
-                        else:
-                            # If channel doesn't exist, continue immediately
-                            pass
-
-                    if self._stop_slow_load_event.is_set(): return
-
-                    with self.state.lock:
-                        self.state['midi_update'] = 1
-                    requests.get(self.url)
-                    print("Cleanup complete. Final numberOfChannels:", self.state['numberOfChannels'])
-
-                except Exception as e:
-                    print(f"[CORE] Error in slow load task: {e}")
-
-            # Start the background thread
-            with self._thread_lock:
-                self._current_load_thread = threading.Thread(target=slow_load_task)
-                self._current_load_thread.daemon = True
-                self._current_load_thread.start()
+            self.state['midi_update'] = 1
 
     def remove_channel(self, channel_index: int) -> bool:
         """Remove a channel and shift others up"""
@@ -360,7 +278,6 @@ class StateManager:
             if 8 in channel:
                 del channel[8]
                 self.state[channel_index] = channel
-                print(f"Cleared gradient for channel {channel_index}")
 
     def toggle_autopilot(self):
         """Toggle autopilot mode"""
@@ -395,6 +312,8 @@ class StateManager:
         """Fire a oneshot"""
         with self.state.lock:
             self.state['oneshot'] = oneshot_index
+        import connection_manager
+        connection_manager.ConnectionManager(self.state).update_key('oneshot')
 
     def update_context(self, context_index: int, channel, index):
         with self.state.lock:

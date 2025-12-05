@@ -166,18 +166,25 @@ const gradientCss = computed(() => {
 
 function loadColorData() {
   const channelIndex = uiState.channelIndex
-  const channel = coreState.channels[channelIndex]
+  let colorData
 
-  if (!channel || !channel.color) return
+  if (channelIndex === 9) {
+    colorData = coreState.globalColor
+  } else {
+    const channel = coreState.channels[channelIndex]
+    colorData = channel?.color
+  }
 
-  gradientStops.value = channel.color.gradient
-  gradientType.value = channel.color.gradientType
-  speed.value = channel.color.speed
-  selectedRegion.value.start = channel.color.sectionStart
-  selectedRegion.value.end = channel.color.sectionStart + channel.color.sectionWidth
-  rotateSpeedY.value = channel.color.rotateSpeedY
-  rotateSpeedZ.value = channel.color.rotateSpeedZ
-  soundToLightOptions.value = channel.color.soundToLightOptions
+  if (!colorData) return
+
+  gradientStops.value = colorData.gradient
+  gradientType.value = colorData.gradientType
+  speed.value = colorData.speed
+  selectedRegion.value.start = colorData.sectionStart
+  selectedRegion.value.end = colorData.sectionStart + colorData.sectionWidth
+  rotateSpeedY.value = colorData.rotateSpeedY
+  rotateSpeedZ.value = colorData.rotateSpeedZ
+  soundToLightOptions.value = colorData.soundToLightOptions
 }
 
 function selectStop(index: number) {
@@ -283,7 +290,7 @@ function saveGradient(subtype: string) {
 watch(
   [
     () => uiState.channelIndex,
-    () => coreState.channels[uiState.channelIndex]?.color
+    () => uiState.channelIndex === 9 ? coreState.globalColor : coreState.channels[uiState.channelIndex]?.color
   ],
   () => {
     loadColorData()

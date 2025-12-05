@@ -8,6 +8,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from starlette.websockets import WebSocketDisconnect
 import uvicorn
+import randomizer
 
 # Import managers
 from db_manager import DatabaseManager
@@ -79,6 +80,7 @@ class WebSocketAPIServer:
         self.app.state.db = self.db
         self.app.state.state_manager = self.state_manager
         self.app.state.cube_state = self.cube_state
+        self.app.state.randomizer = randomizer.Randomizer(self.cube_state)
 
         # UDP transport placeholder
         self.udp_transport = None

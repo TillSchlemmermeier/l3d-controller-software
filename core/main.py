@@ -150,6 +150,7 @@ if __name__ == '__main__':
         "s2l_update": True,
         "context": [[0, 9], [0, 0], [0 ,0], [0 ,0]],
         "midi_update": 0,
+        "shift_activated": False,
         "oneshot": 0,
         "crossfade_active": False,
         "numberOfChannels": 1,

@@ -17,12 +17,14 @@ export const useCoreStateStore = defineStore('coreState', {
     s2l_normalize: false,
     s2l_gain: 0,
     s2l_update: false,
+    shift_activated: false,
     context: [[0,9]],
     oneshot: 0,
     crossfade_active: false,
     numberOfChannels: 0,
     channels: [],
-    globalEffects: []
+    globalEffects: [],
+    globalColor: undefined
   }),
 
   getters: {
@@ -245,7 +247,16 @@ export const useCoreStateStore = defineStore('coreState', {
       const section = value[index]
 
       if (channel === 9) {
-        this.globalEffects[index] = section
+        if (index === 8) {
+          // Only set globalColor if section has a valid gradient
+          if (section && section.gradient && Array.isArray(section.gradient) && section.gradient.length > 0) {
+            this.globalColor = section
+          } else {
+            this.globalColor = undefined  // Clear it for empty/invalid gradients
+          }
+        } else {
+          this.globalEffects[index] = section
+        }
       } else {
         if (index === 9) {
           this.channels[channel].generator = section
@@ -297,7 +308,12 @@ export const useCoreStateStore = defineStore('coreState', {
           { length: data[9].numberOfEffects },
           (_, i) => data[9][i]
         )
-    
+
+      if (data[9][8]) {
+        parsedState.globalColor = data[9][8]
+      } else {
+        parsedState.globalColor = undefined
+      }
       return parsedState as coreState
     }
   },

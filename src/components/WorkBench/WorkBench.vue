@@ -39,11 +39,11 @@
             </template>
           </draggable>
           <template v-if="coreState.channels.length < 8">
-            <div class="w-40 mt-2">
+            <div class="w-40">
               <draggable
                 :v-model="newChannel"
                 item-key="newchannel"
-                class="h-[75px] m-3 border-2 border-dashed border-zinc-500 rounded-lg"
+                class="h-[85px] mx-3 mt-1 border-2 border-dashed border-zinc-500 rounded-lg"
                 :group="{ 
                   name: 'channel-copy',
                   put: true, 
@@ -69,9 +69,10 @@
                 class="px-2 mb-[-5px]"
                 @click="uiState.channelIndex = channelIndex">
                 <div
-                  v-if="channel.color?.gradient"
-                  class="h-6 w-full rounded border border-zinc-500 relative"
-                  :style="{ background: generateGradientCSS(channel.color.gradient) }"
+                  class="h-6 w-full rounded border relative"
+                  :class="channel.color?.gradient ? 'border-zinc-500' : 'border-zinc-600 bg-zinc-700'"
+                  :style="channel.color?.gradient ? { background: generateGradientCSS(channel.color.gradient) } : {}"
+                  :title="channel.color?.gradient ? '' : 'No gradient set'"
                 >
                   <!-- Animated ring overlay -->
                   <div
@@ -79,11 +80,6 @@
                     class="absolute inset-0 ring-3 ring-white ring-offset-3 ring-offset-zinc-700 rounded pointer-events-none animate-pulse"
                   ></div>
                 </div>
-                <div
-                  v-else
-                  class="h-6 w-full rounded border border-zinc-600 bg-zinc-700"
-                  title="No gradient set"
-                />
               </div>
               <draggable
                 v-model="coreState.channels[channelIndex].effects"
@@ -128,6 +124,22 @@
         <CubeParameters 
           @click="toggleDialog('global', 9)"
         />
+        <div
+          class="px-2 my-2"
+          @click="uiState.channelIndex = 9">
+          <div
+            class="h-6 w-full rounded border relative"
+            :class="coreState.globalColor?.gradient ? 'border-zinc-500' : 'border-zinc-600 bg-zinc-700'"
+            :style="coreState.globalColor?.gradient ? { background: generateGradientCSS(coreState.globalColor.gradient) } : {}"
+            :title="coreState.globalColor?.gradient ? '' : 'No gradient set'"
+          >
+            <!-- Animated ring overlay -->
+            <div
+              v-if="uiState.channelIndex === 9"
+              class="absolute inset-0 ring-3 ring-white ring-offset-3 ring-offset-zinc-700 rounded pointer-events-none animate-pulse"
+            ></div>
+          </div>
+        </div>
         <draggable
           v-model="coreState.globalEffects"
           item-key="effect"
@@ -202,6 +214,15 @@ function handleClick(index: number, element_id: number) {
     }
     uiState.deleteActive = false
   } else {
+    // if (coreState.shift_activated) {
+    //   if (element_id == 9) {
+    //     selectParameters(index, element_id)
+    //   } else {
+    //     coreState.toggleEffect(index, element_id)
+    //   }
+    // } else {
+    //   selectParameters(index, element_id)
+    // }
     if (uiState.clickBehavior == 'select') {
       selectParameters(index, element_id)
     } else if (uiState.clickBehavior == 'edit') {
@@ -222,6 +243,11 @@ function handleClick(index: number, element_id: number) {
 }
 
 function handleDoubleClick(index: number, element_id: number) {
+  // if (element_id == 9) {
+  //   newGenerator(index)
+  // } else {
+  //   newEffect(index, element_id)
+  // }
   if (uiState.clickBehavior == 'select') {
     if (element_id == 9) {
       newGenerator(index)

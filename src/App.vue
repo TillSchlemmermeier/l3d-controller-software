@@ -1,5 +1,5 @@
 <template>
-  <div class="h-screen w-screen overflow-hidden flex bg-zinc-700">
+  <div class="h-screen w-screen overflow-hidden flex bg-zinc-900">
     <!-- Loading Screen -->
     <div v-if="isLoading"
          class="fixed inset-0 flex items-center justify-center bg-zinc-800 z-50">

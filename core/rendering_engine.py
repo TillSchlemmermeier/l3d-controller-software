@@ -19,6 +19,8 @@ from oneshots.s_dark_sphere import s_dark_sphere
 from oneshots.s_threesixty import s_threesixty
 from oneshots.s_trigger import s_trigger
 
+from effects.e_color_manager import e_color_manager
+
 from db_manager import DatabaseManager
 
 db = DatabaseManager()
@@ -65,6 +67,8 @@ class rendering_engine:
         self.shot_list.append(s_dark_sphere)
         self.shot_list.append(s_threesixty)
         self.shot_list.append(s_trigger)
+
+        self.global_color_effect = e_color_manager()
 
         # try to establish connection to arduino
         try:
@@ -265,14 +269,23 @@ class rendering_engine:
                     state[9] = global_effects
             self.cubeworld = self.global_effects[i](self.cubeworld, snapshot[9][i]['params'][3::4])
 
+        # apply global color effect
+        if 8 in snapshot[9]:
+            if snapshot[9][8]['update']:
+                self.cubeworld = self.global_color_effect(self.cubeworld, snapshot[9][8])
+                with state.lock:
+                    state[9][8]['update'] = False
+            else:
+                self.cubeworld = self.global_color_effect(self.cubeworld)
+
         # detect whether a oneshot is fired
         if snapshot['oneshot'] > 0:
             print(f"oneshot fired: {snapshot['oneshot']}")
             self.shot_state = snapshot['oneshot']
             self.shot = self.shot_list[int(self.shot_state)]()
+            requests.get("http://localhost:8000/api/update_key/oneshot")
             with state.lock:
                 state['oneshot'] = 0
-            requests.get("http://localhost:8000/api/update_key/oneshot")
 
         if self.shot_state > 0:
             self.cubeworld, counter = self.shot(self.cubeworld)

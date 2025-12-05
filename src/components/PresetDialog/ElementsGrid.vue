@@ -26,7 +26,7 @@
     </template>
     <!-- For channel and global presets show cards with preview -->
     <template v-else>
-      <template v-for="element in uiState.overlayPresets" :key="element">
+      <template v-for="element in sortedPresets" :key="element">
         <button
           :data-preset="element"
           @click="() => {
@@ -117,9 +117,7 @@ interface ElementItem {
   request_count: number
 }
 
-const sortedItems = computed(() => {
-  const items = [...uiState.overlayItems] as ElementItem[]
-  
+function sortElements(items: ElementItem[]): ElementItem[] {
   switch (uiState.sortBy) {
     case 'alpha':
       return items.sort((a, b) => a.name.localeCompare(b.name))
@@ -134,5 +132,9 @@ const sortedItems = computed(() => {
     default:
       return items
   }
-})
+}
+
+const sortedItems = computed(() => sortElements([...uiState.overlayItems] as ElementItem[]))
+
+const sortedPresets = computed(() => sortElements([...uiState.overlayPresets] as ElementItem[]))
 </script>

@@ -1,8 +1,10 @@
 import random
+import threading
+import time
+import requests
 from db_manager import DatabaseManager
 from state_manager import StateManager
 import json
-
 
 class Randomizer:
     def __init__(self, state):
@@ -10,9 +12,31 @@ class Randomizer:
         self.state_manager = StateManager(state)
         self.state = state
 
+        self.api_endpoint = "http://localhost:8000/api"
+        self.url = f"{self.api_endpoint}/get-state"
+
+        # --- Thread Management ---
+        self._current_cancel_event = None
+        self._current_load_thread = None
+        self._thread_lock = threading.Lock()
+        self.expected_number_of_channels = 0
+
+        self.number_of_channels = 0
+        self.context = [[0, 0], [0, 0], [0, 0], [0, 0]]
+
     def trigger(self) -> None:
         """Trigger random action based on current mode"""
-        mode = self.state.get('random', 'global')
+        # Cancel any running slow load thread before starting a new randomization
+        with self._thread_lock:
+            if self._current_cancel_event:
+                self._current_cancel_event.set()
+                if self._current_load_thread and self._current_load_thread.is_alive():
+                    print("Cancelling previous slow load task...")
+
+        with self.state.lock:
+            mode = self.state.get('random', 'global')
+            self.number_of_channels = self.state['numberOfChannels']
+            self.context = self.state['context']
         
         if mode == 'global':
             self._randomize_global()
@@ -39,15 +63,87 @@ class Randomizer:
         if presets:
             preset = random.choice(presets)
             preset_data = self.db.get_preset('global', 'presets', preset['name'], False)
+            # 1. Update global settings first
             self.state_manager.load_global(preset_data, False)
+
+            # Create a unique event for THIS specific task instance
+            cancel_event = threading.Event()
+
+            def slow_load_task():
+                try:
+                    # Use the local 'cancel_event' instead of self._stop_slow_load_event
+                    if cancel_event.is_set(): return
+                    self.expected_number_of_channels = preset_data['numberOfChannels']
+
+                    # 2. Update channels one by one with delay
+                    for i in range(preset_data['numberOfChannels']):
+                        if cancel_event.is_set():
+                            print("Slow load aborted during channel update.")
+                            return
+
+                        self.state_manager.load_channel(i, preset_data[i])
+                        with self.state.lock:
+                            self.state['numberOfChannels'] = max(self.state['numberOfChannels'], i + 1)
+
+                        requests.get(self.url)
+
+                        # Sleep in small chunks to allow faster interruption
+                        for _ in range(30):
+                            if cancel_event.is_set(): return
+                            time.sleep(0.1)
+
+                    # 3. Cleanup extra channels
+                    if cancel_event.is_set(): return
+
+                    print("Starting cleanup of extra channels")
+                    current_max = 8
+
+                    for i in range(current_max, self.expected_number_of_channels - 1, -1):
+                        if cancel_event.is_set():
+                            print("Slow load aborted during cleanup.")
+                            return
+
+                        channel_exists = False
+                        with self.state.lock:
+                            if i in self.state:
+                                channel_exists = True
+
+                        if channel_exists:
+                            self.state_manager.remove_channel(i)
+                            requests.get(self.url)
+
+                            for _ in range(30):
+                                if cancel_event.is_set(): return
+                                time.sleep(0.1)
+                        else:
+                            # If channel doesn't exist, continue immediately
+                            pass
+
+                    if cancel_event.is_set(): return
+
+                    with self.state.lock:
+                        self.state['midi_update'] = 1
+                    requests.get(self.url)
+                    print("Cleanup complete. Final numberOfChannels:", self.state['numberOfChannels'])
+
+                except Exception as e:
+                    print(f"[CORE] Error in slow load task: {e}")
+
+            # Start the background thread
+            with self._thread_lock:
+                # Register the new event and thread
+                self._current_cancel_event = cancel_event
+                self._current_load_thread = threading.Thread(target=slow_load_task)
+                self._current_load_thread.daemon = True
+                self._current_load_thread.start()
 
     def _randomize_all_channels(self) -> None:
         """Load random channel preset for each channel"""
         presets = self.db.get_preset_names('channel', 'presets')
         if not presets:
             return
-            
-        for i in range(self.state['numberOfChannels']):
+
+        for i in range(self.number_of_channels):
             preset = random.choice(presets)
             preset_data = self.db.get_preset('channel', 'presets', preset['name'], False)
             self.state_manager.load_channel(i, preset_data)
@@ -55,10 +151,11 @@ class Randomizer:
     def _randomize_single_channel(self, selected_only: bool = False) -> None:
         """Load random preset for random channel"""
         if selected_only:
-            channel_idx = self.state['context'][0][0]
+            channel_idx = self.context[0][0]
             if channel_idx >= self.state['numberOfChannels']:
-                self.state['numberOfChannels'] += 1
-                channel_idx = self.state['numberOfChannels'] - 1
+                with self.state.lock:
+                    self.state['numberOfChannels'] += 1
+                    channel_idx = self.state['numberOfChannels'] - 1
         else:
             channel_idx = random.randint(0, self.state['numberOfChannels'] - 1)
 
@@ -77,15 +174,15 @@ class Randomizer:
             return
 
         if selected_only:
-            channel_idx = self.state['context'][0][0]
-            if channel_idx >= self.state['numberOfChannels']:
+            channel_idx = self.context[0][0]
+            if channel_idx >= self.number_of_channels:
                 return
             channels_to_randomize = [channel_idx]
         elif randomize:
-            channel_idx = random.randint(0, self.state['numberOfChannels'] - 1)
+            channel_idx = random.randint(0, self.number_of_channels - 1)
             channels_to_randomize = [channel_idx]
         else:
-            channels_to_randomize = range(self.state['numberOfChannels'])
+            channels_to_randomize = range(self.number_of_channels)
 
         # Randomize each channel
         for channel_idx in channels_to_randomize:
@@ -97,7 +194,9 @@ class Randomizer:
                 preset_data = self.db.get_preset('generator', generator['name'], preset['name'], False)
                 self.state_manager.load_generator(channel_idx, preset_data)
             # Randomize effects
-            channel = self.state[channel_idx]
+            channel = None
+            with self.state.lock:
+                channel = self.state[channel_idx]
             for effect_idx in range(channel['numberOfEffects']):
                 effect = random.choice(active_effects)
                 effect_presets = self.db.get_preset_names('effect', effect['name'])
@@ -116,8 +215,11 @@ class Randomizer:
 
         if not selected_only:
             # 1. Randomly select a channel
-            channel_idx = random.randint(0, self.state['numberOfChannels'] - 1)
-            channel = self.state[channel_idx]
+            channel_idx = random.randint(0, self.number_of_channels - 1)
+
+            channel = None
+            with self.state.lock:
+                channel = self.state[channel_idx]
 
             # Add generator (index 9)
             if 9 in channel:
@@ -146,10 +248,10 @@ class Randomizer:
 
         else:
             # If selected_only is True, use only the currently selected element
-            channel = self.state['context'][0][0]
-            element = self.state['context'][0][1]
+            channel = self.context[0][0]
+            element = self.context[0][1]
 
-            if channel >= self.state['numberOfChannels']:
+            if channel >= self.number_of_channels:
                 return
 
             elements_in_channel.append({

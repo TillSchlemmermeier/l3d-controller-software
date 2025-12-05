@@ -13,6 +13,9 @@ def get_connection_manager(request: Request):
 def get_cube_state(request: Request):
     return request.app.state.cube_state
 
+def get_randomizer(request: Request):
+    return request.app.state.randomizer
+
 # update a global key
 @router.get('/api/update-global-key/{key}/{value}')
 async def update_global_key(
@@ -170,10 +173,13 @@ async def autopilot_mode(
 async def trigger_randomizer(
     state_manager = Depends(get_state_manager),
     connection_manager = Depends(get_connection_manager),
-    state = Depends(get_cube_state)
+    randomizer = Depends(get_randomizer),
+    # state = Depends(get_cube_state)
 ):
     state_manager.save_state_for_undo() 
-    Randomizer(state).trigger()
+
+    randomizer.trigger()
+    # Randomizer(state).trigger()
     await connection_manager.update_state()
     return {"message": "Randomizer triggered"}
 
@@ -183,10 +189,10 @@ async def randomize_color(
     channelIndex: int,
     state_manager = Depends(get_state_manager),
     connection_manager = Depends(get_connection_manager),
-    state = Depends(get_cube_state)
+    randomizer = Depends(get_randomizer)
 ):
     state_manager.save_state_for_undo()
-    Randomizer(state)._randomize_color(channelIndex)
+    randomizer._randomize_color(channelIndex)
     await connection_manager.update_state()
     return {"message": "Randomizer triggered"}
 
@@ -223,7 +229,8 @@ async def normalize_s2l(
 @router.get('/api/oneshot/{oneshotIndex}')
 async def oneshot(
     oneshotIndex: int,
-    state_manager = Depends(get_state_manager)
+    state_manager = Depends(get_state_manager),
 ):
     state_manager.fire_oneshot(oneshotIndex)
+    # the rendering engine will notify the frontend
     return {"message": "Oneshot fired"}
