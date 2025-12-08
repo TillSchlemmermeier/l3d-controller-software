@@ -54,11 +54,9 @@ class g_flash():
 
         if 0 < self.counter < self.reset:
             self.lastvalue = current_volume
-            for i in range(self.speed):
-                for step in range(self.counter):
-                    world[0, self.points[step][0], self.points[step][1], self.points[step][2]] = 1
-
-                self.counter += 1
+            for step in range(min(self.counter, len(self.points))):
+                world[0, self.points[step][0], self.points[step][1], self.points[step][2]] = 1
+            self.counter += self.speed
 
         elif self.reset <= self.counter < self.reset + 2:
             self.lastvalue = current_volume

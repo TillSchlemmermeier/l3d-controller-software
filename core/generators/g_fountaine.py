@@ -25,13 +25,11 @@ class g_fountaine():
         self.counter = 0
         self.lastvalue = 0
         self.radius = 5
-        self.size_change = 0
 
     def return_state(self):
         return [
             ['speed', 'speed', round(self.speed,2)],
             ['thickness', 'thickness', round(self.thickness,2)],
-            ['size change', 'size_change', round(self.size_change,2)],
             ['channel', 'channel', self.channel],
         ]
     
@@ -39,8 +37,7 @@ class g_fountaine():
         # === PARAMETERS START ===
         self.speed     = args[0]*2
         self.thickness  = args[1]*2+0.1
-        self.size_change = args[2]
-        self.channel = ['noS2L', 0, 1, 2, 3, 'Trigger'][int(args[3]*5)]
+        self.channel = ['noS2L', 0, 1, 2, 3, 'Trigger'][int(args[2]*5)]
         # === PARAMETERS END ===
 
         #def generate(self, step, dumpworld):
@@ -50,7 +47,7 @@ class g_fountaine():
         if isinstance(self.channel, int):
             current_volume = struct.unpack('d', bytes(self.sound_values.buf[self.channel*8:self.channel*8+8]))[0]
             if current_volume > 0:
-                self.radius = current_volume * self.radius
+                self.radius = current_volume * 5  # Fixed: Use base radius to avoid cumulative scaling
             else:
                 self.radius = 0
 
@@ -64,6 +61,9 @@ class g_fountaine():
                 self.counter += 1
             else:
                 self.radius = 0
+
+        else:  # 'noS2L' mode
+            self.radius = 5  # Reset to default fixed radius
 
         # calculate position
         position = 9 - self.step%10

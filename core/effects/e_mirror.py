@@ -25,7 +25,7 @@ class e_mirror():
     def return_state(self):
         return [
             ['# of axes', 'naxis', self.naxis],
-            ['steps', 'steps', int(self.steps)],
+            ['Trigger steps', 'steps', int(self.steps)],
             ['mode', 'mode', self.mode],
             ['s2l trigger', 'trigger', 'On' if self.trigger else 'Off'],
         ]
