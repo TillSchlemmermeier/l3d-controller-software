@@ -1,6 +1,7 @@
 import random
 import threading
 import time
+import queue
 import requests
 from db_manager import DatabaseManager
 from state_manager import StateManager
@@ -24,7 +25,41 @@ class Randomizer:
         self.number_of_channels = 0
         self.context = [[0, 0], [0, 0], [0, 0], [0, 0]]
 
-    def trigger(self) -> None:
+    def run_autopilot_loop(self, state, randomizer_queue):
+        starttime = time.time()
+
+        autopilot_on = False
+        autopilot_interval = 3
+        last_state_check = 0
+
+        while True:
+            # Check state every 0.5 second
+            current_time = time.time()
+            if current_time - last_state_check > 0.5:
+                with state.lock:
+                    autopilot_on = state['autopilot']
+                    autopilot_interval = state['autopilot_time']
+                last_state_check = current_time
+
+            # Wait up to 0.1 seconds for a manual trigger message
+            try:
+                message = randomizer_queue.get(timeout=0.1)
+                if isinstance(message, int):
+                    self._randomize_color(message)
+                else:
+                    self.trigger(message)
+            except queue.Empty:
+                pass  # No message, proceed
+
+            # Autopilot logic (uses cached values)
+            if autopilot_on:
+                if current_time - starttime > 2 + autopilot_interval:
+                    self.trigger()
+                    starttime = current_time
+            else:
+                starttime = current_time
+
+    def trigger(self, mode=None) -> None:
         """Trigger random action based on current mode"""
         # Cancel any running slow load thread before starting a new randomization
         with self._thread_lock:
@@ -34,7 +69,8 @@ class Randomizer:
                     print("Cancelling previous slow load task...")
 
         with self.state.lock:
-            mode = self.state.get('random', 'global')
+            if mode is None:
+                mode = self.state.get('random', 'global')
             self.number_of_channels = self.state['numberOfChannels']
             self.context = self.state['context']
         
@@ -57,13 +93,16 @@ class Randomizer:
         elif mode == 'selected_element':
             self._randomize_single_element(True)
 
+        requests.get(self.url)
+
     def _randomize_global(self) -> None:
         """Load random global preset"""
         presets = self.db.get_preset_names('global', 'presets')
         if presets:
             preset = random.choice(presets)
             preset_data = self.db.get_preset('global', 'presets', preset['name'], False)
-            # 1. Update global settings first
+
+            # Update global settings first, don't load the preset fully yet
             self.state_manager.load_global(preset_data, False)
 
             # Create a unique event for THIS specific task instance
@@ -340,3 +379,4 @@ class Randomizer:
 
         # Update via state manager
         self.state_manager.update_color_manager(channel_idx, color_data)
+        requests.get(self.url)

@@ -11,6 +11,10 @@
       step="0.01"
       :value="modelValue"
       @input="updateValue"
+      @mousedown="$emit('startSliding')"
+      @touchstart="$emit('startSliding')"
+      @mouseup="$emit('stopSliding')"
+      @touchend="$emit('stopSliding')"
       class="w-full h-12 appearance-none bg-transparent cursor-pointer touch-none"
     />
   </div>
@@ -22,7 +26,7 @@ defineProps<{
   modelValue: number
 }>()
 
-const emit = defineEmits(['update:modelValue'])
+const emit = defineEmits(['update:modelValue', 'startSliding', 'stopSliding'])
 
 function updateValue(e: Event) {
   const val = parseFloat((e.target as HTMLInputElement).value)

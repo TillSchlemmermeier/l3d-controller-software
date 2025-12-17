@@ -1,5 +1,4 @@
 from fastapi import APIRouter, Request, Depends
-from randomizer import Randomizer
 
 router = APIRouter()
 
@@ -13,8 +12,8 @@ def get_connection_manager(request: Request):
 def get_cube_state(request: Request):
     return request.app.state.cube_state
 
-def get_randomizer(request: Request):
-    return request.app.state.randomizer
+def get_randomizer_queue(request: Request):
+    return request.app.state.randomizer_queue
 
 # update a global key
 @router.get('/api/update-global-key/{key}/{value}')
@@ -169,18 +168,16 @@ async def autopilot_mode(
     return {"message": "Autopilot mode changed"}
 
 # trigger randomizer
-@router.get('/api/trigger-randomizer')
+@router.get('/api/trigger-randomizer/{mode}')
 async def trigger_randomizer(
+    mode: str,
     state_manager = Depends(get_state_manager),
-    connection_manager = Depends(get_connection_manager),
-    randomizer = Depends(get_randomizer),
+    randomizer_queue = Depends(get_randomizer_queue),
     # state = Depends(get_cube_state)
 ):
     state_manager.save_state_for_undo() 
 
-    randomizer.trigger()
-    # Randomizer(state).trigger()
-    await connection_manager.update_state()
+    randomizer_queue.put(mode)
     return {"message": "Randomizer triggered"}
 
 # randomize color for a channel
@@ -188,12 +185,10 @@ async def trigger_randomizer(
 async def randomize_color(
     channelIndex: int,
     state_manager = Depends(get_state_manager),
-    connection_manager = Depends(get_connection_manager),
-    randomizer = Depends(get_randomizer)
+    randomizer_queue = Depends(get_randomizer_queue),
 ):
     state_manager.save_state_for_undo()
-    randomizer._randomize_color(channelIndex)
-    await connection_manager.update_state()
+    randomizer_queue.put(channelIndex)
     return {"message": "Randomizer triggered"}
 
 @router.get('/api/undo-random')

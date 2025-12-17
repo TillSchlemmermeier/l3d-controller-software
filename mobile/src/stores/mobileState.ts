@@ -20,7 +20,11 @@ export const useMobileStore = defineStore('mobile', {
     brightness: 1.0,
     fade: 0,
     randomMode: 'all_elements',
-    selectedChannel: 1
+    triggerMode: 'global',
+    selectedChannel: 1,
+    // Interaction flags to prevent backend updates from fighting user input
+    isSlidingBrightness: false,
+    isSlidingFade: false,
   }),
 
   getters: {
@@ -71,17 +75,17 @@ export const useMobileStore = defineStore('mobile', {
       this.vibrate(20)
     },
 
-    setAutopilotMode(mode: string) {
-      this.randomMode = mode
+    setAutopilotMode(mode?: string) {
+      if (!mode) mode = 'next'
       this.vibrate(10)
       fetch(`${API_BASE}/autopilot-mode/${mode}`)
     },
 
     triggerRandom() {
-      if (this.randomMode === 'color') {
+      if (this.triggerMode === 'color') {
         fetch(`${API_BASE}/randomize-color/${this.selectedChannel - 1}`)
       } else {
-        fetch(`${API_BASE}/trigger-randomizer`)
+        fetch(`${API_BASE}/trigger-randomizer/${this.triggerMode}`)
       }
       this.vibrate([30, 50, 30])
     },
@@ -148,9 +152,10 @@ export const useMobileStore = defineStore('mobile', {
       })
 
       // Update global keys
-      this.autopilot = data.autoppilot
+      this.autopilot = data.autopilot
       this.brightness = data.brightness
       this.fade = data.fade
+      this.randomMode = data.random
     },
 
     updateKey(key: string, value: any, channelIndex: number | null) { // eslint-disable-line
@@ -159,14 +164,15 @@ export const useMobileStore = defineStore('mobile', {
       const ch = this.channels[channelIndex]
       if (ch) {
         if (key === 'IO') ch.IO = value
-        if (key === 'brightness') ch.brightness = value
-        if (key === 'fade') ch.fade = value
+        if (key === 'brightness' && !this.isSlidingBrightness) ch.brightness = value
+        if (key === 'fade' && !this.isSlidingFade) ch.fade = value
       }
     } else {
       // Global update
       if (key === 'autopilot') this.autopilot = value
-      if (key === 'brightness') this.brightness = value
-      if (key === 'fade') this.fade = value
+      if (key === 'brightness' && !this.isSlidingBrightness) this.brightness = value
+      if (key === 'fade' && !this.isSlidingFade) this.fade = value
+      if (key === 'random') this.randomMode = value
     }
   },
 

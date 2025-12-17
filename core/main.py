@@ -1,52 +1,32 @@
 #!/usr/bin/python3
+import os
+import sys
 import struct
-from UltraDict import UltraDict
-import multiprocessing as mp
-from time import time, sleep
-import tkinter as tk
-import requests
 import socket
-from midi_emulator import MidiControllerEmulator
-from midi_launchcontrol import class_launchcontrol
-from rendering_engine import rendering_engine
+import pickle
+import signal
+import argparse
+import tkinter as tk
+from time import time, sleep
+import multiprocessing as mp
+from UltraDict import UltraDict
+
+from randomizer import Randomizer
 from s2l_engine import sound_process
 from server import WebSocketAPIServer
-from randomizer import Randomizer
 from state_manager import StateManager
-import pickle
-import argparse
-import os
-import signal
-import sys
+from rendering_engine import rendering_engine
+from midi_launchcontrol import class_launchcontrol
+from midi_emulator import MidiControllerEmulator
 
-def autopilot(state):
-    # Validate all presets
-    # print("Validating presets...")
-    # if not validate_all_presets():
-    #     print("WARNING: Some presets failed validation!")
-    # pass
+def autopilot(state, randomizer_queue):
+    print('Starting autopilot / randomizer process')
     randomizer = Randomizer(state)
-    starttime = time()
-    
-    while True:
-        with state.lock:
-            is_autopilot_on = state['autopilot']
+    randomizer.run_autopilot_loop(state, randomizer_queue)
 
-        if is_autopilot_on:
-            if time() - starttime > 2 + state['autopilot_time']:
-                with state.lock:
-                    randomizer.trigger()
-                    starttime = time()
-                requests.get("http://localhost:8000/api/update_state")
-        else:
-            # Reset timer when autopilot is off
-            starttime = time()
-            
-        sleep(0.1)
-
-def server(state):
+def server(state, randomizer_queue):
     print('Starting FastAPI server')
-    server = WebSocketAPIServer(state)
+    server = WebSocketAPIServer(state, randomizer_queue)
     server.run()
 
 def midi_devices(state):
@@ -97,6 +77,7 @@ def rendering(state):
 
 
 def backup_state(state):
+    print("State backup process started, backing up every 30 seconds")
     while True:
         try:
             sleep(30)  # New backup every 30 seconds
@@ -106,7 +87,6 @@ def backup_state(state):
             backup_file = os.path.join(f"state_backup.pkl")
             with open(backup_file, 'wb') as f:  # 'wb' for binary write
                 pickle.dump(state_copy, f)
-            print("State backup created")
         except Exception as e:
             print(f"Backup error: {e}")
 
@@ -175,6 +155,7 @@ if __name__ == '__main__':
                 'sectionWidth': 100,
                 'rotateSpeedY': 50,
                 'rotateSpeedZ': 50,
+                'soundToLightOptions': [''],
                 'update': True
             }
         },
@@ -202,16 +183,19 @@ if __name__ == '__main__':
     except FileExistsError:
         shared_cube_memory = mp.shared_memory.SharedMemory(name="cube_data")
 
+    # Create shared queue for randomizer process
+    randomizer_queue = mp.Queue()
+
     processes = [
-        mp.Process(target=server, name="WebSocket/API Server", args=[state]),
+        mp.Process(target=server, name="WebSocket/API Server", args=[state, randomizer_queue]),
         mp.Process(target=sound_process, name="Sound Process", args=[state]),
         mp.Process(target=midi_devices, name="MIDI Devices", args=[state]),
         mp.Process(target=backup_state, name="State Backup", args=[state]),
         mp.Process(target=rendering, name="Renderer", args=[state]),
-        mp.Process(target=autopilot, name="Autopilot", args=[state]),
+        mp.Process(target=autopilot, name="Autopilot", args=[state, randomizer_queue]),
     ]
 
-    # Define a handler for graceful shutdown
+    # Handler for graceful shutdown
     def signal_handler(sig, frame):
         # Only the main process should manage the child processes
         if mp.current_process().name == 'MainProcess':
@@ -219,6 +203,7 @@ if __name__ == '__main__':
             # Terminate all child processes
             for proc in processes:
                 if proc.is_alive():
+                    print(f"Terminating {proc.name}...")
                     proc.terminate()
             sys.exit(0)
         else:
@@ -237,7 +222,7 @@ if __name__ == '__main__':
         for proc in processes:
             proc.join()
     except (KeyboardInterrupt, SystemExit):
-        print("Main process interrupted, stopping children...")
+        print("Main process exited")
     finally:
         # Ensure all processes are definitely dead
         for proc in processes:

@@ -81,7 +81,8 @@ class e_rotation():
                               axes = (0,2), order = 1,
     	                      mode = 'nearest', reshape = False)
 
-
+        # Clip to prevent negative values before powering
+        world = np.clip(world, 0, 1)
         world[:, :, :, :] = world[:, :, :, :]**1.3
 
         if self.mode == 'fixed':

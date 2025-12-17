@@ -5,8 +5,9 @@
     <div class="flex flex-col items-center gap-4">
       <input
         v-model="presetName"
+        @focus="onFocus"
         @keydown.enter.prevent="$emit('save', presetName)"
-        class="9672 px-3 py-2 text-3xl text-center rounded-lg bg-zinc-700 border border-zinc-600 text-zinc-200"
+        class="px-3 py-2 text-3xl text-center rounded-lg bg-zinc-700 border border-zinc-600 text-zinc-200"
       />
       <SimpleKeyboard
         :input="presetName"
@@ -35,8 +36,16 @@ defineEmits<{
 }>()
 
 const presetName = ref('TYPE NAME')
+const firstFocus = ref(true)
 
 function updateSaveName(input: string) {
   presetName.value = input
+}
+
+function onFocus() {
+  if (firstFocus.value) {
+    presetName.value = ''
+    firstFocus.value = false
+  }
 }
 </script>

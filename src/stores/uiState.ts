@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import { ElementInfo, PresetInfo, AdminElements, Preset, GradientPreset, SortOption, AdminPresets } from '../types/types.ts'
+import { ElementInfo, PresetInfo, AdminElements, Preset, GradientPreset, SortOption, AdminPresets, AutopilotMode } from '../types/types.ts'
 
 export const useUiStateStore = defineStore('uiState', {
   state: () => ({
@@ -27,6 +27,8 @@ export const useUiStateStore = defineStore('uiState', {
     contextIndex: 0,
     deleteActive: false,
     sidebarOption: 'console', // console, colors, palette
+    randomMode: 'global' as AutopilotMode
+
   }),
   actions: {
     // fetch the names of active effects or generators

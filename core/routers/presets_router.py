@@ -218,6 +218,7 @@ async def save(
 
     if type == 'channel':
         data = dict(state[channel])
+        data['IO'] = True
         filename = f'channel_p_{preset}'
     elif type == 'global':
         data = dict(state)

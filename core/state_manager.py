@@ -286,7 +286,6 @@ class StateManager:
 
     def autopilot_mode(self, mode: str):
         """Change autopilot mode"""
-        print('Setting autopilot mode to', mode)
         if mode != "next":
             with self.state.lock:
                 self.state['random'] = mode
@@ -312,8 +311,6 @@ class StateManager:
         """Fire a oneshot"""
         with self.state.lock:
             self.state['oneshot'] = oneshot_index
-        import connection_manager
-        connection_manager.ConnectionManager(self.state).update_key('oneshot')
 
     def update_context(self, context_index: int, channel, index):
         with self.state.lock:

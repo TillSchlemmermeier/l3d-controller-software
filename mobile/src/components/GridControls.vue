@@ -1,7 +1,7 @@
 <template>
   <div class="flex-1 min-h-0 grid grid-cols-12 gap-2">
     <div class="col-span-3 flex flex-col gap-2">
-      <button 
+      <button
         @click="store.toggleAutopilot()"
         class="flex-1 rounded-xl flex flex-col items-center justify-center gap-1 border transition-all active:scale-95"
         :class="store.autopilot ? 'bg-emerald-600 border-emerald-400 text-white' : 'bg-zinc-800 border-zinc-700 text-zinc-500'"
@@ -15,8 +15,11 @@
           <path d="M560-160v-80h104L537-367l57-57 126 126v-102h80v240H560Zm-344 0-56-56 504-504H560v-80h240v240h-80v-104L216-160Zm151-377L160-744l56-56 207 207-56 56Z"/>
         </svg>
       </button>
-      <button class="flex-1 rounded-xl bg-zinc-800 border border-zinc-700 flex flex-col items-center justify-center gap-1 active:bg-zinc-700 active:scale-95">
-        <span class="font-bold text-xs text-zinc-300">VOID</span>
+      <button 
+        @click="store.setAutopilotMode()"
+        class="flex-1 rounded-xl bg-zinc-800 border border-zinc-700 flex flex-col items-center justify-center gap-1 active:bg-zinc-700 active:scale-95"
+      >
+        <span class="font-bold text-xs text-zinc-300">Autopilot Mode: {{ store.randomMode }}</span>
       </button>
     </div>
 
@@ -24,9 +27,9 @@
       <button 
         v-for="mode in randomModes" 
         :key="mode.key"
-        @click="store.setAutopilotMode(mode.key)"
+        @click="store.triggerMode = mode.key"
         class="aspect-square rounded-lg flex items-center justify-center transition-all active:scale-90 border"
-        :class="store.randomMode === mode.key 
+        :class="store.triggerMode === mode.key
           ? 'bg-white text-black border-white shadow-[0_0_10px_rgba(255,255,255,0.4)]' 
           : 'bg-zinc-800 text-zinc-600 border-zinc-700'"
       >

@@ -292,7 +292,7 @@ class MidiControllerEmulator:
 
     def update_controls_from_midi(self):
         # Get current context from state
-        channel, index = self.state['context']
+        channel, index = self.state['context'][0]
         if channel != 9 and channel >= self.state['numberOfChannels']:
             print(f"Invalid channel: {channel}")
             return
@@ -306,8 +306,6 @@ class MidiControllerEmulator:
         if channel <= 9:
             try:
                 params = self.state[channel][index]['params']
-                print(params)
-                print(len(params) // 4)
                 for i in range(len(params) // 4):
                     midi_value = params[i * 4 + 3]
                     if isinstance(midi_value, str):
@@ -359,7 +357,7 @@ class MidiControllerEmulator:
         self.knob_values[index] = int(round(float(value)))
         # print(f"Knob {index} value: {self.knob_values[index]}")
         self.midi_translation.update_context(0, index, self.knob_values[index])
-        self.knobs[index].value_label.config(text=str(self.knob_values[index]))
+        self.knobs[index].value_label.config(text=str(round(self.knob_values[index]/127,2)))
 
     def handle_state_button(self, state):
         """Handle state A/B button clicks"""

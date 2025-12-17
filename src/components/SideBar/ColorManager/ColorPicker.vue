@@ -138,7 +138,9 @@ function sendColorUpdate() {
 watch(() => props.selectedColor, (newColor) => {
   if (newColor) {
     const hsv = colorStringToHSV(newColor)
-    currentHue.value = hsv.h
+    if (hsv.s > 0 && hsv.v > 0) {
+      currentHue.value = hsv.h
+    }
     saturation.value = hsv.s
     lightness.value = hsv.v
   }

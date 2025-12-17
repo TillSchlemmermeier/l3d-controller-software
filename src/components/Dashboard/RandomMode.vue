@@ -5,15 +5,13 @@
   <div class="grid grid-cols-12 gap-2 justify-center">
     <div class="col-span-3 gap-4 flex flex-col">
       <DashboardButton
-        label="AUTO PILOT"
-        :subLabel="`${coreState.autopilot_time} s`"
-        :active="coreState.autopilot"
-        :onClick="coreState.toggleAutopilot"
-      />
-      <DashboardButton
         label="TRIGGER RANDOM"
-        :onClick="coreState.triggerRandomizer"
+        :onClick="() => coreState.triggerRandomizer(uiState.randomMode)"
       /> 
+      <DashboardButton
+        label="RANDOM COLOR"
+        :onClick="coreState.randomizeColor"
+      />
     </div>
     <div class="col-span-6">
       <div class="flex flex-row gap-2 justify-center flex-wrap">
@@ -21,10 +19,10 @@
           v-for="(randomMode, index) in randomModes" 
           :key="index"
           class="aspect-square w-16 h-16 rounded-md overflow-hidden transition-all duration-100 flex items-center justify-center"
-          :class="coreState.random === randomMode.key 
+          :class="uiState.randomMode === randomMode.key
             ? 'bg-white text-black shadow-[0_0_10px_rgba(255,255,255,0.3)]' 
             : 'bg-zinc-500 text-zinc-900 '"
-          @click.stop="coreState.autopilotMode(randomMode.key)"
+          @click.stop="uiState.randomMode = randomMode.key"
           :title="randomMode.key"
         >
           <!-- Wrapper to ensure SVG size -->
@@ -35,14 +33,16 @@
     </div>
     <div class="col-span-3 gap-4 flex flex-col">
       <DashboardButton
+        label="AUTO PILOT"
+        :subLabel="`${coreState.autopilot_time} s`"
+        :active="coreState.autopilot"
+        :onClick="coreState.toggleAutopilot"
+      />
+      <DashboardButton
         label="MODE:"
         :subLabel="coreState.random.replace(/_/g, ' ')"
         :onClick="coreState.autopilotMode"
         />
-        <DashboardButton
-        label="RANDOM COLOR"
-        :onClick="coreState.randomizeColor"
-      />
     </div>
 
   </div>
@@ -50,10 +50,12 @@
 
 <script setup lang="ts">
 import { useCoreStateStore } from '../../stores/coreState'
+import { useUiStateStore } from '../../stores/uiState'
 import DashboardButton from './DashboardButton.vue'
 import type { AutopilotMode } from '../../types/types'
 
 const coreState = useCoreStateStore()
+const uiState = useUiStateStore()
 
 const randomModes: Array<{ key: AutopilotMode; icon: string }> = [
   {

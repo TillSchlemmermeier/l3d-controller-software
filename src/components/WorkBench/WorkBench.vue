@@ -92,7 +92,7 @@
                 :delayOnTouchOnly="true"
                 :animation="300"
                 class="w-[162px] transition-all duration-200"
-                :class="{ 'min-h-[65vh] pb-20 bg-zinc-900/20 rounded-lg': uiState.isDragging }"
+                :class="{ 'min-h-[65vh] pb-20 bg-zinc-600/20 rounded-lg': uiState.isDragging }"
               >
                 <template #item="{ index }">
                   <div class="">
@@ -151,7 +151,7 @@
           :delay="50"
           :delayOnTouchOnly="true"
           class="transition-all duration-200"
-          :class="{ 'min-h-[25vh] pb-20 bg-zinc-900/20 rounded-lg': uiState.isDragging }"
+          :class="{ 'min-h-[25vh] pb-20 bg-zinc-600/20 rounded-lg': uiState.isDragging }"
         >
           <template #item="{ index }">
             <div>

@@ -77,8 +77,8 @@ export const useCoreStateStore = defineStore('coreState', {
       await this.callBackend(url)
     },
 
-    async triggerRandomizer() {
-      const url = `${baseUrl}/trigger-randomizer`
+    async triggerRandomizer(mode: AutopilotMode) {
+      const url = `${baseUrl}/trigger-randomizer/${mode}`
       await this.callBackend(url)
     },
 

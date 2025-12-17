@@ -41,8 +41,18 @@
         class="flex gap-3 items-center shrink-0 bg-zinc-950/30 p-3 rounded-2xl border border-white/5"
       >
         <div class="flex-1 flex flex-col gap-3">
-          <MobileSlider label="Brightness" v-model="currentBrightness" />
-          <MobileSlider label="Fade" v-model="currentFade" />
+          <MobileSlider
+            @startSliding="store.isSlidingBrightness = true"
+            @stopSliding="store.isSlidingBrightness = false"
+            label="Brightness"
+            v-model="currentBrightness"
+          />
+          <MobileSlider
+            @startSliding="store.isSlidingFade = true"
+            @stopSliding="store.isSlidingFade = false"
+            label="Fade"
+            v-model="currentFade"
+          />
         </div>
         <ToggleChannelButton />
       </div>

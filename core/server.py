@@ -8,7 +8,6 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from starlette.websockets import WebSocketDisconnect
 import uvicorn
-import randomizer
 
 # Import managers
 from db_manager import DatabaseManager
@@ -16,7 +15,7 @@ from state_manager import StateManager
 from connection_manager import ConnectionManager
 
 # Import routers
-from routers import presets, gradients, system, controller
+from routers import gradients_router, presets_router, state_router, system_router
 
 class UDPBroadcastProtocol(asyncio.DatagramProtocol):
     def __init__(self, connection_manager):
@@ -29,7 +28,7 @@ class UDPBroadcastProtocol(asyncio.DatagramProtocol):
             asyncio.create_task(self.connection_manager.broadcast_udp(data))
 
 class WebSocketAPIServer:
-    def __init__(self, state):
+    def __init__(self, state, randomizer_queue):
         # Define lifespan context manager
         @asynccontextmanager
         async def lifespan(app: FastAPI):
@@ -52,7 +51,7 @@ class WebSocketAPIServer:
             print("Shutting down UDP Bridge...")
             if self.udp_transport:
                 self.udp_transport.close()
-                await asyncio.sleep(0.5)  # Wait for cleanup
+                await asyncio.sleep(0.4)  # Wait for cleanup
                 print("UDP Bridge closed")
             print("Server shutdown complete")
 
@@ -80,7 +79,7 @@ class WebSocketAPIServer:
         self.app.state.db = self.db
         self.app.state.state_manager = self.state_manager
         self.app.state.cube_state = self.cube_state
-        self.app.state.randomizer = randomizer.Randomizer(self.cube_state)
+        self.app.state.randomizer_queue = randomizer_queue
 
         # UDP transport placeholder
         self.udp_transport = None
@@ -97,10 +96,10 @@ class WebSocketAPIServer:
             self.app.mount("/assets", StaticFiles(directory=f"{self.dist_path}/assets"), name="assets")
 
         # 7. Mount Routers
-        self.app.include_router(presets.router)
-        self.app.include_router(controller.router)
-        self.app.include_router(gradients.router)
-        self.app.include_router(system.router)
+        self.app.include_router(presets_router.router)
+        self.app.include_router(state_router.router)
+        self.app.include_router(gradients_router.router)
+        self.app.include_router(system_router.router)
 
         # 8. Initialize Core Routes
         self.init_core_routes()
