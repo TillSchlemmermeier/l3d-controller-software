@@ -23,7 +23,7 @@ class g_central_glow():
 
     def return_state(self):
         return [
-            ['exponent', 'exponent', self.exponent],
+            ['exponent', 'exponent', round(self.exponent, 2)],
             ['channel', 'channel', self.channel if self.channel < 4 else "LFO"],
             ['amount', 'compress', round(self.compress,2)],
             ['speed', 'speed', round(self.speed,2) if self.channel == 4 else '-'],

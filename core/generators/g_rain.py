@@ -82,7 +82,7 @@ class g_rain():
 
             #check for trigger
             elif self.channel == 'Trigger':
-                current_volume = int(float(str(self.sound_values.buf[32:40],'utf-8')))
+                current_volume = struct.unpack('d', bytes(self.sound_values.buf[32:40]))[0]
                 if current_volume > self.lastvalue:
                     self.lastvalue = current_volume
                     self.counter = 5
@@ -90,12 +90,12 @@ class g_rain():
                     self.numbers = self.counter
                     self.counter -= 1
                     # turn on random leds in lower level
-                    for i in range(self.numbers):
+                    for _ in range(self.numbers):
                         world[0,9,randint(0, 9),randint(0, 9)] = 1.0
 
             # turn on random leds in lower level
             else:
-                for i in range(self.numbers):
+                for _ in range(self.numbers):
                     world[0,9,randint(0, 9),randint(0, 9)] = 1.0
 
         # add last frame

@@ -69,6 +69,7 @@
         </button>
         <button 
           @click="$emit('create', selectedStart, selectedEnd, false)"
+          :disabled="isSaveDisabled"
           class="w-24 px-4 py-2 bg-zinc-700 aspect-square rounded hover:bg-zinc-600"
         >
           <span class="text-m text-center font-semibold text-zinc-200 break-words w-full ">
@@ -89,7 +90,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch } from 'vue'
+import { ref, watch, onMounted } from 'vue'
 
 const props = defineProps<{
   frames: string[]
@@ -99,6 +100,7 @@ const props = defineProps<{
 const selectedStart = ref(0)
 const selectedEnd = ref(props.frames.length - 1)
 const isSelectingStart = ref(true)
+const isSaveDisabled = ref(true)
 
 watch(
   () => props.frames.length,
@@ -126,6 +128,13 @@ function selectFrame(index: number) {
     isSelectingStart.value = true
   }
 }
+
+onMounted(() => {
+  // Enable the save button after a short delay to prevent accidental clicks
+  setTimeout(() => {
+    isSaveDisabled.value = false
+  }, 500)  // 500ms delay
+})
 
 defineEmits<{
   (e: 'create', startFrame: number, endFrame: number, gif?: boolean): void
