@@ -1,0 +1,14 @@
+numpy
+scipy
+pyaudio
+requests
+pyserial
+fastapi
+uvicorn[standard]
+starlette
+UltraDict
+rtmidi
+sqlalchemy
+python-dotenv
+beautifulsoup4
+matplotlib
