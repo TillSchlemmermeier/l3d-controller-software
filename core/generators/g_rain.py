@@ -74,7 +74,7 @@ class g_rain():
 
             # check if S2L is activated
             if isinstance(self.channel, int):
-                current_volume = float(str(self.sound_values.buf[self.channel*8:self.channel*8+8],'utf-8'))
+                current_volume = struct.unpack('d', bytes(self.sound_values.buf[self.channel*8:self.channel*8+8]))[0]
                 self.numbers = int(10 * current_volume)
                 # turn on random leds in lower level
                 for i in range(self.numbers):
