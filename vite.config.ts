@@ -12,6 +12,13 @@ export default defineConfig({
     electron({
       main: {
         entry: 'electron/main.ts',
+        vite: {
+          build: {
+            rollupOptions: {
+              external: ['bufferutil', 'utf-8-validate'],
+            },
+          },
+        }
       },
       preload: {
         input: path.join(__dirname, 'electron/preload.ts'),
@@ -39,10 +46,5 @@ export default defineConfig({
       ]
     },
     // hmr: false,  // Disable HMR completely
-  },
-  build: {
-    rollupOptions: {
-      external: ['bufferutil', 'utf-8-validate'],
-    },
   },
 })
