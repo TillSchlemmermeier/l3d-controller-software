@@ -39,5 +39,10 @@ export default defineConfig({
       ]
     },
     // hmr: false,  // Disable HMR completely
-  }
+  },
+  build: {
+    rollupOptions: {
+      external: ['bufferutil', 'utf-8-validate'],
+    },
+  },
 })
