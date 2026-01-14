@@ -214,31 +214,31 @@ function handleClick(index: number, element_id: number) {
     }
     uiState.deleteActive = false
   } else {
-    // if (coreState.shift_activated) {
-    //   if (element_id == 9) {
-    //     selectParameters(index, element_id)
-    //   } else {
-    //     coreState.toggleEffect(index, element_id)
-    //   }
-    // } else {
-    //   selectParameters(index, element_id)
-    // }
-    if (uiState.clickBehavior == 'select') {
-      selectParameters(index, element_id)
-    } else if (uiState.clickBehavior == 'edit') {
-      selectParameters(index, element_id)
-      if (element_id == 9) {
-        newGenerator(index)
-      } else {
-        newEffect(index, element_id)
-      }
-    } else if (uiState.clickBehavior == 'IO') {
+    if (uiState.shiftActivated) {
       if (element_id == 9) {
         selectParameters(index, element_id)
       } else {
         coreState.toggleEffect(index, element_id)
       }
+    } else {
+      selectParameters(index, element_id)
     }
+    // if (uiState.clickBehavior == 'select') {
+    //   selectParameters(index, element_id)
+    // } else if (uiState.clickBehavior == 'edit') {
+    //   selectParameters(index, element_id)
+    //   if (element_id == 9) {
+    //     newGenerator(index)
+    //   } else {
+    //     newEffect(index, element_id)
+    //   }
+    // } else if (uiState.clickBehavior == 'IO') {
+    //   if (element_id == 9) {
+    //     selectParameters(index, element_id)
+    //   } else {
+    //     coreState.toggleEffect(index, element_id)
+    //   }
+    // }
   }
 }
 

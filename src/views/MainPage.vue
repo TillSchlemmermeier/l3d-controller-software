@@ -15,6 +15,7 @@
     <div class="w-[500px] h-full flex flex-col">
       <CubePreview />
       <SoundSpectrum />
+      <MidiController />
       <Dashboard class="flex-1" />
     </div>
     <SideBar />
@@ -35,6 +36,7 @@ import ChannelPreview from '../components/ChannelPreview.vue'
 import SoundSpectrum from '../components/SoundSpectrum.vue'
 import PresetDialog from '../components/PresetDialog/PresetDialog.vue'
 import SideBar from '../components/SideBar/SideBar.vue'
+import MidiController from '../components/MidiController/MidiController.vue'
 import { useUiStateStore } from '../stores/uiState'
 import { useCoreStateStore } from '../stores/coreState'
 

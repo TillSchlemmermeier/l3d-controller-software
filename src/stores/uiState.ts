@@ -27,8 +27,9 @@ export const useUiStateStore = defineStore('uiState', {
     contextIndex: 0,
     deleteActive: false,
     sidebarOption: 'console', // console, colors, palette
-    randomMode: 'global' as AutopilotMode
-
+    randomMode: 'global' as AutopilotMode,
+    launchPadMode: 'workbench' as 'workbench' | 'dashboard',
+    shiftActivated: false, // whether to IO effects or select them
   }),
   actions: {
     // fetch the names of active effects or generators

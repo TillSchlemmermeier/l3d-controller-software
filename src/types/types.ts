@@ -63,7 +63,6 @@ export interface coreState {
   s2l_normalize: boolean
   s2l_gain: number
   s2l_update: boolean
-  shift_activated: boolean
   context: number[][]
   oneshot: number
   crossfade_active: boolean

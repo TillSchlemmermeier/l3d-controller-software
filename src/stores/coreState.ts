@@ -17,7 +17,6 @@ export const useCoreStateStore = defineStore('coreState', {
     s2l_normalize: false,
     s2l_gain: 0,
     s2l_update: false,
-    shift_activated: false,
     context: [[0,9]],
     oneshot: 0,
     crossfade_active: false,
