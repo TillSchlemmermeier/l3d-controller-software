@@ -32,7 +32,7 @@ class e_lfo_hsv():
         # get list of leds
         led_list = np.round(world.reshape([3, 10**3]).T,2)
 
-        hsv_list = colors.rgb_to_hsv(led_list)
+        hsv_list = colors.rgb_to_hsv(np.clip(led_list, 0, 1))
         # print(round(self.amount_h*current_volume, 2), round(self.amount_s*current_volume, 2))
 
         inds = np.where(hsv_list[:, 2] > 0)[0]

@@ -50,6 +50,7 @@ class class_midi_translation:
                             self.state[channel] = this_channel
                         except Exception as e:
                             print(f"Error updating parameter: {e}")
+                            return
         except AssertionError as e:
             print(f"UltraDict error in update_context: {e}")
 

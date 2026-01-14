@@ -15,7 +15,11 @@
       @touchstart="$emit('startSliding')"
       @mouseup="$emit('stopSliding')"
       @touchend="$emit('stopSliding')"
-      class="w-full h-12 appearance-none bg-transparent cursor-pointer touch-none"
+       class="w-full h-12 appearance-none bg-transparent cursor-pointer touch-none
+[&::-webkit-slider-runnable-track]:h-2 [&::-webkit-slider-runnable-track]:rounded-full [&::-webkit-slider-runnable-track]:bg-zinc-800
+[&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:h-7 [&::-webkit-slider-thumb]:w-7 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-white [&::-webkit-slider-thumb]:-mt-2.5 [&::-webkit-slider-thumb]:shadow-[0_2px_6px_rgba(0,0,0,0.3)]
+[&::-moz-range-track]:h-2 [&::-moz-range-track]:rounded-full [&::-moz-range-track]:bg-zinc-800
+[&::-moz-range-thumb]:h-7 [&::-moz-range-thumb]:w-7 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:bg-white [&::-moz-range-thumb]:border-none [&::-moz-range-thumb]:shadow-[0_2px_6px_rgba(0,0,0,0.3)]"
     />
   </div>
 </template>
@@ -36,19 +40,4 @@ function updateValue(e: Event) {
 </script>
 
 <style scoped>
-input[type=range]::-webkit-slider-runnable-track {
-  background: #27272a; /* zinc-800 */
-  height: 8px;
-  border-radius: 999px;
-}
-
-input[type=range]::-webkit-slider-thumb {
-  -webkit-appearance: none;
-  height: 28px;
-  width: 28px;
-  border-radius: 50%;
-  background: white;
-  margin-top: -10px; /* center on track */
-  box-shadow: 0 2px 6px rgba(0,0,0,0.3);
-}
 </style>

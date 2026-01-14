@@ -44,7 +44,7 @@ class e_sound_hsv():
         # get list of leds
         led_list = world.reshape([3, 10**3]).T
 
-        hsv_list = np.round(colors.rgb_to_hsv(led_list),2)
+        hsv_list = np.round(colors.rgb_to_hsv(np.clip(led_list, 0, 1)),2)
         # print(round(self.amount_h*current_volume, 2), round(self.amount_s*current_volume, 2))
 
         inds = np.where(hsv_list[:, 2] > 0)[0]

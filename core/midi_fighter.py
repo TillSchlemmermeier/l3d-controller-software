@@ -7,6 +7,8 @@ class class_fighter:
         """initializes the MIDI fighter"""
         self.midi_inputs = []
         self.midi_outputs = []
+
+        self.channel_color = 144 # midi channel to write colors
         
         # Try to open first Fighter
         try:
@@ -44,11 +46,24 @@ class class_fighter:
         
         # Colors for each column (White, Cyan, Yellow, Pink)
         # These correspond to the ContextSelector colors in the frontend
-        self.column_colors = [127, 60, 20, 95]
+        self.column_colors = [40, 20, 60, 95]
+
+        # midiout.send_message([144, 0, 20])
+        # midiout.send_message([177, 1, 40])
+
+
+        # send initial colors to fighter
+        # bottom row red
+        for midiout in self.midi_outputs:
+            for i in range(len(self.column_colors)):
+                midiout.send_message([177,  0+i, self.column_colors[i]])
+                midiout.send_message([177,  4+i, self.column_colors[i]])
+                midiout.send_message([177,  8+i, self.column_colors[i]])
+                midiout.send_message([177, 12+i, 80])
+
 
     def event(self, event, data=None):
         message, deltatime = event
-        # print(message)
 
         # Handle Knobs (CC)
         if message[0] == 176:
@@ -64,19 +79,26 @@ class class_fighter:
                 
                 self.midi_translation.update_context(col, param_idx, message[2])
 
+
         # Handle Buttons (Note On) - Switch Banks
         # Top button (Row 0) -> Bank 0
         # Bottom button (Row 3) -> Bank 1
-        elif message[0] == 144 and message[2] > 0: # Note On with velocity > 0
-            if message[1] in self.fighter_mapping:
-                idx = self.fighter_mapping.index(message[1])
-                col = idx // 4
-                row = idx % 4
-                
-                if row == 0: # Top button
-                    self.column_banks[col] = 0
-                elif row == 3: # Bottom button
-                    self.column_banks[col] = 1
+        elif message[0] == 177 and message[1] in [ 0, 1, 2, 3] and message[2] > 0: # Note On with velocity > 0
+            self.column_banks[message[1]] = 0
+            # send top row colored and bottom row red
+            for midiout in self.midi_outputs:
+                midiout.send_message([177, message[1], self.column_colors[message[1]]])
+                midiout.send_message([177, message[1]+12, 80])
+
+        elif message[0] == 177 and message[1] in [12,13,14,15] and message[2] > 0: # Note On with velocity > 0
+            # switch bank down
+            self.column_banks[message[1]-12] = 1
+            # set top encoder red
+            # and bottom encoder to color
+            for midiout in self.midi_outputs:
+                midiout.send_message([177,  0 + message[1]-12, 80])
+                midiout.send_message([177, 12 + message[1]-12, self.column_colors[message[1]-12]])
+
 
     def update(self):
         # Update feedback for all columns
@@ -128,20 +150,20 @@ class class_fighter:
                         # Send Color/Animation (CC Ch 2 - 177)
                         # We light up the active bank button with the column color
                         # Row 0 is Bank 0 selector, Row 3 is Bank 1 selector
-                        led_color = 0 # Off by default
+                        # led_color = 0 # Off by default
                         
-                        if row == 0 and self.column_banks[col] == 0:
-                            led_color = col_color
-                        elif row == 3 and self.column_banks[col] == 1:
-                            led_color = col_color
+                        # if row == 0 and self.column_banks[col] == 0:
+                        #     led_color = col_color
+                        # elif row == 3 and self.column_banks[col] == 1:
+                        #     led_color = col_color
                         
                         # Send color to switch (using 177 as per previous code, 
                         # though Note On is standard for switches, 177 might be for ring color or custom mapping.
                         # I'll send both to be safe/robust for different configs)
-                        midiout.send_message([177, cc_num, led_color])
+                        # midiout.send_message([177, cc_num, led_color])
                         
                         # Also send Note On for switch LED if 177 doesn't work for switches
                         # (Note On 144, Note = cc_num, Vel = color)
                         # Only send if color > 0 to avoid turning off if not intended, 
                         # or send 0 to turn off.
-                        midiout.send_message([144, cc_num, led_color])
+                        # midiout.send_message([144, cc_num, led_color])

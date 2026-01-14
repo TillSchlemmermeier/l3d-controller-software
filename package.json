@@ -13,9 +13,9 @@
   "dependencies": {
     "@tailwindcss/vite": "^4.0.9",
     "@types/ws": "^8.18.0",
-    "bufferutil": "^4.0.9",
     "chart.js": "^4.4.8",
     "gifshot": "^0.4.5",
+    "launchpad-webmidi": "^1.2.0",
     "pinia": "^3.0.1",
     "qrcode.vue": "^3.6.0",
     "simple-keyboard": "^3.8.39",
@@ -24,7 +24,7 @@
     "vue": "^3.4.21",
     "vue-router": "^4.5.0",
     "vuedraggable": "^4.1.0",
-    "ws": "^8.18.1"
+    "ws": "^8.18.3"
   },
   "devDependencies": {
     "@types/three": "^0.174.0",
