@@ -1,3 +1,4 @@
+import asyncio
 from typing import List, Optional
 from fastapi import WebSocket
 
@@ -8,6 +9,8 @@ class ConnectionManager:
         self.websocket_settings = {}
         self.state = state
         self.array = array
+        # set by the UDP trigger, awaited by the single broadcast consumer below
+        self.frame_ready = asyncio.Event()
 
 
     async def connect(self, websocket: WebSocket, skip: int):
@@ -48,19 +51,40 @@ class ConnectionManager:
                 await websocket.send_text(text)
 
 
-    # send the binary cube data to all connected clients with possible throttling
-    async def broadcast_cube_data(self):
+    # Flag that a new cube frame is ready. Setting an Event coalesces bursts, so frames
+    # that arrive while a send is in flight are dropped — we only ever send the latest one.
+    def notify_frame_ready(self):
+        self.frame_ready.set()
+
+    # wait for a frame, send the LATEST one to all clients, repeat.
+    async def run_broadcast_consumer(self):
+        while True:
+            await self.frame_ready.wait()
+            self.frame_ready.clear()
+            try:
+                await self._send_latest_frame()
+            except Exception as e:
+                # never let a send error kill the consumer
+                print(f"[broadcast] error sending cube frame: {e}")
+
+    async def _send_latest_frame(self):
+        if not self.active_websockets:
+            return
         # Access state without lock for speed
         num_channels = self.state['numberOfChannels']
         binary_data = self.array[0:num_channels + 1].tobytes()
-        
+
         for ws in list(self.active_websockets):
             settings = self.websocket_settings.get(ws)
             if settings:
                 settings['count'] += 1
                 if settings['count'] % settings['skip'] != 0:
                     continue
-            await ws.send_bytes(binary_data)
+            try:
+                await ws.send_bytes(binary_data)
+            except Exception:
+                # drop a dead/slow client instead of crashing the consumer
+                self.disconnect(ws)
 
 
     # send the cube data to the frontend as JSON (legacy function)

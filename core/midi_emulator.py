@@ -148,36 +148,6 @@ class MidiControllerEmulator:
 
         self.state_frame = ttk.LabelFrame(self.main_frame, text="State Transition", padding="10")
         self.state_frame.grid(row=1, column=2, padx=10, pady=5)  # Grid below midi_buttons_frame
-        
-        # Create state A button
-        self.state_a_button = ttk.Button(
-            self.state_frame,
-            text="State A",
-            width=8,
-            command=lambda: self.handle_state_button('A')
-        )
-        self.state_a_button.grid(row=0, column=0, padx=5, pady=5)
-        
-        # Create horizontal crossfade slider
-        self.crossfade_slider = ttk.Scale(
-            self.state_frame,
-            from_=0,
-            to=127,
-            orient=tk.HORIZONTAL,
-            length=150,
-            command=self.update_crossfade
-        )
-        self.crossfade_slider.grid(row=0, column=1, padx=10, pady=5)
-        
-        # Create state B button
-        self.state_b_button = ttk.Button(
-            self.state_frame,
-            text="State B",
-            width=8,
-            command=lambda: self.handle_state_button('B')
-        )
-        self.state_b_button.grid(row=0, column=2, padx=5, pady=5)
-        
 
         # Create sliders frame with more rows for buttons and knobs
         self.sliders_frame = ttk.LabelFrame(self.main_frame, text="Channel Controls", padding="10")
@@ -358,20 +328,6 @@ class MidiControllerEmulator:
         # print(f"Knob {index} value: {self.knob_values[index]}")
         self.midi_translation.update_context(0, index, self.knob_values[index])
         self.knobs[index].value_label.config(text=str(round(self.knob_values[index]/127,2)))
-
-    def handle_state_button(self, state):
-        """Handle state A/B button clicks"""
-        print(f"State {state} button clicked")
-        self.midi_translation.save_state(state)
-        # Add your state handling logic here
-
-    def update_crossfade(self, value):
-        """Handle crossfade slider updates"""
-        value = int(float(value))
-        self.midi_translation.crossfade(value)
-        print(f"Crossfade value: {value}")
-        # Add your crossfade handling logic here
-            # print(f"Knob Values: {self.knob_values}")
 
     def handle_midi_click(self, index):
         """Handle MIDI button click"""

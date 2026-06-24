@@ -19,7 +19,6 @@ export const useCoreStateStore = defineStore('coreState', {
     s2l_update: false,
     context: [[0,9]],
     oneshot: 0,
-    crossfade_active: false,
     numberOfChannels: 0,
     channels: [],
     globalEffects: [],

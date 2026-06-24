@@ -65,7 +65,6 @@ export interface coreState {
   s2l_update: boolean
   context: number[][]
   oneshot: number
-  crossfade_active: boolean
   numberOfChannels: number
   channels: Channel[]
   globalEffects: Effect[]

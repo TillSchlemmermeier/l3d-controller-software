@@ -14,6 +14,8 @@ const scatterplot = ref<HTMLDivElement | null>(null)
 const geometry = ref<THREE.BufferGeometry | null>(null)
 const rotateCube = ref(false)
 const pointsRef = ref<THREE.Points | null>(null)
+let colorAttribute: THREE.BufferAttribute | null = null
+let needsRender = true
 
 function setupScene() {
   const scene = new THREE.Scene()
@@ -66,17 +68,14 @@ function createCircleTexture(): THREE.Texture {
 const circleTexture = createCircleTexture()
 
 function handleCubeData(data: any) {
-  // data comes as a Uint8Array (Buffer), create a Float32 view on the buffer
-  const floatView = new Float32Array(data.buffer, data.byteOffset, data.byteLength / 4)
+  // data arrives as raw uint8 RGB bytes (Buffer); view them directly
+  const bytes = new Uint8Array(data.buffer, data.byteOffset, data.byteLength)
 
-  // Get the first 3000 floats, subarray creates a view, not a copy (very fast)
-  const combinedColors = floatView.subarray(0, 3000)
-
-  if (geometry.value) {
-    geometry.value.setAttribute(
-      'color',
-      new THREE.Float32BufferAttribute(combinedColors, 3)
-    )
+  if (colorAttribute) {
+    // copy the first 3000 bytes (1000 LEDs x RGB) into the existing buffer.
+    ;(colorAttribute.array as Uint8Array).set(bytes.subarray(0, 3000))
+    colorAttribute.needsUpdate = true
+    needsRender = true
   }
 }
 
@@ -86,6 +85,7 @@ function handleRotateCube() {
     pointsRef.value.rotation.y = 0
     pointsRef.value.rotation.z = 0
   }
+  needsRender = true
 }
 
 onMounted(() => {
@@ -109,6 +109,10 @@ onMounted(() => {
     new THREE.Float32BufferAttribute(createVertices(), 3)
   )
 
+  colorAttribute = new THREE.Uint8BufferAttribute(new Uint8Array(3000), 3, true)
+  colorAttribute.setUsage(THREE.DynamicDrawUsage)
+  geometry.value.setAttribute('color', colorAttribute)
+
   const material = new THREE.PointsMaterial({
     size: 0.8,
     vertexColors: true,
@@ -125,14 +129,18 @@ onMounted(() => {
   pointsRef.value = points
   scene.add(points)
 
-  // Animation loop
+  // Animation loop: render only when something changed (new data or rotation)
   const animate = () => {
     requestAnimationFrame(animate)
     if (rotateCube.value) {
       points.rotation.y += 0.01
       points.rotation.z += 0.005
+      needsRender = true
     }
-    renderer.render(scene, camera)
+    if (needsRender) {
+      renderer.render(scene, camera)
+      needsRender = false
+    }
   }
   animate()
 

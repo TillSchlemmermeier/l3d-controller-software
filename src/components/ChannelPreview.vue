@@ -27,6 +27,8 @@ const renderers: THREE.WebGLRenderer[] = []
 const scenes: THREE.Scene[] = []
 const cameras: THREE.PerspectiveCamera[] = []
 const points: THREE.Points[] = []
+const colorAttributes: THREE.BufferAttribute[] = []
+let needsRender = true
 
 
 function captureFrame(renderer: THREE.WebGLRenderer): string {
@@ -117,31 +119,46 @@ function createCircleTexture(): THREE.Texture {
 // Share texture across all renderers to save memory
 const circleTexture = createCircleTexture()
 
-function updateGeometryColors(geometry: THREE.BufferGeometry, data: any) {
-  geometry.setAttribute('color', new THREE.Float32BufferAttribute(data, 3))
+function updateGeometryColors(index: number, data: Uint8Array) {
+  const attr = colorAttributes[index]
+  if (!attr) return
+  ;(attr.array as Uint8Array).set(data)
+  attr.needsUpdate = true
 }
 
 function handleCubeData(data: any) {
-  // data comes as a Uint8Array (Buffer), create a Float32 view on the buffer
-  const floatView = new Float32Array(data.buffer, data.byteOffset, data.byteLength / 4)
+  // data arrives as raw uint8 RGB bytes (Buffer); view them directly
+  const bytes = new Uint8Array(data.buffer, data.byteOffset, data.byteLength)
 
-  // The array structure is [Combined, Channel0, Channel1, ...], each block is 3000 floats (1000 pixels * 3 values)
+  // The array structure is [Combined, Channel0, Channel1, ...], each block is 3000 bytes (1000 pixels * 3 values)
   for (let index = 0; index < channelLength.value; index++) {
-    const colors = floatView.subarray(3000 * (index + 1), 3000 * (index + 2))
-    updateGeometryColors(geometries.value[index], colors)
+    const colors = bytes.subarray(3000 * (index + 1), 3000 * (index + 2))
+    updateGeometryColors(index, colors)
   }
 
   // Handle combined view data (Index 0) only when capturing frames
-  if (capturingGlobalPreset.value && geometries.value[8]) {
-    updateGeometryColors(geometries.value[8], floatView.subarray(0, 3000))
+  if (capturingGlobalPreset.value && colorAttributes[8]) {
+    updateGeometryColors(8, bytes.subarray(0, 3000))
   }
+
+  needsRender = true
 }
 
 function initializeRenderers() {
   renderers.forEach(renderer => {
     renderer.dispose()
     renderer.forceContextLoss()
+    renderer.domElement.remove()
   })
+  geometries.value.forEach(geometry => geometry.dispose())
+  points.forEach(point => (point.material as THREE.Material).dispose())
+
+  renderers.length = 0
+  scenes.length = 0
+  cameras.length = 0
+  points.length = 0
+  geometries.value.length = 0
+  colorAttributes.length = 0
 
   for (let plot = 0; plot < 9; plot++) {
     const { scene, camera, renderer } = setupScene()
@@ -158,6 +175,12 @@ function initializeRenderers() {
       'position',
       new THREE.Float32BufferAttribute(createVertices(), 3)
     )
+
+    const colorAttr = new THREE.Uint8BufferAttribute(new Uint8Array(3000), 3, true)
+    colorAttr.setUsage(THREE.DynamicDrawUsage)
+    geometry.setAttribute('color', colorAttr)
+    colorAttributes.push(colorAttr)
+
     geometries.value.push(geometry)
 
     const material = new THREE.PointsMaterial({
@@ -179,11 +202,17 @@ function initializeRenderers() {
  
   const animate = () => {
     requestAnimationFrame(animate)
-    renderers.forEach((renderer, index) => {
-      if (index < 8 || (index === 8 && capturingGlobalPreset.value)) {
-        renderer.render(scenes[index], cameras[index])
+    // channel plots (0..7) redraw only when new cube data arrived
+    if (needsRender) {
+      for (let index = 0; index < 8; index++) {
+        renderers[index]?.render(scenes[index], cameras[index])
       }
-    })
+      needsRender = false
+    }
+    // combined plot (index 8) is driven on-demand during global-preset capture
+    if (capturingGlobalPreset.value && renderers[8]) {
+      renderers[8].render(scenes[8], cameras[8])
+    }
   }
   animate()
 }
@@ -203,9 +232,9 @@ watch(
   (newLength) => {
     if (newLength < channelLength.value) {
       for (let i = newLength; i < channelLength.value; i++) {
-        if (geometries.value[i]) {
-          const emptyColors = new Float32Array(1000 * 3).fill(0)
-          geometries.value[i].setAttribute('color', new THREE.Float32BufferAttribute(emptyColors, 3))
+        if (colorAttributes[i]) {
+          ;(colorAttributes[i].array as Uint8Array).fill(0)
+          colorAttributes[i].needsUpdate = true
           renderers[i].render(scenes[i], cameras[i])
         }
       }

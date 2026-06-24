@@ -48,10 +48,6 @@ class rendering_engine:
         # initialize global effects
         self.global_effects = []
 
-        # Initialize timing variables
-        self.start_time = time.time()
-        self.frame_count = 0
-
         # one shots
         self.shot_state = 0
         self.shot = s_blank()
@@ -101,49 +97,29 @@ class rendering_engine:
 
         # initialise shared memory
         self.shared_cube_memory = mp.shared_memory.SharedMemory(name="cube_data")
-        self.shared_cube_array = np.ndarray((9, 1000, 3), dtype=np.float32, buffer=self.shared_cube_memory.buf)    
+        self.shared_cube_array = np.ndarray((9, 1000, 3), dtype=np.uint8, buffer=self.shared_cube_memory.buf)
+        self.stage_buffer = np.zeros((9, 1000, 3), dtype=np.float64)
 
 
     def run(self, state):
         """generates a frame and sends the package when cube is turned on"""
-        # check wether 'running' flag is set
+
         self.generate_frame(state)
+
         if self.should_send:
             self.send_frame()
 
-        # Prepare combined cube data
-        cube_colors = np.zeros([3, 1000])
-        cube_colors[0, :] = self.cubeworld[0, :, :, :].flatten()
-        cube_colors[1, :] = self.cubeworld[1, :, :, :].flatten()
-        cube_colors[2, :] = self.cubeworld[2, :, :, :].flatten()
+        # Pack combined + per-channel colors into the (9,1000,3) staging buffer.
+        # reshape/transpose return views (no copy)
+        #   row 0     = combined cube  (cubeworld    (3,10,10,10)   -> (1000,3))
+        #   rows 1..8 = the 8 channels (channelworld (8,3,10,10,10) -> (8,1000,3))
+        self.stage_buffer[0] = self.cubeworld.reshape(3, 1000).T
+        self.stage_buffer[1:9] = self.channelworld.reshape(8, 3, 1000).transpose(0, 2, 1)
 
-        # Prepare channel data
-        channel_colors = np.zeros([8, 3, 1000])  # 8 channels, 3 color components (RGB), 1000 LEDs
-        for i in range(8):
-            channel_colors[i, 0, :] = self.channelworld[i, 0, :, :, :].flatten()  # R
-            channel_colors[i, 1, :] = self.channelworld[i, 1, :, :, :].flatten()  # G
-            channel_colors[i, 2, :] = self.channelworld[i, 2, :, :, :].flatten()  # B
-
-        # Increment frame count
-        self.frame_count += 1
-
-        # Calculate elapsed time
-        elapsed_time = time.time() - self.start_time
-
-        # Print the frequency every 100 seconds
-        if elapsed_time >= 100.0:
-            # print(f"Run method executed {self.frame_count} times in the last 100 seconds")
-            print(f"Rendering engine running at {self.frame_count / 100} FPS")
-            self.frame_count = 0
-            self.start_time = time.time()
-
-        # Reshape cube_colors and channel_colors to have consistent dimensions
-        cube_colors_reshaped = cube_colors.T.reshape(1, 1000, 3)  # Shape: (1, 1000, 3)
-        channel_colors_reshaped = channel_colors.transpose(0, 2, 1)  # Shape: (8, 1000, 3)
-        # Concatenate along first axis
-        all_colors = np.concatenate([cube_colors_reshaped, channel_colors_reshaped], axis=0)  # Shape: (9, 1000, 3)
-        # save to shared memory
-        np.copyto(self.shared_cube_array, all_colors)
+        # quantize float [0,1] -> uint8 [0,255]: matches the cube's 8-bit depth
+        np.clip(self.stage_buffer, 0.0, 1.0, out=self.stage_buffer)
+        self.stage_buffer *= 255.0
+        self.shared_cube_array[:] = self.stage_buffer.astype(np.uint8)
 
 
     def send_frame(self):
@@ -211,6 +187,10 @@ class rendering_engine:
             print("[CORE] No valid snapshot created, skipping frame")
             return
 
+        pending_update = {}
+        clear_color_update = False
+        reset_oneshot = False
+
         # loop through channels
         for i in range(snapshot['numberOfChannels']):
             channel = self.channels[i]
@@ -219,19 +199,14 @@ class rendering_engine:
             if this_channel['update']:
                 updated_state = channel.update_channel(this_channel)
                 updated_state['update'] = False
-                with state.lock:
-                    state[i] = updated_state
-                    if snapshot['crossfade_active']:
-                        state['crossfade_active'] = False
-                        requests.get("http://localhost:8000/api/update_key/crossfade_active")
+                pending_update[i] = updated_state
 
             # check whether channel is active
             new_world, updated_channel = channel.render_frame(this_channel)
 
             # Only update state if changes occurred
             if updated_channel is not None:
-                with state.lock:
-                    state[i] = updated_channel
+                pending_update[i] = updated_channel
 
             # apply channel fade
             self.channelworld[i, :, :, :] = new_world + this_channel['fade']*\
@@ -253,8 +228,7 @@ class rendering_engine:
 
         # check if global effects need to be updated
         if snapshot[9]['update']:
-            with state.lock:
-                state[9] = self.update_global_effects(snapshot[9])
+            pending_update[9] = self.update_global_effects(snapshot[9])
 
         # apply global effect 
         for i in range(snapshot[9]['numberOfEffects']):
@@ -265,16 +239,14 @@ class rendering_engine:
                 for k in range(len(effect_state)):
                     global_effects[i]['params'][4*k:4*k+3] = effect_state[k][:3]
                 global_effects[i]['update'] = False
-                with state.lock:
-                    state[9] = global_effects
+                pending_update[9] = global_effects
             self.cubeworld = self.global_effects[i](self.cubeworld, snapshot[9][i]['params'][3::4])
 
         # apply global color effect
         if 8 in snapshot[9]:
             if snapshot[9][8]['update']:
                 self.cubeworld = self.global_color_effect(self.cubeworld, snapshot[9][8])
-                with state.lock:
-                    state[9][8]['update'] = False
+                clear_color_update = True
             else:
                 self.cubeworld = self.global_color_effect(self.cubeworld)
 
@@ -283,9 +255,7 @@ class rendering_engine:
             print(f"oneshot fired: {snapshot['oneshot']}")
             self.shot_state = snapshot['oneshot']
             self.shot = self.shot_list[int(self.shot_state)]()
-            requests.get("http://localhost:8000/api/update_key/oneshot")
-            with state.lock:
-                state['oneshot'] = 0
+            reset_oneshot = True
 
         if self.shot_state > 0:
             self.cubeworld, counter = self.shot(self.cubeworld)
@@ -299,6 +269,20 @@ class rendering_engine:
 
         # adjust global brightness
         self.cubeworld *= snapshot['brightness']
+
+        if pending_update or clear_color_update or reset_oneshot:
+            with state.lock:
+                for key, value in pending_update.items():
+                    state[key] = value
+                if clear_color_update:
+                    state[9][8]['update'] = False
+                if reset_oneshot:
+                    state['oneshot'] = 0
+            if reset_oneshot:
+                try:
+                    requests.get("http://localhost:8000/api/update_key/oneshot", timeout=0.1)
+                except requests.RequestException:
+                    pass
 
 
     def update_global_effects(self, globalEffects):

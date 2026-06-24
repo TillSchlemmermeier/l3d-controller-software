@@ -263,7 +263,7 @@ class Randomizer:
         "e_randomizer",
         "e_rare_strobo",
         "e_slicer",
-        "e_squared"
+        "e_squared",
         "e_strobe",
         ]
 

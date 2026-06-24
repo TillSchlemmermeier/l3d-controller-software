@@ -93,7 +93,7 @@ def backup_state(state):
 
 def restore_from_backup(state):
     backup_file = os.path.join(f"state_backup.pkl")
-    with open(backup_file, 'rb') as f:  # Note: 'rb' for binary read
+    with open(backup_file, 'rb') as f:  # 'rb' for binary read
         backup_state = pickle.load(f)
 
     with state.lock:
@@ -130,9 +130,7 @@ if __name__ == '__main__':
         "s2l_update": True,
         "context": [[0, 9], [0, 0], [0 ,0], [0 ,0]],
         "midi_update": 0,
-        "shift_activated": False,
         "oneshot": 0,
-        "crossfade_active": False,
         "numberOfChannels": 1,
         0: {
             "IO": True,
@@ -179,7 +177,7 @@ if __name__ == '__main__':
         global_memory_s2l = mp.shared_memory.SharedMemory(name="global_s2l_memory")
 
     try:
-        shared_cube_memory = mp.shared_memory.SharedMemory(name="cube_data", create=True, size=108000) # 9 channels, 1000 LEDs, RGB, 4 bytes per float32
+        shared_cube_memory = mp.shared_memory.SharedMemory(name="cube_data", create=True, size=27000) # 9 channels, 1000 LEDs, RGB, 1 byte per uint8
     except FileExistsError:
         shared_cube_memory = mp.shared_memory.SharedMemory(name="cube_data")
 

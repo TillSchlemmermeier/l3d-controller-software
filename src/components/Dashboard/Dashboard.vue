@@ -36,10 +36,6 @@
           :onClick="coreState.toggleCube"
           :active="coreState.IO"
         />
-        <!-- <DashboardButton
-          label="CROSS FADE"
-          :active="coreState.crossfade_active"
-        /> -->
       </div>
 
       <RandomMode />

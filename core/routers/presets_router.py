@@ -232,12 +232,12 @@ async def save(
         data = dict(state[channel][index])
         filename = f'{element}_p_{preset}'
 
-    success, message = db.save_preset(type, element, preset, data)
+    success = db.save_preset(type, element, preset, data)
 
     if not success:
         return JSONResponse(
             status_code=400,
-            content={"message": message}
+            content={"message": 'Error saving preset'}
         )
 
     PREVIEW_DIR = Path(__file__).resolve().parents[2] / "src/assets/previews"

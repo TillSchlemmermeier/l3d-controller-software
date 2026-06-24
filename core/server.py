@@ -23,7 +23,7 @@ class UDPBroadcastProtocol(asyncio.DatagramProtocol):
 
     def datagram_received(self, data, addr):
         if data == b'trigger_cube_update':
-            asyncio.create_task(self.connection_manager.broadcast_cube_data())
+            self.connection_manager.notify_frame_ready()
         else:
             asyncio.create_task(self.connection_manager.broadcast_udp(data))
 
@@ -44,9 +44,20 @@ class WebSocketAPIServer:
             except Exception as e:
                 print(f"Failed to start UDP server: {e}")
 
+            # Start the single cube-broadcast consumer (coalesces frame triggers)
+            broadcast_task = asyncio.create_task(
+                self.connection_manager.run_broadcast_consumer()
+            )
+
             # --- STARTUP LOGIC ABOVE ---
             yield # Application runs here
             # --- SHUTDOWN LOGIC BELOW ---
+
+            broadcast_task.cancel()
+            try:
+                await broadcast_task
+            except asyncio.CancelledError:
+                pass
 
             print("Shutting down UDP Bridge...")
             if self.udp_transport:
@@ -67,7 +78,7 @@ class WebSocketAPIServer:
         self.shared_mem = mp.shared_memory.SharedMemory(name="cube_data")
         self.array = np.ndarray(
             shape=(9, 1000, 3),
-            dtype=np.float32,
+            dtype=np.uint8,
             buffer=self.shared_mem.buf
         )
 

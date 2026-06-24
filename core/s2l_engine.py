@@ -7,7 +7,6 @@ import json
 import multiprocessing as mp
 from scipy.fftpack import fft, fftfreq
 from scipy.ndimage.filters import uniform_filter1d
-from scipy.interpolate import griddata
 from time import time, sleep
 import struct
 
@@ -131,7 +130,9 @@ def sound_process(state):
 
         # smoothing and interpolating to correct axis
         FFT_smooth = uniform_filter1d(np.abs(FFT), size=10)
-        final_data = griddata(freqs, FFT_smooth, freq_axis, method='linear', fill_value=0)
+        # 1-D interpolation onto the log frequency axis
+        pos = freqs >= 0
+        final_data = np.interp(freq_axis, freqs[pos], FFT_smooth[pos], right=0)
 
         # normalize the whole thing if normalizing was set
         # to "not normalized"

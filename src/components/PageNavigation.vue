@@ -59,7 +59,7 @@ function handleClick(item: { label: string; action: () => void }) {
 const menuItems = computed(() => [
   { icon: home, label: 'Home', action: () => goTo(RouteNames.MAIN_PAGE) },
   // { icon: coreState.shift_activated ? io : midi_edit, label: 'Select', action: () => goTo(RouteNames.MAIN_PAGE) },
-  { icon: coreState.shift_activated ? io : midi_edit, label: 'Select', action: () => uiState.clickBehavior = 'select' },
+  { icon: uiState.shiftActivated ? io : midi_edit, label: 'Select', action: () => uiState.clickBehavior = 'select' },
   { icon: edit, label: 'Edit', action: () => uiState.clickBehavior = 'edit' },
   { icon: io, label: 'IO', action: () => uiState.clickBehavior = 'IO' },
   ...(uiState.admin
