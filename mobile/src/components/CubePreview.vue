@@ -95,8 +95,8 @@ function initThree() {
 
   for (let i = 0; i < 9; i++) {
     const geometry = baseGeometry.clone()
-    const initialColors = new Float32Array(3000).fill(0.1)
-    geometry.setAttribute('color', new THREE.Float32BufferAttribute(initialColors, 3))
+    const initialColors = new Uint8Array(3000).fill(26) // ~0.1 once normalized
+    geometry.setAttribute('color', new THREE.Uint8BufferAttribute(initialColors, 3, true))
     
     const material = i === 0 ? materialGlobal : materialSmall
     const points = new THREE.Points(geometry, material)
@@ -172,18 +172,19 @@ function handleResize() {
 }
 
 // --- PUBLIC API called by Parent ---
-function updateGeometry(floatView: Float32Array) {
+// byteView holds raw uint8 RGB bytes (0-255)
+function updateGeometry(byteView: Uint8Array) {
   const pixelCount = 1000
-  const floatsPerPixel = 3
-  const blockSize = pixelCount * floatsPerPixel
-  
+  const valuesPerPixel = 3
+  const blockSize = pixelCount * valuesPerPixel
+
   for (let i = 0; i < 9; i++) {
     const offset = i * blockSize
-    if (offset + blockSize <= floatView.length && cubes[i]) {
-      const colors = floatView.subarray(offset, offset + blockSize)
+    if (offset + blockSize <= byteView.length && cubes[i]) {
+      const colors = byteView.subarray(offset, offset + blockSize)
       const cube = cubes[i]
       if (cube) {
-        cube.geometry.setAttribute('color', new THREE.Float32BufferAttribute(colors, 3))
+        cube.geometry.setAttribute('color', new THREE.Uint8BufferAttribute(colors, 3, true))
         if (cube.geometry.attributes.color) {
           cube.geometry.attributes.color.needsUpdate = true
         }
@@ -191,10 +192,10 @@ function updateGeometry(floatView: Float32Array) {
       }
     } else if (cubes[i] && !cubeReset[i]) {
       // Only reset to black if not already reset
-      const blackColors = new Float32Array(pixelCount * floatsPerPixel).fill(0.0)
+      const blackColors = new Uint8Array(blockSize)
       const cube = cubes[i]
       if (cube) {
-        cube.geometry.setAttribute('color', new THREE.Float32BufferAttribute(blackColors, 3))
+        cube.geometry.setAttribute('color', new THREE.Uint8BufferAttribute(blackColors, 3, true))
         if (cube.geometry.attributes.color) {
           cube.geometry.attributes.color.needsUpdate = true
         }

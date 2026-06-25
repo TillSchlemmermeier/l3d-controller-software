@@ -115,7 +115,7 @@ function connectWebSocket() {
   socket.onmessage = (event) => {
     if (event.data instanceof ArrayBuffer) {
       if (cubePreviewRef.value) {
-        cubePreviewRef.value.updateGeometry(new Float32Array(event.data))
+        cubePreviewRef.value.updateGeometry(new Uint8Array(event.data))
       }
     } else {
       try {
