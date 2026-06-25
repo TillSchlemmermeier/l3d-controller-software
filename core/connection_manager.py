@@ -70,8 +70,8 @@ class ConnectionManager:
     async def _send_latest_frame(self):
         if not self.active_websockets:
             return
-        # Access state without lock for speed
-        num_channels = self.state['numberOfChannels']
+        with self.state.lock:
+            num_channels = self.state['numberOfChannels']
         binary_data = self.array[0:num_channels + 1].tobytes()
 
         for ws in list(self.active_websockets):
@@ -127,10 +127,11 @@ class ConnectionManager:
 
     # update the value of a single key in the frontend
     async def update_key(self, key: str, channel: Optional[int] = None):
-        if channel is None:
-            value = self.state[key]
-        else:
-            value = self.state[channel][key]
+        with self.state.lock:
+            if channel is None:
+                value = self.state[key]
+            else:
+                value = self.state[channel][key]
 
         message = {
             "type": "state_key",
