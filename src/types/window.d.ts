@@ -1,20 +1,21 @@
+// Each on* registration returns a disposer that removes only that listener.
+type Disposer = () => void;
+
 interface IpcRenderer {
-  onCubeData(callback: (data: any) => void): void;
-  onSpectrumData(callback: (data: any) => void): void;
-  onStateData(callback: (data: any) => void): void;
-  onStateSectionData(callback: (data: any) => void): void;
-  onStateKeyData(callback: (data: any) => void): void;
-  on(channel: string, listener: (event: any, ...args: any[]) => void): void;
-  off(channel: string, listener: (...args: any[]) => void): void;
-  send(channel: string, ...args: any[]): void;
-  invoke(channel: string, ...args: any[]): Promise<any>;
-  onWebSocketData(callback: (data: any) => void): void;
-  removeWebSocketListener(): void;
+  // request/response (renderer -> main)
   restartBackend: () => Promise<void>;
-  onPythonOutput(callback: (event: any, data: any) => void): void;
-  onWebSocketConnected(callback: () => void): void;
-  onWebSocketDisconnected(callback: () => void): void;
-  onWebSocketError(callback: (error: Error) => void): void;
+  // data streams (main -> renderer) — call the returned disposer to unsubscribe
+  onCubeData(callback: (data: any) => void): Disposer;
+  onSpectrumData(callback: (data: any) => void): Disposer;
+  onStateData(callback: (data: any) => void): Disposer;
+  onStateSectionData(callback: (data: any) => void): Disposer;
+  onStateKeyData(callback: (data: any) => void): Disposer;
+  onPythonOutput(callback: (event: any, data: any) => void): Disposer;
+  // connection lifecycle (main -> renderer)
+  onWebSocketConnected(callback: () => void): Disposer;
+  onWebSocketDisconnected(callback: () => void): Disposer;
+  onWebSocketError(callback: (error: string) => void): Disposer;
+  onReinitializeRenderers(callback: () => void): Disposer;
 }
 
 declare global {

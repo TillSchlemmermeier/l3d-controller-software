@@ -16,6 +16,7 @@ const rotateCube = ref(false)
 const pointsRef = ref<THREE.Points | null>(null)
 let colorAttribute: THREE.BufferAttribute | null = null
 let needsRender = true
+let disposeCubeData: (() => void) | null = null
 
 function setupScene() {
   const scene = new THREE.Scene()
@@ -94,7 +95,7 @@ onMounted(() => {
     return
   }
 
-  window.ipcRenderer.onCubeData(handleCubeData)
+  disposeCubeData = window.ipcRenderer.onCubeData(handleCubeData)
 
   const { scene, camera, renderer } = setupScene()
 
@@ -147,7 +148,7 @@ onMounted(() => {
 })
 
 onUnmounted(() => {
-  window.ipcRenderer.removeWebSocketListener()
+  disposeCubeData?.()
 })
 </script>
 

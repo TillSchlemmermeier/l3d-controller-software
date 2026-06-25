@@ -29,6 +29,7 @@ const cameras: THREE.PerspectiveCamera[] = []
 const points: THREE.Points[] = []
 const colorAttributes: THREE.BufferAttribute[] = []
 let needsRender = true
+let disposeCubeData: (() => void) | null = null
 
 
 function captureFrame(renderer: THREE.WebGLRenderer): string {
@@ -223,7 +224,7 @@ onMounted(() => {
     return
   }
   channelLength.value = coreState.channels.length
-  window.ipcRenderer.onCubeData(handleCubeData)
+  disposeCubeData = window.ipcRenderer.onCubeData(handleCubeData)
   initializeRenderers()
 })
 
@@ -244,7 +245,7 @@ watch(
 )
 
 onUnmounted(() => {
-  window.ipcRenderer.removeWebSocketListener()
+  disposeCubeData?.()
   renderers.forEach(renderer => {
     renderer.dispose()
     renderer.forceContextLoss()

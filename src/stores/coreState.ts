@@ -4,6 +4,9 @@ import { coreState, AutopilotMode } from '../types/types'
 
 const baseUrl = 'http://0.0.0.0:8000/api'
 
+// IPC listeners registered by initializeIPC()
+let ipcDisposers: Array<() => void> = []
+
 export const useCoreStateStore = defineStore('coreState', {
   state: (): coreState => ({
     IO: false,
@@ -221,21 +224,37 @@ export const useCoreStateStore = defineStore('coreState', {
     },
 
     initializeIPC() {
-      window.ipcRenderer.onWebSocketConnected(() => {
-        console.log('WebSocket connected, requesting state update')
-        this.requestStateUpdate()
-        console.log('Initial state loaded')
-      })
-      window.ipcRenderer.onStateData((message: any) => {
-        this.$state = this.parseState(message)
-      })
-      window.ipcRenderer.onStateSectionData((message: any) => {
-        this.updateSingleElement(message)
-      })
-      window.ipcRenderer.onStateKeyData((message: any) => {
-        console.log('update key', message)
-        this.updateSingleKey(message)
-      })
+      const uiState = useUiStateStore()
+      ipcDisposers.forEach(dispose => dispose())
+      ipcDisposers = [
+        window.ipcRenderer.onWebSocketConnected(() => {
+          console.log('WebSocket connected, requesting state update')
+          uiState.setConnected()
+          this.requestStateUpdate()
+        }),
+        window.ipcRenderer.onWebSocketDisconnected(() => {
+          console.log('WebSocket disconnected')
+          uiState.setDisconnected()
+        }),
+        window.ipcRenderer.onWebSocketError((error: string) => {
+          console.error('WebSocket error:', error)
+          uiState.setConnectionError(error)
+        }),
+        window.ipcRenderer.onReinitializeRenderers(() => {
+          console.log('Backend restarted, re-syncing state')
+          this.requestStateUpdate()
+        }),
+        window.ipcRenderer.onStateData((message: any) => {
+          this.$state = this.parseState(message)
+        }),
+        window.ipcRenderer.onStateSectionData((message: any) => {
+          this.updateSingleElement(message)
+        }),
+        window.ipcRenderer.onStateKeyData((message: any) => {
+          console.log('update key', message)
+          this.updateSingleKey(message)
+        }),
+      ]
     },
 
     updateSingleElement(data: any) {

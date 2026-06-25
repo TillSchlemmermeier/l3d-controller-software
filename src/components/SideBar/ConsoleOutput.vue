@@ -54,11 +54,13 @@ function clearOutput() {
   visibleLines.value = []
 }
 
+let disposePythonOutput: (() => void) | null = null
+
 onMounted(() => {
-  window.ipcRenderer.onPythonOutput(handleConsoleOutput)
+  disposePythonOutput = window.ipcRenderer.onPythonOutput(handleConsoleOutput)
 })
 
 onUnmounted(() => {
-  window.ipcRenderer.off('python-output', handleConsoleOutput)
+  disposePythonOutput?.()
 })
 </script>

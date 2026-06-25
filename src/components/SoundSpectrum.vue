@@ -22,6 +22,7 @@ const coreState = useCoreStateStore()
 const chart = ref<HTMLCanvasElement | null>(null)
 let chartInstance: Chart | null = null
 let freqAxis: number[] = []
+let disposeSpectrum: (() => void) | null = null
   
 const COLORS = ['red', 'green', 'blue', 'orange'] as const
 const FONT = { size: 16, family: "'DejaVu Sans'" }
@@ -200,7 +201,7 @@ onMounted(() => {
   chartInstance = new Chart(ctx, config)
   updateSelectorsAndThresholds()
 
-  window.ipcRenderer.onSpectrumData((message: any) => {
+  disposeSpectrum = window.ipcRenderer.onSpectrumData((message: any) => {
     updateSpectrum(message)
   })
 })
@@ -217,7 +218,7 @@ onUnmounted(() => {
     chartInstance.destroy()
     chartInstance = null
   }
-  window.ipcRenderer?.removeWebSocketListener()
+  disposeSpectrum?.()
 })
 </script>
 

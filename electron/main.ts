@@ -124,6 +124,8 @@ function createWindow() {
     icon: path.join(PUBLIC_PATH, 'icons/brightness.svg'),
     webPreferences: {
       preload: path.join(APP_ROOT, 'dist-electron', 'preload.mjs'),
+      contextIsolation: true,
+      nodeIntegration: false,
     },
   })
 }

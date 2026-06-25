@@ -1,5 +1,16 @@
 import { defineStore } from 'pinia'
-import { ElementInfo, PresetInfo, AdminElements, Preset, GradientPreset, SortOption, AdminPresets, AutopilotMode } from '../types/types.ts'
+import {
+  AdminElements,
+  AdminPresets,
+  AutopilotMode,
+  ConnectionStatus,
+  ElementInfo,
+  GradientPreset,
+  Preset,
+  PresetInfo,
+  SortOption
+   } from '../types/types.ts'
+
 
 export const useUiStateStore = defineStore('uiState', {
   state: () => ({
@@ -30,8 +41,27 @@ export const useUiStateStore = defineStore('uiState', {
     randomMode: 'global' as AutopilotMode,
     launchPadMode: 'workbench' as 'workbench' | 'dashboard',
     shiftActivated: false, // whether to IO effects or select them
+    connectionStatus: 'connecting' as ConnectionStatus, // Electron-main <-> Python WS lifecycle
+    connectionError: '',
+    everConnected: false, // becomes true after the first successful connect
   }),
   actions: {
+    // backend connection lifecycle
+    setConnected() {
+      this.connectionStatus = 'connected'
+      this.connectionError = ''
+      this.everConnected = true
+    },
+    setDisconnected() {
+      if (this.connectionStatus !== 'error') {
+        this.connectionStatus = 'disconnected'
+      }
+    },
+    setConnectionError(message: string) {
+      this.connectionStatus = 'error'
+      this.connectionError = message || 'Unknown WebSocket error'
+    },
+
     // fetch the names of active effects or generators
     async fetchActiveElements() {
       const url = `get-active-elements/${this.elementType}`

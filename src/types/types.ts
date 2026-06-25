@@ -16,6 +16,13 @@ export type SortOption = 'first' | 'last' | 'none' | 'subtype' | 'mean' | 'rando
 
 export type AutopilotMode = 'global' | 'all_channels' | 'all_elements' | 'random_channel' | 'random_channel_elements' | 'random_element' | 'selected_channel' | 'selected_channel_elements' | 'selected_element' | 'colors'
 
+// Lifecycle of the Electron-main <-> Python-backend WebSocket, surfaced to the UI.
+//   connecting   - initial state, before the first successful connection
+//   connected    - backend reachable, data flowing
+//   disconnected - backend dropped (main is auto-reconnecting)
+//   error        - the WebSocket reported an error
+export type ConnectionStatus = 'connecting' | 'connected' | 'disconnected' | 'error'
+
 export interface Effect {
   name: string
   IO: number
