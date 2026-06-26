@@ -95,6 +95,7 @@ class StateManager:
 
     def load_channel(self, channel: int, preset_data: dict):
         """Load a channel preset"""
+        preset_data['IO'] = False
         with self.state.lock:
             self.state[channel] = preset_data
             if channel == self.state['numberOfChannels']:
