@@ -1,7 +1,6 @@
 import sqlite3
 from contextlib import contextmanager
 import json
-import os
 import numpy as np
 from sqlalchemy import JSON
 
@@ -330,17 +329,6 @@ class DatabaseManager:
                 
                 db_success = cursor.rowcount > 0
                 conn.commit()
-                
-                # If preset was found and deleted from DB, try to delete the GIF
-                if db_success:
-                    gif_path = f"../src/assets/previews/{element}_p_{preset}.gif"
-                    try:
-                        if os.path.exists(gif_path):
-                            os.remove(gif_path)
-                    except OSError as e:
-                        print(f"Warning: Could not delete GIF file: {e}")
-                        # Don't return False here as the DB deletion was successful
-            
                 return db_success
 
         except Exception as e:
