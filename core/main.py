@@ -20,12 +20,10 @@ from midi_launchcontrol import class_launchcontrol
 from midi_emulator import MidiControllerEmulator
 
 def autopilot(state, randomizer_queue):
-    print('Starting autopilot / randomizer process')
     randomizer = Randomizer(state)
     randomizer.run_autopilot_loop(state, randomizer_queue)
 
 def server(state, randomizer_queue):
-    print('Starting FastAPI server')
     server = WebSocketAPIServer(state, randomizer_queue)
     server.run()
 
@@ -51,7 +49,6 @@ def midi_devices(state):
     # root.mainloop()
 
 def rendering(state):
-    print('Starting rendering thread')
     frame_renderer = rendering_engine()
 
     udp_sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
@@ -77,7 +74,6 @@ def rendering(state):
 
 
 def backup_state(state):
-    print("State backup process started, backing up every 30 seconds")
     while True:
         try:
             sleep(30)  # New backup every 30 seconds

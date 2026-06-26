@@ -13,7 +13,6 @@ let ws: WebSocket | null = null
 let win: BrowserWindow | null = null
 let pythonProcess: ChildProcess | null = null
 let isQuitting = false
-let isProcessing = false;
 
 function setupWebSocket(win: BrowserWindow) {
   ws = new WebSocket('ws://localhost:8000/ws')
@@ -29,19 +28,13 @@ function setupWebSocket(win: BrowserWindow) {
   })
 
   ws.on('message', (data: any, isBinary: boolean) => {
-    if (isProcessing) return
-
     // Handle binary cube data separately
     if (isBinary) {
-      isProcessing = true
       win.webContents.send('cube_data_binary', data)
-      isProcessing = false
       return
     }
-    isProcessing = true;
     const message = JSON.parse(data.toString())
     win.webContents.send(message.type, message.data)
-    isProcessing = false;
   })
 
   ws.on('close', () => {
