@@ -6,11 +6,17 @@ from threading import Timer
 
 class class_midi_translation:
 
+    # tolerance for soft-takeover, ~2 steps of the 0.01 value grid
+    PICKUP_EPS = 0.02
+
     def __init__(self, state):
         # self.state = UltraDict(name='state')
         self.state = state
         self.slider_values = [0, 0, 0, 0]
         self.knob_values = [0, 0, 0, 0]
+        # soft-takeover ("pickup") bookkeeping, keyed by physical control
+        self.pickup_prev = {}   # -> last raw fader reading (0..1)
+        self.pickup_owned = {}  # -> last value we wrote, while we own the control
         self.state_a = {}
         self.state_b = {}
         self.state_diff = {}
@@ -32,6 +38,26 @@ class class_midi_translation:
         """
         Timer(0.05, self._send_request, args=[url]).start()
         
+    def caught(self, key, target, incoming):
+        """Soft-takeover ("pickup") for non-motorized faders/knobs.
+
+        Returns True if `incoming` may drive `target` without a jump. We keep
+        control while the stored value still matches what we last wrote (the
+        fader then tracks 1:1). If anything else moved it — channel reorder,
+        context switch, autopilot, preset — the match breaks and we re-acquire
+        only once the fader crosses or reaches the value."""
+        prev = self.pickup_prev.get(key)
+        owned = self.pickup_owned.get(key)
+        self.pickup_prev[key] = incoming
+        if owned is not None and abs(target - owned) <= self.PICKUP_EPS:
+            self.pickup_owned[key] = incoming      # still in sync → keep control
+            return True
+        if abs(incoming - target) <= self.PICKUP_EPS or (
+                prev is not None and (prev - target) * (incoming - target) <= 0):
+            self.pickup_owned[key] = incoming      # crossed/reached → acquire
+            return True
+        return False                                # still hunting → ignore
+
     def update_context(self, context_index, midi_index, midi_value):
         midi_index = int(midi_index)
         midi_value = round((float(midi_value) / 127.0), 2)
@@ -45,7 +71,11 @@ class class_midi_translation:
                     this_channel = self.state[channel]
                     if index < 10:
                         try:
-                            this_channel[index]['params'][midi_index * 4 + 3] = midi_value
+                            params = this_channel[index]['params']
+                            slot = midi_index * 4 + 3
+                            if not self.caught((context_index, midi_index), params[slot], midi_value):
+                                return
+                            params[slot] = midi_value
                             this_channel[index]['update'] = 1
                             self.state[channel] = this_channel
                         except Exception as e:
@@ -141,6 +171,8 @@ class class_midi_translation:
         if midi_index < 8:
             try:
                 channel = self.state[midi_index]
+                if not self.caught((key, midi_index), channel[key], midi_value):
+                    return
                 channel[key] = midi_value
                 self.state[midi_index] = channel
                 self.trigger_update(f"{self.api_endpoint}/update_key/{key}?channel={midi_index}")
@@ -149,6 +181,8 @@ class class_midi_translation:
                 pass
 
         if midi_index == 8:
+            if not self.caught((key, 8), self.state[key], midi_value):
+                return
             self.state[key] = midi_value
             self.trigger_update(f"{self.api_endpoint}/update_key/{key}")
             
@@ -176,154 +210,3 @@ class class_midi_translation:
         midi_index = int(midi_index)
         self.state['oneshot'] = midi_index + 2
         self.trigger_update(f"{self.api_endpoint}/update_key/oneshot")
-
-
-    def save_state(self, button):
-        # Create a regular dictionary from UltraDict
-        state_dict = dict(self.state)
-        
-        # Deep copy all nested structures
-        state_snapshot = {}
-        for key, value in state_dict.items():
-            if isinstance(value, dict):
-                state_snapshot[key] = deepcopy(value)
-            else:
-                state_snapshot[key] = value
-
-        if button == 'A':
-            self.state_a = state_snapshot
-            print("Saved state A:", self.state_a)
-        elif button == 'B':
-            self.state_b = state_snapshot
-            print("Saved state B:", self.state_b)
-
-        crossfade_active = self.crossfade_active()
-        self.state['crossfade_active'] = crossfade_active
-        self.trigger_update(f"{self.api_endpoint}/update_key/crossfade_active")
-
-        if self.state['crossfade_active']:
-            self.state_diff = self.compare_states()
-            print("Differences:", self.state_diff)
-
-        
-    def crossfade_active(self):
-        try:
-            if self.state_a['numberOfChannels'] == self.state_b['numberOfChannels']:
-                for i in range(self.state_a['numberOfChannels']):
-                    # check generator names
-                    if self.state_a[i][9]['name'] != self.state_b[i][9]['name']:
-                        return False
-                    
-                    # check effect names
-                    if self.state_a[i]['numberOfEffects'] == self.state_b[i]['numberOfEffects']:
-                        for j in range(self.state_a[i]['numberOfEffects']):
-                            if self.state_a[i][j]['name'] != self.state_b[i][j]['name']:
-                                return False
-                    else:
-                        return False
-                    
-                # check global effects names
-                if self.state_a[9]['numberOfEffects'] == self.state_b[9]['numberOfEffects']:
-                    for k in range(self.state_a[9]['numberOfEffects']):
-                        if self.state_a[9][k]['name'] != self.state_b[9][k]['name']:
-                            return False
-                else:
-                    return False
-                        
-                return True
-            else:
-                return False
-
-        except:        
-            return False
-
-                
-        
-    def compare_states(self):
-        differences = {}
-        
-        # Compare channel parameters
-        for channel_idx in range(10):  # Channels 0-9
-            channel_a = self.state_a.get(channel_idx, {})
-            channel_b = self.state_b.get(channel_idx, {})
-            
-            # Skip if channel doesn't exist in either state
-            if not channel_a or not channel_b:
-                continue
-            
-            # Compare generator first (index 9)
-            generator_a = channel_a.get(9, {})
-            generator_b = channel_b.get(9, {})
-            
-            # Always compare generator parameters
-            if generator_a or generator_b:
-                params_a = generator_a.get('params', [])
-                params_b = generator_b.get('params', [])
-                
-                            # Check every 4th parameter starting at index 3
-                for param_idx in range(3, len(params_a), 4):
-                    if params_a[param_idx] != params_b[param_idx]:
-                        key = f"{channel_idx}.9.{param_idx}"
-                        differences[key] = {
-                            'A': params_a[param_idx],
-                            'B': params_b[param_idx]
-                        }
-                    
-            # Compare effects in each channel
-            for effect_idx in range(6):  # Up to 6 effects per channel
-                effect_a = channel_a.get(effect_idx, {})
-                effect_b = channel_b.get(effect_idx, {})
-                
-                # Skip if effect doesn't exist in either state
-                if not effect_a or not effect_b:
-                    continue
-                    
-                # Compare parameter arrays
-                params_a = effect_a.get('params', [])
-                params_b = effect_b.get('params', [])
-                
-                # Check every 4th parameter starting at index 3
-                for param_idx in range(3, len(params_a), 4):
-                    if params_a[param_idx] != params_b[param_idx]:
-                        key = f"{channel_idx}.{effect_idx}.{param_idx}"
-                        differences[key] = {
-                            'A': params_a[param_idx],
-                            'B': params_b[param_idx]
-                        }
-        
-        return differences
-
-
-    def crossfade(self, midi_value):
-        if self.state['crossfade_active']:
-            # Convert MIDI value to 0-1 range
-            fade_value = float(midi_value) / 127.0
-            
-            # Process each differing parameter
-            for key, values in self.state_diff.items():
-                parts = key.split('.')
-                channel_id = int(parts[0])
-                element_id = int(parts[1])
-                param_index = int(parts[2])
-                
-                # Calculate interpolated value
-                value_a = values['A']
-                value_b = values['B']
-                current_value = round(value_a + (value_b - value_a) * fade_value, 2)
-                
-                try:
-                    channel = self.state[channel_id]
-                    # Update parameter value
-                    channel[element_id]['params'][param_index] = current_value
-                    # Mark both effect and channel for update
-                    channel[element_id]['update'] = 1
-                    channel['update'] = 1
-                    # Update the state
-                    self.state[channel_id] = channel
-                    
-                except Exception as e:
-                    print(f"Error updating parameter {key}: {e}")
-            
-            # Notify frontend of parameter change
-            self.trigger_update(f"{self.api_endpoint}/update_state")
-
