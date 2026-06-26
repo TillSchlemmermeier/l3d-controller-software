@@ -4,6 +4,7 @@ type Disposer = () => void;
 interface IpcRenderer {
   // request/response (renderer -> main)
   restartBackend: () => Promise<void>;
+  getNetworkIp: () => Promise<string>;
   // data streams (main -> renderer) — call the returned disposer to unsubscribe
   onCubeData(callback: (data: any) => void): Disposer;
   onSpectrumData(callback: (data: any) => void): Disposer;

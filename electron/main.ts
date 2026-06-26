@@ -3,6 +3,7 @@ import { fileURLToPath } from 'node:url'
 import path from 'node:path'
 import WebSocket from 'ws'
 import { exec, spawn, ChildProcess } from 'child_process'
+import { createSocket } from 'node:dgram'
 
 const APP_ROOT = path.join(path.dirname(fileURLToPath(import.meta.url)), '..')
 const VITE_DEV_SERVER_URL = process.env['VITE_DEV_SERVER_URL']
@@ -156,6 +157,17 @@ function restartBackend() {
 ipcMain.handle('restart-backend', () => {
   restartBackend()
 })
+
+// Report the machine's LAN IP for the mobile-app QR code
+ipcMain.handle('get-network-ip', () => new Promise<string>((resolve) => {
+  const sock = createSocket('udp4')
+  sock.once('error', () => { sock.close(); resolve('127.0.0.1') })
+  sock.connect(1, '10.255.255.255', () => {
+    const ip = sock.address().address
+    sock.close()
+    resolve(ip)
+  })
+}))
 
 // App Event Handlers
 app.on('window-all-closed', () => {

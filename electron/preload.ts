@@ -23,6 +23,7 @@ const RECEIVE_CHANNELS = {
 
 const INVOKE_CHANNELS = {
   RESTART_BACKEND: 'restart-backend',
+  GET_NETWORK_IP: 'get-network-ip',
 } as const
 
 // Subscribe to a fixed channel, forwarding only the payload to the callback.
@@ -35,6 +36,7 @@ const subscribe = (channel: string) => (callback: EventCallback): Disposer => {
 
 contextBridge.exposeInMainWorld('ipcRenderer', {
   restartBackend: () => ipcRenderer.invoke(INVOKE_CHANNELS.RESTART_BACKEND),
+  getNetworkIp: () => ipcRenderer.invoke(INVOKE_CHANNELS.GET_NETWORK_IP),
 
   // --- data streams (main -> renderer) ---
   onCubeData: subscribe(RECEIVE_CHANNELS.CUBE_BINARY),

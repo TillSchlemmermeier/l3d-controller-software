@@ -2,38 +2,12 @@ from typing import Optional
 from fastapi import APIRouter, Request
 from fastapi.responses import JSONResponse, HTMLResponse, FileResponse
 import os
-from dotenv import load_dotenv
 
 router = APIRouter()
-
-# Load the .env file from the parent directory
-load_dotenv(dotenv_path=os.path.join(os.path.dirname(__file__), '..', '..', '.env'))
 
 @router.get("/")
 async def root():
   return {"message": "Hello World"}
-
-
-@router.get("/api/network-info")
-def get_network_info():
-    import socket
-    # robust way to get local IP
-    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    try:
-        # doesn't actually connect, just determines routing
-        s.connect(('10.255.255.255', 1))
-        IP = s.getsockname()[0]
-    except Exception:
-        IP = '127.0.0.1'
-    finally:
-        s.close()
-    
-    return {
-        "ip": IP,
-        "port": 8000,
-        "ssid": os.getenv("SSID"), 
-        "password": os.getenv("WIFI_PW") 
-    }
 
 
 # serve the mobile application
