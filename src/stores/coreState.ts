@@ -134,19 +134,12 @@ export const useCoreStateStore = defineStore('coreState', {
 
     async removeEffect(channelIndex: number, effectIndex: number) {
       const url = `${baseUrl}/remove/effect/${channelIndex}/${effectIndex}`
-      await this.callBackend(url)
+      await this.callBackend(url, 'DELETE')
     },
 
     async removeChannel(channelIndex: number) {
       const url = `${baseUrl}/remove/channel/${channelIndex}/0`
-      await this.callBackend(url)
-    },
-    
-    // delete a generator, effect, channel or global preset
-    async delete(preset: string, element?: string) {
-      const uiState = useUiStateStore()
-      const url = `${baseUrl}/delete/${uiState.elementType}/${preset}/${element}`
-      await this.callBackend(url)
+      await this.callBackend(url, 'DELETE')
     },
 
     // save a generator, effect, channel or global preset
@@ -209,13 +202,11 @@ export const useCoreStateStore = defineStore('coreState', {
       await this.callBackend(url)
     },
 
-    // make API call
-    async callBackend(url: string) {
-      console.log('fetching data from', url)
+    // make a state-mutating API call (POST by default, DELETE for removals)
+    async callBackend(url: string, method: 'POST' | 'DELETE' = 'POST') {
+      console.log('calling backend', method, url)
       try {
-        const response = await fetch(url, {
-          method: 'GET',
-        })
+        const response = await fetch(url, { method })
         const data = await response.json()
         console.log(data)
       } catch (error) {

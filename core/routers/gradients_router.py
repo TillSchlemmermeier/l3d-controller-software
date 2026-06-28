@@ -5,7 +5,7 @@ import json
 router = APIRouter()
 
 # load a gradient from DB
-@router.get('/api/load-gradient/{gradientId}/{channelIndex}')
+@router.post('/api/load-gradient/{gradientId}/{channelIndex}')
 async def load_gradient(gradientId: int, channelIndex: int, request: Request):
     db = request.app.state.db
 
@@ -60,7 +60,7 @@ async def save_gradient(request: Request):
         return JSONResponse(status_code=400, content={"message": "Failed to save gradient"})
 
 # delete a gradient from DB
-@router.get('/api/delete-gradient/{id}')
+@router.delete('/api/delete-gradient/{id}')
 async def delete_gradient(id: int, request: Request):
     db = request.app.state.db
 
@@ -71,7 +71,7 @@ async def delete_gradient(id: int, request: Request):
         return JSONResponse(status_code=400, content={"message": "Failed to delete gradient"})
 
 # clear the gradient object from a channel
-@router.get('/api/clear-gradient/{channelIndex}')
+@router.post('/api/clear-gradient/{channelIndex}')
 async def clear_gradient(channelIndex: int, request: Request):
     state_manager = request.app.state.state_manager
     connection_manager = request.app.state.connection_manager

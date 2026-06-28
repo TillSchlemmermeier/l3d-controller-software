@@ -11,6 +11,7 @@ import {
   SortOption
    } from '../types/types.ts'
 
+const baseUrl = 'http://0.0.0.0:8000/api'
 
 export const useUiStateStore = defineStore('uiState', {
   state: () => ({
@@ -65,78 +66,78 @@ export const useUiStateStore = defineStore('uiState', {
     // fetch the names of active effects or generators
     async fetchActiveElements() {
       const url = `get-active-elements/${this.elementType}`
-      this.overlayItems = await this.fetchFromBackend(url)
+      this.overlayItems = await this.callBackend(url)
     },
 
     // fetch the names of all available effects or generators
     async fetchAllElements() {
       const url = `get-element-names/${this.elementType}`
-      this.adminElements = await this.fetchFromBackend(url)
+      this.adminElements = await this.callBackend(url)
     },
 
     // fetch the names of element, channel and global presets containing the element
     async fetchAllPresets() {
       const url = `get-all-presets/${this.elementType}/${this.selectedElement}`
-      this.adminPresets = await this.fetchFromBackend(url)
+      this.adminPresets = await this.callBackend(url)
       console.log('fetched all presets', this.adminPresets)
     },
 
     // fetch the list of presets for an element
     async fetchPresets() {
       const url = `get-presets/${this.elementType}/${this.selectedElement}`
-      this.overlayPresets = await this.fetchFromBackend(url)
+      this.overlayPresets = await this.callBackend(url)
     },
 
     // fetch all available info from the database for the selected element
     async fetchElementInfo() {
       const url = `get-element-info/${this.elementType}/${this.selectedElement}`
-      this.elementInfo = await this.fetchFromBackend(url)
+      this.elementInfo = await this.callBackend(url)
     },
 
     // fetch all available info from the database for the selected preset
     async fetchPresetInfo() {
       const url = `get-preset-info/${this.elementType}/${this.selectedElement}/${this.selectedPreset}`
-      this.presetInfo = await this.fetchFromBackend(url)
+      this.presetInfo = await this.callBackend(url)
     },
 
     // delete a preset
     async deletePreset() {
       const url = `delete-preset/${this.elementType}/${this.selectedElement}/${this.selectedPreset}`
-      const response = await this.fetchFromBackend(url)
+      const response = await this.callBackend(url, 'DELETE')
       console.log('delete response', response)
     },
 
     // delete an element
     async deleteElement() {
       const url = `delete-element/${this.elementType}/${this.selectedElement}`
-      const response = await this.fetchFromBackend(url)
+      const response = await this.callBackend(url, 'DELETE')
       console.log('delete response', response)
     },
 
     // add an element
     async addElement(type: string, name: string) {
       const url = `add-element/${type}/${name}`
-      const response = await this.fetchFromBackend(url)
+      const response = await this.callBackend(url, 'POST')
       console.log('add response', response)
     },
 
     // toggle active status of generator or effect
     async toggleElementActive() {
       const url = `toggle-element-active/${this.elementType}/${this.selectedElement}`
-      const response = await this.fetchFromBackend(url)
+      const response = await this.callBackend(url, 'POST')
       console.log('toggle response', response)
     },
 
     async renamePreset(newName: string) {
       const url = `rename-preset/${this.elementType}/${this.selectedElement}/${this.selectedPreset}/${newName}`
-      const response = await this.fetchFromBackend(url)
+      const response = await this.callBackend(url, 'POST')
       console.log('rename response', response)
       this.selectedPreset = newName
     },
 
     async fetchGradientPresets() {
       const url = `get-gradient-presets`
-      const gradients = await this.fetchFromBackend(url)
+      const gradients = await this.callBackend(url)
       this.gradientPresets = gradients.map((preset: any) => ({
         ...preset,
         data: JSON.parse(preset.data) as Array<[number, string]>
@@ -146,55 +147,39 @@ export const useUiStateStore = defineStore('uiState', {
     async saveGradientPreset(gradientArray: Array<[number, string]>, subtype: string) {
       const url = `save-gradient`
       const gradientString = JSON.stringify(gradientArray)
-      await this.postToBackend(url, { subtype, gradientString })
+      await this.callBackend(url, 'POST', { subtype, gradientString })
       this.fetchGradientPresets()
     },
 
     async deleteGradientPreset(id: number) {
       const url = `delete-gradient/${id}`
-      await this.fetchFromBackend(url)
+      await this.callBackend(url, 'DELETE')
       this.fetchGradientPresets()
     },
 
     async checkPresetConsistency() {
       const url = `validate-presets`
-      const response = await this.fetchFromBackend(url)
+      const response = await this.callBackend(url)
       console.log('Validation results:', response)
       return response
     },
 
     async clearGradient(channel: number) {
       const url = `clear-gradient/${channel}`
-      await this.fetchFromBackend(url)
+      await this.callBackend(url, 'POST')
     },
 
-    // make GET call
-    async fetchFromBackend(url: string) {
-      console.log('fetching data from', url)
+    // call the backend; GET by default, with an optional JSON body for POST
+    async callBackend(url: string, method: 'GET' | 'POST' | 'DELETE' = 'GET', data?: any) {
+      console.log(method, url)
       try {
-        const response = await fetch(`http://0.0.0.0:8000/api/${url}`, {
-          method: 'GET',
-        })
-        const data = await response.json()
-        return data
-      } catch (error) {
-        console.error('error', error)
-      }
-    },
-
-    // make POST call
-    async postToBackend(url: string, data: any) {
-      console.log('posting data to', url)
-      try {
-        const response = await fetch(`http://0.0.0.0:8000/api/${url}`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(data),
-        })
-        const result = await response.json()
-        return result
+        const options: RequestInit = { method }
+        if (data !== undefined) {
+          options.headers = { 'Content-Type': 'application/json' }
+          options.body = JSON.stringify(data)
+        }
+        const response = await fetch(`${baseUrl}/${url}`, options)
+        return await response.json()
       } catch (error) {
         console.error('error', error)
       }

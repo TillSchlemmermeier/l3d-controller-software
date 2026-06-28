@@ -16,7 +16,7 @@ def get_randomizer_queue(request: Request):
     return request.app.state.randomizer_queue
 
 # update a global key
-@router.get('/api/update-global-key/{key}/{value}')
+@router.post('/api/update-global-key/{key}/{value}')
 async def update_global_key(
     key: str, 
     value: float,
@@ -28,7 +28,7 @@ async def update_global_key(
     return {'message': f'Global key {key} updated to {value}'}
 
 # update a channel key
-@router.get('/api/update-channel-key/{channelIndex}/{key}/{value}')
+@router.post('/api/update-channel-key/{channelIndex}/{key}/{value}')
 async def update_channel_key(
     channelIndex: int, 
     key: str, 
@@ -40,7 +40,7 @@ async def update_channel_key(
     await connection_manager.update_key(key, channelIndex)
     return {'message': f'Channel {channelIndex} key {key} updated to {value}'}
 
-@router.get('/api/toggle-channel-key/{channelIndex}/{key}')
+@router.post('/api/toggle-channel-key/{channelIndex}/{key}')
 async def toggle_channel_key(
     channelIndex: int, 
     key: str, 
@@ -52,7 +52,7 @@ async def toggle_channel_key(
     return {'message': f'Channel {channelIndex} key {key} toggled'}
 
 # remove an effect or a channel
-@router.get('/api/remove/{type}/{channelIndex}/{effectIndex}')
+@router.delete('/api/remove/{type}/{channelIndex}/{effectIndex}')
 async def remove(
     type: str, 
     channelIndex: int, 
@@ -72,7 +72,7 @@ async def remove(
     return {'message': type + ' deleted'}
 
 # copy a channel
-@router.get('/api/copychannel/{channel}')
+@router.post('/api/copychannel/{channel}')
 async def copychannel(
     channel: int,
     state_manager = Depends(get_state_manager),
@@ -83,7 +83,7 @@ async def copychannel(
     return {'message': 'Channel copied'}
 
 # move a channel
-@router.get('/api/movechannel/{from_index}/{to_index}')
+@router.post('/api/movechannel/{from_index}/{to_index}')
 async def movechannel(
     from_index: int, 
     to_index: int,
@@ -95,7 +95,7 @@ async def movechannel(
     return {'message': 'Channel moved'}
 
 # move an effect
-@router.get('/api/moveeffect/{channelIndex}/{fromIndex}/{toIndex}')
+@router.post('/api/moveeffect/{channelIndex}/{fromIndex}/{toIndex}')
 async def moveeffect(
     channelIndex: int, 
     fromIndex: int, 
@@ -108,7 +108,7 @@ async def moveeffect(
     return {'message': 'Effect moved'}
 
 # copy an effect
-@router.get('/api/copyeffect/{from_channel}/{from_effectIndex}/{to_channel}/{to_effectIndex}')
+@router.post('/api/copyeffect/{from_channel}/{from_effectIndex}/{to_channel}/{to_effectIndex}')
 async def copyeffect(
     from_channel: int, 
     from_effectIndex: int, 
@@ -122,7 +122,7 @@ async def copyeffect(
     return {'message': 'Effect copied'}
 
 # toggle an effect
-@router.get('/api/toggleeffect/{channelIndex}/{effectIndex}')
+@router.post('/api/toggleeffect/{channelIndex}/{effectIndex}')
 async def toggleeffect(
     channelIndex: int, 
     effectIndex: int,
@@ -134,7 +134,7 @@ async def toggleeffect(
     return {'message': 'Effect toggled'}
 
 # select a new context for the midi-controller
-@router.get('/api/select/{contextIndex}/{channelIndex}/{elementIndex}')
+@router.post('/api/select/{contextIndex}/{channelIndex}/{elementIndex}')
 async def select(
     contextIndex: int, 
     channelIndex: int, 
@@ -147,7 +147,7 @@ async def select(
     return {"message": "Selected"}
 
 # toggle autopilot
-@router.get('/api/toggle-autopilot')
+@router.post('/api/toggle-autopilot')
 async def toggle_autopilot(
     state_manager = Depends(get_state_manager),
     connection_manager = Depends(get_connection_manager)
@@ -157,7 +157,7 @@ async def toggle_autopilot(
     return {"message": "Autopilot toggled"}
 
 # change autopilot mode
-@router.get('/api/autopilot-mode/{mode}')
+@router.post('/api/autopilot-mode/{mode}')
 async def autopilot_mode(
     mode: str,
     state_manager = Depends(get_state_manager),
@@ -168,7 +168,7 @@ async def autopilot_mode(
     return {"message": "Autopilot mode changed"}
 
 # trigger randomizer
-@router.get('/api/trigger-randomizer/{mode}')
+@router.post('/api/trigger-randomizer/{mode}')
 async def trigger_randomizer(
     mode: str,
     state_manager = Depends(get_state_manager),
@@ -181,7 +181,7 @@ async def trigger_randomizer(
     return {"message": "Randomizer triggered"}
 
 # randomize color for a channel
-@router.get('/api/randomize-color/{channelIndex}')
+@router.post('/api/randomize-color/{channelIndex}')
 async def randomize_color(
     channelIndex: int,
     state_manager = Depends(get_state_manager),
@@ -191,7 +191,7 @@ async def randomize_color(
     randomizer_queue.put(channelIndex)
     return {"message": "Randomizer triggered"}
 
-@router.get('/api/undo-random')
+@router.post('/api/undo-random')
 async def undo_random(
     state_manager = Depends(get_state_manager),
     connection_manager = Depends(get_connection_manager)
@@ -201,7 +201,7 @@ async def undo_random(
     return {"message": "Last randomization undone"}
 
 # toggle sending data to Arduino
-@router.get('/api/toggle-cube')
+@router.post('/api/toggle-cube')
 async def toggle_cube(
     state_manager = Depends(get_state_manager),
     connection_manager = Depends(get_connection_manager)
@@ -211,7 +211,7 @@ async def toggle_cube(
     return {"message": "Sending to Arduino toggled"}
 
 # normalize s2l
-@router.get('/api/normalize-s2l')
+@router.post('/api/normalize-s2l')
 async def normalize_s2l(
     state_manager = Depends(get_state_manager),
     connection_manager = Depends(get_connection_manager)
@@ -221,7 +221,7 @@ async def normalize_s2l(
     return {"message": "s2l normalized"}
 
 # fire a oneshot in s2l
-@router.get('/api/oneshot/{oneshotIndex}')
+@router.post('/api/oneshot/{oneshotIndex}')
 async def oneshot(
     oneshotIndex: int,
     state_manager = Depends(get_state_manager),
