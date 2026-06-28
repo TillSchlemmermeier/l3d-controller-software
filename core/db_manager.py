@@ -351,7 +351,7 @@ class DatabaseManager:
                     WHERE e.type = ? AND e.name = ?
                 ''', (type, element))
                 
-                # Delete each preset and associated GIF file
+                # Delete each preset
                 presets = [row[0] for row in cursor.fetchall()]
                 for preset in presets:
                     self.delete_preset(type, element, preset)

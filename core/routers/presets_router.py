@@ -8,8 +8,10 @@ router = APIRouter()
 # Preview GIFs live here
 PREVIEW_DIR = (Path(__file__).resolve().parents[2] / "src/assets/previews").resolve()
 
-def preview_path(filename: str) -> Path:
-    path = (PREVIEW_DIR / filename).resolve()
+# Resolve and traversal-check a preset's preview gif
+def preview_path(type: str, element: str, preset: str) -> Path:
+    prefix = type if type in ('channel', 'global') else element
+    path = (PREVIEW_DIR / f"{prefix}_p_{preset}.gif").resolve()
     if path.parent != PREVIEW_DIR:
         raise HTTPException(status_code=400, detail="Invalid preset or element name")
     return path
@@ -72,12 +74,9 @@ async def rename_preset(
     new_preset: str, 
     db = Depends(get_db)
 ):
-    if type == 'channel' or type == 'global':
-        element = type
-
     # build (and traversal-check) both paths before mutating the DB
-    old_file_path = preview_path(f"{element}_p_{old_preset}.gif")
-    new_file_path = preview_path(f"{element}_p_{new_preset}.gif")
+    old_file_path = preview_path(type, element, old_preset)
+    new_file_path = preview_path(type, element, new_preset)
 
     success = db.rename_preset(type, element, old_preset, new_preset)
     if not success:
@@ -107,7 +106,7 @@ async def delete_preset(type: str, element: str, preset: str, db = Depends(get_d
             content={"message": "Failed to delete preset"}
         )
     # remove the preview gif too (best-effort)
-    preview_path(f"{element}_p_{preset}.gif").unlink(missing_ok=True)
+    preview_path(type, element, preset).unlink(missing_ok=True)
     return JSONResponse(
         status_code=200,
         content={"message": "Preset deleted successfully"}
@@ -116,17 +115,21 @@ async def delete_preset(type: str, element: str, preset: str, db = Depends(get_d
 # delete element
 @router.get('/api/delete-element/{type}/{element}')
 async def delete_element(type: str, element: str, db = Depends(get_db)):
+    # capture preset names before the DB cascade removes them
+    presets = db.get_preset_names(type, element)
     success = db.delete_element(type, element)
-    if success:
-        return JSONResponse(
-            status_code=200,
-            content={"message": "Element deleted successfully"}
-        )
-    else:
+    if not success:
         return JSONResponse(
             status_code=400,
             content={"message": "Failed to delete element"}
         )
+    # remove the preview gifs for all the presets too (best-effort)
+    for preset in presets:
+        preview_path(type, element, preset['name']).unlink(missing_ok=True)
+    return JSONResponse(
+        status_code=200,
+        content={"message": "Element deleted successfully"}
+    )
 
 # add new element
 @router.get('/api/add-element/{type}/{element}')
@@ -208,7 +211,6 @@ async def save(
     state = Depends(get_cube_state)
 ):
     success = False
-    message = ""
 
     # Determine the correct element name based on type
     element = 'presets'  # default for channel and global
@@ -226,18 +228,12 @@ async def save(
     if type == 'channel':
         data = dict(state[channel])
         data['IO'] = True
-        filename = f'channel_p_{preset}'
     elif type == 'global':
         data = dict(state)
-        filename = f'global_p_{preset}'
     elif type == 'generator':
-        print('saving generator')
         data = dict(state[channel][9])
-        filename = f'{element}_p_{preset}'
-        print(success)
     elif type == 'effect':
         data = dict(state[channel][index])
-        filename = f'{element}_p_{preset}'
 
     success = db.save_preset(type, element, preset, data)
 
@@ -250,7 +246,7 @@ async def save(
     PREVIEW_DIR.mkdir(parents=True, exist_ok=True)
 
     if preview:
-        file_path = preview_path(f"{filename}.gif")
+        file_path = preview_path(type, element, preset)
         with open(file_path, "wb") as buffer:
             buffer.write(await preview.read())
 
