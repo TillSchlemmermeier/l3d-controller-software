@@ -9,3 +9,5 @@ dist/
 .vite/
 *.pkl
 .env
+__pycache__/
+todo.txt

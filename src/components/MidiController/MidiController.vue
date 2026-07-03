@@ -17,7 +17,7 @@
 import { ref, onMounted, onUnmounted, watch, computed } from 'vue'
 import { useCoreStateStore } from '../../stores/coreState'
 import { useUiStateStore } from '../../stores/uiState'
-import { launchpadModes, SYSEX_HEADER, SYSEX_END, LaunchpadContext, COLORS } from '../../utils/launchpad'
+import { launchpadModes, SYSEX_HEADER, SYSEX_END, LaunchpadContext, COLORS } from './launchpad'
 
 const coreState = useCoreStateStore()
 const uiState = useUiStateStore()
@@ -170,7 +170,7 @@ function clearAllLeds() {
 }
 
 onUnmounted(() => {
+  if (midiAccess) midiAccess.onstatechange = null
   if (inputPort) inputPort.onmidimessage = null
-  clearAllLeds()
 })
 </script>

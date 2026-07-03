@@ -1,4 +1,4 @@
-import { gradientSets } from '../colorSchemes'
+import { gradientSets } from '../../../utils/colorSchemes'
 import type { LaunchpadMode } from './types'
 import { COLORS, CONTEXT_BUTTONS, CONTEXT_COLORS, TAILWIND_TO_NOVATION, noteToGrid, SYSEX_HEADER, SYSEX_END } from './types'
 

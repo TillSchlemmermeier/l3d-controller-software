@@ -1,6 +1,6 @@
 import type { LaunchpadMode } from './types'
 import { COLORS, noteToGrid, SYSEX_HEADER, SYSEX_END } from './types'
-import type { AutopilotMode } from '../../types/types'
+import type { AutopilotMode } from '../../../types/types'
 
 const RANDOM_MODES: AutopilotMode[] = [
   'global',
