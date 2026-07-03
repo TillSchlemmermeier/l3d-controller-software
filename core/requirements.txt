@@ -1,14 +1,42 @@
-numpy
-scipy
-pyaudio
-requests
-pyserial
-fastapi
-uvicorn[standard]
-starlette
-UltraDict
-rtmidi
-sqlalchemy
-python-dotenv
-beautifulsoup4
-matplotlib
+# =============================================================================
+# L3D Studio — Python core dependencies
+#
+# Target interpreter: python3.12. The Electron app spawns `python3.12` and uses
+# the user site-packages (not a virtualenv). Install with:
+#
+#     python3.12 -m pip install --user -r requirements.txt
+#
+# Version bounds are intentional: the numeric stack is ABI-locked (see below),
+# and the rest are capped to the last known-good minor to keep installs
+# reproducible on the show machine.
+# =============================================================================
+
+# --- Numeric / rendering stack (ABI-LOCKED — do not bump casually) ------------
+# numpy MUST stay < 2: the compiled f2py/Fortran .so extensions in this repo
+# (world2vox_fortran, g_sphere_f, g_torus_f, g_shooting_star_f, g_ellipsoid,
+# gen_central_glow_f, gen_outer_shadow_f, ...) and matplotlib were built against
+# the numpy 1.x C-ABI and crash on numpy 2.x ("module compiled using NumPy 1.x
+# ... multiarray failed to import"). Moving to 2.x means recompiling every .so
+# with f2py first (see core/makefile).
+numpy>=1.26,<2
+# scipy >= 1.14 requires numpy >= 2.0, so cap it to the last numpy-1.x line.
+scipy>=1.13,<1.14
+# matplotlib supplies colormaps/colors used by several effects (e_colormaps,
+# e_sound_hsv, e_lfo_hsv, e_black_color_white); also built against numpy 1.x.
+matplotlib>=3.6,<4
+
+# --- API / WebSocket server ---------------------------------------------------
+fastapi>=0.115,<0.116
+starlette>=0.41,<0.42            # imported directly (WebSocketDisconnect); keep fastapi-compatible
+uvicorn[standard]>=0.32,<0.33    # [standard] pulls the websockets impl used by /ws
+
+# --- Realtime I/O -------------------------------------------------------------
+UltraDict==0.0.6                 # shared-memory state dict; pre-1.0, pin exactly
+pyaudio>=0.2.13                  # audio capture for sound-to-light (needs system portaudio)
+pyserial>=3.5                    # RGB frames to the Arduino over USB serial
+python-rtmidi>=1.5               # hardware MIDI — provides `import rtmidi` (.midiutil).
+                                 # NOT the abandoned PyPI package literally named `rtmidi`.
+
+# --- Assets / utilities -------------------------------------------------------
+Pillow>=10                       # text/letter generators (g_text, g_letters)
+requests>=2.31,<3                # loopback HTTP between the core's processes
