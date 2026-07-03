@@ -1,17 +1,4 @@
-from db_manager import DatabaseManager
-
-db = DatabaseManager()
-
-# generators = [gen['name'] for gen in db.get_active_elements('generator')]
-# effects = [eff['name'] for eff in db.get_active_elements('effect')]
-generators = [gen['name'] for gen in db.get_element_names('generator')]
-effects = [eff['name'] for eff in db.get_element_names('effect')]
-
-for generator in generators:
-    exec(f'from generators.{generator} import *')
-for effect in effects:
-    exec(f'from effects.{effect} import *')
-
+from element_registry import new_element
 from effects.e_color_manager import e_color_manager
 
 class class_channel:
@@ -29,7 +16,7 @@ class class_channel:
             # check if generator changed
             if channelstate[9]['name'] != self.generator.__class__.__name__:
                 # if so, replace old generator with instance of the new one
-                exec('self.generator = ' + channelstate[9]['name'] + '()')
+                self.generator = new_element('generator', channelstate[9]['name'])
 
         # if effects were removed, remove them from the list
         if channelstate['numberOfEffects'] < len(self.effects):
@@ -40,10 +27,10 @@ class class_channel:
             if channelstate[i]['update']:
                 # if the effect was added, add a new instance to the list
                 if i >= len(self.effects):
-                    exec('self.effects.append(' + channelstate[i]['name'] + '())')
+                    self.effects.append(new_element('effect', channelstate[i]['name']))
                 # otherwise check if effect changed and if so, replace old effect with instance of the new one
                 elif channelstate[i]['name'] != self.effects[i].__class__.__name__:
-                    exec('self.effects[i] = ' + channelstate[i]['name'] + '()')
+                    self.effects[i] = new_element('effect', channelstate[i]['name'])
 
         return channelstate
 

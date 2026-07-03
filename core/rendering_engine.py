@@ -21,12 +21,7 @@ from oneshots.s_trigger import s_trigger
 
 from effects.e_color_manager import e_color_manager
 
-from db_manager import DatabaseManager
-
-db = DatabaseManager()
-effects = [eff['name'] for eff in db.get_active_elements('effect')]
-for effect in effects:
-    exec(f'from effects.{effect} import *')
+from element_registry import new_element
 
 class rendering_engine:
     """
@@ -297,10 +292,10 @@ class rendering_engine:
             if this_effect['update']:
                 # if the effect was added, add a new instance to the list
                 if i >= len(self.global_effects):
-                    exec('self.global_effects.append(' + this_effect['name'] + '())')
+                    self.global_effects.append(new_element('effect', this_effect['name']))
                 # otherwise check if effect changed and if so, replace old effect with instance of the new one
                 elif this_effect['name'] != self.global_effects[i].__class__.__name__:
-                    exec('self.global_effects[i] = ' + this_effect['name'] + '()')
+                    self.global_effects[i] = new_element('effect', this_effect['name'])
 
         globalEffects['update'] = False
         return globalEffects

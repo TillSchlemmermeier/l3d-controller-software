@@ -2,8 +2,8 @@ import sqlite3
 from contextlib import contextmanager
 import json
 import numpy as np
-from sqlalchemy import JSON
 
+from element_registry import new_element
 
 class DatabaseManager:
     def __init__(self, db_path: str = 'l3d.db'):
@@ -484,18 +484,9 @@ class DatabaseManager:
                     
                     element_id = cursor.lastrowid
                     
-                    # Create a local namespace for exec
-                    namespace = {}
+                    # Instantiate via the safe element registry
+                    element = new_element(type, name)
 
-                    # Import the module into our namespace
-                    exec(f'from {type}s.{name} import *', namespace)
-
-                    # Initialize element in the namespace
-                    exec(f'element = {name}()', namespace)
-                    
-                    # Get the element from namespace
-                    element = namespace['element']
-                    
                     # Call element with appropriate arguments
                     if type == 'generator':
                         element([0, 0, 0, 0, 0, 0, 0, 0])
