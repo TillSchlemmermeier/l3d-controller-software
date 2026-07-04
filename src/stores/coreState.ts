@@ -3,6 +3,8 @@ import { useUiStateStore } from './uiState'
 import { coreState, AutopilotMode } from '../types/types'
 
 const baseUrl = 'http://0.0.0.0:8000/api'
+// shared secret for destructive endpoints
+const adminToken = import.meta.env.VITE_ADMIN_TOKEN || ''
 
 // IPC listeners registered by initializeIPC()
 let ipcDisposers: Array<() => void> = []
@@ -161,6 +163,7 @@ export const useCoreStateStore = defineStore('coreState', {
     
       const response = await fetch(`${baseUrl}/save/`, {
         method: 'POST',
+        headers: { 'X-Admin-Token': adminToken },
         body: formData
       })
       const data = await response.json()
@@ -206,7 +209,7 @@ export const useCoreStateStore = defineStore('coreState', {
     async callBackend(url: string, method: 'POST' | 'DELETE' = 'POST') {
       console.log('calling backend', method, url)
       try {
-        const response = await fetch(url, { method })
+        const response = await fetch(url, { method, headers: { 'X-Admin-Token': adminToken } })
         const data = await response.json()
         console.log(data)
       } catch (error) {

@@ -1,7 +1,9 @@
 from typing import Optional
-from fastapi import APIRouter, Request
+from fastapi import APIRouter, Request, Depends
 from fastapi.responses import JSONResponse, HTMLResponse, FileResponse
 import os
+
+from routers.auth import require_admin
 
 router = APIRouter()
 
@@ -19,7 +21,7 @@ async def mobile_app():
 
 
 # validate all presets
-@router.get('/api/validate-presets')
+@router.get('/api/validate-presets', dependencies=[Depends(require_admin)])
 async def validate_presets():
     try:
         from preset_validator import PresetValidator

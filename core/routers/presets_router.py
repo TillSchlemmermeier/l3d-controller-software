@@ -3,6 +3,8 @@ from pathlib import Path
 from fastapi import APIRouter, Request, Form, File, UploadFile, Depends, HTTPException
 from fastapi.responses import JSONResponse
 
+from routers.auth import require_admin
+
 router = APIRouter()
 
 # Preview GIFs live here
@@ -66,7 +68,7 @@ async def get_preset_info(type: str, element: str, preset: str, db = Depends(get
     return JSONResponse(content=preset_data)
 
 # rename a given preset in the db and in the filesystem
-@router.post('/api/rename-preset/{type}/{element}/{old_preset}/{new_preset}')
+@router.post('/api/rename-preset/{type}/{element}/{old_preset}/{new_preset}', dependencies=[Depends(require_admin)])
 async def rename_preset(
     type: str, 
     element: str, 
@@ -97,7 +99,7 @@ async def rename_preset(
         )
 
 # delete preset
-@router.delete('/api/delete-preset/{type}/{element}/{preset}')
+@router.delete('/api/delete-preset/{type}/{element}/{preset}', dependencies=[Depends(require_admin)])
 async def delete_preset(type: str, element: str, preset: str, db = Depends(get_db)):
     success = db.delete_preset(type, element, preset)
     if not success:
@@ -113,7 +115,7 @@ async def delete_preset(type: str, element: str, preset: str, db = Depends(get_d
     )
 
 # delete element
-@router.delete('/api/delete-element/{type}/{element}')
+@router.delete('/api/delete-element/{type}/{element}', dependencies=[Depends(require_admin)])
 async def delete_element(type: str, element: str, db = Depends(get_db)):
     # capture preset names before the DB cascade removes them
     presets = db.get_preset_names(type, element)
@@ -132,7 +134,7 @@ async def delete_element(type: str, element: str, db = Depends(get_db)):
     )
 
 # add new element
-@router.post('/api/add-element/{type}/{element}')
+@router.post('/api/add-element/{type}/{element}', dependencies=[Depends(require_admin)])
 async def add_element(type: str, element: str, db = Depends(get_db)):
     success = db.add_element(type, element)
     if success:
@@ -147,7 +149,7 @@ async def add_element(type: str, element: str, db = Depends(get_db)):
         )
         
 # toggle the active state of a generator or effect
-@router.post('/api/toggle-element-active/{type}/{element}')
+@router.post('/api/toggle-element-active/{type}/{element}', dependencies=[Depends(require_admin)])
 async def toggle_element_active(type: str, element: str, db = Depends(get_db)):
     success = db.toggle_element_active(type, element)
     if success:
@@ -199,7 +201,7 @@ async def load(
     return {'message': f'{type} loaded successfully'}
 
 # save a new preset in the database       
-@router.post('/api/save/')
+@router.post('/api/save/', dependencies=[Depends(require_admin)])
 async def save(
     preset: str = Form(...),
     type: str = Form(...),

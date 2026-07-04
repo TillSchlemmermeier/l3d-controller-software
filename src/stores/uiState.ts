@@ -12,6 +12,8 @@ import {
    } from '../types/types.ts'
 
 const baseUrl = 'http://0.0.0.0:8000/api'
+// shared secret for destructive endpoints; guests (mobile) never have it
+const adminToken = import.meta.env.VITE_ADMIN_TOKEN || ''
 
 export const useUiStateStore = defineStore('uiState', {
   state: () => ({
@@ -173,9 +175,9 @@ export const useUiStateStore = defineStore('uiState', {
     async callBackend(url: string, method: 'GET' | 'POST' | 'DELETE' = 'GET', data?: any) {
       console.log(method, url)
       try {
-        const options: RequestInit = { method }
+        const options: RequestInit = { method, headers: { 'X-Admin-Token': adminToken } }
         if (data !== undefined) {
-          options.headers = { 'Content-Type': 'application/json' }
+          options.headers = { ...options.headers, 'Content-Type': 'application/json' }
           options.body = JSON.stringify(data)
         }
         const response = await fetch(`${baseUrl}/${url}`, options)

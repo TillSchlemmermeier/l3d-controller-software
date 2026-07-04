@@ -1,6 +1,8 @@
-from fastapi import APIRouter, Request
+from fastapi import APIRouter, Request, Depends
 from fastapi.responses import JSONResponse
 import json
+
+from routers.auth import require_admin
 
 router = APIRouter()
 
@@ -45,7 +47,7 @@ async def get_gradient_presets(request: Request):
     return JSONResponse(content=gradients)
 
 # save a custom gradient to DB
-@router.post('/api/save-gradient')
+@router.post('/api/save-gradient', dependencies=[Depends(require_admin)])
 async def save_gradient(request: Request):
     db = request.app.state.db
 
@@ -60,7 +62,7 @@ async def save_gradient(request: Request):
         return JSONResponse(status_code=400, content={"message": "Failed to save gradient"})
 
 # delete a gradient from DB
-@router.delete('/api/delete-gradient/{id}')
+@router.delete('/api/delete-gradient/{id}', dependencies=[Depends(require_admin)])
 async def delete_gradient(id: int, request: Request):
     db = request.app.state.db
 
