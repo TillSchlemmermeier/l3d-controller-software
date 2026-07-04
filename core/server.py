@@ -9,6 +9,8 @@ from fastapi.staticfiles import StaticFiles
 from starlette.websockets import WebSocketDisconnect
 import uvicorn
 
+MAX_WS_MESSAGE_BYTES = 4096   # /ws clients aren't expected to send data; cap inbound
+
 # Import managers
 from db_manager import DatabaseManager
 from state_manager import StateManager
@@ -118,11 +120,15 @@ class WebSocketAPIServer:
     def init_core_routes(self):
         @self.app.websocket("/ws")
         async def websocket_endpoint(websocket: WebSocket, skip: int = Query(1)):
+            if not await self.connection_manager.connect(websocket, skip):
+                return
             try:
-                await self.connection_manager.connect(websocket, skip)
                 while True:
                     try:
-                        await websocket.receive_json()
+                        data = await websocket.receive_text()
+                        if len(data) > MAX_WS_MESSAGE_BYTES:
+                            await websocket.close(code=1009)  # 1009 = message too big
+                            break
                     except WebSocketDisconnect:
                         break
             finally:

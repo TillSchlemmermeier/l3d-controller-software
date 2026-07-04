@@ -2,6 +2,8 @@ import asyncio
 from typing import List, Optional
 from fastapi import WebSocket
 
+MAX_CONNECTIONS = 12  # cap simultaneous /ws clients
+
 
 class ConnectionManager:
     def __init__(self, state, array):
@@ -13,7 +15,13 @@ class ConnectionManager:
         self.frame_ready = asyncio.Event()
 
 
-    async def connect(self, websocket: WebSocket, skip: int):
+    async def connect(self, websocket: WebSocket, skip: int) -> bool:
+        # guard: skip=0 would cause a ZeroDivisionError
+        skip = max(1, skip)
+        if len(self.active_websockets) >= MAX_CONNECTIONS:
+            await websocket.close(code=1013)  # 1013 = try again later
+            print(f"WebSocket rejected: connection cap ({MAX_CONNECTIONS}) reached")
+            return False
         await websocket.accept()
         self.active_websockets.append(websocket)
         self.websocket_settings[websocket] = {
@@ -23,6 +31,7 @@ class ConnectionManager:
         print(f"WebSocket connected. Skip: {skip}. Total: {len(self.active_websockets)}")
         # Send initial status
         await websocket.send_json({"type": "state_update", "data": {"status": "connected"}})
+        return True
 
 
     def disconnect(self, websocket: WebSocket):
