@@ -17,7 +17,7 @@
         v-if="showDialog"
         class="fixed bottom-0 left-0 right-0"
       >
-        <div class="bg-zinc-400 shadow-up w-full rounded-t-xl">
+        <div class="bg-zinc-800 text-zinc-200 border-t border-zinc-700 shadow-up w-full rounded-t-xl">
 
           <DialogHeader
             @close="close"

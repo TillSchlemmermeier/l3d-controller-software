@@ -9,15 +9,15 @@
       <template v-for="element in sortedItems" :key="element">
         <button
           @click="$emit('select', element.name)"
-          class="group w-28 aspect-square rounded-lg shadow-sm ring-1 ring-zinc-500/50"
+          class="group w-28 aspect-square rounded-lg shadow-sm transition-colors"
           :class="[
             element.name === uiState.selectedElement
-              ? 'bg-gradient-to-br from-zinc-500 to-zinc-400' 
-              : 'bg-gradient-to-br from-zinc-400 to-zinc-300'
+              ? 'bg-zinc-600 ring-2 ring-amber-500'
+              : 'bg-zinc-700 ring-1 ring-zinc-600/60 hover:bg-zinc-600'
           ]"
         >
           <div class="flex h-full flex-col items-center justify-center p-3">
-            <span class="text-center font-semibold text-zinc-900 break-words w-full capitalize">
+            <span class="text-center font-semibold text-zinc-100 text-base tracking-wide leading-tight text-balance antialiased break-words w-full capitalize">
               {{ formatName(element.name) }}
             </span>
           </div>
@@ -57,18 +57,18 @@
       <button
         v-if="uiState.elementType === 'generator'"
         @click="$emit('changeType')"
-        class="w-28 aspect-square rounded-lg bg-gradient-to-br from-zinc-500 to-zinc-400 shadow-sm ring-1 ring-zinc-800/50"
+        class="w-28 aspect-square rounded-lg bg-zinc-700 shadow-sm ring-1 ring-amber-500/50 hover:bg-zinc-600 transition-colors"
       >
-        <span class="text-center font-semibold text-zinc-900 break-words w-full capitalize">
+        <span class="text-center font-semibold text-zinc-100 text-base tracking-wide leading-tight text-balance antialiased break-words w-full capitalize">
           Switch to Channel Presets
         </span>
       </button>
       <button
         v-else="uiState.elementType === 'channel'"
         @click="$emit('changeType')"
-        class="w-28 aspect-square rounded-lg bg-gradient-to-br from-zinc-500 to-zinc-400 shadow-sm ring-1 ring-zinc-800/50"
+        class="w-28 aspect-square rounded-lg bg-zinc-700 shadow-sm ring-1 ring-amber-500/50 hover:bg-zinc-600 transition-colors "
       >
-        <span class="text-center font-semibold text-zinc-900 break-words w-full capitalize">
+        <span class="text-center font-semibold text-zinc-100 text-base tracking-wide leading-tight text-balance antialiased break-words w-full capitalize">
           Switch to Generators
         </span>
       </button>
@@ -78,10 +78,10 @@
     <button
       v-if="!newChannel && uiState.admin == true"
       @click="$emit('toggleKeyboard')"
-      class="group w-28 aspect-square rounded-lg bg-gradient-to-br from-zinc-700 to-zinc-500 shadow-sm ring-1 ring-zinc-800/50"
+      class="group w-28 aspect-square rounded-lg bg-zinc-700 shadow-sm ring-1 ring-amber-500/50 hover:bg-zinc-600 transition-colors"
     >
       <div class="flex h-full flex-col items-center justify-center p-3">
-        <span class="text-center font-semibold text-zinc-300 break-words w-full capitalize">
+        <span class="text-center font-semibold text-zinc-100 text-base tracking-wide leading-tight text-balance antialiased break-words w-full capitalize">
           Save {{ uiState.elementType }} Preset
         </span>
       </div>
