@@ -27,7 +27,7 @@
                     @click="toggleDialog('channel', index)"
                   />
                 </div>
-                <div class="relative">
+                <div class="relative" v-longpress="() => handleDoubleClick(index, 9)">
                   <GeneratorComponent
                     :channel="index"
                     :context="whichContext(index, 9)"
@@ -95,7 +95,7 @@
                 :class="{ 'min-h-[65vh] pb-20 bg-zinc-600/20 rounded-lg': uiState.isDragging }"
               >
                 <template #item="{ index }">
-                  <div class="">
+                  <div class="" v-longpress="() => handleDoubleClick(channelIndex, index)">
                     <EffectComponent
                       :channel="channelIndex"
                       :effectNumber="index"
@@ -154,7 +154,7 @@
           :class="{ 'min-h-[25vh] pb-20 bg-zinc-600/20 rounded-lg': uiState.isDragging }"
         >
           <template #item="{ index }">
-            <div>
+            <div v-longpress="() => handleDoubleClick(9, index)">
               <EffectComponent
                 :channel="9"
                 :effectNumber="index"
@@ -199,6 +199,27 @@ const uiState = useUiStateStore()
 const oldIndex = ref(0)
 const newIndex = ref(0)
 const newChannel = ref([])
+
+// Long-press as a touch-friendly alternative to double-tap (opens the picker).
+// Fires after 500ms of holding still; movement > 10px cancels it so drag/scroll win.
+const vLongpress = {
+  mounted(el: HTMLElement, binding: { value: (e: PointerEvent) => void }) {
+    const ac = new AbortController(), o = { signal: ac.signal }
+    let timer: ReturnType<typeof setTimeout>, x = 0, y = 0
+    const cancel = () => clearTimeout(timer)
+    el.addEventListener('pointerdown', (e: PointerEvent) => {
+      x = e.clientX; y = e.clientY
+      timer = setTimeout(() => binding.value(e), 500)
+    }, o)
+    el.addEventListener('pointermove', (e: PointerEvent) => {
+      if (Math.hypot(e.clientX - x, e.clientY - y) > 10) cancel()
+    }, o)
+    el.addEventListener('pointerup', cancel, o)
+    el.addEventListener('pointercancel', cancel, o)
+    ;(el as any)._lp = ac
+  },
+  unmounted: (el: any) => el._lp?.abort(),
+}
 
 function handleClick(index: number, element_id: number) {
   uiState.channelIndex = index
