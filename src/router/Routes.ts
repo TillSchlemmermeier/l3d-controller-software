@@ -1,5 +1,4 @@
 import MainPage from '../views/MainPage.vue'
-import SecondPage from '../views/SecondPage.vue'
 import AdminView from '../views/AdminView.vue'
 import RemoteControl from '../views/RemoteControl.vue'
 import { RouteNames } from './RouteNames'
@@ -21,11 +20,6 @@ const routes: Array<RouteRecordRaw> = [
     path: '/remote',
     name: RouteNames.REMOTE_CONTROL,
     component: () => RemoteControl,
-  },
-  {
-    path: '/second',
-    name: RouteNames.SECOND_PAGE,
-    component: SecondPage,
   },
 ]
 

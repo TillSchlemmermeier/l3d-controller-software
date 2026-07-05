@@ -12,7 +12,7 @@ import {
    } from '../types/types.ts'
 
 const baseUrl = 'http://0.0.0.0:8000/api'
-// shared secret for destructive endpoints; guests (mobile) never have it
+// shared secret for destructive endpoints
 const adminToken = import.meta.env.VITE_ADMIN_TOKEN || ''
 
 export const useUiStateStore = defineStore('uiState', {

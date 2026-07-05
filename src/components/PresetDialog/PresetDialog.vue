@@ -72,6 +72,7 @@
 import { ref, onMounted } from 'vue'
 import { useCoreStateStore } from '../../stores/coreState'
 import { useUiStateStore } from '../../stores/uiState'
+import { dialog } from '../ConfirmDialog.vue'
 import DialogHeader from './Header.vue'
 import PresetGallery from './PresetGallery.vue'
 import ElementsGrid from './ElementsGrid.vue'
@@ -223,10 +224,13 @@ async function savePreset(startFrame: number, endFrame: number, gif: boolean = t
       }, 1000)
     } else if (response.status === 409) { // Conflict status
       // Show confirmation dialog
-      const confirmOverwrite = await window.confirm(
-        `A preset named "${presetName.value}" already exists. Do you want to overwrite it?`
-      )
-      
+      const confirmOverwrite = await dialog.confirm({
+        title: 'Overwrite preset',
+        message: `A preset named "${presetName.value}" already exists. Overwrite it?`,
+        confirmText: 'Overwrite',
+        danger: true,
+      })
+
       if (confirmOverwrite) {
         // Try saving again with force flag
         const overwriteResponse = await coreState.save(presetName.value, gifData, true)

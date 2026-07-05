@@ -74,6 +74,7 @@
 import { ref, computed, onMounted } from 'vue'
 import { useUiStateStore } from '../../../stores/uiState'
 import { useCoreStateStore } from '../../../stores/coreState'
+import { dialog } from '../../ConfirmDialog.vue'
 import type { GradientPreset, SortOption } from '../../../types/types'
 import { ColorSorter } from '../../../utils/colorSorter'
 import SortButtons from './SortButtons.vue'
@@ -126,17 +127,20 @@ function selectGradient(gradient: GradientPreset) {
   }
 }
 
-function handleDeleteGradient(gradient: GradientPreset) {
+async function handleDeleteGradient(gradient: GradientPreset) {
   if (!uiState.admin) {
     console.warn('Delete action attempted without admin privileges.')
     uiState.deleteActive = false
     return
   }
 
-  const confirmed = window.confirm(
-    `Are you sure you want to delete gradient ID "${gradient.id}" from the ${gradient.type} collection?`
-  )
-  
+  const confirmed = await dialog.confirm({
+    title: 'Delete gradient',
+    message: `Delete gradient ID "${gradient.id}" from the ${gradient.type} collection?`,
+    confirmText: 'Delete',
+    danger: true,
+  })
+
   if (confirmed) {
     uiState.deleteGradientPreset(gradient.id)
     uiState.fetchGradientPresets()

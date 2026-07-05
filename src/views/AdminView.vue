@@ -156,6 +156,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useUiStateStore } from '../stores/uiState'
+import { dialog } from '../components/ConfirmDialog.vue'
 import AddElementDialog from '../components/AdminSection/AddElementDialog.vue'
 import StatusMessage from '../components/AdminSection/StatusMessage.vue'
 import ElementInfoPanel from '../components/AdminSection/ElementInfoPanel.vue'
@@ -239,11 +240,19 @@ async function handleAddElement(name: string) {
 
 async function deletePreset() {
   if (uiState.selectedPreset === 'basic') {
-    alert("Cannot delete basic preset. It will be deleted automatically when deleting the element.")
+    await dialog.alert({
+      title: 'Cannot delete',
+      message: "Cannot delete the basic preset. It is removed automatically when the element is deleted.",
+    })
     return
   }
-  
-  if (!confirm(`Are you sure you want to delete preset "${uiState.selectedPreset}"?`)) return
+
+  if (!await dialog.confirm({
+    title: 'Delete preset',
+    message: `Delete preset "${uiState.selectedPreset}"?`,
+    confirmText: 'Delete',
+    danger: true,
+  })) return
 
   uiState.deletePreset()
   uiState.fetchPresets()
@@ -255,9 +264,12 @@ async function handleRenamePreset(newName: string) {
 }
 
 async function handleDeleteElement() {
-  if (!confirm(`Are you sure you want to delete "${uiState.selectedElement}"? This will also delete all associated presets.`)) {
-    return
-  }
+  if (!await dialog.confirm({
+    title: 'Delete element',
+    message: `Delete "${uiState.selectedElement}"? This will also delete all associated presets.`,
+    confirmText: 'Delete',
+    danger: true,
+  })) return
 
   await uiState.deleteElement()
   await uiState.fetchAllElements()
@@ -270,7 +282,7 @@ async function handleToggleElement() {
 }
 
 async function handlePresetConsistencyCheck() {
-  if (confirm('Are you sure you want to check all presets?')) {
+  if (await dialog.confirm({ title: 'Check presets', message: 'Check all presets for consistency?', confirmText: 'Check' })) {
     const results = await uiState.checkPresetConsistency()
     console.log(results)
 

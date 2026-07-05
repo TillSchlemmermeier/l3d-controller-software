@@ -349,6 +349,7 @@
 
 <script setup lang="ts">
 import { ref, computed, watch } from 'vue'
+import { dialog } from '../ConfirmDialog.vue'
 
 interface Parameter {
   name: string
@@ -468,8 +469,12 @@ function handlePreview() {
   emit('preview', buildConfig())
 }
 
-function handleUpdate() {
-  if (confirm(`This will update all presets for ${props.elementName}. Continue?`)) {
+async function handleUpdate() {
+  if (await dialog.confirm({
+    title: 'Update presets',
+    message: `This will update all presets for ${props.elementName}. Continue?`,
+    confirmText: 'Update',
+  })) {
     emit('update', buildConfig())
   }
 }

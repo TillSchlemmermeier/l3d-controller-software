@@ -1,7 +1,6 @@
 import { app, BrowserWindow, ipcMain } from 'electron'
 import { fileURLToPath } from 'node:url'
 import path from 'node:path'
-import fs from 'node:fs'
 import WebSocket from 'ws'
 import { exec, spawn, ChildProcess } from 'child_process'
 import { createSocket } from 'node:dgram'
@@ -51,23 +50,12 @@ function setupWebSocket(win: BrowserWindow) {
   })
 }
 
-// Read the shared admin token from .env
-function getAdminToken(): string {
-  try {
-    const env = fs.readFileSync(path.join(APP_ROOT, '.env'), 'utf-8')
-    const match = env.match(/^\s*VITE_ADMIN_TOKEN\s*=\s*(.*)$/m)
-    return match ? match[1].trim().replace(/^["']|["']$/g, '') : ''
-  } catch {
-    return ''
-  }
-}
-
 function setupPythonProcess(restore = false) {
   const pythonPath = path.join(APP_ROOT, 'core')
   pythonProcess = spawn('python3.12', ['-u', 'main.py', ...(restore ? ['--restore'] : [])], {
     cwd: pythonPath,
     stdio: ['ignore', 'pipe', 'pipe'],
-    env: { ...process.env, L3D_ADMIN_TOKEN: getAdminToken() }
+    env: { ...process.env, L3D_ADMIN_TOKEN: import.meta.env.VITE_ADMIN_TOKEN ?? '' },
   })
 
   // Set up console output handlers

@@ -29,12 +29,16 @@
       <span v-if="uiState.connectionStatus === 'error'">Backend error: {{ uiState.connectionError }} — reconnecting…</span>
       <span v-else>Backend disconnected — reconnecting…</span>
     </div>
+
+    <!-- App-wide confirm/alert dialogs -->
+    <ConfirmDialog />
   </div>
 </template>
 
 <script setup lang="ts">
 import { RouterView } from 'vue-router'
 import PageNavigation from './components/PageNavigation.vue'
+import ConfirmDialog from './components/ConfirmDialog.vue'
 import { useUiStateStore } from './stores/uiState'
 
 const uiState = useUiStateStore()
