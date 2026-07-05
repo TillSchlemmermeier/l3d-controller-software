@@ -28,7 +28,7 @@
     <div>
       <span class="text-zinc-400">Status:</span>
       <span 
-        class="ml-2 px-2 py-0.5 rounded-full text-md font-medium"
+        class="ml-2 px-2 py-0.5 rounded-full font-medium"
         :class="elementInfo.isActive ? 'bg-emerald-500/20 text-emerald-300' : 'bg-red-500/20 text-red-300'"
       >
         {{ elementInfo.isActive ? 'Active' : 'Inactive' }}

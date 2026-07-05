@@ -18,7 +18,7 @@
         @click="$emit('cancel')"
         class="absolute w-28 bottom-10 right-10 bg-zinc-700 aspect-square rounded-lg hover:bg-zinc-600"
       >
-        <span class="text-m text-center font-semibold text-zinc-200 break-words w-full ">
+        <span class="text-center font-semibold text-zinc-200 break-words w-full ">
           Cancel
         </span>
       </button>

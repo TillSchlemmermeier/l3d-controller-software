@@ -17,7 +17,7 @@
           ]"
         >
           <div class="flex h-full flex-col items-center justify-center p-3">
-            <span class="text-m text-center font-semibold text-zinc-900 break-words w-full capitalize">
+            <span class="text-center font-semibold text-zinc-900 break-words w-full capitalize">
               {{ formatName(element.name) }}
             </span>
           </div>
@@ -59,7 +59,7 @@
         @click="$emit('changeType')"
         class="w-28 aspect-square rounded-lg bg-gradient-to-br from-zinc-500 to-zinc-400 shadow-sm ring-1 ring-zinc-800/50"
       >
-        <span class="text-m text-center font-semibold text-zinc-900 break-words w-full capitalize">
+        <span class="text-center font-semibold text-zinc-900 break-words w-full capitalize">
           Switch to Channel Presets
         </span>
       </button>
@@ -68,7 +68,7 @@
         @click="$emit('changeType')"
         class="w-28 aspect-square rounded-lg bg-gradient-to-br from-zinc-500 to-zinc-400 shadow-sm ring-1 ring-zinc-800/50"
       >
-        <span class="text-m text-center font-semibold text-zinc-900 break-words w-full capitalize">
+        <span class="text-center font-semibold text-zinc-900 break-words w-full capitalize">
           Switch to Generators
         </span>
       </button>
@@ -81,7 +81,7 @@
       class="group w-28 aspect-square rounded-lg bg-gradient-to-br from-zinc-700 to-zinc-500 shadow-sm ring-1 ring-zinc-800/50"
     >
       <div class="flex h-full flex-col items-center justify-center p-3">
-        <span class="text-m text-center font-semibold text-zinc-300 break-words w-full capitalize">
+        <span class="text-center font-semibold text-zinc-300 break-words w-full capitalize">
           Save {{ uiState.elementType }} Preset
         </span>
       </div>

@@ -31,23 +31,23 @@
     <div class="mt-6 flex justify-around">
       <div class="flex gap-4">
         <div>
-          <label class="ml-12 text-m text-center font-semibold text-zinc-200 break-words w-full mr-2">Start Frame:</label>
+          <label class="ml-12 text-center font-semibold text-zinc-200 break-words w-full mr-2">Start Frame:</label>
           <input 
             type="number" 
             v-model="selectedStart" 
             :max="selectedEnd"
             min="0"
-            class="mt-6 w-16 px-2 py-1 bg-zinc-700 rounded text-zinc-200 text-m font-semibold"
+            class="mt-6 w-16 px-2 py-1 bg-zinc-700 rounded text-zinc-200 font-semibold"
           />
         </div>
         <div>
-          <label class="text-m text-center font-semibold text-zinc-200 break-words w-full mr-2">End Frame:</label>
+          <label class="text-center font-semibold text-zinc-200 break-words w-full mr-2">End Frame:</label>
           <input 
             type="number" 
             v-model="selectedEnd"
             :min="selectedStart"
             :max="frames.length - 1"
-            class="mt-6 w-16 px-2 py-1 bg-zinc-700 rounded text-zinc-200 text-m font-semibold"
+            class="mt-6 w-16 px-2 py-1 bg-zinc-700 rounded text-zinc-200 font-semibold"
           />
         </div>
       </div>
@@ -63,7 +63,7 @@
           @click="$emit('cancel')"
           class="w-24 px-4 py-2 bg-zinc-700 aspect-square rounded hover:bg-zinc-600"
         >
-          <span class="text-m text-center font-semibold text-zinc-200 break-words w-full ">
+          <span class="text-center font-semibold text-zinc-200 break-words w-full ">
             Cancel
           </span>
         </button>
@@ -72,7 +72,7 @@
           :disabled="isSaveDisabled"
           class="w-24 px-4 py-2 bg-zinc-700 aspect-square rounded hover:bg-zinc-600"
         >
-          <span class="text-m text-center font-semibold text-zinc-200 break-words w-full ">
+          <span class="text-center font-semibold text-zinc-200 break-words w-full ">
             Save without GIF
           </span>
         </button>
@@ -80,7 +80,7 @@
           @click="$emit('create', selectedStart, selectedEnd)"
           class="w-24 px-4 py-2 bg-blue-600 aspect-square rounded hover:bg-blue-500"
         >
-          <span class="text-m text-center font-semibold text-zinc-200 break-words w-full">
+          <span class="text-center font-semibold text-zinc-200 break-words w-full">
             Save Preset
           </span>
         </button>

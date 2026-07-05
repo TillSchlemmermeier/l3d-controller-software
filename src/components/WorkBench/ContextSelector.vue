@@ -11,7 +11,7 @@
             'w-20 h-20 rounded-xl flex items-center justify-center font-bold text-sm',
             isActive(index) 
               ? `${context.bg} ${context.text} shadow-lg scale-110 ring-2 ring-white/30` 
-              : `${context.bgInactive} ${context.textInactive} hover:scale-105 hover:${context.bg}`
+              : `${context.bgInactive} ${context.textInactive} hover:scale-105`
           ]"
         >
           <!-- Context Number -->
