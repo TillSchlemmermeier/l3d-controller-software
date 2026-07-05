@@ -177,6 +177,7 @@
       </div>
     </div>
     <ContextSelector />
+    <ShiftSelector />
   </div>
 </template>
 
@@ -190,6 +191,7 @@ import EffectComponent from './EffectComponent.vue'
 import ChannelParameters from './ChannelParameters.vue'
 import CubeParameters from './CubeParameters.vue'
 import ContextSelector from './ContextSelector.vue'
+import ShiftSelector from './ShiftSelector.vue'
 import TrashZone from './TrashZone.vue'
 
 const coreState = useCoreStateStore()
@@ -223,42 +225,14 @@ function handleClick(index: number, element_id: number) {
     } else {
       selectParameters(index, element_id)
     }
-    // if (uiState.clickBehavior == 'select') {
-    //   selectParameters(index, element_id)
-    // } else if (uiState.clickBehavior == 'edit') {
-    //   selectParameters(index, element_id)
-    //   if (element_id == 9) {
-    //     newGenerator(index)
-    //   } else {
-    //     newEffect(index, element_id)
-    //   }
-    // } else if (uiState.clickBehavior == 'IO') {
-    //   if (element_id == 9) {
-    //     selectParameters(index, element_id)
-    //   } else {
-    //     coreState.toggleEffect(index, element_id)
-    //   }
-    // }
   }
 }
 
 function handleDoubleClick(index: number, element_id: number) {
-  // if (element_id == 9) {
-  //   newGenerator(index)
-  // } else {
-  //   newEffect(index, element_id)
-  // }
-  if (uiState.clickBehavior == 'select') {
-    if (element_id == 9) {
-      newGenerator(index)
-    } else {
-      newEffect(index, element_id)
-    }
-  } 
-  else if (uiState.clickBehavior == 'edit') {
-    selectParameters(index, element_id)
+  if (element_id == 9) {
+    newGenerator(index)
   } else {
-    {}
+    newEffect(index, element_id)
   }
 }
 
