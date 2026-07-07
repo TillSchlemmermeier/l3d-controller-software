@@ -1,11 +1,16 @@
 // we need FastLED v. 3.3.3 or older to be compatible with arduino Due
 #include <FastLED.h>
 
-// How many leds are in the strip?
-#define NUM_LEDS 2000
+// 8 parallel lanes x 400 LEDs each (WS2811_PORTD below) — FastLED reads all 3200
+// even though only 5 lanes are physically populated (ACTIVE_LEDS)
+#define NUM_LEDS 3200
+#define ACTIVE_LEDS 2000
 // This is an array of leds.  One item for each led in your strip.
 CRGB leds[NUM_LEDS];
 
+// sized past the 3000 received bytes: strand 5's replaced LEDs make the draw
+// loop read ~6 voxels beyond voxel 1000 (into the zeroed tail, shown on
+// nonexistent LEDs past the physical strand end)
 uint8_t rgbArray[(NUM_LEDS/2)*3];
 
 bool framePass = false;
@@ -88,7 +93,7 @@ void loop() {
   //draw frame if fully transmitted
   if(framePass) {
     int k=0;
-    for(int i=0; i<NUM_LEDS; i+=2) {
+    for(int i=0; i<ACTIVE_LEDS; i+=2) {
       switch(i) {
         case 392: i = 400; break;
         case 792: i = 800; break;
@@ -99,6 +104,7 @@ void loop() {
       if(replacedLedPosition(i)) {
         leds[i] =  CRGB( rgbArray[k]*0.7 ,rgbArray[k+2], rgbArray[k+1]*0.60);
         i--;
+        k+=3;
         continue;
       } else {
         leds[i]  =  CRGB( rgbArray[k] ,rgbArray[k+1], rgbArray[k+2]);
@@ -106,7 +112,7 @@ void loop() {
       }
       k+=3;
     }
+    FastLED.show();
   }
-  FastLED.show();
   framePass = false;
 }
