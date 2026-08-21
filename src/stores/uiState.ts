@@ -49,6 +49,18 @@ export const useUiStateStore = defineStore('uiState', {
     everConnected: false, // becomes true after the first successful connect
   }),
   actions: {
+    // Keep the selected channel inside the range the core actually has
+    clampChannelIndex(channelCount: number) {
+      if (this.channelIndex === 9) return
+      if (channelCount <= 0) {
+        this.channelIndex = 0
+        return
+      }
+      if (this.channelIndex >= channelCount || this.channelIndex < 0) {
+        this.channelIndex = channelCount - 1
+      }
+    },
+
     // backend connection lifecycle
     setConnected() {
       this.connectionStatus = 'connected'

@@ -9,6 +9,16 @@ const adminToken = import.meta.env.VITE_ADMIN_TOKEN || ''
 // IPC listeners registered by initializeIPC()
 let ipcDisposers: Array<() => void> = []
 
+// A color-manager section is only usable if it carries a non-empty gradient of
+// [position, color] pairs. Anything else (cleared gradient, corrupted state)
+// must be treated as "no color manager" rather than installed into the store.
+function hasValidGradient(section: any): boolean {
+  return !!section
+    && Array.isArray(section.gradient)
+    && section.gradient.length > 0
+    && section.gradient.every((stop: any) => Array.isArray(stop) && stop.length >= 2)
+}
+
 export const useCoreStateStore = defineStore('coreState', {
   state: (): coreState => ({
     IO: false,
@@ -240,6 +250,7 @@ export const useCoreStateStore = defineStore('coreState', {
         }),
         window.ipcRenderer.onStateData((message: any) => {
           this.$state = this.parseState(message)
+          uiState.clampChannelIndex(this.channels.length)
         }),
         window.ipcRenderer.onStateSectionData((message: any) => {
           this.updateSingleElement(message)
@@ -259,12 +270,7 @@ export const useCoreStateStore = defineStore('coreState', {
 
       if (channel === 9) {
         if (index === 8) {
-          // Only set globalColor if section has a valid gradient
-          if (section && section.gradient && Array.isArray(section.gradient) && section.gradient.length > 0) {
-            this.globalColor = section
-          } else {
-            this.globalColor = undefined  // Clear it for empty/invalid gradients
-          }
+          this.globalColor = hasValidGradient(section) ? section : undefined
         } else {
           this.globalEffects[index] = section
         }
@@ -272,7 +278,7 @@ export const useCoreStateStore = defineStore('coreState', {
         if (index === 9) {
           this.channels[channel].generator = section
         } else if (index === 8) {
-          this.channels[channel].color = section
+          this.channels[channel].color = hasValidGradient(section) ? section : undefined
         } else {
           this.channels[channel].effects[index] = section
         }
@@ -310,7 +316,7 @@ export const useCoreStateStore = defineStore('coreState', {
           numberOfEffects: numberOfEffects,
           effects,
           generator: channel[9],
-          color: channel[8]
+          color: hasValidGradient(channel[8]) ? channel[8] : undefined
         }
       })
 
@@ -320,11 +326,8 @@ export const useCoreStateStore = defineStore('coreState', {
           (_, i) => data[9][i]
         )
 
-      if (data[9][8]) {
-        parsedState.globalColor = data[9][8]
-      } else {
-        parsedState.globalColor = undefined
-      }
+      parsedState.globalColor = hasValidGradient(data[9][8]) ? data[9][8] : undefined
+
       return parsedState as coreState
     }
   },

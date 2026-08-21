@@ -35,6 +35,7 @@
 import { ref } from 'vue'
 import { useCoreStateStore } from '../../../stores/coreState'
 import { useUiStateStore } from '../../../stores/uiState'
+import type { Color } from '../../../types/types'
 
 interface Emits {
   (e: 'channelCopied'): void
@@ -50,21 +51,48 @@ function toggleCopyDirection() {
   copyDirection.value = copyDirection.value === 'From' ? 'To' : 'From'
 }
 
-function handleChannelClick(channelIndex: number) {
-  if (copyDirection.value === 'From') {
-    const sourceChannel = coreState.channels[channelIndex]
-    if (!sourceChannel?.color) return
-    coreState.channels[uiState.channelIndex].color = { ...sourceChannel.color }
-  } else {
-    const currentChannel = coreState.channels[uiState.channelIndex]
-    if (!currentChannel?.color) return
-    coreState.channels[channelIndex].color = { ...currentChannel.color }
-  }
-  emit('channelCopied')
+function readChannelColor(index: number): Color | undefined {
+  return index === 9 ? coreState.globalColor : coreState.channels[index]?.color
 }
 
-function generateChannelGradientCSS(colorData: any): string {
-  if (!colorData?.gradient) {
+function writeChannelColor(index: number, color: Color): boolean {
+  if (index === 9) {
+    coreState.globalColor = color
+    return true
+  }
+  const channel = coreState.channels[index]
+  if (!channel) return false
+  channel.color = color
+  return true
+}
+
+function cloneColor(color: Color): Color {
+  return {
+    ...color,
+    gradient: color.gradient.map(stop => [...stop] as [number, string]),
+    soundToLightOptions: [...(color.soundToLightOptions ?? [])]
+  }
+}
+
+async function handleChannelClick(channelIndex: number) {
+  const fromIndex = copyDirection.value === 'From' ? channelIndex : uiState.channelIndex
+  const toIndex = copyDirection.value === 'From' ? uiState.channelIndex : channelIndex
+
+  const sourceColor = readChannelColor(fromIndex)
+  if (!sourceColor) return
+
+  const copy = cloneColor(sourceColor)
+  if (!writeChannelColor(toIndex, copy)) return
+
+  await coreState.updateColorManager(toIndex, copy)
+
+  if (toIndex === uiState.channelIndex) {
+    emit('channelCopied')
+  }
+}
+
+function generateChannelGradientCSS(colorData: Color | undefined): string {
+  if (!Array.isArray(colorData?.gradient) || colorData.gradient.length === 0) {
     return 'linear-gradient(to right, #666666, #666666)'
   }
 

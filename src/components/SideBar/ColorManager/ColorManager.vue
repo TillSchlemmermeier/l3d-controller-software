@@ -104,7 +104,7 @@
 
       <!-- Copy From Other Channels -->
       <OtherChannels
-        @copied-from-channel="channelCopied"
+        @channel-copied="loadEditor"
       />
     </div>
     <ActionButtons
@@ -166,30 +166,32 @@ const gradientCss = computed(() => {
 
 function loadColorData() {
   const channelIndex = uiState.channelIndex
-  let colorData
+  const colorData = channelIndex === 9
+    ? coreState.globalColor
+    : coreState.channels[channelIndex]?.color
 
-  if (channelIndex === 9) {
-    colorData = coreState.globalColor
-  } else {
-    const channel = coreState.channels[channelIndex]
-    colorData = channel?.color
+  gradientStops.value = colorData?.gradient?.length
+    ? colorData.gradient.map(stop => [...stop] as [number, string])
+    : [[0, '#FF0000'], [100, '#0000FF']]
+  gradientType.value = colorData?.gradientType ?? 'linear'
+  speed.value = colorData?.speed ?? 0
+  selectedRegion.value = {
+    start: colorData?.sectionStart ?? 0,
+    end: (colorData?.sectionStart ?? 0) + (colorData?.sectionWidth ?? 100)
   }
+  rotateSpeedY.value = colorData?.rotateSpeedY ?? 0
+  rotateSpeedZ.value = colorData?.rotateSpeedZ ?? 0
+  soundToLightOptions.value = colorData?.soundToLightOptions ?? []
 
-  if (!colorData) return
-
-  gradientStops.value = colorData.gradient
-  gradientType.value = colorData.gradientType
-  speed.value = colorData.speed
-  selectedRegion.value.start = colorData.sectionStart
-  selectedRegion.value.end = colorData.sectionStart + colorData.sectionWidth
-  rotateSpeedY.value = colorData.rotateSpeedY
-  rotateSpeedZ.value = colorData.rotateSpeedZ
-  soundToLightOptions.value = colorData.soundToLightOptions
+  selectedStopIndex.value = Math.min(selectedStopIndex.value, gradientStops.value.length - 1)
 }
 
 function selectStop(index: number) {
+  const stop = gradientStops.value[index]
+  if (!stop) return
+
   selectedStopIndex.value = index
-  updateHSVFromColor(selectedStop.value[1])
+  updateHSVFromColor(stop[1])
 }
 
 function handleAddGradientStop(position: number) {
@@ -200,25 +202,29 @@ function handleAddGradientStop(position: number) {
   
   gradientStops.value.push(newStop)
   gradientStops.value.sort(([a], [b]) => a - b)  // Sort by position
-  
-  selectedStopIndex.value = gradientStops.value.findIndex(([pos]) => pos === position)
-  
+
+  const newIndex = gradientStops.value.findIndex(([pos]) => pos === position)
+  selectedStopIndex.value = newIndex === -1 ? 0 : newIndex
+
   sendColorUpdate()
 }
 
 function handleUpdateStopPosition(index: number, position: number) {
-  gradientStops.value[index][0] = position
+  const stop = gradientStops.value[index]
+  if (!stop) return
+
+  stop[0] = position
 }
 
 function deleteSelectedStop() {
   gradientStops.value.splice(selectedStopIndex.value, 1)
-  selectedStopIndex.value -= 1
+  selectedStopIndex.value = Math.max(0, selectedStopIndex.value - 1)
 
   sendColorUpdate()
 }
 
-function canDeleteStop(stop: [number, string]): boolean {
-  return stop[0] !== 0 && stop[0] !== 100
+function canDeleteStop(stop: [number, string] | undefined): boolean {
+  return !!stop && stop[0] !== 0 && stop[0] !== 100 && gradientStops.value.length > 1
 }
 
 function handleColorChange(color: string) {
@@ -226,11 +232,10 @@ function handleColorChange(color: string) {
   sendColorUpdate()
 }
 
-function channelCopied() {
+function loadEditor() {
   selectedStopIndex.value = 0
-  updateHSVFromColor(gradientStops.value[0][1])
   loadColorData()
-  sendColorUpdate()
+  updateHSVFromColor(selectedStop.value[1])
 }
 
 function sendColorUpdate() {
@@ -269,14 +274,6 @@ function resetSettings() {
 function clearGradient() {
   const channelIndex = uiState.channelIndex
   uiState.clearGradient(channelIndex)
-  // Alternative: instead of clearing, reset to default white gradient.
-  // gradientStops.value = [
-  //   [0, '#FFFFFF'],
-  //   [100, '#FFFFFF']
-  // ]
-  // selectedStopIndex.value = 0
-  // updateHSVFromColor('#FFFFFF')
-  // sendColorUpdate()
 }
 
 function saveGradient(subtype: string) {
@@ -298,11 +295,7 @@ watch(
   { immediate: true, deep: true }
 )
 
-onMounted(() => {
-  selectedStopIndex.value = 0
-  updateHSVFromColor(selectedStop.value[1])
-  loadColorData()
-})
+onMounted(loadEditor)
 
 </script>
 <style scoped>
