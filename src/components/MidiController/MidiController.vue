@@ -30,10 +30,13 @@ const gridState = ref<number[][]>(Array(8).fill(0).map(() => Array(8).fill(0)))
 let midiAccess: MIDIAccess | null = null
 let inputPort: MIDIInput | null = null
 let outputPort: MIDIOutput | null = null
+let knownPorts = ''
+let rescanTimer: ReturnType<typeof setTimeout> | null = null
 
 const DEVICE_NAME_SUBSTRING = 'Launchpad Mini MK3'
+const RESCAN_DELAY = 200
 const CMD_SET_MODE = 0x0E
-const SELECT_LAYOUT_CMD = 0x00
+// const SELECT_LAYOUT_CMD = 0x00
 // const MODE_PROGRAMMER = 0x7F
 const MODE_PROGRAMMER = 0x01
 
@@ -82,7 +85,13 @@ onMounted(async () => {
       return
     }
     midiAccess = await navigator.requestMIDIAccess({ sysex: true })
-    midiAccess.onstatechange = () => findController()
+    midiAccess.onstatechange = (event) => {
+      // every other MIDI device on the machine announces itself here too
+      const port = event.port
+      if (port && !port.name?.includes(DEVICE_NAME_SUBSTRING)) return
+      if (rescanTimer) clearTimeout(rescanTimer)
+      rescanTimer = setTimeout(findController, RESCAN_DELAY)
+    }
     findController()
   } catch (err) {
     console.error('MIDI Access Failed:', err)
@@ -100,11 +109,19 @@ function findController() {
         || null
   }
 
-  inputPort = findDawPort(Array.from(midiAccess.inputs.values()))
-  outputPort = findDawPort(Array.from(midiAccess.outputs.values()))
+  const input = findDawPort(Array.from(midiAccess.inputs.values()))
+  const output = findDawPort(Array.from(midiAccess.outputs.values()))
+
+  const found = `${input?.id ?? ''}|${output?.id ?? ''}`
+  if (found === knownPorts) return
+  knownPorts = found
+
+  if (inputPort && inputPort !== input) inputPort.onmidimessage = null
+  inputPort = input
+  outputPort = output
 
   if (inputPort) inputPort.onmidimessage = handleMidiMessage
-  
+
   if (inputPort && outputPort) {
     isConnected.value = true
     statusMessage.value = `Connected: ${inputPort.name}`
@@ -161,15 +178,17 @@ function setPadColorSysEx(note: number, color: number) {
 
 function clearAllLeds() {
   if (!outputPort) return
+  const updates: number[] = []
   for (let row = 1; row <= 9; row++) {
     for (let col = 1; col <= 9; col++) {
-      const note = row * 10 + col
-      if (note >= 11 && note <= 99) setPadColorSysEx(note, 0)
+      updates.push(0x00, row * 10 + col, COLORS.OFF)
     }
   }
+  outputPort.send(new Uint8Array([...SYSEX_HEADER, 0x03, ...updates, SYSEX_END]))
 }
 
 onUnmounted(() => {
+  if (rescanTimer) clearTimeout(rescanTimer)
   if (midiAccess) midiAccess.onstatechange = null
   if (inputPort) inputPort.onmidimessage = null
 })
