@@ -6,6 +6,8 @@ import { exec, spawn, ChildProcess } from 'child_process'
 import { createSocket } from 'node:dgram'
 
 const APP_ROOT = path.join(path.dirname(fileURLToPath(import.meta.url)), '..')
+const PROFILE = process.env.L3D_PROFILE ?? import.meta.env.VITE_PROFILE ?? 'dev'
+const IS_SHOW = PROFILE === 'show'
 const VITE_DEV_SERVER_URL = process.env['VITE_DEV_SERVER_URL']
 const RENDERER_DIST = path.join(APP_ROOT, 'dist')
 const PUBLIC_PATH = VITE_DEV_SERVER_URL ? path.join(APP_ROOT, 'public') : RENDERER_DIST
@@ -55,7 +57,11 @@ function setupPythonProcess(restore = false) {
   pythonProcess = spawn('python3.12', ['-u', 'main.py', ...(restore ? ['--restore'] : [])], {
     cwd: pythonPath,
     stdio: ['ignore', 'pipe', 'pipe'],
-    env: { ...process.env, L3D_ADMIN_TOKEN: import.meta.env.VITE_ADMIN_TOKEN ?? '' },
+    env: {
+      ...process.env,
+      L3D_ADMIN_TOKEN: import.meta.env.VITE_ADMIN_TOKEN ?? '',
+      L3D_PROFILE: PROFILE,
+    },
   })
 
   // Set up console output handlers
@@ -107,15 +113,11 @@ function createWindow() {
     width: 2560,
     height: 1440,
     backgroundColor: '#3f3f46',
-    frame: false,  // Remove window frame
-    titleBarStyle: 'hidden', // Hide title bar
-    resizable: false, // Prevent resizing
+    kiosk: IS_SHOW,
+    frame: !IS_SHOW,
     minimizable: false, // Optionally prevent minimizing
     maximizable: false, // Prevent maximizing
     fullscreenable: true, // Prevent fullscreen
-    fullscreen: true,
-    // x: 200,
-    // y: 200,
     icon: path.join(PUBLIC_PATH, 'icons/brightness.svg'),
     webPreferences: {
       preload: path.join(APP_ROOT, 'dist-electron', 'preload.mjs'),

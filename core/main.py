@@ -16,8 +16,11 @@ from s2l_engine import sound_process
 from server import WebSocketAPIServer
 from state_manager import StateManager
 from rendering_engine import rendering_engine
-from midi_launchcontrol import class_launchcontrol
+from midi_launchcontrol import LaunchControl
+from midi_fighter import MidiFighter
 from midi_emulator import MidiControllerEmulator
+
+PROFILE = os.environ.get('L3D_PROFILE', 'dev')
 
 def autopilot(state, randomizer_queue):
     randomizer = Randomizer(state)
@@ -28,25 +31,24 @@ def server(state, randomizer_queue):
     server.run()
 
 def midi_devices(state):
-    print('...starting midi thread')
-    launchcontrol = class_launchcontrol(state)
-    # akai = class_akai(state)
-    # fighter = class_fighter(state)
-    # fighter.update()
+    if PROFILE == 'show':
+        launchcontrol = LaunchControl(state)
+        fighter = MidiFighter(state)
+        fighter.update()
 
-    while True:
-        # Small sleep to prevent CPU overload
-        if state['midi_update'] == True:
-            launchcontrol.update()
-            with state.lock:
-                state['midi_update'] = False
+        while True:
+            # Small sleep to prevent CPU overload
+            if state['midi_update'] == True:
+                launchcontrol.update()
+                with state.lock:
+                    state['midi_update'] = False
 
-        sleep(0.1)
+            sleep(0.1)
 
-    # use the following to activate on-screen midi emulator
-    # root = tk.Tk()
-    # midi = MidiControllerEmulator(root, state)
-    # root.mainloop()
+    # no controllers attached, use the emulator instead
+    root = tk.Tk()
+    midi = MidiControllerEmulator(root, state)
+    root.mainloop()
 
 def rendering(state):
     frame_renderer = rendering_engine()
