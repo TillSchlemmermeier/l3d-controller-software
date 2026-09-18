@@ -12,7 +12,10 @@
       <div class="flex flex-row flex-wrap mb-4 gap-4">
         <DashboardButton
           label="NORM S2L"
+          :subLabel="coreState.s2l_auto_normalize ? 'auto' : 'manual'"
+          :active="coreState.s2l_auto_normalize"
           :onClick="coreState.normalize"
+          :onLongPress="coreState.toggleAutoNormalize"
         />
         <DashboardButton
         label="REBOOT CORE"
@@ -65,7 +68,7 @@ function selectDashboard() {
   coreState.select(0, 10, 1)
 }
 
-function reloadUI() {
-  window.location.reload()
-}
+// function reloadUI() {
+//   window.location.reload()
+// }
 </script>

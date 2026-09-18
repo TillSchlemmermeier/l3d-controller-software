@@ -68,6 +68,7 @@ export interface coreState {
   s2l_values: number[]
   s2l_thresholds: number[]
   s2l_normalize: boolean
+  s2l_auto_normalize: boolean
   s2l_gain: number
   s2l_update: boolean
   context: number[][]

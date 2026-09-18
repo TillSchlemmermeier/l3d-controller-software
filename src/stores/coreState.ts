@@ -30,6 +30,7 @@ export const useCoreStateStore = defineStore('coreState', {
     s2l_values: [],
     s2l_thresholds: [],
     s2l_normalize: false,
+    s2l_auto_normalize: true,
     s2l_gain: 0,
     s2l_update: false,
     context: [[0,9]],
@@ -76,6 +77,11 @@ export const useCoreStateStore = defineStore('coreState', {
 
     async normalize() {
       const url = `${baseUrl}/normalize-s2l`
+      await this.callBackend(url)
+    },
+
+    async toggleAutoNormalize() {
+      const url = `${baseUrl}/toggle-auto-normalize`
       await this.callBackend(url)
     },
 

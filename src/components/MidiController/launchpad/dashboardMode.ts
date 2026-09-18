@@ -42,6 +42,12 @@ export const dashboardMode: LaunchpadMode = {
       }
     }
 
+    // Row 7: auto normalize, sits under NORM S2L
+    if (row === 7 && col === 1) {
+      ctx.coreState.toggleAutoNormalize()
+      this.refresh(ctx)
+    }
+
     // Row 6: Random Triggers
     if (row === 6 && col === 1) {
       ctx.coreState.triggerRandomizer(ctx.uiState.randomMode)
@@ -119,6 +125,9 @@ export const dashboardMode: LaunchpadMode = {
     ctx.gridState.value[7][1] = COLORS.RED    // REBOOT CORE
     ctx.gridState.value[7][2] = COLORS.ORANGE // UNDO RANDOM
     ctx.gridState.value[7][3] = ctx.coreState.IO ? COLORS.GREEN : COLORS.RED // I/O CUBE
+
+    // Row 7: auto normalize, green while s2l rescales itself
+    ctx.gridState.value[6][0] = ctx.coreState.s2l_auto_normalize ? COLORS.GREEN : COLORS.RED
 
     // Row 6: Random Triggers
     ctx.gridState.value[5][0] = COLORS.PURPLE // TRIGGER RANDOM

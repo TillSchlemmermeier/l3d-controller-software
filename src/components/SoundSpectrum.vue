@@ -6,9 +6,15 @@
       : 'background: black'"
   >
       <div
-        class="w-[492px] h-[425px] bg-black p-2 border-2"
+        class="relative w-[492px] h-[425px] bg-black p-2 border-2"
       >
         <canvas ref="chart" @click="selectSpectrum"></canvas>
+        <div
+          class="absolute top-7 left-16 w-2.5 h-2.5 rounded-full pointer-events-none"
+          :style="beatOn
+            ? 'background:#ff7171; transition:none'
+            : 'background:#3f1d1d; transition:background 70ms linear'"
+        ></div>
       </div>
     </div>
 </template>
@@ -24,6 +30,9 @@ let chartInstance: Chart | null = null
 let freqAxis: number[] = []
 let disposeSpectrum: (() => void) | null = null
   
+const beatOn = ref(false)
+let lastTrigger: number | null = null
+
 const COLORS = ['red', 'green', 'blue', 'orange'] as const
 const FONT = { size: 16, family: "'DejaVu Sans'" }
 
@@ -202,7 +211,9 @@ onMounted(() => {
   updateSelectorsAndThresholds()
 
   disposeSpectrum = window.ipcRenderer.onSpectrumData((message: any) => {
-    updateSpectrum(message)
+    updateSpectrum(message.spectrum)
+    beatOn.value = lastTrigger !== null && message.trigger !== lastTrigger
+    lastTrigger = message.trigger
   })
 })
 

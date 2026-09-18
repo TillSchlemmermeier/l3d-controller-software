@@ -10,6 +10,56 @@ from scipy.ndimage.filters import uniform_filter1d
 from time import time, sleep
 import struct
 
+class BeatDetector:
+    '''
+    Onset detection on the low band.
+
+    A beat is a sudden rise in energy, so this watches the frame to frame
+    increase (the spectral flux) rather than the level.
+    '''
+
+    HISTORY = 60        # frames of flux behind the moving bar, about 3 seconds
+    K = 2.2             # how far above the recent median an onset has to sit
+    LEVEL_GATE = 0.5    # normalised low band under which nothing counts
+    REFRACTORY = 0.30   # seconds before the next beat can be called
+
+    def __init__(self):
+        self.previous = None
+        self.history = []
+        self.last_beat = 0.0
+        self.beats = 0
+
+    def __call__(self, band, level, now):
+        '''take the magnitudes of the low band and its normalised level,
+        return True on a beat'''
+        # compress first. the rise from a kick is then the same size whether the
+        # track is mastered loud or quiet
+        band = np.log1p(band)
+
+        if self.previous is None:
+            self.previous = band
+            return False
+
+        # only the rises. a note ending is not an onset
+        flux = float(np.sum(np.maximum(band - self.previous, 0)))
+        self.previous = band
+
+        self.history.append(flux)
+        if len(self.history) > self.HISTORY:
+            self.history.pop(0)
+
+        bar = np.median(self.history)*self.K
+
+        fired = (level >= self.LEVEL_GATE
+                 and flux > bar
+                 and now - self.last_beat > self.REFRACTORY)
+        if fired:
+            self.last_beat = now
+            self.beats += 1
+
+        return fired
+
+
 def sound_process(state):
     
     # initialize pyaudio
@@ -61,17 +111,31 @@ def sound_process(state):
 
     print('\nstarting sound loop\n')
 
-    # normalization
-    normalized = [False]
-    buffer = []
-    min = [np.zeros(60)]
-    max = [np.ones(60)]
+    reference = [np.zeros(60)]  # one reference per bin, roughly the loudest it has been lately
+    reference_rise = 0.1        # climbs a tenth of the way to a new peak each frame
+    reference_ceiling = 1.05    # but never more than this much of itself
+    reference_fall = 0.9995     # and about 4 dB a minute back down
+
+    # the reference only gives way while music is actually playing. Read off the
+    # balance between the bass and the rest of the spectrum: turning the volume
+    # down scales every bin alike and leaves the balance where it was, a break
+    # does not. Too high a number here and a quiet set stops re-scaling by itself;
+    # too low and a long break drags the scale down with it
+    bass_share = 8.0
 
     # trigger
     norm_value = 0.0
     last_value = 0.0
-    armed = True
-    starttime = time()
+    detector = BeatDetector()
+
+    # the bins a kick lives in. the raw fft axis, not the log one used for the
+    # display, and taken before the smoothing that would flatten the transient.
+    freqs = fftfreq(buffer_size, 1.0/sample_rate)
+    kick_band = (freqs >= 40) & (freqs <= 110)
+    # the same window on the display axis, where the normalisation has run
+    level_band = (freq_axis >= 40) & (freq_axis <= 110)
+    # what the bass is weighed against to tell music from an ambient passage
+    mid_band = (freqs >= 300) & (freqs <= 4000)
 
     # create LFOs
 
@@ -83,40 +147,30 @@ def sound_process(state):
 
 
     def update():
-        '''
-        function for update the plotting window, which also
-        calls the functions to read the spectrum and parse it
-
-        this function uses `array`, which is passed from the parent
-        function to the function `sound_process`. that's the
-        global parameters array
-        '''
         nonlocal norm_value
         nonlocal last_value
-        nonlocal armed
-        nonlocal starttime
 
-        if state['s2l_update']:
-            # update selectors
-            selectors[0] = (state['s2l_values'][0]**2)*10000
-            selectors[1] = (state['s2l_values'][1]**2)*10000
-            selectors[2] = (state['s2l_values'][2]**2)*10000
-            selectors[3] = (state['s2l_values'][3]**2)*10000
-
-            # update threshold
-            thresholds[0] = state['s2l_thresholds'][0]
-            thresholds[1] = state['s2l_thresholds'][1]
-            thresholds[2] = state['s2l_thresholds'][2]
-            thresholds[3] = state['s2l_thresholds'][3]
-            with state.lock:
+        # everything this frame needs from the state
+        with state.lock:
+            needs_update = state['s2l_update']
+            resetting = state['s2l_normalize']
+            auto_normalize = state['s2l_auto_normalize']
+            gain = state['s2l_gain']
+            if needs_update:
+                new_selectors = list(state['s2l_values'])
+                new_thresholds = list(state['s2l_thresholds'])
                 state['s2l_update'] = False
+            if resetting:
+                state['s2l_normalize'] = False
+
+        if needs_update:
+            for i in range(len(selectors)):
+                selectors[i] = (new_selectors[i]**2)*10000
+                thresholds[i] = new_thresholds[i]
 
         # check for normalizing
-        if state['s2l_normalize']:
-            normalized[0] = False
-            with state.lock:
-                state['s2l_normalize'] = False
-            buffer[:] = []
+        if resetting:
+            reference[0][:] = 0
             print('s2l engine : reseting normalization')
 
         # read raw data and unpack it
@@ -127,27 +181,32 @@ def sound_process(state):
 
         # perform fourier transformation
         FFT   = fft(data)
-        freqs = fftfreq(buffer_size, 1.0/sample_rate)
+        magnitude = np.abs(FFT)
 
         # smoothing and interpolating to correct axis
-        FFT_smooth = uniform_filter1d(np.abs(FFT), size=10)
+        FFT_smooth = uniform_filter1d(magnitude, size=10)
         # 1-D interpolation onto the log frequency axis
         pos = freqs >= 0
         final_data = np.interp(freq_axis, freqs[pos], FFT_smooth[pos], right=0)
 
-        # normalize the whole thing if normalizing was set
-        # to "not normalized"
-        if not normalized[0]:
-            buffer.append(final_data)
+        if not reference[0].any():          # first frame, or after a reset
+            reference[0] = final_data.copy()
 
-            if len(buffer) > 60:
-                print('normalized')
-                normalized[0] = True
-                min[0] = np.min(np.array(buffer), axis = 0)
-                max[0] = np.max(np.array(buffer), axis = 0)
+        # with the automatic rescaling off the reference still follows a peak
+        # up, it just never gives way again
+        playing = (auto_normalize
+                   and magnitude[kick_band].mean() > bass_share*magnitude[mid_band].mean())
 
-        # final data is the final processed spectrum
-        final_data = (final_data - min[0])/(max[0] - min[0] + 0.001)
+        target = reference[0] + (final_data - reference[0])*reference_rise
+        reference[0] = np.where(final_data > reference[0],
+                                np.minimum(target, reference[0]*reference_ceiling),
+                                reference[0]*(reference_fall if playing else 1.0))
+
+        final_data = final_data/(reference[0] + 1e-9)
+
+        # beat detection
+        beat = detector(magnitude[kick_band],
+                        float(np.mean(final_data[level_band])), time())
         
         current_volumes = []
 
@@ -157,30 +216,18 @@ def sound_process(state):
             current_volume = round(final_data[freq_ind],4)
 
             # apply threshold
-            if current_volume < thresholds[0]:
+            if current_volume < thresholds[i]:
                 current_volume = 0.0
 
             # apply gain
-            current_volume *= (state['s2l_gain']*4 + 1)
+            current_volume *= (gain*4 + 1)
 
             current_volumes.append(current_volume)
 
-            # process trigger (only for the first frequency)
-            if i == 0:
-                trigger_detected = 0.0
-                # if loud enough and armed is true, we detect a trigger
-                if current_volume > 0.5 and armed:
-                    trigger_detected = 1.0
-                    armed = False
-                    starttime = time()
-                elif current_volume < 0.5 and not armed and time()-starttime > 0.3:
-                    armed = True
-                else:
-                    pass
-
-                # read from shared memory to get eventual changes from oneshot
-                last_value = struct.unpack('d', sound_values.buf[32:40])[0]
-                last_value += trigger_detected
+        # read from shared memory to get eventual changes from oneshot
+        last_value = struct.unpack('d', sound_values.buf[32:40])[0]
+        if beat:
+            last_value += 1.0
 
         # Add trigger values
         current_volumes.append(last_value)
@@ -197,7 +244,10 @@ def sound_process(state):
         # send data to frontend
         data = {
             "type": "spectrum_data",
-            "data": final_data.tolist()
+            "data": {
+                "spectrum": final_data.tolist(),
+                "trigger": last_value,
+            }
         }
 
         udp_sock.sendto(json.dumps(data).encode('utf-8'), udp_dest)

@@ -220,6 +220,16 @@ async def normalize_s2l(
     await connection_manager.update_state()
     return {"message": "s2l normalized"}
 
+# turn the automatic rescaling on or off
+@router.post('/api/toggle-auto-normalize')
+async def toggle_auto_normalize(
+    state_manager = Depends(get_state_manager),
+    connection_manager = Depends(get_connection_manager)
+):
+    state_manager.toggle_auto_normalize()
+    await connection_manager.update_state()
+    return {"message": "auto normalize toggled"}
+
 # fire a oneshot in s2l
 @router.post('/api/oneshot/{oneshotIndex}')
 async def oneshot(

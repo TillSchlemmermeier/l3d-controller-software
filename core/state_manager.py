@@ -308,6 +308,11 @@ class StateManager:
         with self.state.lock:
             self.state['s2l_normalize'] = True
 
+    def toggle_auto_normalize(self):
+        """Toggle whether s2l rescales itself as the music changes"""
+        with self.state.lock:
+            self.state['s2l_auto_normalize'] = not self.state['s2l_auto_normalize']
+
     def fire_oneshot(self, oneshot_index: int):
         """Fire a oneshot"""
         with self.state.lock:
