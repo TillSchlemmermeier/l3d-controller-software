@@ -200,7 +200,7 @@ async function savePreset(startFrame: number, endFrame: number, gif: boolean = t
           interval: 0.06,
           sampleInterval: 10,
           repeat: 0
-        }, (obj: any) => {
+        }, (obj) => {
           if (!obj.error) {
             resolve(obj.image)
           } else {

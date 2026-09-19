@@ -1,5 +1,5 @@
 <template>
-  <div class="h-screen w-full bg-zinc-700 text-white flex flex-col">
+  <div class="h-full w-full bg-zinc-700 text-white flex flex-col">
     <!-- Gallery Header -->
     <div class="p-3 border-b border-zinc-600 shrink-0">
       <!-- Gradient Type Filter -->
@@ -26,7 +26,7 @@
     </div>
 
     <!-- Gallery Grid -->
-    <div class="flex-1 px-4 mt-2 mb-20 overflow-y-auto scrollbar-thin scrollbar-track-transparent scrollbar-thumb-zinc-500/50 hover:scrollbar-thumb-zinc-500/70 scrollbar-thumb-rounded-full scrollbar-track-rounded-full">
+    <div class="flex-1 min-h-0 px-4 mt-2 overflow-y-auto scrollbar-thin scrollbar-track-transparent scrollbar-thumb-zinc-500/50 hover:scrollbar-thumb-zinc-500/70 scrollbar-thumb-rounded-full scrollbar-track-rounded-full">
       <div 
         v-for="group in groupedGradients"
         :key="group.subtype"

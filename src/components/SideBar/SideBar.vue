@@ -1,6 +1,6 @@
 <template>
- <div class="h-screen w-[436px] bg-black select-none">
-    <div class="flex justify-around bg-zinc-800 pt-1">
+ <div class="h-screen w-[436px] bg-black select-none flex flex-col">
+    <div class="flex justify-around bg-zinc-800 pt-1 shrink-0">
       <button 
         @click="uiState.sidebarOption = 'console'"
         class="w-16 aspect-square flex items-center justify-center relative transition-all duration-200 ease-in-out rounded mx-1 active:scale-95"
@@ -85,13 +85,13 @@
         />
       </button>
     </div>
-    <div v-show="uiState.admin && uiState.sidebarOption === 'console'">
+    <div v-show="uiState.admin && uiState.sidebarOption === 'console'" class="flex-1 min-h-0">
       <ConsoleOutput />
     </div>
-    <div v-show="uiState.sidebarOption === 'palette'">
+    <div v-show="uiState.sidebarOption === 'palette'" class="flex-1 min-h-0">
       <ColorManager />
     </div>
-    <div v-show="uiState.sidebarOption === 'colors'">
+    <div v-show="uiState.sidebarOption === 'colors'" class="flex-1 min-h-0">
       <ColorGallery />
     </div>
   </div>

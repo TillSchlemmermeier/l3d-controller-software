@@ -357,6 +357,18 @@ interface Parameter {
   index: number
 }
 
+interface UpdateError {
+  preset: string
+  error: string
+}
+
+interface UpdateResults {
+  total: number
+  updated: number
+  deleted: number
+  errors: UpdateError[]
+}
+
 const props = defineProps<{
   elementName: string
   elementType: string
@@ -393,7 +405,7 @@ const insertPosition = ref(0)
 
 // Results
 const showResults = ref(false)
-const results = ref({
+const results = ref<UpdateResults>({
   total: 0,
   updated: 0,
   deleted: 0,

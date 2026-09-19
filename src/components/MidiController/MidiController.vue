@@ -1,16 +1,4 @@
 <template>
-  <!-- <div class="p-4 bg-zinc-800 rounded-lg border border-zinc-700 text-white">
-    <div class="flex flex-col gap-2 text-sm">
-      <div class="flex items-center gap-2">
-        <div :class="['w-3 h-3 rounded-full', isConnected ? 'bg-green-500' : 'bg-red-500']"></div>
-        <span>{{ statusMessage }}</span>
-        <span v-if="isConnected" class="text-xs text-zinc-400">({{ uiState.launchPadMode }})</span>
-      </div>
-      <div v-if="lastMessage" class="font-mono bg-zinc-900 p-2 rounded text-xs">
-        Last Input: {{ lastMessage }}
-      </div>
-    </div>
-  </div> -->
 </template>
 
 <script setup lang="ts">

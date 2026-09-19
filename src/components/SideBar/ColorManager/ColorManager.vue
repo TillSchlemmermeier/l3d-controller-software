@@ -1,5 +1,5 @@
 <template>
-  <div class="h-[1395px] bg-zinc-700 text-white font-medium flex flex-col">
+  <div class="h-full overflow-y-auto bg-zinc-700 text-white font-medium flex flex-col">
     <div class="p-6">
       <!-- Gradient Slider -->
       <GradientSlider
