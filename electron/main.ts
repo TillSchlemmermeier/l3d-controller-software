@@ -4,9 +4,13 @@ import path from 'node:path'
 import WebSocket from 'ws'
 import { exec, spawn, ChildProcess } from 'child_process'
 import { createSocket } from 'node:dgram'
+import fs from 'node:fs'
 
 const APP_ROOT = path.join(path.dirname(fileURLToPath(import.meta.url)), '..')
-const PROFILE = process.env.L3D_PROFILE ?? import.meta.env.VITE_PROFILE ?? 'dev'
+const PROFILE = app.isPackaged
+  ? 'show'
+  : (process.env.L3D_PROFILE ?? import.meta.env.VITE_PROFILE ?? 'dev')
+
 const IS_SHOW = PROFILE === 'show'
 const VITE_DEV_SERVER_URL = process.env['VITE_DEV_SERVER_URL']
 const RENDERER_DIST = path.join(APP_ROOT, 'dist')
@@ -52,8 +56,27 @@ function setupWebSocket(win: BrowserWindow) {
   })
 }
 
+function coreDir() {
+  return app.isPackaged
+    ? path.join(app.getPath('userData'), 'core')
+    : path.join(APP_ROOT, 'core')
+}
+
+// Refresh the mirror from the bundle, so a new build's code takes effect. The
+// database is the one file the user owns, so it is seeded once and then left.
+function syncPackagedCore() {
+  if (!app.isPackaged) return
+  const target = coreDir()
+  const db = path.join(target, 'l3d.db')
+  fs.cpSync(path.join(process.resourcesPath, 'core'), target, {
+    recursive: true,
+    filter: (from) => path.basename(from) !== 'l3d.db' || !fs.existsSync(db),
+  })
+}
+
 function setupPythonProcess(restore = false) {
-  const pythonPath = path.join(APP_ROOT, 'core')
+  syncPackagedCore()
+  const pythonPath = coreDir()
   pythonProcess = spawn('python3.12', ['-u', 'main.py', ...(restore ? ['--restore'] : [])], {
     cwd: pythonPath,
     stdio: ['ignore', 'pipe', 'pipe'],
@@ -213,7 +236,13 @@ app.on('window-all-closed', () => {
 app.whenReady().then(() => {
   setupPythonProcess()
   win = createWindow()
-  win.loadURL(VITE_DEV_SERVER_URL ?? path.join(RENDERER_DIST, 'index.html'))
+
+  if (VITE_DEV_SERVER_URL) {
+    win.loadURL(VITE_DEV_SERVER_URL)
+  } else {
+    win.loadFile(path.join(RENDERER_DIST, 'index.html'))
+  }
+
   // wait 2 seconds before setting up WebSocket to allow backend to start
   setTimeout(() => {
     if (win) {

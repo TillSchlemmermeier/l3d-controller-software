@@ -14,12 +14,12 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: '/admin',
     name: RouteNames.ADMIN_VIEW,
-    component: () => AdminView,
+    component: AdminView,
   },
   {
     path: '/remote',
     name: RouteNames.REMOTE_CONTROL,
-    component: () => RemoteControl,
+    component: RemoteControl,
   },
 ]
 

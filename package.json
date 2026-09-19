@@ -1,13 +1,14 @@
 {
   "name": "l3d-studio",
+  "desktopName": "l3d-studio.desktop",
   "private": true,
-  "version": "0.0.0",
+  "version": "2026.9.20",
   "type": "module",
   "scripts": {
     "dev": "vite",
     "l3d": "vite",
     "start": "electron --trace-warnings .",
-    "build": "vue-tsc && vite build && electron-builder",
+    "build": "vue-tsc && vite build && npm version $(date +%Y.%-m.%-d) --no-git-tag-version --allow-same-version && electron-builder",
     "preview": "vite preview"
   },
   "dependencies": {

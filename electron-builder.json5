@@ -1,15 +1,30 @@
 // @see - https://www.electron.build/configuration/configuration
 {
   "$schema": "https://raw.githubusercontent.com/electron-userland/electron-builder/master/packages/app-builder-lib/scheme.json",
-  "appId": "YourAppID",
+  "appId": "com.l3dstudio.app",
   "asar": true,
-  "productName": "YourAppName",
+  "productName": "L3D-Studio",
   "directories": {
     "output": "release/${version}"
   },
   "files": [
     "dist",
     "dist-electron"
+  ],
+  // The Python core ships beside the asar rather than inside it: a child
+  // process cannot be given a cwd inside an asar archive.
+  "extraResources": [
+    {
+      "from": "core",
+      "to": "core",
+      "filter": [
+        "**/*",
+        "!**/__pycache__/**",
+        "!Arduino/**",
+        "!state_backup.pkl",
+        "!**/*.log"
+      ]
+    }
   ],
   "mac": {
     "target": [
@@ -38,6 +53,9 @@
     "target": [
       "AppImage"
     ],
+    // syncDesktopName pairs with "desktopName" in package.json
+    "syncDesktopName": true,
+    "category": "AudioVideo",
     "artifactName": "${productName}-Linux-${version}.${ext}"
   }
 }
