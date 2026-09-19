@@ -1,8 +1,8 @@
 import time as time
 from rtmidi.midiutil import open_midiinput, open_midioutput
-from midi_translation import class_midi_translation
+from midi_translation import MidiTranslation
 
-class class_fighter:
+class MidiFighter:
     def __init__(self, state):
         """initializes the MIDI fighter"""
         self.midi_inputs = []
@@ -19,21 +19,10 @@ class class_fighter:
             midiout, portname_out = open_midioutput('Fighter')
             self.midi_outputs.append(midiout)
             print(f"Attached to Fighter: {portname_in}")
-        except:
-            print("No Fighter found")
+        except Exception as e:
+            print(f"No Fighter found: {e}")
 
-        # Try to open second Fighter (if available)
-        try:
-            # Note: open_midiinput might return the same port if not careful, 
-            # but usually it finds the first matching. 
-            # To properly support multiple, we'd need to iterate ports.
-            # For now, we'll assume the user might have a specific setup or this is a placeholder.
-            # A more robust way is to list ports and open by index.
-            pass 
-        except:
-            pass
-
-        self.midi_translation = class_midi_translation(state)
+        self.midi_translation = MidiTranslation(state)
         
         # Mapping: Column-major
         # Col 0: 0, 4, 8, 12

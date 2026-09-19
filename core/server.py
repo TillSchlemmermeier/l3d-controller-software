@@ -20,12 +20,22 @@ from connection_manager import ConnectionManager
 from routers import gradients_router, presets_router, state_router, system_router
 
 class UDPBroadcastProtocol(asyncio.DatagramProtocol):
+    """Datagrams from the sibling core processes."""
+
     def __init__(self, connection_manager):
         self.connection_manager = connection_manager
 
     def datagram_received(self, data, addr):
         if data == b'trigger_cube_update':
             self.connection_manager.notify_frame_ready()
+        elif data.startswith(b'update_key:'):
+            key, _, channel = data.removeprefix(b'update_key:').decode().partition(':')
+            asyncio.create_task(
+                self.connection_manager.update_key(key, int(channel) if channel else None))
+        elif data.startswith(b'update_element:'):
+            channel, _, index = data.removeprefix(b'update_element:').decode().partition(':')
+            asyncio.create_task(
+                self.connection_manager.update_element(int(channel), int(index)))
         else:
             asyncio.create_task(self.connection_manager.broadcast_udp(data))
 
@@ -99,7 +109,7 @@ class WebSocketAPIServer:
 
         # 5. Middleware
         self.app.add_middleware(
-            CORSMiddleware, allow_origins=["*"], allow_credentials=True,
+            CORSMiddleware, allow_origins=["*"], allow_credentials=False,
             allow_methods=["*"], allow_headers=["*"]
         )
 

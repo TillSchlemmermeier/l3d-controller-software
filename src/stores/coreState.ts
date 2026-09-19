@@ -2,7 +2,7 @@ import { defineStore } from 'pinia'
 import { useUiStateStore } from './uiState'
 import { coreState, AutopilotMode } from '../types/types'
 
-const baseUrl = 'http://0.0.0.0:8000/api'
+const baseUrl = 'http://localhost:8000/api'
 // shared secret for destructive endpoints
 const adminToken = import.meta.env.VITE_ADMIN_TOKEN || ''
 
@@ -114,6 +114,11 @@ export const useCoreStateStore = defineStore('coreState', {
     },
 
     async fireOneShot(index: number) {
+      // Flash the button
+      const uiState = useUiStateStore()
+      uiState.activeOneshot = index
+      setTimeout(() => { uiState.activeOneshot = 0 }, 150)
+
       const url = `${baseUrl}/oneshot/${index}`
       await this.callBackend(url)
     },

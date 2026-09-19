@@ -11,7 +11,7 @@ import {
   SortOption
    } from '../types/types.ts'
 
-const baseUrl = 'http://0.0.0.0:8000/api'
+const baseUrl = 'http://localhost:8000/api'
 // shared secret for destructive endpoints
 const adminToken = import.meta.env.VITE_ADMIN_TOKEN || ''
 
@@ -47,6 +47,7 @@ export const useUiStateStore = defineStore('uiState', {
     connectionStatus: 'connecting' as ConnectionStatus, // Electron-main <-> Python WS lifecycle
     connectionError: '',
     everConnected: false, // becomes true after the first successful connect
+    activeOneshot: 0, // which oneshot button is mid-flash, 0 for none
   }),
   actions: {
     // Keep the selected channel inside the range the core actually has

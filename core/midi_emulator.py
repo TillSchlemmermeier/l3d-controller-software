@@ -2,7 +2,7 @@ import tkinter as tk
 from tkinter import ttk
 import numpy as np
 import math
-from midi_translation import class_midi_translation
+from midi_translation import MidiTranslation
 from UltraDict import UltraDict
 import time
 
@@ -68,7 +68,7 @@ class MidiControllerEmulator:
         self.root = root
         self.state = state
         self.root.title("MIDI Controller Emulator")
-        self.midi_translation = class_midi_translation(state)
+        self.midi_translation = MidiTranslation(state)
 
         # Get screen dimensions and window size
         screen_width = 3840
@@ -205,7 +205,7 @@ class MidiControllerEmulator:
         self.update_fixed_midi()
 
     def update_fixed_midi(self):
-        for i in range(8):
+        for i in range(self.state['numberOfChannels']):
             # self.slider_values[i] = self.state.get(i, {}).get('brightness', 0)
             # self.upper_knobs[i] = self.state.get(i, {}).get('fade', 0)
             # self.button_states[i] = self.state.get(i, {}).get('IO', 0)

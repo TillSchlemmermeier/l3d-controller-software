@@ -7,7 +7,7 @@
       v-for="(oneshot, index) in oneshots" 
       :key="index"
       class="aspect-square w-10 h-10 rounded-md overflow-hidden transition-all duration-50 active:scale-95 flex-shrink-0"
-      :class="{ 'invert': activeOneshot !== index + 1 }"
+      :class="{ 'invert': uiState.activeOneshot !== index + 1 }"
       @click="handleGridClick(index + 1)"
     >
       <span v-html="oneshot.icon"></span>
@@ -16,11 +16,11 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch } from 'vue'
 import { useCoreStateStore } from '../../stores/coreState'
+import { useUiStateStore } from '../../stores/uiState'
 
 const coreState = useCoreStateStore()
-const activeOneshot = ref(0)
+const uiState = useUiStateStore()
 
 const oneshots: Array<{ key: string; icon: string }> = [
   {
@@ -88,14 +88,4 @@ const oneshots: Array<{ key: string; icon: string }> = [
 function handleGridClick(position: number) {
   coreState.fireOneShot(position)
 }
-
-watch(() => coreState.oneshot, (newValue) => {
-  if (newValue > 0) {
-    console.log(`Oneshot ${newValue} activated`)
-    activeOneshot.value = newValue
-    setTimeout(() => {
-      activeOneshot.value = 0
-    }, 150)
-  }
-})
 </script>

@@ -1,7 +1,6 @@
 import numpy as np
 from channel import class_channel
 from world2vox_fortran import world2vox_f as world2vox
-import requests
 import serial
 import time
 import copy
@@ -273,11 +272,6 @@ class rendering_engine:
                     state[9][8]['update'] = False
                 if reset_oneshot:
                     state['oneshot'] = 0
-            if reset_oneshot:
-                try:
-                    requests.get("http://localhost:8000/api/update_key/oneshot", timeout=0.1)
-                except requests.RequestException:
-                    pass
 
 
     def update_global_effects(self, globalEffects):

@@ -1,18 +1,18 @@
 import time as time
 from rtmidi.midiutil import open_midiinput,open_midioutput, open_midiport
-from midi_translation import class_midi_translation
+from midi_translation import MidiTranslation
 from UltraDict import UltraDict
 import numpy as np
 
 
-class class_launchcontrol:
+class LaunchControl:
     def __init__(self, state):
         """initializes the MIDI fighter"""
 
         self.midiin, self.portname_in = open_midiinput('LCXL3 1 MIDI In')
         self.midiout, self.portname_out = open_midioutput(1)
         self.midiin.set_callback(self.event)
-        self.midi_translation = class_midi_translation(state)
+        self.midi_translation = MidiTranslation(state)
         # self.list_available_devices()
 
     def list_available_devices(self):

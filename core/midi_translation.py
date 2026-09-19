@@ -1,16 +1,15 @@
-from copy import deepcopy
-import numpy as np
-import requests
-from UltraDict import UltraDict
-from threading import Timer
+import queue
+import socket
+import time
+from threading import Thread
 
-class class_midi_translation:
+class MidiTranslation:
 
-    # tolerance for soft-takeover, ~2 steps of the 0.01 value grid
-    PICKUP_EPS = 0.02
+    PICKUP_EPS = 0.02                # tolerance for soft-takeover
+    UDP_DEST = ("127.0.0.1", 8001)   # Address of the server's UDP bridge
+    NOTIFY_DELAY = 0.05              # approx 1.2 frames
 
     def __init__(self, state):
-        # self.state = UltraDict(name='state')
         self.state = state
         self.slider_values = [0, 0, 0, 0]
         self.knob_values = [0, 0, 0, 0]
@@ -20,24 +19,38 @@ class class_midi_translation:
         self.state_a = {}
         self.state_b = {}
         self.state_diff = {}
-        self.api_endpoint = "http://localhost:8000/api"
-        self.session = requests.Session()
 
-    def _send_request(self, url):
-        """Helper to run in the thread"""
-        try:
-            self.session.get(url)
-        except:
-            pass
+        # UI notifications go out as UDP datagrams to the server's bridge.
+        self.udp_sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        self.notifications = queue.Queue()
+        Thread(target=self.notify_loop, daemon=True).start()
 
-    def trigger_update(self, url):
+    def notify_loop(self):
+        """Send queued notifications, each after NOTIFY_DELAY.
+        The wait lets the rendering engine (40ms/frame) process the change and
+        write its display values back into the state before the UI reads them.
         """
-        Waits 50ms (approx 1.2 frames) before sending the update.
-        This allows the rendering engine (running at 40ms/frame) to
-        process the change and update the display values in the state.
-        """
-        Timer(0.05, self._send_request, args=[url]).start()
-        
+        while True:
+            due, payload = self.notifications.get()
+            delay = due - time.monotonic()
+            if delay > 0:
+                time.sleep(delay)
+            try:
+                self.udp_sock.sendto(payload, self.UDP_DEST)
+            except OSError as e:
+                print(f"Error sending notification {payload!r}: {e}")
+
+    def notify(self, payload):
+        self.notifications.put((time.monotonic() + self.NOTIFY_DELAY, payload.encode()))
+
+    def notify_key(self, key, channel=None):
+        """Tell the UI to re-read one state key, top level or inside a channel."""
+        self.notify(f'update_key:{key}' if channel is None else f'update_key:{key}:{channel}')
+
+    def notify_element(self, channel, index):
+        """Tell the UI to re-read one element's params."""
+        self.notify(f'update_element:{channel}:{index}')
+
     def caught(self, key, target, incoming):
         """Soft-takeover ("pickup") for non-motorized faders/knobs.
 
@@ -87,9 +100,9 @@ class class_midi_translation:
         # API calls outside the lock
         if channel <= 9:
             if index < 10:
-                self.trigger_update(f"{self.api_endpoint}/update_element/{channel}/{index}")
+                self.notify_element(channel, index)
             elif index == 10:
-                self.trigger_update(f"{self.api_endpoint}/update_key/{key}?channel={channel}")
+                self.notify_key(key, channel)
 
         elif channel == 10:
             if index == 0:
@@ -99,12 +112,12 @@ class class_midi_translation:
                     if midi_index < 4:
                         current_values[midi_index] = midi_value
                         self.state['s2l_values'] = current_values
-                        self.trigger_update(f"{self.api_endpoint}/update_key/s2l_values")
+                        self.notify_key('s2l_values')
 
                     elif midi_index >= 4:
                         current_thresholds[midi_index-4] = midi_value
                         self.state['s2l_thresholds'] = current_thresholds
-                        self.trigger_update(f"{self.api_endpoint}/update_key/s2l_thresholds")
+                        self.notify_key('s2l_thresholds')
                     self.state['s2l_update'] = True
 
             elif index == 1:
@@ -131,7 +144,7 @@ class class_midi_translation:
                 elif midi_index == 6:
                     pass
 
-                self.trigger_update(f"{self.api_endpoint}/update_key/{key}")
+                self.notify_key(key)
 
     def get_context_midi_values(self):
         with self.state.lock:
@@ -170,43 +183,51 @@ class class_midi_translation:
         midi_value = round((float(midi_value) / 127.0), 2)
         if midi_index < 8:
             try:
-                channel = self.state[midi_index]
-                if not self.caught((key, midi_index), channel[key], midi_value):
-                    return
-                channel[key] = midi_value
-                self.state[midi_index] = channel
-                self.trigger_update(f"{self.api_endpoint}/update_key/{key}?channel={midi_index}")
+                with self.state.lock:
+                    if midi_index >= self.state['numberOfChannels']:
+                        return
+                    channel = self.state[midi_index]
+                    if not self.caught((key, midi_index), channel[key], midi_value):
+                        return
+                    channel[key] = midi_value
+                    self.state[midi_index] = channel
+                self.notify_key(key, midi_index)
 
-            except:
-                pass
+            except Exception as e:
+                print(f"Error updating key {key} for channel {midi_index}: {e}")
 
         if midi_index == 8:
-            if not self.caught((key, 8), self.state[key], midi_value):
-                return
-            self.state[key] = midi_value
-            self.trigger_update(f"{self.api_endpoint}/update_key/{key}")
+            with self.state.lock:
+                if not self.caught((key, 8), self.state[key], midi_value):
+                    return
+                self.state[key] = midi_value
+            self.notify_key(key)
             
 
     def toggle_fixed(self, midi_index, key):
         midi_index = int(midi_index)
         key = str(key)
         if midi_index < 8:
+            if midi_index >= self.state['numberOfChannels']:
+                return
             try:
-                channel = self.state[midi_index]
-                channel[key] = not channel[key]
-                self.state[midi_index] = channel
-                self.trigger_update(f"{self.api_endpoint}/update_key/{key}?channel={midi_index}")
+                with self.state.lock:
+                    channel = self.state[midi_index]
+                    channel[key] = not channel[key]
+                    self.state[midi_index] = channel
+                self.notify_key(key, midi_index)
 
-            except:
-                pass
+            except Exception as e:
+                print(f"Error toggling key {key} for channel {midi_index}: {e}")
 
         if midi_index == 8:
-            self.state[key] = not self.state[key]
-            self.trigger_update(f"{self.api_endpoint}/update_key/{key}")
+            with self.state.lock:
+                self.state[key] = not self.state[key]
+            self.notify_key(key)
 
 
     def oneshot(self, midi_index):
         print("Oneshot triggered with index:", midi_index)
         midi_index = int(midi_index)
         self.state['oneshot'] = midi_index + 2
-        self.trigger_update(f"{self.api_endpoint}/update_key/oneshot")
+        self.notify_key('oneshot')
