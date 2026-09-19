@@ -9,7 +9,7 @@
             :group="{ 
               name: 'channel',
               pull: 'clone',
-              put: true,
+              put: ['channel'],
               revertClone: true
             }"
             :delay="50"
@@ -46,7 +46,7 @@
                 class="h-[85px] mx-3 mt-1 border-2 border-dashed border-zinc-500 rounded-lg"
                 :group="{ 
                   name: 'channel-copy',
-                  put: true, 
+                  put: ['channel'], 
                   pull: false,
                   revertClone: true
                 }"
@@ -87,7 +87,7 @@
                 :id="channelIndex"
                 @start="startEffectDrag(channelIndex)"
                 @end="endEffectDrag($event, channelIndex)"
-                :group="{ name: 'effects', pull: 'clone', revertClone: true }"
+                :group="{ name: 'effects', pull: 'clone', put: ['effects'], revertClone: true }"
                 :delay="50"
                 :delayOnTouchOnly="true"
                 :animation="300"
@@ -146,7 +146,7 @@
           id=9
           @start="startEffectDrag(9)"
           @end="endEffectDrag($event, 9)"
-          :group="{ name: 'effects', pull: 'clone', revertClone: true }"
+          :group="{ name: 'effects', pull: 'clone', put: ['effects'], revertClone: true }"
           :animation="300"
           :delay="50"
           :delayOnTouchOnly="true"
