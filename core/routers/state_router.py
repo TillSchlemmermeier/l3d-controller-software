@@ -1,6 +1,12 @@
-from fastapi import APIRouter, Request, Depends
+from typing import Annotated, Literal
+from fastapi import APIRouter, Request, Depends, Path
 
 router = APIRouter()
+
+FaderKey = Literal['brightness', 'fade']
+ToggleKey = Literal['IO']
+FaderValue = Annotated[float, Path(ge=0, le=1)]
+ChannelIndex = Annotated[int, Path(ge=0, le=7)]
 
 # Dependency functions
 def get_state_manager(request: Request):
@@ -18,8 +24,8 @@ def get_randomizer_queue(request: Request):
 # update a global key
 @router.post('/api/update-global-key/{key}/{value}')
 async def update_global_key(
-    key: str, 
-    value: float,
+    key: FaderKey,
+    value: FaderValue,
     state_manager = Depends(get_state_manager),
     connection_manager = Depends(get_connection_manager)
 ):
@@ -30,9 +36,9 @@ async def update_global_key(
 # update a channel key
 @router.post('/api/update-channel-key/{channelIndex}/{key}/{value}')
 async def update_channel_key(
-    channelIndex: int, 
-    key: str, 
-    value: float,
+    channelIndex: ChannelIndex,
+    key: FaderKey,
+    value: FaderValue,
     state_manager = Depends(get_state_manager),
     connection_manager = Depends(get_connection_manager)
 ):
@@ -42,8 +48,8 @@ async def update_channel_key(
 
 @router.post('/api/toggle-channel-key/{channelIndex}/{key}')
 async def toggle_channel_key(
-    channelIndex: int, 
-    key: str, 
+    channelIndex: ChannelIndex,
+    key: ToggleKey,
     state_manager = Depends(get_state_manager),
     connection_manager = Depends(get_connection_manager)
 ):
