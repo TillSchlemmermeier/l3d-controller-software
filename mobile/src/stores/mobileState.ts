@@ -6,7 +6,10 @@ export interface ChannelState {
   brightness: number
   fade: number
 }
-const API_BASE = '/api' 
+const API_BASE = '/api'
+
+// Every state-changing endpoint is POST
+const post = (path: string) => fetch(`${API_BASE}/${path}`, { method: 'POST' })
 
 export const useMobileStore = defineStore('mobile', {
   state: () => ({
@@ -60,53 +63,53 @@ export const useMobileStore = defineStore('mobile', {
         this.updateKey('IO', newValue, channel.id - 1)
         this.vibrate(20)
 
-        fetch(`${API_BASE}/toggle-channel-key/${channel.id - 1}/IO`)
+        post(`toggle-channel-key/${channel.id - 1}/IO`)
       }
     },
 
     selectChannel(channel: number) {
       this.selectedChannel = channel
-      fetch(`${API_BASE}/select/0/${channel - 1}/9`)
+      post(`select/0/${channel - 1}/9`)
       this.vibrate(10)
     },
 
     toggleAutopilot() {
-      fetch(`${API_BASE}/toggle-autopilot`)
+      post(`toggle-autopilot`)
       this.vibrate(20)
     },
 
     setAutopilotMode(mode?: string) {
       if (!mode) mode = 'next'
       this.vibrate(10)
-      fetch(`${API_BASE}/autopilot-mode/${mode}`)
+      post(`autopilot-mode/${mode}`)
     },
 
     triggerRandom() {
       if (this.triggerMode === 'color') {
-        fetch(`${API_BASE}/randomize-color/${this.selectedChannel - 1}`)
+        post(`randomize-color/${this.selectedChannel - 1}`)
       } else {
-        fetch(`${API_BASE}/trigger-randomizer/${this.triggerMode}`)
+        post(`trigger-randomizer/${this.triggerMode}`)
       }
       this.vibrate([30, 50, 30])
     },
 
     undoRandom() {
-      fetch(`${API_BASE}/undo-random`)
+      post(`undo-random`)
       this.vibrate(30)
     },
 
     normalizeS2L() {
-      fetch(`${API_BASE}/normalize-s2l`)
+      post(`normalize-s2l`)
       this.vibrate(20)
     },
 
     triggerOneshot() {
-      fetch(`${API_BASE}/oneshot/10`)
+      post(`oneshot/10`)
       this.vibrate(50)
     },
 
     strobeOneshot() {
-      fetch(`${API_BASE}/oneshot/6`)
+      post(`oneshot/6`)
       this.vibrate([10, 10, 10, 10])
     },
 
@@ -118,11 +121,11 @@ export const useMobileStore = defineStore('mobile', {
       if (this.selectedChannel > 0) {
         // Update channel-specific brightness
         this.updateKey('brightness', value, this.selectedChannel - 1)
-        fetch(`${API_BASE}/update-channel-key/${this.selectedChannel - 1}/brightness/${value}`)
+        post(`update-channel-key/${this.selectedChannel - 1}/brightness/${value}`)
       } else {
         // Update global brightness
         this.brightness = value
-        fetch(`${API_BASE}/update-global-key/brightness/${value}`)
+        post(`update-global-key/brightness/${value}`)
       }
     },
 
@@ -130,11 +133,11 @@ export const useMobileStore = defineStore('mobile', {
       if (this.selectedChannel > 0) {
         // Update channel-specific fade
         this.updateKey('fade', value, this.selectedChannel - 1)
-        fetch(`${API_BASE}/update-channel-key/${this.selectedChannel - 1}/fade/${value}`)
+        post(`update-channel-key/${this.selectedChannel - 1}/fade/${value}`)
       } else {
         // Update global fade
         this.fade = value
-        fetch(`${API_BASE}/update-global-key/fade/${value}`)
+        post(`update-global-key/fade/${value}`)
       }
     },
 
