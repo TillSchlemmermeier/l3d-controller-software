@@ -2,7 +2,7 @@ import random
 import threading
 import time
 import queue
-import requests
+import socket
 from db_manager import DatabaseManager
 from state_manager import StateManager
 import json
@@ -13,8 +13,9 @@ class Randomizer:
         self.state_manager = StateManager(state)
         self.state = state
 
-        self.api_endpoint = "http://localhost:8000/api"
-        self.url = f"{self.api_endpoint}/get-state"
+        # asks the server to push the whole state to the UI, over its UDP bridge
+        self.udp_sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        self.udp_dest = ("127.0.0.1", 8001) # Address of the server's UDP bridge
 
         # --- Thread Management ---
         self.current_cancel_event = None
@@ -24,6 +25,11 @@ class Randomizer:
 
         self.number_of_channels = 0
         self.context = [[0, 0], [0, 0], [0, 0], [0, 0]]
+
+
+    def notify_state(self):
+        """Have the server broadcast the full state. Fire-and-forget."""
+        self.udp_sock.sendto(b'update_state', self.udp_dest)
 
     def run_autopilot_loop(self, state, randomizer_queue):
         starttime = time.time()
@@ -120,7 +126,7 @@ class Randomizer:
 
         # wait 50 ms to make sure rendering engine has processed the state change
         time.sleep(0.05)
-        requests.get(self.url)
+        self.notify_state()
 
     def randomize_global(self) -> None:
         """Load random global preset"""
@@ -151,7 +157,7 @@ class Randomizer:
                         with self.state.lock:
                             self.state['numberOfChannels'] = max(self.state['numberOfChannels'], i + 1)
 
-                        requests.get(self.url)
+                        self.notify_state()
 
                         # Sleep in small chunks to allow faster interruption
                         for _ in range(30):
@@ -176,7 +182,7 @@ class Randomizer:
 
                         if channel_exists:
                             self.state_manager.remove_channel(i)
-                            requests.get(self.url)
+                            self.notify_state()
 
                             for _ in range(30):
                                 if cancel_event.is_set(): return
@@ -189,7 +195,7 @@ class Randomizer:
 
                     with self.state.lock:
                         self.state['midi_update'] = 1
-                    requests.get(self.url)
+                    self.notify_state()
                     print("Cleanup complete. Final numberOfChannels:", self.state['numberOfChannels'])
 
                 except Exception as e:
@@ -328,4 +334,4 @@ class Randomizer:
 
         # Update via state manager
         self.state_manager.update_color_manager(channel_idx, color_data)
-        requests.get(self.url)
+        self.notify_state()
