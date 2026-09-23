@@ -85,15 +85,26 @@ class ConnectionManager:
 
         for ws in list(self.active_websockets):
             settings = self.websocket_settings.get(ws)
-            if settings:
-                settings['count'] += 1
-                if settings['count'] % settings['skip'] != 0:
-                    continue
-            try:
-                await ws.send_bytes(binary_data)
-            except Exception:
-                # drop a dead/slow client instead of crashing the consumer
-                self.disconnect(ws)
+            if settings is None:
+                continue
+            settings['count'] += 1
+            if settings['count'] % settings['skip'] != 0:
+                continue
+            # A client still taking the previous frame simply misses this one.
+            # Nothing here waits for any client.
+            if settings.get('sending'):
+                continue
+            settings['sending'] = True
+            asyncio.create_task(self._send_frame_to(ws, settings, binary_data))
+
+    async def _send_frame_to(self, ws, settings, data):
+        try:
+            await ws.send_bytes(data)
+        except Exception:
+            # drop a dead client instead of crashing the consumer
+            self.disconnect(ws)
+        finally:
+            settings['sending'] = False
 
 
     # send the cube data to the frontend as JSON (legacy function)
