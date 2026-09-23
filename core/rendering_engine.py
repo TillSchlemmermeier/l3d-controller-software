@@ -37,7 +37,7 @@ class rendering_engine:
         self.connected = False     # Arduino connection status
         self.arduino_message_shown = False
 
-        self.header = [int(66), int(69), int(69), int(70)] # BEEF in ASCII
+        self.header = b'BEEF'  # marks the start of a frame for the Arduino
 
         # initialize global effects
         self.global_effects = []
@@ -123,13 +123,8 @@ class rendering_engine:
         Arduino
         """
 
-        try:
-            package = bytearray(self.header + self.get_cubedata())
-        except:
-            print(self.get_cubedata())
-
         if self.connected:
-            self.arduino.write(package)
+            self.arduino.write(self.header + self.get_cubedata())
         elif not self.arduino_message_shown:
             print('----------------------------------------------------\n' \
             'NO ARDUINO DETECTED, PLEASE CONNECT AND REBOOT CORE\n' \
@@ -301,11 +296,9 @@ class rendering_engine:
     
 
     def get_cubedata(self):
-        """get vox format from the internal stored world"""
-        list1 = world2vox(np.nan_to_num(np.clip(self.cubeworld[0, :, :, :], 0, 1)))
-        list2 = world2vox(np.nan_to_num(np.clip(self.cubeworld[1, :, :, :], 0, 1)))
-        list3 = world2vox(np.nan_to_num(np.clip(self.cubeworld[2, :, :, :], 0, 1)))
-        # stack this lists for each color, so that we have RGB ordering for
-        # each LED
-        liste = list(np.stack((list1, list2, list3)).flatten('F'))
-        return liste
+        """get vox format from the internal stored world, as bytes"""
+        world = np.nan_to_num(np.clip(self.cubeworld, 0, 1))
+        # one byte per colour, interleaved so each LED gets its RGB in a row.
+        # world2vox tops out at 254, so the uint8 cast never wraps
+        voxels = np.stack([world2vox(world[c]) for c in range(3)])
+        return voxels.flatten('F').astype(np.uint8).tobytes()
