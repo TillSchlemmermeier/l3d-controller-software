@@ -3,7 +3,7 @@ from channel import class_channel
 from world2vox_fortran import world2vox_f as world2vox
 import serial
 import time
-import copy
+import pickle
 import multiprocessing as mp
 # load shots
 from oneshots.s_sides import *
@@ -149,13 +149,14 @@ class rendering_engine:
         snapshot = None
         while retry_count < 3:
             try:
-                # Create copy of state to prevent UltraDict AssertionError
+                # Pickle every key under the lock. The bytes stay as a
+                # record of what was read, for the write-back at the end.
                 with state.lock:
                     state.apply_update()
-                    snapshot = copy.deepcopy(state.data)
-                    # shallow copy alternative:
-                    # snapshot = dict(state)
-                    self.should_send = snapshot['IO']
+                    read = {k: pickle.dumps(v, pickle.HIGHEST_PROTOCOL)
+                            for k, v in state.data.items()}
+                snapshot = {k: pickle.loads(b) for k, b in read.items()}
+                self.should_send = snapshot['IO']
                 break
 
             except AssertionError as e:
@@ -264,13 +265,17 @@ class rendering_engine:
         # adjust global brightness
         self.cubeworld *= snapshot['brightness']
 
+        # Write back only what nobody (MIDI, API) changed while this frame rendered.
+        # A skipped key keeps its update flag, so the next frame simply does the same work again.
         if pending_update or clear_color_update or reset_oneshot:
             with state.lock:
+                state.apply_update()
                 for key, value in pending_update.items():
-                    state[key] = value
+                    if pickle.dumps(state[key], pickle.HIGHEST_PROTOCOL) == read[key]:
+                        state[key] = value
                 if clear_color_update:
                     state[9][8]['update'] = False
-                if reset_oneshot:
+                if reset_oneshot and state['oneshot'] == snapshot['oneshot']:
                     state['oneshot'] = 0
 
 
