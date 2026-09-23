@@ -29,6 +29,8 @@ class UDPBroadcastProtocol(asyncio.DatagramProtocol):
     def datagram_received(self, data, addr):
         if data == b'trigger_cube_update':
             self.connection_manager.notify_frame_ready()
+        elif data == b'update_state':
+            asyncio.create_task(self.connection_manager.update_state())
         elif data.startswith(b'update_key:'):
             key, _, channel = data.removeprefix(b'update_key:').decode().partition(':')
             asyncio.create_task(

@@ -22,13 +22,14 @@ const isCapturing = ref(true)
 const capturingGlobalPreset = ref(false)
 
 const scatterplots = ref<(HTMLDivElement | null)[]>([])
-const geometries = ref<THREE.BufferGeometry[]>([])
+const geometries: THREE.BufferGeometry[] = []
 const renderers: THREE.WebGLRenderer[] = []
 const scenes: THREE.Scene[] = []
 const cameras: THREE.PerspectiveCamera[] = []
 const points: THREE.Points[] = []
 const colorAttributes: THREE.BufferAttribute[] = []
 let needsRender = true
+let frameId = 0
 let disposeCubeData: (() => void) | null = null
 
 
@@ -151,14 +152,15 @@ function initializeRenderers() {
     renderer.forceContextLoss()
     renderer.domElement.remove()
   })
-  geometries.value.forEach(geometry => geometry.dispose())
+  cancelAnimationFrame(frameId)
+  geometries.forEach(geometry => geometry.dispose())
   points.forEach(point => (point.material as THREE.Material).dispose())
 
   renderers.length = 0
   scenes.length = 0
   cameras.length = 0
   points.length = 0
-  geometries.value.length = 0
+  geometries.length = 0
   colorAttributes.length = 0
 
   for (let plot = 0; plot < 9; plot++) {
@@ -182,7 +184,7 @@ function initializeRenderers() {
     geometry.setAttribute('color', colorAttr)
     colorAttributes.push(colorAttr)
 
-    geometries.value.push(geometry)
+    geometries.push(geometry)
 
     const material = new THREE.PointsMaterial({
       size: 1.0,
@@ -202,7 +204,7 @@ function initializeRenderers() {
   }
  
   const animate = () => {
-    requestAnimationFrame(animate)
+    frameId = requestAnimationFrame(animate)
     // channel plots (0..7) redraw only when new cube data arrived
     if (needsRender) {
       for (let index = 0; index < 8; index++) {
@@ -246,6 +248,10 @@ watch(
 
 onUnmounted(() => {
   disposeCubeData?.()
+  cancelAnimationFrame(frameId)
+  geometries.forEach(geometry => geometry.dispose())
+  points.forEach(point => (point.material as THREE.Material).dispose())
+  circleTexture.dispose()
   renderers.forEach(renderer => {
     renderer.dispose()
     renderer.forceContextLoss()

@@ -11,9 +11,10 @@ import { onMounted, ref, onUnmounted } from 'vue'
 import * as THREE from 'three'
 
 const scatterplot = ref<HTMLDivElement | null>(null)
-const geometry = ref<THREE.BufferGeometry | null>(null)
 const rotateCube = ref(false)
-const pointsRef = ref<THREE.Points | null>(null)
+let rotatingPoints: THREE.Points | null = null
+let frameId = 0
+let teardown: (() => void) | null = null
 let colorAttribute: THREE.BufferAttribute | null = null
 let needsRender = true
 let disposeCubeData: (() => void) | null = null
@@ -82,9 +83,9 @@ function handleCubeData(data: any) {
 
 function handleRotateCube() {
   rotateCube.value = !rotateCube.value
-  if (pointsRef.value) {
-    pointsRef.value.rotation.y = 0
-    pointsRef.value.rotation.z = 0
+  if (rotatingPoints) {
+    rotatingPoints.rotation.y = 0
+    rotatingPoints.rotation.z = 0
   }
   needsRender = true
 }
@@ -104,15 +105,15 @@ onMounted(() => {
   }
 
   // Setup geometry
-  geometry.value = new THREE.BufferGeometry()
-  geometry.value.setAttribute(
+  const geometry = new THREE.BufferGeometry()
+  geometry.setAttribute(
     'position',
     new THREE.Float32BufferAttribute(createVertices(), 3)
   )
 
   colorAttribute = new THREE.Uint8BufferAttribute(new Uint8Array(3000), 3, true)
   colorAttribute.setUsage(THREE.DynamicDrawUsage)
-  geometry.value.setAttribute('color', colorAttribute)
+  geometry.setAttribute('color', colorAttribute)
 
   const material = new THREE.PointsMaterial({
     size: 0.8,
@@ -126,13 +127,23 @@ onMounted(() => {
     blending: THREE.AdditiveBlending
   })
   
-  const points = new THREE.Points(geometry.value, material)
-  pointsRef.value = points
+  const points = new THREE.Points(geometry, material)
+  rotatingPoints = points
   scene.add(points)
+
+  // everything that holds GPU memory or keeps the loop alive, released on unmount
+  teardown = () => {
+    cancelAnimationFrame(frameId)
+    geometry.dispose()
+    material.dispose()
+    circleTexture.dispose()
+    renderer.dispose()
+    renderer.forceContextLoss()
+  }
 
   // Animation loop: render only when something changed (new data or rotation)
   const animate = () => {
-    requestAnimationFrame(animate)
+    frameId = requestAnimationFrame(animate)
     if (rotateCube.value) {
       points.rotation.y += 0.01
       points.rotation.z += 0.005
@@ -149,6 +160,7 @@ onMounted(() => {
 
 onUnmounted(() => {
   disposeCubeData?.()
+  teardown?.()
 })
 </script>
 
