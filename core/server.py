@@ -1,4 +1,5 @@
 import os
+import sys
 import asyncio
 import multiprocessing as mp
 import numpy as np
@@ -108,6 +109,15 @@ class WebSocketAPIServer:
         self.udp_transport = None
 
         # 5. Middleware
+        # Every rejected request goes to stderr, 409 is left out ("preset exists, overwrite?")
+        @self.app.middleware("http")
+        async def log_rejected(request, call_next):
+            response = await call_next(request)
+            if response.status_code >= 400 and response.status_code != 409:
+                print(f"[api] {response.status_code} {request.method} {request.url.path}",
+                      file=sys.stderr)
+            return response
+
         self.app.add_middleware(
             CORSMiddleware, allow_origins=["*"], allow_credentials=False,
             allow_methods=["*"], allow_headers=["*"]

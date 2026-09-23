@@ -18,6 +18,10 @@
               : 'bg-transparent'
           ]"
         ></div>
+        <span
+          v-if="uiState.consoleError"
+          class="absolute top-1 right-1 w-4 h-4 rounded-full bg-red-500 ring-2 ring-zinc-800 animate-pulse"
+        ></span>
         <img
           :src="terminal"
           class="w-8 h-8 transition-transform duration-200"

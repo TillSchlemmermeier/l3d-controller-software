@@ -47,6 +47,7 @@ export const useUiStateStore = defineStore('uiState', {
     connectionStatus: 'connecting' as ConnectionStatus, // Electron-main <-> Python WS lifecycle
     connectionError: '',
     everConnected: false, // becomes true after the first successful connect
+    consoleError: false, // the core wrote to stderr while the console was out of sight
     activeOneshot: 0, // which oneshot button is mid-flash, 0 for none
   }),
   actions: {

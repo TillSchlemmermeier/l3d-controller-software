@@ -17,16 +17,23 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted, nextTick } from 'vue'
+import { ref, computed, watch, onMounted, onUnmounted, nextTick } from 'vue'
+import { useUiStateStore } from '../../stores/uiState'
 
 const MAX_LINES = 300
 
+const uiState = useUiStateStore()
 const consoleLines = ref<Array<{type: string, data: string}>>([])
+
+// An error while the console is out of sight flags the tab in the sidebar
+const visible = computed(() => uiState.admin && uiState.sidebarOption === 'console')
+watch(visible, (shown) => { if (shown) uiState.consoleError = false })
 const consoleContainer = ref<HTMLElement | null>(null)
 
 // The lines scroll so keeping the newest one in view is a scroll to the bottom.
 async function handleConsoleOutput(_: any, data: {type: string, data: string}) {
   consoleLines.value.push(data)
+  if (data.type === 'stderr' && !visible.value) uiState.consoleError = true
   if (consoleLines.value.length > MAX_LINES) {
     consoleLines.value = consoleLines.value.slice(-MAX_LINES)
   }
