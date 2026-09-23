@@ -149,7 +149,7 @@ async def select(
     connection_manager = Depends(get_connection_manager)
 ):
     state_manager.update_context(contextIndex, channelIndex, elementIndex)
-    await connection_manager.update_state()
+    await connection_manager.update_key('context')
     return {"message": "Selected"}
 
 # toggle autopilot
@@ -159,7 +159,7 @@ async def toggle_autopilot(
     connection_manager = Depends(get_connection_manager)
 ):
     state_manager.toggle_autopilot()
-    await connection_manager.update_state()
+    await connection_manager.update_key('autopilot')
     return {"message": "Autopilot toggled"}
 
 # change autopilot mode
@@ -170,7 +170,7 @@ async def autopilot_mode(
     connection_manager = Depends(get_connection_manager)
 ):
     state_manager.autopilot_mode(mode)
-    await connection_manager.update_state()
+    await connection_manager.update_key('random')
     return {"message": "Autopilot mode changed"}
 
 # trigger randomizer
@@ -213,7 +213,7 @@ async def toggle_cube(
     connection_manager = Depends(get_connection_manager)
 ):
     state_manager.toggle_cube()
-    await connection_manager.update_state()
+    await connection_manager.update_key('IO')
     return {"message": "Sending to Arduino toggled"}
 
 # normalize s2l
@@ -223,7 +223,7 @@ async def normalize_s2l(
     connection_manager = Depends(get_connection_manager)
 ):
     state_manager.normalize_s2l()
-    await connection_manager.update_state()
+    await connection_manager.update_key('s2l_normalize')
     return {"message": "s2l normalized"}
 
 # turn the automatic rescaling on or off
@@ -233,7 +233,7 @@ async def toggle_auto_normalize(
     connection_manager = Depends(get_connection_manager)
 ):
     state_manager.toggle_auto_normalize()
-    await connection_manager.update_state()
+    await connection_manager.update_key('s2l_auto_normalize')
     return {"message": "auto normalize toggled"}
 
 # fire a oneshot in s2l
