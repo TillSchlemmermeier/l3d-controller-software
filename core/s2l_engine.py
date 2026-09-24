@@ -7,7 +7,8 @@ import json
 import multiprocessing as mp
 from scipy.fftpack import fft, fftfreq
 from scipy.ndimage.filters import uniform_filter1d
-from time import time, sleep
+from time import time
+from collections import deque
 import struct
 
 class BeatDetector:
@@ -18,14 +19,15 @@ class BeatDetector:
     increase (the spectral flux) rather than the level.
     '''
 
-    HISTORY = 60        # frames of flux behind the moving bar, about 3 seconds
+    HISTORY = 3.0       # seconds of flux behind the moving bar
     K = 2.2             # how far above the recent median an onset has to sit
     LEVEL_GATE = 0.5    # normalised low band under which nothing counts
     REFRACTORY = 0.30   # seconds before the next beat can be called
 
-    def __init__(self):
-        self.previous = None
-        self.history = []
+    def __init__(self, hops_per_window, hops_per_second):
+        # deque: a list that is fast to add to and remove from at both ends.
+        self.previous = deque(maxlen=hops_per_window)
+        self.history = deque(maxlen=round(self.HISTORY*hops_per_second))
         self.last_beat = 0.0
         self.beats = 0
 
@@ -36,17 +38,15 @@ class BeatDetector:
         # track is mastered loud or quiet
         band = np.log1p(band)
 
-        if self.previous is None:
-            self.previous = band
+        if len(self.previous) < self.previous.maxlen:
+            self.previous.append(band)
             return False
 
         # only the rises. a note ending is not an onset
-        flux = float(np.sum(np.maximum(band - self.previous, 0)))
-        self.previous = band
+        flux = float(np.sum(np.maximum(band - self.previous[0], 0)))
+        self.previous.append(band)
 
         self.history.append(flux)
-        if len(self.history) > self.HISTORY:
-            self.history.pop(0)
 
         bar = np.median(self.history)*self.K
 
@@ -65,6 +65,15 @@ def sound_process(state):
     # initialize pyaudio
     sample_rate = 44100
     buffer_size = int(44100/20)
+    # audio ─────────────────────────────────────────────────▶ time
+    #          0 ms                  50 ms                   100 ms
+    # frame 1  [=======================]
+    # frame 2          [=======================]
+    # frame 3                  [=======================]
+    # frame 4                          [=======================]
+    #          |hop    |hop    |hop    |
+    hops_per_window = 3
+    hop = buffer_size//hops_per_window
 
     # Suppress stderr output from PyAudio initialization
     devnull = os.open(os.devnull, os.O_WRONLY) # open /dev/null
@@ -100,7 +109,7 @@ def sound_process(state):
         input_device_index = pulse_device_index,
         input = True,
         output = False,
-        frames_per_buffer = buffer_size)
+        frames_per_buffer = hop)
 
     # initialize frequency axis for spectrum
     freq_axis = np.logspace(0, 5, 60)
@@ -112,9 +121,9 @@ def sound_process(state):
     print('\nstarting sound loop\n')
 
     reference = [np.zeros(60)]  # one reference per bin, roughly the loudest it has been lately
-    reference_rise = 0.1        # climbs a tenth of the way to a new peak each frame
-    reference_ceiling = 1.05    # but never more than this much of itself
-    reference_fall = 0.9995     # and about 4 dB a minute back down
+    reference_rise = 1 - 0.9**(1/hops_per_window)       # climbs a tenth of the way to a new peak every 50 ms
+    reference_ceiling = 1.05**(1/hops_per_window)       # but never more than this much of itself
+    reference_fall = 0.9995**(1/hops_per_window)        # and about 4 dB a minute back down
 
     # the reference only gives way while music is actually playing. Read off the
     # balance between the bass and the rest of the spectrum: turning the volume
@@ -126,7 +135,8 @@ def sound_process(state):
     # trigger
     norm_value = 0.0
     last_value = 0.0
-    detector = BeatDetector()
+    detector = BeatDetector(hops_per_window, sample_rate/hop)
+    samples = np.frombuffer(stream.read(buffer_size), dtype=np.int16)
 
     # the bins a kick lives in. the raw fft axis, not the log one used for the
     # display, and taken before the smoothing that would flatten the transient.
@@ -149,6 +159,7 @@ def sound_process(state):
     def update():
         nonlocal norm_value
         nonlocal last_value
+        nonlocal samples
 
         # everything this frame needs from the state
         with state.lock:
@@ -173,14 +184,11 @@ def sound_process(state):
             reference[0][:] = 0
             print('s2l engine : reseting normalization')
 
-        # read raw data and unpack it
-        dump = stream.read(buffer_size)
-
-        # unpack from byte to numbers
-        data = np.frombuffer(dump, dtype=np.int16)
+        # the newest hop pushes the oldest out of the window
+        samples = np.concatenate((samples[hop:], np.frombuffer(stream.read(hop), dtype=np.int16)))
 
         # perform fourier transformation
-        FFT   = fft(data)
+        FFT   = fft(samples)
         magnitude = np.abs(FFT)
 
         # smoothing and interpolating to correct axis
@@ -252,6 +260,6 @@ def sound_process(state):
 
         udp_sock.sendto(json.dumps(data).encode('utf-8'), udp_dest)
 
+    # stream.read() waits for the next hop
     while True:
         update()
-        sleep(0.01)
