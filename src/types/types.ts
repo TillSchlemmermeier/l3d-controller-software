@@ -23,6 +23,14 @@ export type AutopilotMode = 'global' | 'all_channels' | 'all_elements' | 'random
 //   error        - the WebSocket reported an error
 export type ConnectionStatus = 'connecting' | 'connected' | 'disconnected' | 'error'
 
+// How the core addresses its state: channels are numbered, the global channel
+// on top of them is 'global'. Inside a channel effects are numbered and the
+// generator is 'generator'. The MIDI context can also point at a panel.
+export type ChannelKey = number | 'global'
+export type Section = ChannelKey | 'panel'
+export type Slot = number | 'generator' | 's2l' | 'dashboard'
+export type ContextEntry = [Section, Slot]
+
 export interface Effect {
   name: string
   IO: number
@@ -71,7 +79,7 @@ export interface coreState {
   s2l_auto_normalize: boolean
   s2l_gain: number
   s2l_update: boolean
-  context: number[][]
+  context: ContextEntry[]
   oneshot: number
   numberOfChannels: number
   channels: Channel[]

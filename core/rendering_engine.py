@@ -217,25 +217,25 @@ class rendering_engine:
                 self.cubeworld += brightness * self.channelworld[i, :, :, :]
 
         # check if global effects need to be updated
-        if snapshot[9]['update']:
-            pending_update[9] = self.update_global_effects(snapshot[9])
+        if snapshot['global']['update']:
+            pending_update['global'] = self.update_global_effects(snapshot['global'])
 
         # apply global effect 
-        for i in range(snapshot[9]['numberOfEffects']):
+        for i in range(snapshot['global']['numberOfEffects']):
             # Update effect state values if needed
-            if snapshot[9][i]['update']:
-                global_effects = snapshot[9]
+            if snapshot['global'][i]['update']:
+                global_effects = snapshot['global']
                 effect_state = self.global_effects[i].return_state()
                 for k in range(len(effect_state)):
                     global_effects[i]['params'][4*k:4*k+3] = effect_state[k][:3]
                 global_effects[i]['update'] = False
-                pending_update[9] = global_effects
-            self.cubeworld = self.global_effects[i](self.cubeworld, snapshot[9][i]['params'][3::4])
+                pending_update['global'] = global_effects
+            self.cubeworld = self.global_effects[i](self.cubeworld, snapshot['global'][i]['params'][3::4])
 
         # apply global color effect
-        if 8 in snapshot[9]:
-            if snapshot[9][8]['update']:
-                self.cubeworld = self.global_color_effect(self.cubeworld, snapshot[9][8])
+        if 'color' in snapshot['global']:
+            if snapshot['global']['color']['update']:
+                self.cubeworld = self.global_color_effect(self.cubeworld, snapshot['global']['color'])
                 clear_color_update = True
             else:
                 self.cubeworld = self.global_color_effect(self.cubeworld)
@@ -269,7 +269,7 @@ class rendering_engine:
                     if pickle.dumps(state[key], pickle.HIGHEST_PROTOCOL) == read[key]:
                         state[key] = value
                 if clear_color_update:
-                    state[9][8]['update'] = False
+                    state['global']['color']['update'] = False
                 if reset_oneshot and state['oneshot'] == snapshot['oneshot']:
                     state['oneshot'] = 0
 

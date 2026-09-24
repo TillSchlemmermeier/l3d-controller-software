@@ -99,7 +99,7 @@ def restore_from_backup(state):
         state.update(backup_state)
         state.apply_update()
 
-    channel_indices = list(range(state['numberOfChannels'])) + [9]
+    channel_indices = list(range(state['numberOfChannels'])) + ['global']
     for channel_key in channel_indices:
         StateManager(state).update_channel(channel_key)
     print("State restored from backup")
@@ -127,7 +127,7 @@ if __name__ == '__main__':
         "s2l_auto_normalize": True,
         "s2l_gain": 0.5,
         "s2l_update": True,
-        "context": [[0, 9], [0, 0], [0 ,0], [0 ,0]],
+        "context": [[0, 'generator'], [0, 0], [0, 0], [0, 0]],
         "midi_update": 0,
         "oneshot": 0,
         "numberOfChannels": 1,
@@ -136,15 +136,13 @@ if __name__ == '__main__':
             "brightness": 0.9,
             "fade": 0.0,
             "update": True,
-            # generator element
-            9: {
+            "generator": {
                 "name": "g_cube",
                 "update": True,
                 "params": ['size', 'size', 4, 1.0, 'surface', 'sides', 'Off', 0.45, 'channel', 'channel', 'noS2L', 0.0, 'speed', 'speed', 0, 0.0]
             },
             "numberOfEffects": 0,
-            # color element
-            8: {
+            "color": {
                 'gradient': [[0, '#FF9F3F'], [100, '#0080FF']],
                 'gradientType': 'linear',
                 'speed': 0,
@@ -157,8 +155,8 @@ if __name__ == '__main__':
             }
         },
 
-        # global effects channel
-        9: {
+        # effects applied on top of all channels
+        "global": {
             "update": False,
             "numberOfEffects": 0,
       },

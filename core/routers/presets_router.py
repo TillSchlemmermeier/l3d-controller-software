@@ -4,6 +4,7 @@ from fastapi import APIRouter, Request, Form, File, UploadFile, Depends, HTTPExc
 from fastapi.responses import JSONResponse
 
 from routers.auth import require_admin
+from routers.state_router import ChannelKey
 
 router = APIRouter()
 
@@ -168,7 +169,7 @@ async def toggle_element_active(type: str, element: str, db = Depends(get_db)):
 async def load(
     type: str, 
     preset: str, 
-    channel: int, 
+    channel: ChannelKey,
     effectIndex: int, 
     element: str,
     db = Depends(get_db),
@@ -184,13 +185,17 @@ async def load(
                 "brightness": 1.0,
                 "fade": 0.0,
                 "update": False,
-                9: {"name": "blank"},
+                "generator": {"name": "blank"},
                 "numberOfEffects": 0
             }
             state_manager.load_generator(channel, preset_data, this_channel)
         else:
             state_manager.load_generator(channel, preset_data)
     elif type == 'effect':
+        with state.lock:
+            count = state[channel]['numberOfEffects']
+        if effectIndex > count:
+            raise HTTPException(status_code=422, detail=f'effect slot {effectIndex} is past the end ({count} effects)')
         state_manager.load_effect(channel, effectIndex, preset_data)
     elif type == 'channel':
         state_manager.load_channel(channel, preset_data)
@@ -205,7 +210,7 @@ async def load(
 async def save(
     preset: str = Form(...),
     type: str = Form(...),
-    channel: int = Form(...),
+    channel: ChannelKey = Form(...),
     index: int = Form(...),
     preview: UploadFile = File(None),
     force: bool = Form(False),
@@ -217,7 +222,7 @@ async def save(
     # Determine the correct element name based on type
     element = 'presets'  # default for channel and global
     if type == 'generator':
-        element = state[channel][9]['name']
+        element = state[channel]['generator']['name']
     elif type == 'effect':
         element = state[channel][index]['name']
 
@@ -233,7 +238,7 @@ async def save(
     elif type == 'global':
         data = dict(state)
     elif type == 'generator':
-        data = dict(state[channel][9])
+        data = dict(state[channel]['generator'])
     elif type == 'effect':
         data = dict(state[channel][index])
 

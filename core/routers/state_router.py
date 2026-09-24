@@ -1,5 +1,6 @@
-from typing import Annotated, Literal
-from fastapi import APIRouter, Request, Depends, Path
+from typing import Annotated, Literal, Union
+from fastapi import APIRouter, Request, Depends, Path, HTTPException
+from pydantic import Field
 
 router = APIRouter()
 
@@ -7,6 +8,10 @@ FaderKey = Literal['brightness', 'fade']
 ToggleKey = Literal['IO']
 FaderValue = Annotated[float, Path(ge=0, le=1)]
 ChannelIndex = Annotated[int, Path(ge=0, le=7)]
+
+ChannelKey = Union[Annotated[int, Field(ge=0, le=7)], Literal['global']]
+Section = Union[ChannelKey, Literal['panel']]
+Slot = Union[Annotated[int, Field(ge=0)], Literal['generator', 's2l', 'dashboard']]
 
 # Dependency functions
 def get_state_manager(request: Request):
@@ -61,7 +66,7 @@ async def toggle_channel_key(
 @router.delete('/api/remove/{type}/{channelIndex}/{effectIndex}')
 async def remove(
     type: str, 
-    channelIndex: int, 
+    channelIndex: ChannelKey,
     effectIndex: int,
     state_manager = Depends(get_state_manager),
     connection_manager = Depends(get_connection_manager),
@@ -103,7 +108,7 @@ async def movechannel(
 # move an effect
 @router.post('/api/moveeffect/{channelIndex}/{fromIndex}/{toIndex}')
 async def moveeffect(
-    channelIndex: int, 
+    channelIndex: ChannelKey,
     fromIndex: int, 
     toIndex: int,
     state_manager = Depends(get_state_manager),
@@ -116,9 +121,9 @@ async def moveeffect(
 # copy an effect
 @router.post('/api/copyeffect/{from_channel}/{from_effectIndex}/{to_channel}/{to_effectIndex}')
 async def copyeffect(
-    from_channel: int, 
+    from_channel: ChannelKey,
     from_effectIndex: int, 
-    to_channel: int, 
+    to_channel: ChannelKey,
     to_effectIndex: int,
     state_manager = Depends(get_state_manager),
     connection_manager = Depends(get_connection_manager)
@@ -130,7 +135,7 @@ async def copyeffect(
 # toggle an effect
 @router.post('/api/toggleeffect/{channelIndex}/{effectIndex}')
 async def toggleeffect(
-    channelIndex: int, 
+    channelIndex: ChannelKey,
     effectIndex: int,
     state_manager = Depends(get_state_manager),
     connection_manager = Depends(get_connection_manager)
@@ -143,8 +148,8 @@ async def toggleeffect(
 @router.post('/api/select/{contextIndex}/{channelIndex}/{elementIndex}')
 async def select(
     contextIndex: int, 
-    channelIndex: int, 
-    elementIndex: int,
+    channelIndex: Section,
+    elementIndex: Slot,
     state_manager = Depends(get_state_manager),
     connection_manager = Depends(get_connection_manager)
 ):
@@ -189,12 +194,12 @@ async def trigger_randomizer(
 # randomize color for a channel
 @router.post('/api/randomize-color/{channelIndex}')
 async def randomize_color(
-    channelIndex: int,
+    channelIndex: ChannelKey,
     state_manager = Depends(get_state_manager),
     randomizer_queue = Depends(get_randomizer_queue),
 ):
     state_manager.save_state_for_undo()
-    randomizer_queue.put(channelIndex)
+    randomizer_queue.put(('color', channelIndex))
     return {"message": "Randomizer triggered"}
 
 @router.post('/api/undo-random')

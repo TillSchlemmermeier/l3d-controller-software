@@ -8,7 +8,7 @@
       :key="index"
       class="aspect-square w-10 h-10 rounded-md overflow-hidden transition-all duration-50 active:scale-95 flex-shrink-0"
       :class="{ 'invert': uiState.activeOneshot !== index + 1 }"
-      @click="handleGridClick(index + 1)"
+      @click.stop="handleGridClick(index + 1)"
     >
       <span v-html="oneshot.icon"></span>
     </button>

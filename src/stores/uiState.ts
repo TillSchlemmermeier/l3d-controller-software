@@ -3,6 +3,7 @@ import {
   AdminElements,
   AdminPresets,
   AutopilotMode,
+  ChannelKey,
   ConnectionStatus,
   ElementInfo,
   GradientPreset,
@@ -17,11 +18,11 @@ const adminToken = import.meta.env.VITE_ADMIN_TOKEN || ''
 
 export const useUiStateStore = defineStore('uiState', {
   state: () => ({
-    draggedChannelIndex: 0,
+    draggedChannelIndex: 0 as ChannelKey,
     lastTypeDragged: 'channel',
     dialogOpen: false,
     elementType: 'generator',
-    channelIndex: 0,
+    channelIndex: 0 as ChannelKey, // a channel, or 'global'
     effectIndex: 0,
     overlayItems: [],
     overlayPresets: [] as Preset[],
@@ -53,7 +54,7 @@ export const useUiStateStore = defineStore('uiState', {
   actions: {
     // Keep the selected channel inside the range the core actually has
     clampChannelIndex(channelCount: number) {
-      if (this.channelIndex === 9) return
+      if (this.channelIndex === 'global') return
       if (channelCount <= 0) {
         this.channelIndex = 0
         return
@@ -180,7 +181,7 @@ export const useUiStateStore = defineStore('uiState', {
       return response
     },
 
-    async clearGradient(channel: number) {
+    async clearGradient(channel: ChannelKey) {
       const url = `clear-gradient/${channel}`
       await this.callBackend(url, 'POST')
     },

@@ -263,17 +263,17 @@ class MidiControllerEmulator:
     def update_controls_from_midi(self):
         # Get current context from state
         channel, index = self.state['context'][0]
-        if channel != 9 and channel >= self.state['numberOfChannels']:
+        if isinstance(channel, int) and channel >= self.state['numberOfChannels']:
             print(f"Invalid channel: {channel}")
             return
-        if index != 9 and index >= self.state[channel]['numberOfEffects']:
+        if channel != 'panel' and isinstance(index, int) and index >= self.state[channel]['numberOfEffects']:
             print(f"Invalid index: {index}")
             return
             
         for i in range(8):
             self.knob_values[i] = 0
 
-        if channel <= 9:
+        if channel != 'panel':
             try:
                 params = self.state[channel][index]['params']
                 for i in range(len(params) // 4):
@@ -285,7 +285,7 @@ class MidiControllerEmulator:
             except (KeyError, IndexError) as e:
                 print(f"Error updating controls: {e}")
 
-        elif channel == 10:
+        elif index == 's2l':
             try:
                 for i in range(8):
                     midi_value = self.state['s2l_values'][i] if i < 4 else self.state['s2l_thresholds'][i-4]

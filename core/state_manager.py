@@ -1,14 +1,14 @@
 from copy import deepcopy
 
+# a channel of the state: 0..7, or 'global' for global effects
+ChannelKey = int | str
+
 class StateManager:
     def __init__(self, state):
         self.state = state
         self._max_retries = 3
         self.history = []
         self.max_history_size = 10
-
-        self.api_endpoint = "http://localhost:8000/api"
-        self.url = f"{self.api_endpoint}/get-state"
 
 
     def safe_state_operation(self, operation):
@@ -51,16 +51,16 @@ class StateManager:
         print(f"State restored. History size: {len(self.history)}")
         return True
 
-    def update_channel(self, channel_key):
+    def update_channel(self, channel_key: ChannelKey):
         def _update():
             channel = dict(self.state[channel_key])  # Local copy
             channel['update'] = 1
-            if channel_key != 9:
-                channel[9]['update'] = 1
+            if 'generator' in channel:
+                channel['generator']['update'] = 1
             for i in range(channel['numberOfEffects']):
                 channel[i]['update'] = 1
-            if 8 in channel:
-                channel[8]['update'] = 1
+            if 'color' in channel:
+                channel['color']['update'] = 1
             self.state[channel_key] = channel
 
         self.safe_state_operation(_update)
@@ -72,15 +72,15 @@ class StateManager:
                 this_channel = self.state[channel]
             
             this_channel['update'] = 1
-            this_channel[9] = preset_data
-            this_channel[9]['update'] = 1
+            this_channel['generator'] = preset_data
+            this_channel['generator']['update'] = 1
             
             if channel == self.state['numberOfChannels']:
                 self.state['numberOfChannels'] += 1
             
             self.state[channel] = this_channel
 
-    def load_effect(self, channel: int, effect_index: int, preset_data: dict):
+    def load_effect(self, channel: ChannelKey, effect_index: int, preset_data: dict):
         """Load an effect preset into a channel"""
         with self.state.lock:
             this_channel = self.state[channel]
@@ -110,8 +110,8 @@ class StateManager:
             # for key, value in preset_data.items():
             #     self.state[key] = value
             self.state["context"] = preset_data["context"]
-            self.state[9] = preset_data[9]
-            self.update_channel(9)
+            self.state['global'] = preset_data['global']
+            self.update_channel('global')
 
             if instant:
                 self.state['numberOfChannels'] = preset_data['numberOfChannels']
@@ -141,7 +141,7 @@ class StateManager:
             self.state['numberOfChannels'] -= 1
             self.state['midi_update'] = 1
 
-    def remove_effect(self, channel_index: int, effect_index: int):
+    def remove_effect(self, channel_index: ChannelKey, effect_index: int):
         """Remove an effect from a channel"""
         with self.state.lock:
             channel = self.state[channel_index]
@@ -188,7 +188,7 @@ class StateManager:
                 self.update_channel(i)
             self.state['midi_update'] = 1
 
-    def move_effect(self, channel_index: int, from_index: int, to_index: int):
+    def move_effect(self, channel_index: ChannelKey, from_index: int, to_index: int):
         """Move an effect within a channel to a new position"""
         with self.state.lock:
             channel = self.state[channel_index]
@@ -214,7 +214,7 @@ class StateManager:
             
             self.state[channel_index] = channel
 
-    def copy_effect(self, from_channel: int, from_effect_index: int, to_channel: int, to_effect_index: int):
+    def copy_effect(self, from_channel: ChannelKey, from_effect_index: int, to_channel: ChannelKey, to_effect_index: int):
         """Copy an effect from one channel to another"""
         with self.state.lock:
             effect = deepcopy(self.state[from_channel][from_effect_index])
@@ -230,7 +230,7 @@ class StateManager:
             self.state[to_channel] = this_channel
             self.update_channel(to_channel)
 
-    def toggle_effect(self, channel_index: int, effect_index: int):
+    def toggle_effect(self, channel_index: ChannelKey, effect_index: int):
         """Toggle an effect's IO state"""
         with self.state.lock:
             channel = self.state[channel_index]
@@ -261,23 +261,23 @@ class StateManager:
             self.state[channel_index] = channel
             self.state['midi_update'] = 1
 
-    def update_color_manager(self, channel_index: int, color_data: dict) -> bool:
+    def update_color_manager(self, channel_index: ChannelKey, color_data: dict) -> bool:
         """Update color manager settings for a specific channel"""
         with self.state.lock:
             channel = self.state[channel_index]
-            channel[8] = color_data.copy()
-            channel[8]['update'] = 1
+            channel['color'] = color_data.copy()
+            channel['color']['update'] = 1
             self.state[channel_index] = channel
             self.state['midi_update'] = 1
 
             return True
 
-    def clear_gradient(self, channel_index: int):
+    def clear_gradient(self, channel_index: ChannelKey):
         """Clear gradient settings for a specific channel"""
         with self.state.lock:
             channel = self.state[channel_index]
-            if 8 in channel:
-                del channel[8]
+            if 'color' in channel:
+                del channel['color']
                 self.state[channel_index] = channel
 
     def toggle_autopilot(self):

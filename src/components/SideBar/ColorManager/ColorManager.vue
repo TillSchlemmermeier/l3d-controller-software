@@ -166,7 +166,7 @@ const gradientCss = computed(() => {
 
 function loadColorData() {
   const channelIndex = uiState.channelIndex
-  const colorData = channelIndex === 9
+  const colorData = channelIndex === 'global'
     ? coreState.globalColor
     : coreState.channels[channelIndex]?.color
 
@@ -287,7 +287,7 @@ function saveGradient(subtype: string) {
 watch(
   [
     () => uiState.channelIndex,
-    () => uiState.channelIndex === 9 ? coreState.globalColor : coreState.channels[uiState.channelIndex]?.color
+    () => uiState.channelIndex === 'global' ? coreState.globalColor : coreState.channels[uiState.channelIndex]?.color
   ],
   () => {
     loadColorData()

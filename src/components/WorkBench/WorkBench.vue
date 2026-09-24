@@ -27,12 +27,12 @@
                     @click="toggleDialog('channel', index)"
                   />
                 </div>
-                <div class="relative" v-longpress="() => handleDoubleClick(index, 9)">
+                <div class="relative" v-longpress="() => handleDoubleClick(index, 'generator')">
                   <GeneratorComponent
                     :channel="index"
-                    :context="whichContext(index, 9)"
-                    @click="handleClick(index, 9)"
-                    @dblclick="handleDoubleClick(index, 9)"
+                    :context="whichContext(index, 'generator')"
+                    @click="handleClick(index, 'generator')"
+                    @dblclick="handleDoubleClick(index, 'generator')"
                   />
                 </div>
               </div>
@@ -122,11 +122,11 @@
       </div>
       <div class="col-span-1 flex flex-col pr-2">
         <CubeParameters 
-          @click="toggleDialog('global', 9)"
+          @click="toggleDialog('global', 'global')"
         />
         <div
           class="px-2 my-2"
-          @click="uiState.channelIndex = 9">
+          @click="uiState.channelIndex = 'global'">
           <div
             class="h-6 w-full rounded border relative"
             :class="coreState.globalColor?.gradient ? 'border-zinc-500' : 'border-zinc-600 bg-zinc-700'"
@@ -135,7 +135,7 @@
           >
             <!-- Animated ring overlay -->
             <div
-              v-if="uiState.channelIndex === 9"
+              v-if="uiState.channelIndex === 'global'"
               class="absolute inset-0 ring-3 ring-white ring-offset-3 ring-offset-zinc-700 rounded pointer-events-none animate-pulse"
             ></div>
           </div>
@@ -143,9 +143,9 @@
         <draggable
           v-model="coreState.globalEffects"
           item-key="effect"
-          id=9
-          @start="startEffectDrag(9)"
-          @end="endEffectDrag($event, 9)"
+          id="global"
+          @start="startEffectDrag('global')"
+          @end="endEffectDrag($event, 'global')"
           :group="{ name: 'effects', pull: 'clone', put: ['effects'], revertClone: true }"
           :animation="300"
           :delay="50"
@@ -154,13 +154,13 @@
           :class="{ 'min-h-[25vh] pb-20 bg-zinc-600/20 rounded-lg': uiState.isDragging }"
         >
           <template #item="{ index }">
-            <div v-longpress="() => handleDoubleClick(9, index)">
+            <div v-longpress="() => handleDoubleClick('global', index)">
               <EffectComponent
-                :channel="9"
+                channel="global"
                 :effectNumber="index"
-                :context="whichContext(9, index)"
-                @click="handleClick(9, index)"
-                @dblclick="handleDoubleClick(9, index)"
+                :context="whichContext('global', index)"
+                @click="handleClick('global', index)"
+                @dblclick="handleDoubleClick('global', index)"
               />
             </div>
           </template>
@@ -168,7 +168,7 @@
         <div
           class="flex items-center justify-center h-[75px] m-3 border-2 border-dashed border-zinc-500 rounded-lg text-4xl text-zinc-500"
           @click="
-            newEffect(9, coreState.globalEffects.length)
+            newEffect('global', coreState.globalEffects.length)
           "
         >
           +
@@ -186,6 +186,7 @@ import { ref } from 'vue'
 import draggable from 'vuedraggable'
 import { useCoreStateStore } from '../../stores/coreState'
 import { useUiStateStore } from '../../stores/uiState'
+import type { ChannelKey, Section, Slot } from '../../types/types'
 import GeneratorComponent from './GeneratorComponent.vue'
 import EffectComponent from './EffectComponent.vue'
 import ChannelParameters from './ChannelParameters.vue'
@@ -201,27 +202,24 @@ const oldIndex = ref(0)
 const newIndex = ref(0)
 const newChannel = ref([])
 
-function handleClick(index: number, element_id: number) {
+function handleClick(index: ChannelKey, element_id: Slot) {
   uiState.channelIndex = index
   if(uiState.deleteActive) {
-    if (element_id == 9) {
-      coreState.removeChannel(index)
-      uiState.channelIndex -= 1
+    if (element_id === 'generator') {
+      // deleting a generator removes its channel; select the one before it
+      coreState.removeChannel(index as number)
+      uiState.channelIndex = Math.max(0, (index as number) - 1)
       selectParameters(uiState.channelIndex, element_id)
     } else {
-      if (index == 9) {
-        coreState.removeEffect(9, element_id)
-      } else {
-        coreState.removeEffect(index, element_id)
-      }
+      coreState.removeEffect(index, element_id as number)
     }
     uiState.deleteActive = false
   } else {
     if (uiState.shiftActivated) {
-      if (element_id == 9) {
+      if (element_id === 'generator') {
         selectParameters(index, element_id)
       } else {
-        coreState.toggleEffect(index, element_id)
+        coreState.toggleEffect(index, element_id as number)
       }
     } else {
       selectParameters(index, element_id)
@@ -229,16 +227,16 @@ function handleClick(index: number, element_id: number) {
   }
 }
 
-function handleDoubleClick(index: number, element_id: number) {
-  if (element_id == 9) {
-    newGenerator(index)
+function handleDoubleClick(index: ChannelKey, element_id: Slot) {
+  if (element_id === 'generator') {
+    newGenerator(index as number)
   } else {
-    newEffect(index, element_id)
+    newEffect(index, element_id as number)
   }
 }
 
 // open the selection dialog for generators, effects or presets
-function toggleDialog(type: string, channelIndex: number, effectIndex?: number) {
+function toggleDialog(type: string, channelIndex: ChannelKey, effectIndex?: number) {
   uiState.elementType = type
   uiState.channelIndex = channelIndex
   if (effectIndex !== undefined && effectIndex !== null) {
@@ -248,7 +246,7 @@ function toggleDialog(type: string, channelIndex: number, effectIndex?: number) 
 }
 
 // open the dialog to add a new effect to a channel
-function newEffect(channelIndex: number, effectIndex: number) {
+function newEffect(channelIndex: ChannelKey, effectIndex: number) {
   uiState.elementType = 'effect'
   uiState.channelIndex = channelIndex
   uiState.effectIndex = effectIndex
@@ -259,22 +257,21 @@ function newEffect(channelIndex: number, effectIndex: number) {
 function newGenerator(channelIndex: number) {
   uiState.elementType = 'generator'
   uiState.channelIndex = channelIndex
-  uiState.effectIndex = 9
+  uiState.effectIndex = 0
   uiState.dialogOpen = true
 }
 
 // select an effect or generator to change its parameters with the MIDI Controller
-function selectParameters(channelIndex: number, index: number) {
+function selectParameters(channelIndex: Section, index: Slot) {
   const contextIndex = uiState.contextIndex
   if (index !== undefined && index !== null) {
     coreState.select(contextIndex, channelIndex, index)
   } else {
-    // if a generator is selected, we give it the index 9
-    coreState.select(contextIndex, channelIndex, 9)
+    coreState.select(contextIndex, channelIndex, 'generator')
   }
 }
 
-function whichContext(channelIndex: number, effectIndex: number) {
+function whichContext(channelIndex: Section, effectIndex: Slot) {
   if (coreState.context[0][0] === channelIndex && coreState.context[0][1] === effectIndex) {
     return 0
   } else if (coreState.context[1][0] === channelIndex && coreState.context[1][1] === effectIndex) {
@@ -315,14 +312,14 @@ function endColumnDrag(event: {
 }
 
 // start dragging an effect
-function startEffectDrag(channelIndex: number) {
+function startEffectDrag(channelIndex: ChannelKey) {
   uiState.draggedChannelIndex = channelIndex
   uiState.lastTypeDragged = 'effect'
   uiState.isDragging = true
 }
 
 // start dragging an effect
-function endEffectDrag(event: { to: any, oldIndex: number; newIndex: number }, channelIndex: number) {
+function endEffectDrag(event: { to: any, oldIndex: number; newIndex: number }, channelIndex: ChannelKey) {
   // Skip processing if dropped in trash zone
   uiState.isDragging = false
   if (event.to.dataset.name === 'trashZone') {
@@ -333,7 +330,8 @@ function endEffectDrag(event: { to: any, oldIndex: number; newIndex: number }, c
     console.log('Invalid drop target')
     return
   }
-  const newChannelIndex = Number(event.to.attributes.id.nodeValue)
+  const id = event.to.attributes.id.nodeValue
+  const newChannelIndex: ChannelKey = id === 'global' ? 'global' : Number(id)
   console.log(newChannelIndex, uiState.draggedChannelIndex)
   
   if (newChannelIndex !== uiState.draggedChannelIndex) {

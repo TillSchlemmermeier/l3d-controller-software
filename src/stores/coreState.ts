@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 import { useUiStateStore } from './uiState'
-import { coreState, AutopilotMode } from '../types/types'
+import { coreState, AutopilotMode, ChannelKey, Section, Slot } from '../types/types'
 
 const baseUrl = 'http://localhost:8000/api'
 // shared secret for destructive endpoints
@@ -33,7 +33,7 @@ export const useCoreStateStore = defineStore('coreState', {
     s2l_auto_normalize: true,
     s2l_gain: 0,
     s2l_update: false,
-    context: [[0,9]],
+    context: [[0, 'generator']],
     oneshot: 0,
     numberOfChannels: 0,
     channels: [],
@@ -65,7 +65,7 @@ export const useCoreStateStore = defineStore('coreState', {
       await window.ipcRenderer.restartBackend()
     },
 
-    async select(contextIndex: number, channelIndex: number, elementIndex: number) {
+    async select(contextIndex: number, channelIndex: Section, elementIndex: Slot) {
       const url = `${baseUrl}/select/${contextIndex}/${channelIndex}/${elementIndex}`
       await this.callBackend(url)
     },
@@ -140,22 +140,22 @@ export const useCoreStateStore = defineStore('coreState', {
       await this.callBackend(url)
     },
 
-    async copyEffect(fromChannel: number, fromIndex: number, toChannel: number, toIndex: number) {
+    async copyEffect(fromChannel: ChannelKey, fromIndex: number, toChannel: ChannelKey, toIndex: number) {
       const url = `${baseUrl}/copyeffect/${fromChannel}/${fromIndex}/${toChannel}/${toIndex}`
       await this.callBackend(url)
     },
 
-    async moveEffect(channelIndex: number, oldIndex: number, newIndex: number) {
+    async moveEffect(channelIndex: ChannelKey, oldIndex: number, newIndex: number) {
       const url = `${baseUrl}/moveeffect/${channelIndex}/${oldIndex}/${newIndex}`
       await this.callBackend(url)
     },
 
-    async toggleEffect(channelIndex: number, effectIndex: number) {
+    async toggleEffect(channelIndex: ChannelKey, effectIndex: number) {
       const url = `${baseUrl}/toggleeffect/${channelIndex}/${effectIndex}`
       await this.callBackend(url)
     },
 
-    async removeEffect(channelIndex: number, effectIndex: number) {
+    async removeEffect(channelIndex: ChannelKey, effectIndex: number) {
       const url = `${baseUrl}/remove/effect/${channelIndex}/${effectIndex}`
       await this.callBackend(url, 'DELETE')
     },
@@ -194,7 +194,7 @@ export const useCoreStateStore = defineStore('coreState', {
       }
     },
 
-    async updateColorManager(channel: number, colorData: {
+    async updateColorManager(channel: ChannelKey, colorData: {
       gradient: Array<[number, string]>,
       gradientType: 'linear' | 'radial',
       sectionWidth: number,
@@ -274,24 +274,27 @@ export const useCoreStateStore = defineStore('coreState', {
     },
 
     updateSingleElement(data: any) {
-      const channel = Number(Object.keys(data)[0])
+      // JSON keys are strings: digits are a channel or an effect, names are slots
+      const key = (k: string) => (/^\d+$/.test(k) ? Number(k) : k)
+      const channel = key(Object.keys(data)[0])
       const value = data[channel]
-      const index = Number(Object.keys(value)[0])
+      const index = key(Object.keys(value)[0])
       const section = value[index]
 
-      if (channel === 9) {
-        if (index === 8) {
+      if (channel === 'global') {
+        if (index === 'color') {
           this.globalColor = hasValidGradient(section) ? section : undefined
         } else {
-          this.globalEffects[index] = section
+          this.globalEffects[index as number] = section
         }
       } else {
-        if (index === 9) {
-          this.channels[channel].generator = section
-        } else if (index === 8) {
-          this.channels[channel].color = hasValidGradient(section) ? section : undefined
+        const target = this.channels[channel as number]
+        if (index === 'generator') {
+          target.generator = section
+        } else if (index === 'color') {
+          target.color = hasValidGradient(section) ? section : undefined
         } else {
-          this.channels[channel].effects[index] = section
+          target.effects[index as number] = section
         }
       }
     },
@@ -326,18 +329,18 @@ export const useCoreStateStore = defineStore('coreState', {
           fade: channel.fade,
           numberOfEffects: numberOfEffects,
           effects,
-          generator: channel[9],
-          color: hasValidGradient(channel[8]) ? channel[8] : undefined
+          generator: channel.generator,
+          color: hasValidGradient(channel.color) ? channel.color : undefined
         }
       })
 
       // Transform global effects
       parsedState.globalEffects = Array.from(
-          { length: data[9].numberOfEffects },
-          (_, i) => data[9][i]
+          { length: data.global.numberOfEffects },
+          (_, i) => data.global[i]
         )
 
-      parsedState.globalColor = hasValidGradient(data[9][8]) ? data[9][8] : undefined
+      parsedState.globalColor = hasValidGradient(data.global.color) ? data.global.color : undefined
 
       return parsedState as coreState
     }

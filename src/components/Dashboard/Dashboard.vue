@@ -61,11 +61,11 @@ const coreState = useCoreStateStore()
 
 const isSelected = computed(() => {
   const [section, index] = coreState.context[0]
-  return section === 10 && index === 1
+  return section === 'panel' && index === 'dashboard'
 })
 
 function selectDashboard() {
-  coreState.select(0, 10, 1)
+  coreState.select(0, 'panel', 'dashboard')
 }
 
 // function reloadUI() {

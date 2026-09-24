@@ -20,6 +20,11 @@ from connection_manager import ConnectionManager
 # Import routers
 from routers import gradients_router, presets_router, state_router, system_router
 
+def state_key(text):
+    """A channel or slot as written in a datagram: numbers are numbers, names stay names."""
+    return int(text) if text.isdigit() else text
+
+
 class UDPBroadcastProtocol(asyncio.DatagramProtocol):
     """Datagrams from the sibling core processes."""
 
@@ -34,11 +39,11 @@ class UDPBroadcastProtocol(asyncio.DatagramProtocol):
         elif data.startswith(b'update_key:'):
             key, _, channel = data.removeprefix(b'update_key:').decode().partition(':')
             asyncio.create_task(
-                self.connection_manager.update_key(key, int(channel) if channel else None))
+                self.connection_manager.update_key(key, state_key(channel) if channel else None))
         elif data.startswith(b'update_element:'):
             channel, _, index = data.removeprefix(b'update_element:').decode().partition(':')
             asyncio.create_task(
-                self.connection_manager.update_element(int(channel), int(index)))
+                self.connection_manager.update_element(state_key(channel), state_key(index)))
         else:
             asyncio.create_task(self.connection_manager.broadcast_udp(data))
 

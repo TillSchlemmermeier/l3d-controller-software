@@ -3,12 +3,13 @@ from fastapi.responses import JSONResponse
 import json
 
 from routers.auth import require_admin
+from routers.state_router import ChannelKey
 
 router = APIRouter()
 
 # load a gradient from DB
 @router.post('/api/load-gradient/{gradientId}/{channelIndex}')
-async def load_gradient(gradientId: int, channelIndex: int, request: Request):
+async def load_gradient(gradientId: int, channelIndex: ChannelKey, request: Request):
     db = request.app.state.db
 
     gradient_data = db.get_gradient_by_id(gradientId)
@@ -26,12 +27,12 @@ async def load_gradient(gradientId: int, channelIndex: int, request: Request):
 
 # update color manager settings
 @router.post('/api/color-manager/{channel}')
-async def update_color_manager(channel: int, color_data: dict, request: Request):
+async def update_color_manager(channel: ChannelKey, color_data: dict, request: Request):
     state_manager = request.app.state.state_manager
     connection_manager = request.app.state.connection_manager
 
     state_manager.update_color_manager(channel, color_data)
-    await connection_manager.update_element(channel, 8)
+    await connection_manager.update_element(channel, 'color')
 
     return JSONResponse(
         status_code=200,
@@ -74,7 +75,7 @@ async def delete_gradient(id: int, request: Request):
 
 # clear the gradient object from a channel
 @router.post('/api/clear-gradient/{channelIndex}')
-async def clear_gradient(channelIndex: int, request: Request):
+async def clear_gradient(channelIndex: ChannelKey, request: Request):
     state_manager = request.app.state.state_manager
     connection_manager = request.app.state.connection_manager
 

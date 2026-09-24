@@ -67,9 +67,9 @@ function removeItem(event: { item: HTMLElement; oldIndex: number }) {
       })
     })
   } else if (uiState.lastTypeDragged === 'effect') {
-    if (uiState.draggedChannelIndex === 9) {
+    if (uiState.draggedChannelIndex === 'global') {
       // Handle global effects
-      coreState.removeEffect(9, event.oldIndex)
+      coreState.removeEffect('global', event.oldIndex)
       nextTick(() => {
         const tempGlobalEffects = [...coreState.globalEffects]
         coreState.globalEffects = []
@@ -79,12 +79,13 @@ function removeItem(event: { item: HTMLElement; oldIndex: number }) {
       })
     } else {
       // Handle channel effects
-      coreState.removeEffect(uiState.draggedChannelIndex, event.oldIndex)
+      const channelIndex = uiState.draggedChannelIndex as number
+      coreState.removeEffect(channelIndex, event.oldIndex)
       nextTick(() => {
-        const tempEffects = [...coreState.channels[uiState.draggedChannelIndex].effects]
-        coreState.channels[uiState.draggedChannelIndex].effects = []
+        const tempEffects = [...coreState.channels[channelIndex].effects]
+        coreState.channels[channelIndex].effects = []
         nextTick(() => {
-          coreState.channels[uiState.draggedChannelIndex].effects = tempEffects
+          coreState.channels[channelIndex].effects = tempEffects
         })
       })
     }

@@ -37,14 +37,14 @@ export const workbenchMode: LaunchpadMode = {
     if (row < 1 || row > 8 || col < 1 || col > 8) return
 
     const channelIndex = col - 1
-    const elementIndex = row === 8 ? 9 : 7 - row // Row 8 = generator, else effect
+    const elementIndex = row === 8 ? 'generator' : 7 - row // Row 8 = generator, else effect
 
     if (channelIndex >= ctx.coreState.channels.length) return
     
     const channel = ctx.coreState.channels[channelIndex]
-    if (elementIndex !== 9 && elementIndex >= channel.effects.length) return
+    if (elementIndex !== 'generator' && elementIndex >= channel.effects.length) return
 
-    if (ctx.uiState.shiftActivated && elementIndex <= 7) {
+    if (ctx.uiState.shiftActivated && elementIndex !== 'generator') {
       ctx.coreState.toggleEffect(channelIndex, elementIndex)
       this.refresh(ctx)
     } else {

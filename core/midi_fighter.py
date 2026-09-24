@@ -101,11 +101,11 @@ class MidiFighter:
                 # Fetch parameters for the element in this context slot
                 params = []
                 try:
-                    if channel_idx < 10: # Normal channel
+                    if channel_idx != 'panel':
                         channel = self.midi_translation.state[channel_idx]
-                        if element_idx == 9: # Generator
-                            if 'params' in channel[9]:
-                                params = channel[9]['params']
+                        if element_idx == 'generator':
+                            if 'params' in channel['generator']:
+                                params = channel['generator']['params']
                         elif element_idx < channel['numberOfEffects']: # Effect
                             if 'params' in channel[element_idx]:
                                 params = channel[element_idx]['params']

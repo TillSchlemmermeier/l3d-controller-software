@@ -137,9 +137,9 @@ async function loadPreset(preset_name: string) {
     if (uiState.elementType === 'effect') {
       await coreState.select(0, uiState.channelIndex, uiState.effectIndex)
     } else if (uiState.elementType === 'generator' || uiState.elementType === 'channel') {
-      await coreState.select(0, uiState.channelIndex, 9)
+      await coreState.select(0, uiState.channelIndex, 'generator')
     } else if (uiState.elementType === 'global') {
-      await coreState.select(0, 0, 9)
+      await coreState.select(0, 0, 'generator')
     }
     setTimeout(() => close(), 50)
   }
@@ -152,7 +152,9 @@ async function recordGif() {
   showFrameSelector.value = true
   capturedFrames.value = []
 
-  if (uiState.elementType === 'global') {
+  // Global presets and global effects both act on the whole cube, so both record
+  // the combined view; there is no per-channel preview for the global channel.
+  if (uiState.elementType === 'global' || uiState.channelIndex === 'global') {
     capturedFrames.value = await props.channelPreviewRef.captureCombinedView(
       (frame: string) => {
         capturedFrames.value.push(frame)
@@ -287,9 +289,13 @@ async function populateOverlayElements() {
 
 function getElementName() {
   if (uiState.elementType === 'effect') {
-    return coreState.channels[uiState.channelIndex].effects[uiState.effectIndex].name
+    const effects = uiState.channelIndex === 'global'
+      ? coreState.globalEffects
+      : coreState.channels[uiState.channelIndex].effects
+    return effects[uiState.effectIndex].name
   } else if (uiState.elementType === 'generator') {
-    return coreState.channels[uiState.channelIndex].generator.name
+    // only a numbered channel has a generator
+    return coreState.channels[uiState.channelIndex as number].generator.name
   }
   return null
 }

@@ -12,11 +12,11 @@ class class_channel:
         
     def update_channel(self, channelstate):
         # check if generator values need to be updated
-        if channelstate[9]['update']:
+        if channelstate['generator']['update']:
             # check if generator changed
-            if channelstate[9]['name'] != self.generator.__class__.__name__:
+            if channelstate['generator']['name'] != self.generator.__class__.__name__:
                 # if so, replace old generator with instance of the new one
-                self.generator = new_element('generator', channelstate[9]['name'])
+                self.generator = new_element('generator', channelstate['generator']['name'])
 
         # if effects were removed, remove them from the list
         if channelstate['numberOfEffects'] < len(self.effects):
@@ -38,14 +38,14 @@ class class_channel:
         channel_updated = False
 
         # create world from generator
-        world = self.generator(channelstate[9]['params'][3::4])
+        world = self.generator(channelstate['generator']['params'][3::4])
 
         # Update generator state values if needed
-        if channelstate[9]['update']:
+        if channelstate['generator']['update']:
             generator_state = self.generator.return_state()
             for i in range(len(generator_state)):
-                channelstate[9]['params'][4*i:4*i+3] = generator_state[i][:3]
-            channelstate[9]['update'] = False
+                channelstate['generator']['params'][4*i:4*i+3] = generator_state[i][:3]
+            channelstate['generator']['update'] = False
             channel_updated = True
 
         # apply the effects to the world, using the midi values
@@ -61,10 +61,10 @@ class class_channel:
                     channelstate[i]['update'] = False
                     channel_updated = True
 
-        if 8 in channelstate:
-            if channelstate[8]['update']:
-                world = self.color_effect(world, channelstate[8])
-                channelstate[8]['update'] = False
+        if 'color' in channelstate:
+            if channelstate['color']['update']:
+                world = self.color_effect(world, channelstate['color'])
+                channelstate['color']['update'] = False
             else:
                 world = self.color_effect(world)
 

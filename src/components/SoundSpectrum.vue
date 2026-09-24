@@ -186,12 +186,12 @@ const chartAreaBorder = {
 };
 
 function selectSpectrum() {
-  coreState.select(0, 10, 0)
+  coreState.select(0, 'panel', 's2l')
 }
 
 const isSelected = computed(() => {
   const [section, index] = coreState.context[0]
-  return section === 10 && index === 0
+  return section === 'panel' && index === 's2l'
 })
 
 onMounted(() => {

@@ -50,8 +50,8 @@ class Randomizer:
             # Wait up to 0.1 seconds for a manual trigger message
             try:
                 message = randomizer_queue.get(timeout=0.1)
-                if isinstance(message, int):
-                    self.randomize_color(message)
+                if isinstance(message, tuple):      # ('color', channel)
+                    self.randomize_color(message[1])
                 else:
                     self.trigger(message)
             except queue.Empty:
@@ -100,11 +100,13 @@ class Randomizer:
             self.randomize_all_elements([channel_idx])
 
         elif mode == 'selected_channel':
-            self.randomize_single_channel(self.context[0][0])
+            # only a real channel can be replaced; the global channel and panels can't
+            if isinstance(self.context[0][0], int):
+                self.randomize_single_channel(self.context[0][0])
 
         elif mode == 'selected_channel_elements':
             channel_idx = self.context[0][0]
-            if channel_idx >= self.number_of_channels:
+            if not isinstance(channel_idx, int) or channel_idx >= self.number_of_channels:
                 return
             self.randomize_all_elements([channel_idx])
 
@@ -113,8 +115,8 @@ class Randomizer:
 
             with self.state.lock:
                 channel = self.state[channel_idx]
-            # get all keys that are integers (8: colors, 9: generator, 0..n: effects)
-            available_indices = [k for k in channel if isinstance(k, int)]
+            # the generator, the colour if there is one, and every effect
+            available_indices = [k for k in channel if isinstance(k, int) or k in ('generator', 'color')]
 
             element_idx = random.choice(available_indices)
             self.randomize_single_element(channel_idx, element_idx)
@@ -122,7 +124,8 @@ class Randomizer:
         elif mode == 'selected_element':
             channel_idx = self.context[0][0]
             element_idx = self.context[0][1]
-            self.randomize_single_element(channel_idx, element_idx)
+            if channel_idx != 'panel':           # a panel is not an element
+                self.randomize_single_element(channel_idx, element_idx)
 
         # wait 50 ms to make sure rendering engine has processed the state change
         time.sleep(0.05)
@@ -226,17 +229,15 @@ class Randomizer:
         for channel_idx in channels_to_randomize:
             with self.state.lock:
                 channel = self.state[channel_idx]
-            # get all keys that are integers (8: colors, 9: generator, 0..n: effects)
-            elements = [k for k in channel if isinstance(k, int)]
-            if 8 not in elements:
-                elements.append(8)
+            # the generator and every effect, plus the colour whether it exists yet or not
+            elements = [k for k in channel if isinstance(k, int) or k == 'generator'] + ['color']
 
             for element in elements:
                 self.randomize_single_element(channel_idx, element)
 
     def randomize_single_element(self, channel_idx: int, element_idx: int) -> None:
         """Load random preset for a specific or random element"""
-        if element_idx == 8:
+        if element_idx == 'color':
             self.randomize_color(channel_idx)
             return
 
@@ -273,7 +274,7 @@ class Randomizer:
         "e_strobe",
         ]
 
-        element_type = 'generator' if element_idx == 9 else 'effect'
+        element_type = 'generator' if element_idx == 'generator' else 'effect'
         active_elements = self.db.get_active_elements(element_type)
 
         new_element = random.choice(active_elements)

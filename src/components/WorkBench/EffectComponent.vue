@@ -124,13 +124,14 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, watch, nextTick } from 'vue'
+import { computed, ref, watch, nextTick, type PropType } from 'vue'
 import { useCoreStateStore } from '../../stores/coreState'
 import { getColorsByName, getContextColorSet } from '../../utils/colorSchemes'
+import type { ChannelKey } from '../../types/types'
 
 const props = defineProps({
   channel: {
-    type: Number,
+    type: [Number, String] as PropType<ChannelKey>,
     required: true,
   },
   effectNumber: {
@@ -149,7 +150,7 @@ const loadProgressCircles = ref(false)
 const initialFill = ref(true)
 
 const thisEffect = computed(() => {
-  if (props.channel === 9) {
+  if (props.channel === 'global') {
     return coreState.globalEffects[props.effectNumber]
   }
   return coreState.channels[props.channel].effects[props.effectNumber]

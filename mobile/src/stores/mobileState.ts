@@ -69,7 +69,7 @@ export const useMobileStore = defineStore('mobile', {
 
     selectChannel(channel: number) {
       this.selectedChannel = channel
-      post(`select/0/${channel - 1}/9`)
+      post(`select/0/${channel - 1}/generator`)
       this.vibrate(10)
     },
 

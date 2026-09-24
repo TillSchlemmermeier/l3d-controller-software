@@ -76,36 +76,32 @@ class MidiTranslation:
         midi_value = round((float(midi_value) / 127.0), 2)
         try:
             with self.state.lock:  # Single lock block for all operations
-                channel = self.state['context'][context_index][0] # channel is 0, 1, 2, 3, ...
-                                                   # channel 9 is gloa
-                index = self.state['context'][context_index][1]   # index 9 is generator, 0 first effect, ...
-                
-                if channel <= 9:
+                # what the faders drive: [channel, slot] for an element, where the
+                # channel may be 'global', or ['panel', 's2l' | 'dashboard']
+                channel, index = self.state['context'][context_index]
+
+                if channel != 'panel':
                     this_channel = self.state[channel]
-                    if index < 10:
-                        try:
-                            params = this_channel[index]['params']
-                            slot = midi_index * 4 + 3
-                            if not self.caught((context_index, midi_index), params[slot], midi_value):
-                                return
-                            params[slot] = midi_value
-                            this_channel[index]['update'] = 1
-                            self.state[channel] = this_channel
-                        except Exception as e:
-                            print(f"Error updating parameter: {e}")
+                    try:
+                        params = this_channel[index]['params']
+                        slot = midi_index * 4 + 3
+                        if not self.caught((context_index, midi_index), params[slot], midi_value):
                             return
+                        params[slot] = midi_value
+                        this_channel[index]['update'] = 1
+                        self.state[channel] = this_channel
+                    except Exception as e:
+                        print(f"Error updating parameter: {e}")
+                        return
         except AssertionError as e:
             print(f"UltraDict error in update_context: {e}")
 
         # API calls outside the lock
-        if channel <= 9:
-            if index < 10:
-                self.notify_element(channel, index)
-            elif index == 10:
-                self.notify_key(key, channel)
+        if channel != 'panel':
+            self.notify_element(channel, index)
 
-        elif channel == 10:
-            if index == 0:
+        else:
+            if index == 's2l':
                 with self.state.lock:
                     current_values = list(self.state['s2l_values'])
                     current_thresholds = list(self.state['s2l_thresholds'])
@@ -120,7 +116,7 @@ class MidiTranslation:
                         self.notify_key('s2l_thresholds')
                     self.state['s2l_update'] = True
 
-            elif index == 1:
+            elif index == 'dashboard':
                 if midi_index == 0:
                     key = 'autopilot'
                     if midi_value <= 0.5:
@@ -148,22 +144,17 @@ class MidiTranslation:
 
     def get_context_midi_values(self):
         with self.state.lock:
-            channel = self.state['context'][0][0]
-            index = self.state['context'][0][1]
-            if channel <= 9:
-                this_channel = self.state[channel]
-                if index < 10:
-                    element = this_channel[index]
-                    params = element['params']
-                    midi_values = params[3::4]
-                    return midi_values
-            elif channel == 10:
-                if index == 0:
+            channel, index = self.state['context'][0]
+            if channel != 'panel':
+                params = self.state[channel][index]['params']
+                return params[3::4]
+            else:
+                if index == 's2l':
                     current_values = list(self.state['s2l_values'])
                     current_thresholds = list(self.state['s2l_thresholds'])
                     s2l_values = current_values + current_thresholds
                     return s2l_values
-                elif index == 1:
+                elif index == 'dashboard':
                     return [
                         1.0 if self.state['autopilot'] else 0.0,
                         self.state['autopilot_time'] / 180.0,

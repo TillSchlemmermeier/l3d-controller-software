@@ -35,7 +35,7 @@
 import { ref } from 'vue'
 import { useCoreStateStore } from '../../../stores/coreState'
 import { useUiStateStore } from '../../../stores/uiState'
-import type { Color } from '../../../types/types'
+import type { ChannelKey, Color } from '../../../types/types'
 
 interface Emits {
   (e: 'channelCopied'): void
@@ -51,12 +51,12 @@ function toggleCopyDirection() {
   copyDirection.value = copyDirection.value === 'From' ? 'To' : 'From'
 }
 
-function readChannelColor(index: number): Color | undefined {
-  return index === 9 ? coreState.globalColor : coreState.channels[index]?.color
+function readChannelColor(index: ChannelKey): Color | undefined {
+  return index === 'global' ? coreState.globalColor : coreState.channels[index]?.color
 }
 
-function writeChannelColor(index: number, color: Color): boolean {
-  if (index === 9) {
+function writeChannelColor(index: ChannelKey, color: Color): boolean {
+  if (index === 'global') {
     coreState.globalColor = color
     return true
   }
@@ -74,7 +74,7 @@ function cloneColor(color: Color): Color {
   }
 }
 
-async function handleChannelClick(channelIndex: number) {
+async function handleChannelClick(channelIndex: ChannelKey) {
   const fromIndex = copyDirection.value === 'From' ? channelIndex : uiState.channelIndex
   const toIndex = copyDirection.value === 'From' ? uiState.channelIndex : channelIndex
 

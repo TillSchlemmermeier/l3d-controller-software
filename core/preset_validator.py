@@ -4,6 +4,7 @@ import numpy as np
 import traceback  # Add this import at the top
 from typing import Dict, List, Tuple
 from db_manager import DatabaseManager
+from element_registry import new_element
 
 class PresetValidator:
     def __init__(self):
@@ -16,18 +17,11 @@ class PresetValidator:
         """Initialize generators and effects from database"""
         self.generators = [gen['name'] for gen in self.db.get_element_names('generator')]
         self.effects = [eff['name'] for eff in self.db.get_element_names('effect')]
-        # Create namespace for imports
-        self.namespace = {}
-
-        for generator in self.generators:
-            exec(f'from generators.{generator} import *', self.namespace)
-        for effect in self.effects:
-            exec(f'from effects.{effect} import *', self.namespace)
 
     def validate_generator(self, generator_name: str, preset_data: Dict) -> Tuple[bool, str]:
         """Validate a single generator preset"""
         try:
-            generator = self.namespace[generator_name]()
+            generator = new_element('generator', generator_name)
 
             midi_values = preset_data['params'][3::4]
             generator(midi_values)
@@ -58,7 +52,7 @@ class PresetValidator:
     def validate_effect(self, effect_name: str, preset_data: Dict) -> Tuple[bool, str]:
         """Validate a single effect preset"""
         try:
-            effect = self.namespace[effect_name]()
+            effect = new_element('effect', effect_name)
 
             world = np.zeros([3, 10, 10, 10])
             midi_values = preset_data['params'][3::4]
@@ -91,8 +85,8 @@ class PresetValidator:
         """Validate a channel with its generator and effects"""
         results = []
 
-        if not is_global and 9 in channel_data:
-            generator_data = channel_data[9]
+        if not is_global and 'generator' in channel_data:
+            generator_data = channel_data['generator']
             valid, message = self.validate_generator(generator_data['name'], generator_data)
             results.append({
                 'type': 'generator',
@@ -124,8 +118,8 @@ class PresetValidator:
                 channel_results = self.validate_channel(preset_data[i], preset_name)
                 results.extend(channel_results)
 
-        if 9 in preset_data:
-            channel_results = self.validate_channel(preset_data[9], preset_name, is_global=True)
+        if 'global' in preset_data:
+            channel_results = self.validate_channel(preset_data['global'], preset_name, is_global=True)
             results.extend(channel_results)
 
         return results
