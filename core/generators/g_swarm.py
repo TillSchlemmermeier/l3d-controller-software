@@ -21,6 +21,7 @@ class g_swarm():
     - s2l channel : the sound opens the flock out and lets it close again
     '''
 
+    # the number knob in the parameter block tops out at this
     MAX_BIRDS = 60
     # birds fly at a steady pace, only their heading changes
     SPEED = 0.42
@@ -61,7 +62,7 @@ class g_swarm():
 
     def __call__(self, args):
         # === PARAMETERS START ===
-        self.number = int(args[0]*(self.MAX_BIRDS-8))+8
+        self.number = int(args[0]*52)+8
         self.cohesion = args[1]
         self.fade = args[2]
         self.channel = ['noS2L', 0, 1, 2, 3, 'Trigger'][int(args[3]*5)]

@@ -21,7 +21,8 @@ class g_shapes():
     - s2l channel
     '''
 
-    # the order the beat walks through the shapes
+    # the order the beat walks through the shapes, the same list as the solid
+    # knob in the parameter block
     SOLIDS = ['tetra', 'octa', 'cube', 'icosa']
     # what size 0 and size 1 mean once the shape is actually drawn. 4.7 puts the
     # vertices just past the walls, which fills the cube without losing them
@@ -113,7 +114,7 @@ class g_shapes():
 
     def __call__(self, args):
         # === PARAMETERS START ===
-        self.solid = self.SOLIDS[min(int(args[0]*4), 3)]
+        self.solid = ['tetra', 'octa', 'cube', 'icosa'][min(int(args[0]*4), 3)]
         self.size = args[1]
         self.speed = args[2]*0.09+0.005
         self.thickness = args[3]*1.3+0.5

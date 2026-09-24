@@ -2,9 +2,7 @@ import tkinter as tk
 from tkinter import ttk
 import numpy as np
 import math
-from midi_translation import MidiTranslation
-from UltraDict import UltraDict
-import time
+from midi.translation import MidiTranslation
 
 class RotaryKnob(tk.Canvas):
     def __init__(self, parent, size=50, **kwargs):

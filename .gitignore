@@ -11,3 +11,4 @@ dist/
 .env
 __pycache__/
 todo.txt
+core/l3d.db.before-*

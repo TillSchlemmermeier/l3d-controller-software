@@ -31,22 +31,10 @@
         >
           Add Effect
         </button>
-        <button
-          @click="handlePresetConsistencyCheck"
-          class="bg-zinc-700 hover:bg-zinc-600 text-zinc-200 px-4 py-2 rounded-lg"
-        >
-          Check all Presets
-        </button>
       </div>
     </div>
 
     <!-- Status Messages -->
-    <StatusMessage
-      :show="showValidationMessage"
-      message="Check Terminal for preset validation results"
-      @close="showValidationMessage = false"
-    />
-
     <StatusMessage
       :show="showAddMessage"
       message="Please restart the program for the new element to take effect"
@@ -77,30 +65,6 @@
               @toggle="handleToggleElement"
               @delete="handleDeleteElement"
             />
-
-            <!-- Preset Updater -->
-            <div
-              v-if="selectedType === 'element' && uiState.elementInfo && showPresetUpdater && uiState.elementType !== 'channel' && uiState.elementType !== 'global'"
-              class="mt-4 border-t border-zinc-700 pt-4"
-            >
-              <PresetUpdater
-                ref="presetUpdaterRef"
-                :element-name="uiState.selectedElement"
-                :element-type="uiState.elementInfo.type"
-                :parameters="elementParameters"
-                />
-                <!-- @update="handlePresetUpdate"
-                @preview="handlePresetPreview" -->
-            </div>
-
-            <!-- Preset Updater Toggle -->
-            <button
-              v-if="selectedType === 'element' && uiState.elementInfo && uiState.elementType !== 'channel' && uiState.elementType !== 'global'"
-              @click="showPresetUpdater = !showPresetUpdater"
-              class="w-full mt-4 px-4 py-2 bg-zinc-700 hover:bg-zinc-600 rounded-lg transition-colors"
-            >
-              {{ showPresetUpdater ? 'Hide' : 'Show' }} Preset Updater
-            </button>
 
             <!-- Preset Info -->
             <PresetInfoPanel
@@ -162,7 +126,6 @@ import StatusMessage from '../components/AdminSection/StatusMessage.vue'
 import ElementInfoPanel from '../components/AdminSection/ElementInfoPanel.vue'
 import PresetInfoPanel from '../components/AdminSection/PresetInfoPanel.vue'
 import PresetGrid from '../components/AdminSection/PresetGrid.vue'
-import PresetUpdater from '../components/AdminSection/PresetUpdater.vue'
 
 const tabs = ['Generator', 'Effect', 'Channel', 'Global']
 const activeTab = ref('Generator')
@@ -175,13 +138,7 @@ const uiState = useUiStateStore()
 // Dialog states
 const showAddElementDialog = ref(false)
 const addElementType = ref('')
-const showValidationMessage = ref(false)
 const showAddMessage = ref(false)
-
-// Preset updater
-const showPresetUpdater = ref(false)
-const presetUpdaterRef = ref<InstanceType<typeof PresetUpdater> | null>(null)
-const elementParameters = ref<any[]>([])
 
 async function changeType(type: string) {
   activeElementType.value = type.toLowerCase()
@@ -280,42 +237,4 @@ async function handleToggleElement() {
   await uiState.fetchAllElements()
   await uiState.fetchElementInfo()
 }
-
-async function handlePresetConsistencyCheck() {
-  if (await dialog.confirm({ title: 'Check presets', message: 'Check all presets for consistency?', confirmText: 'Check' })) {
-    const results = await uiState.checkPresetConsistency()
-    console.log(results)
-
-    showValidationMessage.value = true
-    setTimeout(() => {
-      showValidationMessage.value = false
-    }, 2000)
-  }
-}
-
-// Fetch parameters when element is selected
-// watch(() => uiState.selectedElement, async () => {
-//   if (uiState.selectedElement) {
-//     elementParameters.value = await uiState.fetchElementParameters()
-//   }
-// })
-
-// async function handlePresetUpdate(config: any) {
-//   try {
-//     const results = await uiState.updatePresets(config)
-//     presetUpdaterRef.value?.showUpdateResults(results)
-//   } catch (error) {
-//     console.error('Failed to update presets:', error)
-//     alert('Failed to update presets. Check console for details.')
-//   }
-// }
-
-// async function handlePresetPreview(config: any) {
-//   try {
-//     const preview = await uiState.previewPresetUpdate(config)
-//     console.log('Preview:', preview)
-//   } catch (error) {
-//     console.error('Failed to preview update:', error)
-//   }
-// }
 </script>

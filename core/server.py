@@ -13,9 +13,9 @@ import uvicorn
 MAX_WS_MESSAGE_BYTES = 4096   # /ws clients aren't expected to send data; cap inbound
 
 # Import managers
-from db_manager import DatabaseManager
-from state_manager import StateManager
-from connection_manager import ConnectionManager
+from managers.db_manager import DatabaseManager
+from managers.state_manager import StateManager
+from managers.connection_manager import ConnectionManager
 
 # Import routers
 from routers import gradients_router, presets_router, state_router, system_router

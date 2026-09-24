@@ -73,8 +73,9 @@ class g_cyclic():
             self.state = moved
 
     def __call__(self, args):
+        previous = self.length
         # === PARAMETERS START ===
-        length = int(args[0]*8)+6
+        self.length = int(args[0]*8)+6
         self.speed = int(args[1]*5)+1
         self.smooth = args[2]*0.8+0.15
         self.channel = ['noS2L', 0, 1, 2, 3, 'Trigger'][int(args[3]*5)]
@@ -82,8 +83,7 @@ class g_cyclic():
 
         # the cycle length changed. reseed rather than rescale, every phase has
         # to be present somewhere or the waves cannot travel round the cycle
-        if length != self.length:
-            self.length = length
+        if self.length != previous:
             self.seed()
 
         # the knob reads as a speed, the automaton wants a gap between steps,

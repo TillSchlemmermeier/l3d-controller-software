@@ -3,8 +3,8 @@ import threading
 import time
 import queue
 import socket
-from db_manager import DatabaseManager
-from state_manager import StateManager
+from managers.db_manager import DatabaseManager
+from managers.state_manager import StateManager
 import json
 
 class Randomizer:

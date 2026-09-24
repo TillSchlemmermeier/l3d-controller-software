@@ -22,6 +22,7 @@
         "!**/__pycache__/**",
         "!Arduino/**",
         "!state_backup.pkl",
+        "!l3d.db.before-*",
         "!**/*.log"
       ]
     }

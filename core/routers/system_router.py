@@ -1,9 +1,7 @@
 from typing import Optional
-from fastapi import APIRouter, Request, Depends
-from fastapi.responses import JSONResponse, HTMLResponse, FileResponse
+from fastapi import APIRouter, Request
+from fastapi.responses import HTMLResponse, FileResponse
 import os
-
-from routers.auth import require_admin
 
 router = APIRouter()
 
@@ -18,28 +16,6 @@ async def mobile_app():
     print("Serving mobile app")
     dist_path = os.path.join(os.path.dirname(__file__), "..", "..", "mobile","dist")
     return FileResponse(f"{dist_path}/index.html")
-
-
-# validate all presets
-@router.get('/api/validate-presets', dependencies=[Depends(require_admin)])
-async def validate_presets():
-    try:
-        from preset_validator import PresetValidator
-        
-        validator = PresetValidator()
-        validation_results = validator.validate_all()
-        
-        return JSONResponse(
-            status_code=200,
-            content=validation_results
-        )
-        
-    except Exception as e:
-        print(f"Error validating presets: {e}")
-        return JSONResponse(
-            status_code=500,
-            content={"message": f"Error validating presets: {str(e)}"}
-        )
 
 
 # update the cube data in the frontend with JSON (legacy function)

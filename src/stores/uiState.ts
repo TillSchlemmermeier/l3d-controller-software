@@ -174,13 +174,6 @@ export const useUiStateStore = defineStore('uiState', {
       this.fetchGradientPresets()
     },
 
-    async checkPresetConsistency() {
-      const url = `validate-presets`
-      const response = await this.callBackend(url)
-      console.log('Validation results:', response)
-      return response
-    },
-
     async clearGradient(channel: ChannelKey) {
       const url = `clear-gradient/${channel}`
       await this.callBackend(url, 'POST')

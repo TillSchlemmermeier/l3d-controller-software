@@ -20,6 +20,7 @@ class g_voronoi():
     - s2l channel
     '''
 
+    # the number knob in the parameter block tops out at this
     MAX_SEEDS = 10
     # thinnest the walls are ever drawn, the bottom of the width knob's own range
     WIDTH_MIN = 0.25
@@ -58,7 +59,7 @@ class g_voronoi():
 
     def __call__(self, args):
         # === PARAMETERS START ===
-        self.number = int(args[0]*(self.MAX_SEEDS-3))+3
+        self.number = int(args[0]*7)+3
         self.speed = args[1]*0.25+0.01
         self.width = args[2]*0.85+0.25
         self.channel = ['noS2L', 0, 1, 2, 3, 'Trigger'][int(args[3]*5)]

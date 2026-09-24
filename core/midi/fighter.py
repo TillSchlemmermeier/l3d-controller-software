@@ -1,6 +1,6 @@
 import time as time
 from rtmidi.midiutil import open_midiinput, open_midioutput
-from midi_translation import MidiTranslation
+from midi.translation import MidiTranslation
 
 class MidiFighter:
     def __init__(self, state):

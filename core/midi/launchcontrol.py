@@ -1,7 +1,6 @@
 import time as time
 from rtmidi.midiutil import open_midiinput,open_midioutput, open_midiport
-from midi_translation import MidiTranslation
-from UltraDict import UltraDict
+from midi.translation import MidiTranslation
 import numpy as np
 
 

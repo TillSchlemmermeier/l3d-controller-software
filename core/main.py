@@ -11,14 +11,15 @@ from time import time, sleep
 import multiprocessing as mp
 from UltraDict import UltraDict
 
+from migrations import migrate
 from randomizer import Randomizer
 from s2l_engine import sound_process
 from server import WebSocketAPIServer
-from state_manager import StateManager
+from managers.state_manager import StateManager
 from rendering_engine import rendering_engine
-from midi_launchcontrol import LaunchControl
-from midi_fighter import MidiFighter
-from midi_emulator import MidiControllerEmulator
+from midi.launchcontrol import LaunchControl
+from midi.fighter import MidiFighter
+from midi.emulator import MidiControllerEmulator
 
 PROFILE = os.environ.get('L3D_PROFILE', 'dev')
 
@@ -108,6 +109,9 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--restore', action='store_true')
     args = parser.parse_args()
+
+    # presets have to match the element code before anything reads them
+    migrate()
 
     # Unlink both shared memory buffers possibly used by UltraDict
     name = 'state'
