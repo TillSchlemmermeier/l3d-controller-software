@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import { useUiStateStore, post, remove } from './uiState'
+import { useUiStateStore, get, post, remove } from './uiState'
 import { coreState, AutopilotMode, ChannelKey, Section, Slot } from '../types/types'
 
 const baseUrl = 'http://localhost:8000/api'
@@ -53,13 +53,7 @@ export const useCoreStateStore = defineStore('coreState', {
   },
   actions: {
     async requestStateUpdate() {
-      try {
-        await fetch(`${baseUrl}/get-state`, {
-          method: 'GET',
-        })
-      } catch (error) {
-        console.error('error', error)
-      }
+      await get('get-state')
     },
     async rebootCore() {
       await window.ipcRenderer.restartBackend()
@@ -204,20 +198,8 @@ export const useCoreStateStore = defineStore('coreState', {
       rotateSpeedZ: number,
       soundToLightOptions: string[]
     }) {
-      const url = `${baseUrl}/color-manager/${channel}`
-      try {
-        const response = await fetch(url, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(colorData)
-        })
-        const data = await response.json()
-        console.log('Color manager updated:', data.message)
-      } catch (error) {
-        console.error('Error updating color manager:', error)
-      }
+      const url = `color-manager/${channel}`
+      await post(url, colorData)
     },
 
     async loadGradient(gradientId: number) {
