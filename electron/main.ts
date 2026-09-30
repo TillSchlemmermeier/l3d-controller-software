@@ -237,6 +237,11 @@ app.whenReady().then(() => {
   setupPythonProcess()
   win = createWindow()
 
+  // The layout is based on 2560 px wide screen; on any other width we zoom to fit
+  const fitToWidth = () => win?.webContents.setZoomFactor(win.getContentBounds().width / 2560)
+  win.on('resize', fitToWidth)
+  win.webContents.on('did-finish-load', fitToWidth)
+
   if (VITE_DEV_SERVER_URL) {
     win.loadURL(VITE_DEV_SERVER_URL)
   } else {
