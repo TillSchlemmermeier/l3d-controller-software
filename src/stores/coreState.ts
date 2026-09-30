@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import { useUiStateStore } from './uiState'
+import { useUiStateStore, post, remove } from './uiState'
 import { coreState, AutopilotMode, ChannelKey, Section, Slot } from '../types/types'
 
 const baseUrl = 'http://localhost:8000/api'
@@ -66,51 +66,51 @@ export const useCoreStateStore = defineStore('coreState', {
     },
 
     async select(contextIndex: number, channelIndex: Section, elementIndex: Slot) {
-      const url = `${baseUrl}/select/${contextIndex}/${channelIndex}/${elementIndex}`
-      await this.callBackend(url)
+      const url = `select/${contextIndex}/${channelIndex}/${elementIndex}`
+      await post(url)
     },
 
     async toggleCube() {
-      const url = `${baseUrl}/toggle-cube`
-      await this.callBackend(url)
+      const url = `toggle-cube`
+      await post(url)
     },
 
     async normalize() {
-      const url = `${baseUrl}/normalize-s2l`
-      await this.callBackend(url)
+      const url = `normalize-s2l`
+      await post(url)
     },
 
     async toggleAutoNormalize() {
-      const url = `${baseUrl}/toggle-auto-normalize`
-      await this.callBackend(url)
+      const url = `toggle-auto-normalize`
+      await post(url)
     },
 
     async toggleAutopilot() {
-      const url = `${baseUrl}/toggle-autopilot`
-      await this.callBackend(url)
+      const url = `toggle-autopilot`
+      await post(url)
     },
 
     async autopilotMode(mode?: AutopilotMode) {
       const url_mode = mode ? mode : 'next'
-      const url = `${baseUrl}/autopilot-mode/${url_mode}`
-      await this.callBackend(url)
+      const url = `autopilot-mode/${url_mode}`
+      await post(url)
     },
 
     async triggerRandomizer(mode: AutopilotMode) {
-      const url = `${baseUrl}/trigger-randomizer/${mode}`
-      await this.callBackend(url)
+      const url = `trigger-randomizer/${mode}`
+      await post(url)
     },
 
     async undoRandom() {
-      const url = `${baseUrl}/undo-random`
-      await this.callBackend(url)
+      const url = `undo-random`
+      await post(url)
     },
 
     async randomizeColor() {
       const uiState = useUiStateStore()
       const channelIndex = uiState.channelIndex
-      const url = `${baseUrl}/randomize-color/${channelIndex}`
-      await this.callBackend(url)
+      const url = `randomize-color/${channelIndex}`
+      await post(url)
     },
 
     async fireOneShot(index: number) {
@@ -119,50 +119,50 @@ export const useCoreStateStore = defineStore('coreState', {
       uiState.activeOneshot = index
       setTimeout(() => { uiState.activeOneshot = 0 }, 150)
 
-      const url = `${baseUrl}/oneshot/${index}`
-      await this.callBackend(url)
+      const url = `oneshot/${index}`
+      await post(url)
     },
 
     // load a new channel, generator, effect or global effect
     async load(preset_name: string) {
       const uiState = useUiStateStore()
-      const url = `${baseUrl}/load/${uiState.elementType}/${preset_name}/${uiState.channelIndex}/${uiState.effectIndex}/${uiState.selectedElement}`
-      await this.callBackend(url)
+      const url = `load/${uiState.elementType}/${preset_name}/${uiState.channelIndex}/${uiState.effectIndex}/${uiState.selectedElement}`
+      await post(url)
     },
 
     async copyChannel(channelIndex: number) {
-      const url = `${baseUrl}/copychannel/${channelIndex}`
-      await this.callBackend(url)
+      const url = `copychannel/${channelIndex}`
+      await post(url)
     },
 
     async moveChannel(channelIndex: number, newIndex: number) {
-      const url = `${baseUrl}/movechannel/${channelIndex}/${newIndex}`
-      await this.callBackend(url)
+      const url = `movechannel/${channelIndex}/${newIndex}`
+      await post(url)
     },
 
     async copyEffect(fromChannel: ChannelKey, fromIndex: number, toChannel: ChannelKey, toIndex: number) {
-      const url = `${baseUrl}/copyeffect/${fromChannel}/${fromIndex}/${toChannel}/${toIndex}`
-      await this.callBackend(url)
+      const url = `copyeffect/${fromChannel}/${fromIndex}/${toChannel}/${toIndex}`
+      await post(url)
     },
 
     async moveEffect(channelIndex: ChannelKey, oldIndex: number, newIndex: number) {
-      const url = `${baseUrl}/moveeffect/${channelIndex}/${oldIndex}/${newIndex}`
-      await this.callBackend(url)
+      const url = `moveeffect/${channelIndex}/${oldIndex}/${newIndex}`
+      await post(url)
     },
 
     async toggleEffect(channelIndex: ChannelKey, effectIndex: number) {
-      const url = `${baseUrl}/toggleeffect/${channelIndex}/${effectIndex}`
-      await this.callBackend(url)
+      const url = `toggleeffect/${channelIndex}/${effectIndex}`
+      await post(url)
     },
 
     async removeEffect(channelIndex: ChannelKey, effectIndex: number) {
-      const url = `${baseUrl}/remove/effect/${channelIndex}/${effectIndex}`
-      await this.callBackend(url, 'DELETE')
+      const url = `remove/effect/${channelIndex}/${effectIndex}`
+      await remove(url)
     },
 
     async removeChannel(channelIndex: number) {
-      const url = `${baseUrl}/remove/channel/${channelIndex}/0`
-      await this.callBackend(url, 'DELETE')
+      const url = `remove/channel/${channelIndex}/0`
+      await remove(url)
     },
 
     // save a generator, effect, channel or global preset
@@ -222,20 +222,8 @@ export const useCoreStateStore = defineStore('coreState', {
 
     async loadGradient(gradientId: number) {
       const uiState = useUiStateStore()
-      const url = `${baseUrl}/load-gradient/${gradientId}/${uiState.channelIndex}`
-      await this.callBackend(url)
-    },
-
-    // make a state-mutating API call (POST by default, DELETE for removals)
-    async callBackend(url: string, method: 'POST' | 'DELETE' = 'POST') {
-      console.log('calling backend', method, url)
-      try {
-        const response = await fetch(url, { method, headers: { 'X-Admin-Token': adminToken } })
-        const data = await response.json()
-        console.log(data)
-      } catch (error) {
-        console.error('error', error)
-      }
+      const url = `load-gradient/${gradientId}/${uiState.channelIndex}`
+      await post(url)
     },
 
     initializeIPC() {
