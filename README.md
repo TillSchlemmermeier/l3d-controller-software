@@ -16,6 +16,7 @@ Visuals are composed from stackable building blocks: a **generator** creates a s
 - [Getting started](#getting-started)
 - [Project layout](#project-layout)
 - [Adding a new generator or effect](#adding-a-new-generator-or-effect)
+- [Changing an element's parameters](#changing-an-elements-parameters)
 - [Constraints & gotchas](#constraints--gotchas)
 - [Security status](#security-status)
 - [Roadmap / known issues](#roadmap--known-issues)
@@ -26,7 +27,7 @@ Visuals are composed from stackable building blocks: a **generator** creates a s
 
 - **LED cube:** 10 stacked layers of 10×10 WS2811 LEDs (1000 pixels).
 - **Driver:** an Arduino Due receives RGB frames over native USB serial and drives the LEDs with FastLED. Firmware is in [`Arduino/`](Arduino/).
-- **Control surfaces:** MIDI controllers (Novation Launch Control, Midi Fighter, Launchpad) plus an on-screen touchscreen emulator. Real device drivers live in `core/midi_*.py`.
+- **Control surfaces:** MIDI controllers (Novation Launch Control, Midi Fighter, Launchpad) plus an on-screen touchscreen emulator. Real device drivers live in `core/midi/`.
 - **Host:** a Linux machine with a touchscreen, running the Electron app.
 
 ---
@@ -67,7 +68,7 @@ core/main.py forks 6 processes, all sharing one UltraDict "state":
 | WebSocket `:8000/ws` | State (JSON) + cube frames (binary) to the Electron UI and phones |
 | Serial `/dev/ttyACM*` | RGB frames to the Arduino |
 
-Saved data (elements, presets, gradients) lives in the SQLite database `core/l3d.db`, accessed via [`core/db_manager.py`](core/db_manager.py). The UltraDict is *runtime* state; the database is *persisted* state.
+Saved data (elements, presets, gradients) lives in the SQLite database `core/l3d.db`, accessed via [`core/managers/db_manager.py`](core/managers/db_manager.py). The UltraDict is *runtime* state; the database is *persisted* state.
 
 ---
 
@@ -183,11 +184,11 @@ core/                Python realtime backend
   rendering_engine.py  the 25 FPS frame loop
   channel.py         per-channel generator→effects→color pipeline
   s2l_engine.py      audio capture + FFT (sound-to-light)
-  midi_*.py          MIDI device drivers + on-screen emulator + translation
+  midi/              MIDI device drivers + on-screen emulator + translation
   server.py          FastAPI/uvicorn + WebSocket + UDP bridge
-  connection_manager.py  WebSocket fan-out + frame broadcast
-  state_manager.py   state mutation API
-  db_manager.py      SQLite access (elements, presets, gradients)
+  managers/          connection_manager (WebSocket fan-out + frame broadcast),
+                     state_manager (state mutation API),
+                     db_manager (SQLite: elements, presets, gradients)
   randomizer.py      autopilot / randomization
   routers/           HTTP endpoints (presets, state, gradients, system)
   generators/        g_*.py  (+ .f90 Fortran generators)
@@ -210,9 +211,27 @@ Arduino/             LED cube firmware (FastLED)
    - `__init__(self)` — declare parameters.
    - `__call__(self, values)` for a generator (returns a `[3,10,10,10]` numpy array), or `__call__(self, world, values)` for an effect (transforms and returns the world).
    - `return_state(self)` — return display metadata for each parameter.
-3. Register it in the database so it appears in the UI (via the admin tools / `db_manager`).
+3. Register it in the database so it appears in the UI (via the admin tools / `managers/db_manager.py`).
 4. If it's performance-critical, consider a Fortran `.f90` + an f2py target in the `makefile`.
 
 Keep everything **numpy 1.x compatible** (see below).
+
+---
+
+## Changing an element's parameters
+
+A preset stores each knob only as a 0–1 value, in order. When a line in an element's parameter block changes (a range, a curve, a mode list, a knob added, removed or moved), every stored value would silently start meaning something else. So each such change gets a short entry in `core/element_migrations.py` that says what should happen to the stored values. The most common entry is `keep(...)`: store the value that makes the new line give the same result as the old one, so existing presets look exactly as before. Renaming a knob, changing a label or the drawing code, and adding a new element need no entry.
+
+```bash
+cd core
+python3.12 migrations.py new g_cube   # before committing: diff the parameter block against the last commit,
+                                      # answer what each change should do, the entry is written for you
+python3.12 migrations.py              # dry run: how many presets the pending entries change
+python3.12 migrations.py examples     # the same for an example of every kind of change
+```
+
+Starting the core applies the entries this database hasn't had yet: to the element's own presets, to the copies inside channel and global presets, and to `state_backup.pkl`. The database is copied to `l3d.db.before-<date>` first, and every applied entry is recorded in its `migrations` table. So every database (the development one, the show machine's) gets each change exactly once, the first time it runs the new code.
+
+The file is append-only: never edit or delete an entry that may have run somewhere. To correct a mistake, add a new entry; to undo one, restore the database copy. Parameter lines must be self-contained (`self.x = <expression of args[k]>`, with numbers and lists written out), because the tool reads them as code.
 
 ---
