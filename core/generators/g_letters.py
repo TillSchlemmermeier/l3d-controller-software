@@ -74,7 +74,7 @@ class g_letters():
         if self.channel != 'Trigger':
             self.runtime_char = self.char
 
-        self.font = ImageFont.truetype("/usr/share/fonts/truetype/ubuntu/UbuntuMono-R.ttf", self.size)
+        self.font = ImageFont.truetype("/usr/share/fonts/truetype/ubuntu/UbuntuMono-R.ttf", max(self.size, 1))
         img = Image.new(mode = 'L', size = (10, 10), color = (0))
 
 
@@ -124,7 +124,7 @@ class g_letters():
 
 
         d = ImageDraw.Draw(img)
-        w, h = self.font.getsize(self.runtime_char)
+        _, _, w, h = self.font.getbbox(self.runtime_char)
         # print(w,h,(10-w)/2,(10-h)/2)
         d.text(((10-w)/2,(10-h)/2 -2), self.runtime_char,  font = self.font, fill=(255))
         self.frame = np.array(img)[:, ::-1]/255.0
