@@ -16,18 +16,11 @@ const baseUrl = 'http://localhost:8000/api'
 // shared secret for destructive endpoints
 const adminToken = import.meta.env.VITE_ADMIN_TOKEN || ''
 
-// Calls to the core API, used by both stores. url is relative to baseUrl; returns the JSON.
 async function callCoreApi(method: 'GET' | 'POST' | 'DELETE', url: string, data?: unknown) {
-  console.log(method, url)
-  try {
-    const headers: Record<string, string> = { 'X-Admin-Token': adminToken }
-    if (data !== undefined) headers['Content-Type'] = 'application/json'
-    const body = data === undefined ? undefined : JSON.stringify(data)
-    const response = await fetch(`${baseUrl}/${url}`, { method, headers, body })
-    return await response.json()
-  } catch (error) {
-    console.error('error', error)
-  }
+  const headers = { 'X-Admin-Token': adminToken, 'Content-Type': 'application/json' }
+  // without data, JSON.stringify gives undefined and fetch sends no body
+  const response = await fetch(`${baseUrl}/${url}`, { method, headers, body: JSON.stringify(data) })
+  return await response.json()
 }
 export const get = (url: string) => callCoreApi('GET', url)
 export const post = (url: string, data?: unknown) => callCoreApi('POST', url, data)

@@ -48,14 +48,23 @@ function clearOutput() {
   consoleLines.value = []
 }
 
+// Show errors from frontend that arrive here through main.ts.
+const showError = (error: unknown) => handleConsoleOutput(null, { type: 'stderr', data: `[frontend] ${error}` })
+const onError = (event: ErrorEvent) => showError(event.error ?? event.message)
+const onRejection = (event: PromiseRejectionEvent) => showError(event.reason)
+
 let disposePythonOutput: (() => void) | null = null
 
 onMounted(() => {
   disposePythonOutput = window.ipcRenderer.onPythonOutput(handleConsoleOutput)
+  window.addEventListener('error', onError)
+  window.addEventListener('unhandledrejection', onRejection)
 })
 
 onUnmounted(() => {
   disposePythonOutput?.()
+  window.removeEventListener('error', onError)
+  window.removeEventListener('unhandledrejection', onRejection)
 })
 </script>
 
