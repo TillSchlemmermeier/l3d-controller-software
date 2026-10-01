@@ -128,17 +128,15 @@ class MidiTranslation:
                     self.state[key] = int(midi_value * 180)
                 elif midi_index == 2:
                     key = 'random'
-                    self.state[key]=['global', 'all_channels', 'all_elements', 'random_channel', 'random_channel_elements', 'selected_channel', 'selected_channel_elements', 'random_element', 'selected_element'][int(midi_value * 9)]
+                    self.state[key]=['global', 'all_channels', 'all_elements', 'random_channel', 'random_channel_elements', 'selected_channel', 'selected_channel_elements', 'random_element', 'selected_element'][min(int(midi_value * 9), 8)]
                 elif midi_index == 3:
                     key = 's2l_normalize'
                     self.state[key] = True
                 elif midi_index == 4:
                     key = 's2l_gain'
                     self.state[key] = midi_value
-                elif midi_index == 5:
-                    pass
-                elif midi_index == 6:
-                    pass
+                else:
+                    return
 
                 self.notify_key(key)
 
