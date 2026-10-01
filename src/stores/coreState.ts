@@ -237,7 +237,6 @@ export const useCoreStateStore = defineStore('coreState', {
           this.updateSingleElement(message)
         }),
         window.ipcRenderer.onStateKeyData((message: any) => {
-          console.log('update key', message)
           this.updateSingleKey(message)
         }),
       ]

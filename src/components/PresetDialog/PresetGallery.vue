@@ -52,7 +52,7 @@
 
 
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed } from 'vue'
 import { useUiStateStore } from '../../stores/uiState'
 import { Preset } from '../../types/types'
 
@@ -76,7 +76,6 @@ function formatName(name: string): string {
 const sortedPresets = computed(() => {
   gifLoadingErrors.value.clear()
   const presets = [...uiState.overlayPresets] as Preset[]
-  console.log(presets)
   
   // Remove 'basic' preset before sorting
   const basicIndex = presets.findIndex(p => p.name === 'basic')
@@ -137,9 +136,5 @@ function stopDragging(e: MouseEvent) {
   }
   isDragging.value = false
 }
-
-onMounted(async () => {
-  console.log('Mounted Preset Gallery')
-})
 
 </script>

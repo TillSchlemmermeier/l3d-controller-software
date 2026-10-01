@@ -45,7 +45,6 @@ async function captureCombinedView(onFrameCapture: (frame: string) => void): Pro
 }
 
 async function captureFrames(channelIndex: number, onFrameCapture: (frame: string) => void): Promise<string[]> {
-  console.log('Capturing frames for channel:', channelIndex)
   const frames: string[] = []
   isCapturing.value = true
 

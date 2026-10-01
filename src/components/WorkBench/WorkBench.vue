@@ -332,7 +332,6 @@ function endEffectDrag(event: { to: any, oldIndex: number; newIndex: number }, c
   }
   const id = event.to.attributes.id.nodeValue
   const newChannelIndex: ChannelKey = id === 'global' ? 'global' : Number(id)
-  console.log(newChannelIndex, uiState.draggedChannelIndex)
   
   if (newChannelIndex !== uiState.draggedChannelIndex) {
     coreState.copyEffect(

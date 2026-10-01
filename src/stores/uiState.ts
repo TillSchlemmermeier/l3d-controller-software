@@ -106,7 +106,6 @@ export const useUiStateStore = defineStore('uiState', {
     async fetchAllPresets() {
       const url = `get-all-presets/${this.elementType}/${this.selectedElement}`
       this.adminPresets = await get(url)
-      console.log('fetched all presets', this.adminPresets)
     },
 
     // fetch the list of presets for an element
@@ -130,35 +129,30 @@ export const useUiStateStore = defineStore('uiState', {
     // delete a preset
     async deletePreset() {
       const url = `delete-preset/${this.elementType}/${this.selectedElement}/${this.selectedPreset}`
-      const response = await remove(url)
-      console.log('delete response', response)
+      await remove(url)
     },
 
     // delete an element
     async deleteElement() {
       const url = `delete-element/${this.elementType}/${this.selectedElement}`
-      const response = await remove(url)
-      console.log('delete response', response)
+      await remove(url)
     },
 
     // add an element
     async addElement(type: string, name: string) {
       const url = `add-element/${type}/${name}`
-      const response = await post(url)
-      console.log('add response', response)
+      await post(url)
     },
 
     // toggle active status of generator or effect
     async toggleElementActive() {
       const url = `toggle-element-active/${this.elementType}/${this.selectedElement}`
-      const response = await post(url)
-      console.log('toggle response', response)
+      await post(url)
     },
 
     async renamePreset(newName: string) {
       const url = `rename-preset/${this.elementType}/${this.selectedElement}/${this.selectedPreset}/${newName}`
-      const response = await post(url)
-      console.log('rename response', response)
+      await post(url)
       this.selectedPreset = newName
     },
 

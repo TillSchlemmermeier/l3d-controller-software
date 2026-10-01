@@ -146,7 +146,6 @@ async function loadPreset(preset_name: string) {
 }
 
 async function recordGif() {
-  console.log('channelPreviewRef:', props.channelPreviewRef) // Add this line
   showKeyboard.value = false
   isRecording.value = true
   showFrameSelector.value = true
@@ -162,8 +161,6 @@ async function recordGif() {
     )
   } else {
     const channelIndex = uiState.channelIndex
-    console.log('Channel index:', channelIndex)
-    
     try {
       // Pass callback to handle new frames
       capturedFrames.value = await props.channelPreviewRef.captureFrames(
@@ -214,9 +211,7 @@ async function savePreset(startFrame: number, endFrame: number, gif: boolean = t
 
     // Save the Preset
     const response = await coreState.save(presetName.value, gifData)
-    console.log(response)
     if (response.status == 200) { 
-      console.log('Save successful:', response.message)
       showFrameSelector.value = false
       isSuccess.value = true
       // Auto-hide success message after 1 second
