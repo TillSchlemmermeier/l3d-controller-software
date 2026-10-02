@@ -143,6 +143,15 @@ class DatabaseManager:
 
     def get_all_presets(self, element_type: str, element_name: str) -> list:
         """Get all presets containing a specific element, including channel and global presets"""
+        def elements_in(data):
+            """Every element a channel or global preset carries, at any depth."""
+            if isinstance(data, dict):
+                if 'params' in data:
+                    yield data
+                else:
+                    for value in data.values():
+                        yield from elements_in(value)
+
         presets = []
 
         # Get direct element presets (generator/effect presets)
@@ -153,49 +162,12 @@ class DatabaseManager:
                 'type': element_type
             })
 
-        # Get channel presets containing this element
-        channel_presets = self.get_preset_names('channel', 'presets')
-        for preset in channel_presets:
-            data = self.get_preset('channel', 'presets', preset['name'], False)
-
-            # Check if element is in this channel preset
-            if element_type == 'generator' and data['generator']['name'] == element_name:
-                presets.append({**preset, 'type': 'channel'})
-            elif element_type == 'effect':
-                for i in range(data.get('numberOfEffects', 0)):
-                    if data.get(i, {}).get('name') == element_name:
-                        presets.append({**preset, 'type': 'channel'})
-                        break
-
-        # Get global presets containing this element
-        global_presets = self.get_preset_names('global', 'presets')
-        for preset in global_presets:
-            data = self.get_preset('global', 'presets', preset['name'], False)
-            found = False
-
-            # Check regular channels
-            for i in range(data.get('numberOfChannels', 0)):
-                channel = data[i]
-                if element_type == 'generator' and channel['generator']['name'] == element_name:
-                    found = True
-                    break
-                elif element_type == 'effect':
-                    for j in range(channel.get('numberOfEffects', 0)):
-                        if channel.get(j, {}).get('name') == element_name:
-                            found = True
-                            break
-                    if found:
-                        break
-
-            # Check global effects channel
-            if not found and element_type == 'effect' and 'global' in data:
-                for i in range(data['global'].get('numberOfEffects', 0)):
-                    if data['global'].get(i, {}).get('name') == element_name:
-                        found = True
-                        break
-
-            if found:
-                presets.append({**preset, 'type': 'global'})
+        # Channel and global presets that carry a copy of it anywhere
+        for kind in ('channel', 'global'):
+            for preset in self.get_preset_names(kind, 'presets'):
+                data = self.get_preset(kind, 'presets', preset['name'], False)
+                if any(element['name'] == element_name for element in elements_in(data)):
+                    presets.append({**preset, 'type': kind})
 
         return presets
 

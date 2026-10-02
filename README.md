@@ -198,7 +198,7 @@ core/                Python realtime backend
   migrations.py      preset migration tool; element_migrations.py holds the entries
   migrate_slot_keys.py  one-off conversion of databases from before the named slots
   smoke_test.py      end-to-end check on a copy of the database
-  routers/           HTTP endpoints (presets, state, gradients, system)
+  routes.py          every HTTP endpoint (presets, live state, gradients, system)
   generators/        g_*.py  (+ .f90 Fortran generators)
   effects/           e_*.py  (+ .f90 Fortran effects)
   oneshots/          s_*.py

@@ -41,7 +41,7 @@ const uint8_t PROGMEM POSITION_MASK[] = {
     0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000,
     0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000,
     0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000,
-    0b00000000, 0b00000000, 0b00110000, 0b00000000, 0b00000000, 0b11111111, 0b00000011, 0b00000000,
+    0b00000000, 0b00000000, 0b00110000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000,
     0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000001, 0b00000000, 0b00000000,
     0b00000000, 0b00100000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000,
     0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000, 0b00000000,
@@ -50,6 +50,13 @@ const uint8_t PROGMEM POSITION_MASK[] = {
     0b00000000, 0b00000000, 0b00000000, 0b01100000, 0b00000000, 0b00000000, 0b00000010, 0b00000000,
     0b00000000, 0b00000000, 0b00000000,
 };
+
+// The next byte, waiting for it up to the 50 ms timeout; -1 if it never came.
+// SerialUSB.read() doesn't wait: it returns -1 at once if the byte isn't there yet.
+int waitRead() {
+  uint8_t c;
+  return SerialUSB.readBytes(&c, 1) == 1 ? c : -1;
+}
 
 // Position check using bit operations
 inline bool replacedLedPosition(uint16_t pos) {
@@ -65,7 +72,7 @@ void setup() {
   LEDS.addLeds<WS2811_PORTD,8,RGB>(leds, 400).setCorrection(TypicalLEDStrip);
 
   // Red LEDs at the end of each strand
-  const uint16_t redPositions[] = {390, 790, 1192, 1584, 1987};
+  const uint16_t redPositions[] = {390, 790, 1193, 1594, 1987};
   for(uint8_t i = 0; i < 5; i++) {
     leds[redPositions[i]] = CRGB::Red;
     leds[redPositions[i] + 1] = CRGB::Red;
@@ -77,14 +84,17 @@ void loop() {
   // read incomming chars from USB Serial Connection
   if(SerialUSB.available()>0) {
     if(SerialUSB.read()=='B') {
-      if(SerialUSB.read()=='E') {
-        if(SerialUSB.read()=='E') {
-          if(SerialUSB.read()=='F') {
-            for(int i=0; i<3000; i++) {
-              rgbArray[i]=SerialUSB.read();
-              rgbArray[i] = min(rgbArray[i], 200); // Limit RGB values to 200
+      if(waitRead()=='E') {
+        if(waitRead()=='E') {
+          if(waitRead()=='F') {
+            // readBytes waits for the bytes still on their way (up to the 50 ms
+            // timeout); read() would return -1 for them, which shows as 200
+            if(SerialUSB.readBytes(rgbArray, 3000) == 3000) {
+              for(int i=0; i<3000; i++) {
+                rgbArray[i] = min(rgbArray[i], 200); // Limit RGB values to 200
+              }
+              framePass=true;
             }
-            framePass=true;
           }
         }
       }
@@ -98,7 +108,7 @@ void loop() {
         case 392: i = 400; break;
         case 792: i = 800; break;
         case 1194: i = 1200; break;
-        case 1586: i = 1600; break;
+        case 1596: i = 1600; break;
       }
 
       if(replacedLedPosition(i)) {

@@ -35,7 +35,7 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
-import { RouteNames } from '../router/RouteNames'
+import { RouteNames } from '../router'
 import { useUiStateStore } from '../stores/uiState'
 import admin from '../assets/icons/admin.svg'
 import home from '../assets/icons/home.svg'
