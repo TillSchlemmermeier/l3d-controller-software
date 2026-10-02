@@ -17,8 +17,7 @@ from managers.db_manager import DatabaseManager
 from managers.state_manager import StateManager
 from managers.connection_manager import ConnectionManager
 
-# Import routers
-from routers import gradients_router, presets_router, state_router, system_router
+import routes
 
 def state_key(text):
     """A channel or slot as written in a datagram: numbers are numbers, names stay names."""
@@ -105,12 +104,12 @@ class WebSocketAPIServer:
         # 3. Initialize Connection Manager
         self.connection_manager = ConnectionManager(self.cube_state, self.array)
 
-        # 4. Store in app.state for Routers
-        self.app.state.connection_manager = self.connection_manager
-        self.app.state.db = self.db
-        self.app.state.state_manager = self.state_manager
-        self.app.state.cube_state = self.cube_state
-        self.app.state.randomizer_queue = randomizer_queue
+        # 4. Hand the shared objects to the endpoints
+        routes.connection_manager = self.connection_manager
+        routes.db = self.db
+        routes.state_manager = self.state_manager
+        routes.state = self.cube_state
+        routes.randomizer_queue = randomizer_queue
 
         # UDP transport placeholder
         self.udp_transport = None
@@ -135,11 +134,8 @@ class WebSocketAPIServer:
         if os.path.exists(self.dist_path):
             self.app.mount("/assets", StaticFiles(directory=f"{self.dist_path}/assets"), name="assets")
 
-        # 7. Mount Routers
-        self.app.include_router(presets_router.router)
-        self.app.include_router(state_router.router)
-        self.app.include_router(gradients_router.router)
-        self.app.include_router(system_router.router)
+        # 7. Mount the HTTP API
+        self.app.include_router(routes.router)
 
         # 8. Initialize Core Routes
         self.init_core_routes()

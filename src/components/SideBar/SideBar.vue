@@ -1,11 +1,13 @@
 <template>
  <div class="h-screen w-[436px] bg-black select-none flex flex-col">
     <div class="flex justify-around bg-zinc-800 pt-1 shrink-0">
-      <button 
-        @click="uiState.sidebarOption = 'console'"
+      <button
+        v-for="tab in tabs"
+        :key="tab.key"
+        @click="uiState.sidebarOption = tab.key"
         class="w-16 aspect-square flex items-center justify-center relative transition-all duration-200 ease-in-out rounded mx-1 active:scale-95"
         :class="[
-          uiState.sidebarOption === 'console' 
+          uiState.sidebarOption === tab.key
             ? 'bg-zinc-500 shadow-lg scale-105'
             : 'bg-zinc-600'
         ]"
@@ -13,76 +15,20 @@
         <div
           class="absolute top-0 h-1 w-full transition-all duration-200 rounded-l"
           :class="[
-            uiState.sidebarOption === 'console'
+            uiState.sidebarOption === tab.key
               ? 'bg-amber-500'
               : 'bg-transparent'
           ]"
         ></div>
         <span
-          v-if="uiState.consoleError"
+          v-if="tab.key === 'console' && uiState.consoleError"
           class="absolute top-1 right-1 w-4 h-4 rounded-full bg-red-500 ring-2 ring-zinc-800 animate-pulse"
         ></span>
         <img
-          :src="terminal"
+          :src="tab.icon"
           class="w-8 h-8 transition-transform duration-200"
           :class="[
-            uiState.sidebarOption === 'console'
-              ? 'opacity-100 scale-110 invert'
-              : 'opacity-100'
-          ]"
-        />
-      </button>
-      
-      <button 
-        @click="uiState.sidebarOption = 'palette'"
-        class="w-16 aspect-square flex items-center justify-center relative transition-all duration-200 ease-in-out rounded mx-1 active:scale-95"
-        :class="[
-          uiState.sidebarOption === 'palette' 
-            ? 'bg-zinc-500 shadow-lg scale-105'
-            : 'bg-zinc-600'
-        ]"
-      >
-        <div
-          class="absolute top-0 h-1 w-full transition-all duration-200 rounded-l"
-          :class="[
-            uiState.sidebarOption === 'palette'
-              ? 'bg-amber-500'
-              : 'bg-transparent'
-          ]"
-        ></div>
-        <img
-          :src="palette"
-          class="w-8 h-8 transition-transform duration-200"
-          :class="[
-            uiState.sidebarOption === 'palette'
-              ? 'opacity-100 scale-110 invert'
-              : 'opacity-100'
-          ]"
-        />
-      </button>
-
-      <button 
-        @click="uiState.sidebarOption = 'colors'"
-        class="w-16 aspect-square flex items-center justify-center relative transition-all duration-200 ease-in-out rounded mx-1 active:scale-95"
-        :class="[
-          uiState.sidebarOption === 'colors' 
-            ? 'bg-zinc-500 shadow-lg scale-105'
-            : 'bg-zinc-600'
-        ]"
-      >
-        <div
-          class="absolute top-0 h-1 w-full transition-all duration-200 rounded-l"
-          :class="[
-            uiState.sidebarOption === 'colors'
-              ? 'bg-amber-500'
-              : 'bg-transparent'
-          ]"
-        ></div>
-        <img
-          :src="grid_view"
-          class="w-8 h-8 transition-transform duration-200"
-          :class="[
-            uiState.sidebarOption === 'colors'
+            uiState.sidebarOption === tab.key
               ? 'opacity-100 scale-110 invert'
               : 'opacity-100'
           ]"
@@ -111,5 +57,11 @@ import grid_view from '../../assets/icons/grid_view.svg'
 import { useUiStateStore } from '../../stores/uiState'
 
 const uiState = useUiStateStore()
+
+const tabs = [
+  { key: 'console', icon: terminal },
+  { key: 'palette', icon: palette },
+  { key: 'colors', icon: grid_view },
+] as const
 
 </script>

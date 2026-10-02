@@ -96,3 +96,15 @@ export function rgbToHue(r: number, g: number, b: number): number {
   
   return h
 }
+
+// CSS background for a colour manager gradient. A colour without stops gets a grey swatch.
+export function gradientCss(stops: Array<[number, string]> | undefined, type: 'linear' | 'radial' = 'linear'): string {
+  if (!stops?.length) {
+    return 'linear-gradient(to right, #666666, #666666)'
+  }
+
+  const stopStrings = stops.map(([position, color]) => `${color} ${position}%`).join(', ')
+  return type === 'radial'
+    ? `radial-gradient(circle, ${stopStrings})`
+    : `linear-gradient(to right, ${stopStrings})`
+}

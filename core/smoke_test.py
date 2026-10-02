@@ -69,7 +69,7 @@ try:
     from midi.translation import MidiTranslation
     from randomizer import Randomizer
     from server import WebSocketAPIServer, UDPBroadcastProtocol
-    import routers.auth
+    import routes
 
     try:
         import migrate_slot_keys
@@ -114,7 +114,7 @@ try:
     randomizer = quietly(Randomizer, state)
     threading.Thread(target=randomizer.run_autopilot_loop, args=(state, queue), daemon=True).start()
     server = quietly(WebSocketAPIServer, state, queue)
-    routers.auth.ADMIN_TOKEN = 'smoke'
+    routes.ADMIN_TOKEN = 'smoke'
     client = TestClient(server.app)
     admin = {'X-Admin-Token': 'smoke'}
 

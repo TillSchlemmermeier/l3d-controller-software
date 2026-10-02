@@ -52,7 +52,7 @@
           >
             <div 
               class="w-14 h-14 rounded-md shadow-sm"
-              :style="{ background: generateGradientCSS(gradient.data) }"
+              :style="{ background: gradientCss(gradient.data) }"
             />
           </div>
         </div>
@@ -77,6 +77,7 @@ import { useCoreStateStore } from '../../../stores/coreState'
 import { dialog } from '../../ConfirmDialog.vue'
 import type { GradientPreset, SortOption } from '../../../types/types'
 import { ColorSorter } from '../../../utils/colorSorter'
+import { gradientCss } from '../../../utils/colorConversion'
 import SortButtons from './SortButtons.vue'
 
 const uiState = useUiStateStore()
@@ -147,11 +148,6 @@ async function handleDeleteGradient(gradient: GradientPreset) {
   }
   
   uiState.deleteActive = false
-}
-
-function generateGradientCSS(gradientData: Array<[number, string]>): string {
-  const stopStrings = gradientData.map(([position, color]) => `${color} ${position}%`)
-  return `linear-gradient(to right, ${stopStrings.join(', ')})`
 }
 
 onMounted(async () => {

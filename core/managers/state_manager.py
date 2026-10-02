@@ -1,27 +1,12 @@
 from copy import deepcopy
 
-# a channel of the state: 0..7, or 'global' for global effects
-ChannelKey = int | str
+from routes import ChannelKey
 
 class StateManager:
     def __init__(self, state):
         self.state = state
-        self._max_retries = 3
         self.history = []
         self.max_history_size = 10
-
-
-    def safe_state_operation(self, operation):
-        """Safely execute a state operation with retries"""
-        for attempt in range(self._max_retries):
-            try:
-                with self.state.lock:
-                    return operation()
-            except AssertionError as e:
-                if attempt == self._max_retries - 1:
-                    print(f"Failed after {self._max_retries} attempts: {e}")
-                    raise
-                print(f"Retry attempt {attempt + 1} after error: {e}")
 
     def save_state_for_undo(self):
         """Saves a snapshot of the current state to history"""
@@ -32,11 +17,11 @@ class StateManager:
         if len(self.history) > self.max_history_size:
             self.history.pop(0)
 
-    def undo_last_change(self) -> bool:
+    def undo_last_change(self):
         """Restores the last state from history"""
         if not self.history:
             print("No history to undo")
-            return False
+            return
 
         previous_state = self.history.pop()
 
@@ -47,12 +32,12 @@ class StateManager:
             self.state['midi_update'] = 1
             for i in range(self.state.get('numberOfChannels', 0)):
                 self.update_channel(i)
+            self.update_channel('global')
 
         print(f"State restored. History size: {len(self.history)}")
-        return True
 
     def update_channel(self, channel_key: ChannelKey):
-        def _update():
+        with self.state.lock:
             channel = dict(self.state[channel_key])  # Local copy
             channel['update'] = 1
             if 'generator' in channel:
@@ -62,8 +47,6 @@ class StateManager:
             if 'color' in channel:
                 channel['color']['update'] = 1
             self.state[channel_key] = channel
-
-        self.safe_state_operation(_update)
 
     def load_generator(self, channel: int, preset_data: dict, this_channel: dict = None):
         """Load a generator preset into a channel"""
@@ -107,8 +90,6 @@ class StateManager:
     def load_global(self, preset_data: dict, instant: bool = True):
         """Load a global preset"""
         with self.state.lock:
-            # for key, value in preset_data.items():
-            #     self.state[key] = value
             self.state["context"] = preset_data["context"]
             self.state['global'] = preset_data['global']
             self.update_channel('global')
@@ -125,7 +106,7 @@ class StateManager:
 
             self.state['midi_update'] = 1
 
-    def remove_channel(self, channel_index: int) -> bool:
+    def remove_channel(self, channel_index: int):
         """Remove a channel and shift others up"""
         with self.state.lock:
             # Move all channels down
@@ -237,13 +218,13 @@ class StateManager:
             channel[effect_index]['IO'] = not channel[effect_index]['IO']
             self.state[channel_index] = channel
 
-    def update_global_key(self, key: str, value) -> bool:
-        """Update a specific global key """
+    def update_global_key(self, key: str, value):
+        """Update a specific global key"""
         with self.state.lock:
             self.state[key] = value
             self.state['midi_update'] = 1
 
-    def update_channel_key(self, channel_index: int, key: str, value) -> bool:
+    def update_channel_key(self, channel_index: int, key: str, value):
         """Update a specific key in a channel"""
         with self.state.lock:
             channel = self.state[channel_index]
@@ -252,7 +233,7 @@ class StateManager:
             self.state[channel_index] = channel
             self.state['midi_update'] = 1
 
-    def toggle_channel_key(self, channel_index: int, key: str) -> bool:
+    def toggle_channel_key(self, channel_index: int, key: str):
         """Toggle a specific boolean key in a channel"""
         with self.state.lock:
             channel = self.state[channel_index]
@@ -261,7 +242,7 @@ class StateManager:
             self.state[channel_index] = channel
             self.state['midi_update'] = 1
 
-    def update_color_manager(self, channel_index: ChannelKey, color_data: dict) -> bool:
+    def update_color_manager(self, channel_index: ChannelKey, color_data: dict):
         """Update color manager settings for a specific channel"""
         with self.state.lock:
             channel = self.state[channel_index]
@@ -269,8 +250,6 @@ class StateManager:
             channel['color']['update'] = 1
             self.state[channel_index] = channel
             self.state['midi_update'] = 1
-
-            return True
 
     def clear_gradient(self, channel_index: ChannelKey):
         """Clear gradient settings for a specific channel"""

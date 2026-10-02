@@ -9,6 +9,7 @@
 <script setup lang="ts">
 import { onMounted, ref, onUnmounted } from 'vue'
 import * as THREE from 'three'
+import { createCircleTexture, createCubePoints } from './cubePoints'
 
 const scatterplot = ref<HTMLDivElement | null>(null)
 const rotateCube = ref(false)
@@ -30,40 +31,6 @@ function setupScene() {
   renderer.setSize(500, 500)
 
   return { scene, camera, renderer }
-}
-
-function createVertices() {
-  const vertices = []
-
-  for (let i = 0; i < 10; i++) {
-    for (let j = 0; j < 10; j++) {
-      for (let k = 0; k < 10; k++) {
-        vertices.push(
-          i - 4.5,
-          j - 4.5,
-          k - 4.5
-        )
-      }
-    }
-  }
-  return vertices
-}
-
-function createCircleTexture(): THREE.Texture {
-  const canvas = document.createElement('canvas')
-  canvas.width = 64
-  canvas.height = 64
-  
-  const context = canvas.getContext('2d')
-  if (!context) throw new Error('Could not get 2D context')
-  
-  context.beginPath()
-  context.arc(32, 32, 30, 0, Math.PI * 2)
-  context.closePath()
-  context.fillStyle = '#ffffff'
-  context.fill()
-  
-  return new THREE.CanvasTexture(canvas)
 }
 
 // Share texture across all renderers to save memory
@@ -104,30 +71,12 @@ onMounted(() => {
     scatterplot.value.appendChild(renderer.domElement)
   }
 
-  // Setup geometry
-  const geometry = new THREE.BufferGeometry()
-  geometry.setAttribute(
-    'position',
-    new THREE.Float32BufferAttribute(createVertices(), 3)
-  )
-
-  colorAttribute = new THREE.Uint8BufferAttribute(new Uint8Array(3000), 3, true)
-  colorAttribute.setUsage(THREE.DynamicDrawUsage)
-  geometry.setAttribute('color', colorAttribute)
-
-  const material = new THREE.PointsMaterial({
+  const { points, colorAttr, geometry, material } = createCubePoints(circleTexture, {
     size: 0.8,
-    vertexColors: true,
-    transparent: true,
     opacity: 0.9,
-    map: circleTexture,
-    alphaMap: circleTexture,
-    alphaTest: 0.1,
-    sizeAttenuation: true,
-    blending: THREE.AdditiveBlending
+    depthWrite: true
   })
-  
-  const points = new THREE.Points(geometry, material)
+  colorAttribute = colorAttr
   rotatingPoints = points
   scene.add(points)
 

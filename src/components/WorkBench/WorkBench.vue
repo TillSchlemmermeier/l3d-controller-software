@@ -71,7 +71,7 @@
                 <div
                   class="h-6 w-full rounded border relative"
                   :class="channel.color?.gradient ? 'border-zinc-500' : 'border-zinc-600 bg-zinc-700'"
-                  :style="channel.color?.gradient ? { background: generateGradientCSS(channel.color.gradient) } : {}"
+                  :style="channel.color?.gradient ? { background: gradientCss(channel.color.gradient) } : {}"
                   :title="channel.color?.gradient ? '' : 'No gradient set'"
                 >
                   <!-- Animated ring overlay -->
@@ -130,7 +130,7 @@
           <div
             class="h-6 w-full rounded border relative"
             :class="coreState.globalColor?.gradient ? 'border-zinc-500' : 'border-zinc-600 bg-zinc-700'"
-            :style="coreState.globalColor?.gradient ? { background: generateGradientCSS(coreState.globalColor.gradient) } : {}"
+            :style="coreState.globalColor?.gradient ? { background: gradientCss(coreState.globalColor.gradient) } : {}"
             :title="coreState.globalColor?.gradient ? '' : 'No gradient set'"
           >
             <!-- Animated ring overlay -->
@@ -195,6 +195,7 @@ import ContextSelector from './ContextSelector.vue'
 import ShiftSelector from './ShiftSelector.vue'
 import TrashZone from './TrashZone.vue'
 import { vLongpress } from '../../directives/longpress'
+import { gradientCss } from '../../utils/colorConversion'
 
 const coreState = useCoreStateStore()
 const uiState = useUiStateStore()
@@ -343,15 +344,6 @@ function endEffectDrag(event: { to: any, oldIndex: number; newIndex: number }, c
   } else {
     coreState.moveEffect(channelIndex, event.oldIndex, event.newIndex)
   }
-}
-
-function generateGradientCSS(gradientData: Array<[number, string]>): string {
-  if (!gradientData || gradientData.length === 0) {
-    return 'linear-gradient(to right, #666666, #666666)' // Fallback for empty/invalid data
-  }
-
-  const stopStrings = gradientData.map(([position, color]) => `${color} ${position}%`)
-  return `linear-gradient(to right, ${stopStrings.join(', ')})`
 }
 
 </script>

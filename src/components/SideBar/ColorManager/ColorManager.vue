@@ -5,7 +5,7 @@
       <GradientSlider
         :mode="mode"
         :gradientStops="gradientStops"
-        :gradientCss="gradientCss"
+        :gradientCss="gradientCss(gradientStops, gradientType)"
         :selectedStopIndex="selectedStopIndex"
         :selectedRegion="selectedRegion"
         @addStop="handleAddGradientStop"
@@ -126,7 +126,7 @@ import RangeSlider from './RangeSlider.vue'
 import SoundOptions from './SoundOptions.vue'
 import OtherChannels from './OtherChannels.vue'
 import ActionButtons from './ActionButtons.vue'
-import { colorStringToHSV, hsvToColorString } from '../../../utils/colorConversion'
+import { colorStringToHSV, hsvToColorString, gradientCss } from '../../../utils/colorConversion'
 import type { SelectedRegion } from '../../../types/types'
 
 const currentHue = ref(0)
@@ -150,18 +150,6 @@ const uiState = useUiStateStore()
 
 const selectedStop = computed(() => {
   return gradientStops.value[selectedStopIndex.value]
-})
-
-const gradientCss = computed(() => {
-  const stops = gradientStops.value
-    .map(([position, color]) => `${color} ${position}%`)
-    .join(', ')
-  
-  if (gradientType.value === 'radial') {
-    return `radial-gradient(circle, ${stops})`
-  } else {
-    return `linear-gradient(to right, ${stops})`
-  }
 })
 
 function loadColorData() {

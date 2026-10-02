@@ -20,7 +20,7 @@
           <div 
             class="mb-2 w-20 h-16 rounded border border-zinc-500 flex items-center justify-center"
             :class="[{ 'ring-4 ring-blue-500 opacity-30': index === uiState.channelIndex }]"
-            :style="{ background: generateChannelGradientCSS(channel.color) }"
+            :style="{ background: gradientCss(channel.color?.gradient, channel.color?.gradientType) }"
           >
             <span class="text-4xl font-bold text-white drop-shadow-lg">
               {{ index + 1 }}
@@ -36,6 +36,7 @@ import { ref } from 'vue'
 import { useCoreStateStore } from '../../../stores/coreState'
 import { useUiStateStore } from '../../../stores/uiState'
 import type { ChannelKey, Color } from '../../../types/types'
+import { gradientCss } from '../../../utils/colorConversion'
 
 interface Emits {
   (e: 'channelCopied'): void
@@ -89,17 +90,5 @@ async function handleChannelClick(channelIndex: ChannelKey) {
   if (toIndex === uiState.channelIndex) {
     emit('channelCopied')
   }
-}
-
-function generateChannelGradientCSS(colorData: Color | undefined): string {
-  if (!Array.isArray(colorData?.gradient) || colorData.gradient.length === 0) {
-    return 'linear-gradient(to right, #666666, #666666)'
-  }
-
-  const stopStrings = colorData.gradient.map(([position, color]: [number, string]) => `${color} ${position}%`)
-
-  return colorData.gradientType === 'radial'
-    ? `radial-gradient(circle, ${stopStrings.join(', ')})`
-    : `linear-gradient(to right, ${stopStrings.join(', ')})`
 }
 </script>

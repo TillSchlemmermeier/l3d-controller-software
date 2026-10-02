@@ -65,33 +65,28 @@ class DatabaseManager:
 
 
     def save_preset(self, type: str, element: str, preset: str, data: dict):
-        print('save_preset', type, element, preset, data)
-        try:
-            with self.get_db_connection() as conn:
-                cursor = conn.cursor()
-                # Get or create component
-                cursor.execute('''
-                    INSERT OR IGNORE INTO elements (type, name)
-                    VALUES (?, ?)
-                ''', (type, element))
-                
-                cursor.execute('''
-                    SELECT id FROM elements
-                    WHERE type = ? AND name = ?
-                ''', (type, element))
-                
-                element_id = cursor.fetchone()[0]
-                
-                cursor.execute('''
-                    INSERT OR REPLACE INTO presets (element_id, name, data)
-                    VALUES (?, ?, ?)
-                ''', (element_id, preset, json.dumps(data, indent=None, separators=(',', ':'))))
-                
-                conn.commit()
-                return True, "Preset saved successfully"
-        except Exception as e:
-            print(f"Error saving preset: {e}")
-            return False
+        """Save a preset, replacing one with the same name; the element row is created if needed"""
+        with self.get_db_connection() as conn:
+            cursor = conn.cursor()
+            # Get or create component
+            cursor.execute('''
+                INSERT OR IGNORE INTO elements (type, name)
+                VALUES (?, ?)
+            ''', (type, element))
+            
+            cursor.execute('''
+                SELECT id FROM elements
+                WHERE type = ? AND name = ?
+            ''', (type, element))
+            
+            element_id = cursor.fetchone()[0]
+            
+            cursor.execute('''
+                INSERT OR REPLACE INTO presets (element_id, name, data)
+                VALUES (?, ?, ?)
+            ''', (element_id, preset, json.dumps(data, indent=None, separators=(',', ':'))))
+            
+            conn.commit()
 
 
     def convert_string_keys_to_int(self, obj):
@@ -254,151 +249,131 @@ class DatabaseManager:
 
     def increment_request_count(self, type: str, element: str, preset: str):
         """Increment the load count for a preset"""
-        try:
-            with self.get_db_connection() as conn:
-                cursor = conn.cursor()
+        with self.get_db_connection() as conn:
+            cursor = conn.cursor()
 
-                # Update preset request count
-                cursor.execute('''
-                    UPDATE presets 
-                    SET request_count = request_count + 1
-                    WHERE id IN (
-                        SELECT p.id
-                        FROM presets p
-                        JOIN elements e ON p.element_id = e.id
-                        WHERE e.type = ? AND e.name = ? AND p.name = ?
-                    )
-                ''', (type, element, preset))
+            # Update preset request count
+            cursor.execute('''
+                UPDATE presets 
+                SET request_count = request_count + 1
+                WHERE id IN (
+                    SELECT p.id
+                    FROM presets p
+                    JOIN elements e ON p.element_id = e.id
+                    WHERE e.type = ? AND e.name = ? AND p.name = ?
+                )
+            ''', (type, element, preset))
 
-                # Update element request count
-                cursor.execute('''
-                    UPDATE elements
-                    SET request_count = request_count + 1
-                    WHERE type = ? AND name = ?
-                ''', (type, element))
+            # Update element request count
+            cursor.execute('''
+                UPDATE elements
+                SET request_count = request_count + 1
+                WHERE type = ? AND name = ?
+            ''', (type, element))
 
-                conn.commit()
-        except Exception as e:
-            print(f"Error incrementing load count: {e}")
+            conn.commit()
 
 
     def rename_preset(self, type: str, element: str, old_name: str, new_name: str) -> bool:
-        """Rename a preset"""
-        try:
-            with self.get_db_connection() as conn:
-                cursor = conn.cursor()
-                cursor.execute('''
-                    UPDATE presets 
-                    SET name = ?
-                    WHERE id IN (
-                        SELECT p.id
-                        FROM presets p
-                        JOIN elements e ON p.element_id = e.id
-                        WHERE e.type = ? AND e.name = ? AND p.name = ?
-                    )
-                ''', (new_name, type, element, old_name))
-                
-                db_success = cursor.rowcount > 0
-                conn.commit()
-                
-                return db_success
-
-        except Exception as e:
-            print(f"Error renaming preset: {e}")
-            return False
+        """Rename a preset
+        Returns bool: True if renamed, False if not found or the new name is taken
+        """
+        with self.get_db_connection() as conn:
+            cursor = conn.cursor()
+            # OR IGNORE: a name that is already taken leaves the row as it is (rowcount 0)
+            cursor.execute('''
+                UPDATE OR IGNORE presets
+                SET name = ?
+                WHERE id IN (
+                    SELECT p.id
+                    FROM presets p
+                    JOIN elements e ON p.element_id = e.id
+                    WHERE e.type = ? AND e.name = ? AND p.name = ?
+                )
+            ''', (new_name, type, element, old_name))
             
+            db_success = cursor.rowcount > 0
+            conn.commit()
+            
+            return db_success
+
 
     def delete_preset(self, type: str, element: str, preset: str) -> bool:
         """Delete a preset
-        Returns bool: True if preset was deleted, False if error or not found
+        Returns bool: True if preset was deleted, False if not found
         """
-        try:
-            with self.get_db_connection() as conn:
-                cursor = conn.cursor()
-                
-                # Delete preset using JOIN to ensure element type/name match
-                cursor.execute('''
-                    DELETE FROM presets 
-                    WHERE id IN (
-                        SELECT p.id
-                        FROM presets p
-                        JOIN elements e ON p.element_id = e.id
-                        WHERE e.type = ? AND e.name = ? AND p.name = ?
-                    )
-                ''', (type, element, preset))
-                
-                db_success = cursor.rowcount > 0
-                conn.commit()
-                return db_success
-
-        except Exception as e:
-            print(f"Error deleting preset: {e}")
-            return False
+        with self.get_db_connection() as conn:
+            cursor = conn.cursor()
+            
+            # Delete preset using JOIN to ensure element type/name match
+            cursor.execute('''
+                DELETE FROM presets 
+                WHERE id IN (
+                    SELECT p.id
+                    FROM presets p
+                    JOIN elements e ON p.element_id = e.id
+                    WHERE e.type = ? AND e.name = ? AND p.name = ?
+                )
+            ''', (type, element, preset))
+            
+            db_success = cursor.rowcount > 0
+            conn.commit()
+            return db_success
         
     def delete_element(self, type: str, element: str) -> bool:
         """Delete an element and all its associated presets
-        Returns bool: True if element was deleted, False if error or not found
+        Returns bool: True if element was deleted, False if not found
         """
-        try:
-            with self.get_db_connection() as conn:
-                cursor = conn.cursor()
-                
-                # Get all associated presets
-                cursor.execute('''
-                    SELECT p.name
-                    FROM presets p
-                    JOIN elements e ON p.element_id = e.id
-                    WHERE e.type = ? AND e.name = ?
-                ''', (type, element))
-                
-                # Delete each preset
-                presets = [row[0] for row in cursor.fetchall()]
-                for preset in presets:
-                    self.delete_preset(type, element, preset)
-                
-                # Delete the element itself
-                cursor.execute('''
-                    DELETE FROM elements 
-                    WHERE type = ? AND name = ?
-                ''', (type, element))
-                
-                success = cursor.rowcount > 0
-                conn.commit()
-                       
-                return success
-                
-        except Exception as e:
-            print(f"Error deleting element: {e}")
-            return False
+        with self.get_db_connection() as conn:
+            cursor = conn.cursor()
+            
+            # Get all associated presets
+            cursor.execute('''
+                SELECT p.name
+                FROM presets p
+                JOIN elements e ON p.element_id = e.id
+                WHERE e.type = ? AND e.name = ?
+            ''', (type, element))
+            
+            # Delete each preset
+            presets = [row[0] for row in cursor.fetchall()]
+            for preset in presets:
+                self.delete_preset(type, element, preset)
+            
+            # Delete the element itself
+            cursor.execute('''
+                DELETE FROM elements 
+                WHERE type = ? AND name = ?
+            ''', (type, element))
+            
+            success = cursor.rowcount > 0
+            conn.commit()
+                   
+            return success
 
 
     def toggle_element_active(self, type: str, name: str) -> bool:
         """Toggle the active status of an element
-        Returns bool: True if status was toggled, False if error or not found
+        Returns bool: True if status was toggled, False if not found
         """
-        try:
-            with self.get_db_connection() as conn:
-                cursor = conn.cursor()
-                
-                # Toggle active status
-                cursor.execute('''
-                    UPDATE elements
-                    SET active = CASE 
-                        WHEN active = 1 THEN 0 
-                        ELSE 1 
-                    END
-                    WHERE type = ? AND name = ?
-                    RETURNING active
-                ''', (type, name))
-                
-                result = cursor.fetchone()
-                if result:
-                    conn.commit()
-                    return True
-                return False
-        
-        except Exception as e:
-            print(f"Error toggling element status: {e}")
+        with self.get_db_connection() as conn:
+            cursor = conn.cursor()
+            
+            # Toggle active status
+            cursor.execute('''
+                UPDATE elements
+                SET active = CASE 
+                    WHEN active = 1 THEN 0 
+                    ELSE 1 
+                END
+                WHERE type = ? AND name = ?
+                RETURNING active
+            ''', (type, name))
+            
+            result = cursor.fetchone()
+            if result:
+                conn.commit()
+                return True
             return False
 
 
@@ -470,86 +445,72 @@ class DatabaseManager:
 
     def add_element(self, type: str, name: str) -> bool:
         """Add a new generator or effect to the database with a basic preset
-        Returns bool: True if element was added successfully"""
-        try:
-            with self.get_db_connection() as conn:
-                cursor = conn.cursor()
-                
-                try:
-                    # Insert new element
-                    cursor.execute('''
-                        INSERT INTO elements (type, name)
-                        VALUES (?, ?)
-                    ''', (type, name))
-                    
-                    element_id = cursor.lastrowid
-                    
-                    # Instantiate via the safe element registry
-                    element = new_element(type, name)
+        Returns bool: True if element was added successfully, False if it already exists"""
+        with self.get_db_connection() as conn:
+            cursor = conn.cursor()
 
-                    # Call element with appropriate arguments
-                    if type == 'generator':
-                        element([0, 0, 0, 0, 0, 0, 0, 0])
-                    elif type == 'effect':
-                        dummy_world = np.zeros([3, 10, 10, 10])
-                        element(dummy_world, [0, 0, 0, 0, 0, 0, 0, 0])
-                    
-                    # Get state and format params
-                    state = element.return_state()
-                    params = []
-                    for param in state:
-                        params.extend([param[0], param[1], param[2], 0])
-                    
-                    # Create and save basic preset
-                    preset_data = {
-                        "name": name,
-                        "update": 1,
-                        "params": params
-                    }
+            # Insert new element
+            cursor.execute('''
+                INSERT OR IGNORE INTO elements (type, name)
+                VALUES (?, ?)
+            ''', (type, name))
+            if cursor.rowcount == 0:
+                return False
 
-                    if type == 'effect':
-                        preset_data['IO'] = 1
+            element_id = cursor.lastrowid
 
-                    cursor.execute('''
-                        INSERT INTO presets (element_id, name, data)
-                        VALUES (?, 'basic', ?)
-                    ''', (element_id, json.dumps(preset_data)))
-                    
-                    conn.commit()
-                    print(f"Element and basic preset added successfully")
-                    return True
-                    
-                except Exception as e:
-                    print(f"Error creating element or preset: {e}")
-                    conn.rollback()  # Rollback the entire transaction
-                    return False
+            # Instantiate via the safe element registry. If this raises, the insert
+            # above is never committed and closing the connection discards it.
+            element = new_element(type, name)
 
-        except Exception as e:
-            print(f"Error connecting to database: {e}")
-            return False
+            # Call element with appropriate arguments
+            if type == 'generator':
+                element([0, 0, 0, 0, 0, 0, 0, 0])
+            elif type == 'effect':
+                dummy_world = np.zeros([3, 10, 10, 10])
+                element(dummy_world, [0, 0, 0, 0, 0, 0, 0, 0])
+
+            # Get state and format params
+            state = element.return_state()
+            params = []
+            for param in state:
+                params.extend([param[0], param[1], param[2], 0])
+
+            # Create and save basic preset
+            preset_data = {
+                "name": name,
+                "update": 1,
+                "params": params
+            }
+
+            if type == 'effect':
+                preset_data['IO'] = 1
+
+            cursor.execute('''
+                INSERT INTO presets (element_id, name, data)
+                VALUES (?, 'basic', ?)
+            ''', (element_id, json.dumps(preset_data)))
+
+            conn.commit()
+            print(f"Element and basic preset added successfully")
+            return True
 
 
     def save_gradient(self, gradient_type: str, data: str,  subtype: str = None):
         """Save a gradient to the database"""
-        try:
-            with self.get_db_connection() as conn:
-                cursor = conn.cursor()
+        with self.get_db_connection() as conn:
+            cursor = conn.cursor()
 
-                cursor.execute('''
-                    INSERT OR REPLACE INTO gradients (type, subtype, data)
-                    VALUES (?, ?, ?)
-                ''', (
-                    gradient_type,
-                    subtype,
-                    data,
-                ))
+            cursor.execute('''
+                INSERT OR REPLACE INTO gradients (type, subtype, data)
+                VALUES (?, ?, ?)
+            ''', (
+                gradient_type,
+                subtype,
+                data,
+            ))
 
-                conn.commit()
-                return True, "Gradient saved successfully"
-
-        except Exception as e:
-            print(f"Error saving gradient: {e}")
-            return False, f"Error saving gradient: {e}"
+            conn.commit()
 
 
     def get_all_gradients(self):
@@ -585,23 +546,18 @@ class DatabaseManager:
 
     def delete_gradient(self, gradient_id: int) -> bool:
         """Delete a gradient by id"""
-        try:
-            with self.get_db_connection() as conn:
-                cursor = conn.cursor()
+        with self.get_db_connection() as conn:
+            cursor = conn.cursor()
 
-                cursor.execute('''
-                    DELETE FROM gradients
-                    WHERE id = ?
-                ''', (gradient_id,))
+            cursor.execute('''
+                DELETE FROM gradients
+                WHERE id = ?
+            ''', (gradient_id,))
 
-                success = cursor.rowcount > 0
-                conn.commit()
+            success = cursor.rowcount > 0
+            conn.commit()
 
-                return success
-
-        except Exception as e:
-            print(f"Error deleting gradient: {e}")
-            return False
+            return success
 
 
     def get_gradient_by_id(self, gradient_id: int):
