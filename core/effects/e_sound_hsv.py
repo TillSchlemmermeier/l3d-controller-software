@@ -13,9 +13,6 @@ class e_sound_hsv():
         self.channel = 1.0
         self.sound_values = shared_memory.SharedMemory(name = "global_s2l_memory")
         self.lastvalue = 0
-        self.counter = 0
-        self.step = 0
-        self.mode = 'normal'
 
     def return_state(self):
         return [
@@ -39,13 +36,11 @@ class e_sound_hsv():
             self.lastvalue = np.clip(current_volume,0,1)
         else:
             self.lastvalue = np.clip(self.lastvalue - 0.2, 0,1)
-        #current_volume = 0.5*np.sin(self.step * 0.1) + 0.5
 
         # get list of leds
         led_list = world.reshape([3, 10**3]).T
 
         hsv_list = np.round(colors.rgb_to_hsv(np.clip(led_list, 0, 1)),2)
-        # print(round(self.amount_h*current_volume, 2), round(self.amount_s*current_volume, 2))
 
         inds = np.where(hsv_list[:, 2] > 0)[0]
         hsv_list[inds, 0] += np.clip(self.amount_h * self.lastvalue, 0, 1)
@@ -55,7 +50,5 @@ class e_sound_hsv():
         led_list = colors.hsv_to_rgb(hsv_list).T
 
         world = led_list.reshape([3, 10, 10, 10])
-
-        #self.step += 1
 
         return np.clip(world, 0, 1)

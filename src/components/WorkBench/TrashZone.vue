@@ -1,4 +1,4 @@
-<template v-if="coreState.channels.length < 8">
+<template>
   <div class="w-full flex justify-center">
     <div class="relative w-34 h-36">
       <!-- Trash icon background -->
@@ -19,7 +19,6 @@
       
       <!-- Draggable area with independent opacity -->
       <draggable
-        :v-model="trashZone"
         item-key="trash"
         class="absolute inset-0 opacity-40"
         :group="{ name: 'effects', put: true, pull: false }"
@@ -45,15 +44,12 @@ import trashIcon from '../../assets/icons/trash.png'
 
 const coreState = useCoreStateStore()
 const uiState = useUiStateStore()
-const trashZone = ref(['trash'])
 const trashIconUrl = ref(trashIcon)
 const backgroundImage = computed(() => `url(${trashIconUrl.value})`)
 
 
 function removeItem(event: { item: HTMLElement; oldIndex: number }) {
-  // uiState.isSelected = [-1, -1]
   event.item.remove()
-  trashZone.value.pop()
   
   if (uiState.lastTypeDragged === 'channel') {
     coreState.removeChannel(event.oldIndex)

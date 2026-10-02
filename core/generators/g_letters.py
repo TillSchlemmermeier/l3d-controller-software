@@ -125,20 +125,8 @@ class g_letters():
 
         d = ImageDraw.Draw(img)
         _, _, w, h = self.font.getbbox(self.runtime_char)
-        # print(w,h,(10-w)/2,(10-h)/2)
         d.text(((10-w)/2,(10-h)/2 -2), self.runtime_char,  font = self.font, fill=(255))
         self.frame = np.array(img)[:, ::-1]/255.0
-
-        if np.shape(self.frame)[0] == 10:
-            pass
-        elif np.shape(self.frame)[0] < 10:
-            add = 10 - np.shape(self.frame)[0]
-            temp = np.zeros([10, 10])
-            temp = self.frame
-            self.frame = temp
-        else:
-            cut = np.shape(self.frame)[0] - 10
-            self.frame = self.frame[int(cut/2) : -int(cut/2), int(cut/2) : -int(cut/2)]
 
         # copy world from storate to world
         world[0,:,4,:] = self.frame

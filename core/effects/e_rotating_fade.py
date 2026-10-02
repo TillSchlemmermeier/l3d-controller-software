@@ -22,10 +22,6 @@ class e_rotating_fade():
         for i in range(10):
             self.colorworld[:, i, :, :] = np.sqrt(i/9.0)
 
-#        self.colorworld[0, :, :, :] *= self.color['r']
-#        self.colorworld[0, :, :, :] *= self.color['g']
-#        self.colorworld[0, :, :, :] *= self.color['b']
-
     def return_state(self):
         return [
             ['X speed', 'xspeed', round(self.xspeed,1)],

@@ -46,7 +46,6 @@ class g_planes():
         # === PARAMETERS END ===
 
 
-        # def generate(self, step, dumpworld):
         world = np.zeros([3, 10, 10, 10])
 
         #check for trigger
@@ -105,12 +104,5 @@ class g_planes():
             world[:, :, self.position,:] = 1.0
         else:
             world[:, :,:,self.position] = 1.0
-
-        '''
-        # delete if idle?
-        if self.trigger:
-            if self.stop:
-                world[:, :, :, :] = 0.0
-        '''
 
         return np.clip(world, 0, 1)

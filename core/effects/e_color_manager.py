@@ -22,15 +22,10 @@ class e_color_manager():
         # Store base values (without sound modulation)
         self._base_speed = 0.5
         self._base_section_start = 0
-        self._base_section_width = 100
-        self._base_rotate_speed_y = 0.0
-        self._base_rotate_speed_z = 0.0
         self._base_gradient = []
 
         # Pre-computed arrays for performance
         self._x_coords = None
-        self._y_coords = None
-        self._z_coords = None
         self._distance_cache = None
         self._colormap_cache = None
         self._gradient_hash = None
@@ -43,10 +38,7 @@ class e_color_manager():
 
     def _precompute_coordinates(self):
         """Pre-compute coordinate arrays for vectorized operations"""
-        # Store coordinates for all three axes
         self._x_coords = np.linspace(0, 1, 10)
-        self._y_coords = np.linspace(0, 1, 10)
-        self._z_coords = np.linspace(0, 1, 10)
 
         # Pre-compute 3D meshgrids for rotation (centered at origin)
         x, y, z = np.meshgrid(
@@ -78,7 +70,6 @@ class e_color_manager():
         cos_y = np.cos(angle_y)
         sin_y = np.sin(angle_y)
         x_rot_y = self._coords_x * cos_y - self._coords_z * sin_y
-        z_rot_y = self._coords_x * sin_y + self._coords_z * cos_y
         y_rot_y = self._coords_y
         
         # Rotation around Z axis (pitch)
@@ -324,11 +315,8 @@ class e_color_manager():
             self.section_start = color_manager_data['sectionStart'] * self._inv_100
             self._base_section_start = color_manager_data['sectionStart']
             self.section_width = color_manager_data['sectionWidth'] * 0.005 # / 100 / 2
-            self._base_section_width = color_manager_data['sectionWidth']
             self.rotate_speed_y = color_manager_data['rotateSpeedY'] * self._inv_100
-            self._base_rotate_speed_y = color_manager_data['rotateSpeedY']
             self.rotate_speed_z = color_manager_data['rotateSpeedZ'] * self._inv_100
-            self._base_rotate_speed_z = color_manager_data['rotateSpeedZ']
             self.sound_to_light_options = color_manager_data.get('soundToLightOptions', [])
 
             # Update colormap cache

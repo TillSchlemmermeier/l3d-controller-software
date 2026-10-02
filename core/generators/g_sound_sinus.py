@@ -12,7 +12,6 @@ class g_sound_sinus():
         self.sound_values = shared_memory.SharedMemory(name = "global_s2l_memory")
         self.speed = 0.1
         self.amps = np.zeros(4)
-        self.base_amp = 0.2
 
     def return_state(self):
         return [
@@ -31,7 +30,7 @@ class g_sound_sinus():
             self.amps[i] = struct.unpack('d', bytes(self.sound_values.buf[i*8:i*8+8]))[0]
 
         x = np.linspace(0, 11, 12)
-        pos = self.amps[0]*np.sin(np.pi*x/11) #  + self.amps[1]*np.sin(2*np.pi*x/11)
+        pos = self.amps[0]*np.sin(np.pi*x/11)
         pos = np.round((4 * pos) , 0).astype(int)
         pos = np.clip(pos, 0, 9)
         for z in range(10):

@@ -60,7 +60,7 @@ class led:
         self.fadespeed = fadespeed
         self.brightness = 0
         self.state = 0
-        self.dx, self.dy, self.dz = 0, 0, 0
+        self.dy, self.dz = 0, 0
 
         if randint(0, 1) == 1:
             # figure out direction
@@ -79,7 +79,6 @@ class led:
         if self.state == 0:
             self.brightness += self.fadespeed
         elif self.state == 1:
-            #self.x += self.dx
             self.y += self.dy
             self.z += self.dz
 

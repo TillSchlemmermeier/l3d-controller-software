@@ -13,8 +13,6 @@ class g_grow():
         self.world = np.zeros([3, 10, 10, 10])
         self.state = 'grow'
 
-        self.probes = []
-
     def return_state(self):
         return [
             ['branch', 'branch', round(self.branch,2)],
@@ -88,8 +86,5 @@ class g_grow():
                     self.state = 'explore'
                     self.world[:, self.probe[0], self.probe[1], self.probe[2]] = 0.0
 
-        else:
-            print('unkown state!')
-            self.state = 'grow'
 
         return np.clip(self.world, 0, 1)

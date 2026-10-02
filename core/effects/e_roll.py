@@ -8,7 +8,6 @@ class e_roll():
 
     def __init__(self):
         # parameters
-        self.amount = 1.0
         self.sound_values = shared_memory.SharedMemory(name = "global_s2l_memory")
         self.counter = 4
         self.direction = choice([-1, 1])

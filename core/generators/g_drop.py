@@ -14,7 +14,6 @@ class g_drop():
             self.z = randint(0,9)
             self.brightness = 0.0
             self.state = 0
-            self.sound_values = shared_memory.SharedMemory(name = "global_s2l_memory")
 
         def do_step(self):
             temp = [self.x, self.y, self.z, self.brightness, self.state]
@@ -40,10 +39,6 @@ class g_drop():
                 self.state = 3
 
             return temp
-
-    '''
-    Generator: drop
-    '''
 
     def __init__(self):
         self.speed = 1

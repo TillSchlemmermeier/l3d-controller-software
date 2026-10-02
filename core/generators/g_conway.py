@@ -1,5 +1,4 @@
 # modules
-from multiprocessing import shared_memory
 import numpy as np
 import struct
 from multiprocessing import shared_memory
@@ -47,9 +46,6 @@ class g_conway():
 
                 self.lastvalue = current_volume
                 self.sides += np.random.randint(0, 2, [40,10])
-                # self.sides = np.clip(self.sides, 0, 2)
-        else:
-            pass
         self.step += 1
 
 
@@ -67,7 +63,5 @@ class g_conway():
         if self.mode == 'Continuous':
             if self.step % self.wait == 0:
                 self.sides += np.random.randint(0, 2, [40,10])
-                # self.sides -= np.random.randint(0, 2, [40,10])
-                # self.sides = np.clip(self.sides, 0, 2)
 
         return np.clip(np.round(world,2), 0, 1)

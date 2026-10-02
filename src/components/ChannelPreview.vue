@@ -6,8 +6,6 @@
       :ref="el => scatterplots[n-1] = el as HTMLDivElement"
       class="w-[170px] h-[170px]">
     </div>
-    <!-- scatterplot for saving global presets -->
-    <div ref="el => scatterplots[8] = el" class="w-[170px] h-[170px] hidden"></div>
   </div>
 </template>
 
@@ -77,8 +75,6 @@ function setupScene() {
   const scene = new THREE.Scene()
 
   const camera = new THREE.PerspectiveCamera(45, 1, 0.1, 1000)
-  // camera.position.set(15, 7, 12)  // x: right, y: up, z: forward
-  // camera.lookAt(0, -1, 0) // Look at the center of the cube
   camera.position.set(-7, 14.5, 11.5)  // x: right, y: up, z: forward
   camera.up.set(-1, 0, 0) 
   camera.lookAt(1, 0, 0)
@@ -146,22 +142,6 @@ function handleCubeData(data: any) {
 }
 
 function initializeRenderers() {
-  renderers.forEach(renderer => {
-    renderer.dispose()
-    renderer.forceContextLoss()
-    renderer.domElement.remove()
-  })
-  cancelAnimationFrame(frameId)
-  geometries.forEach(geometry => geometry.dispose())
-  points.forEach(point => (point.material as THREE.Material).dispose())
-
-  renderers.length = 0
-  scenes.length = 0
-  cameras.length = 0
-  points.length = 0
-  geometries.length = 0
-  colorAttributes.length = 0
-
   for (let plot = 0; plot < 9; plot++) {
     const { scene, camera, renderer } = setupScene()
     scenes.push(scene)
@@ -254,10 +234,6 @@ onUnmounted(() => {
   renderers.forEach(renderer => {
     renderer.dispose()
     renderer.forceContextLoss()
-    const gl = renderer.domElement.getContext('webgl')
-    if (gl) {
-      gl.getExtension('WEBGL_lose_context')?.loseContext()
-    }
   })
 })
 </script>

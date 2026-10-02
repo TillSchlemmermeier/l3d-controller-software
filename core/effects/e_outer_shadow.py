@@ -6,11 +6,9 @@ from multiprocessing import shared_memory
 
 class e_outer_shadow():
     def __init__(self):
-        self.amount = 1.0
         self.channel = 1
         self.exponent = 1
         self.sound_values = shared_memory.SharedMemory(name = "global_s2l_memory")
-        self.size = 1
         self.amount = 0.0
 
     def return_state(self):

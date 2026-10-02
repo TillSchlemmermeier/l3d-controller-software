@@ -13,7 +13,7 @@ const props = defineProps({
   },
 })
 
-const emit = defineEmits(['onChange', 'onKeyPress', 'save'])
+const emit = defineEmits(['onChange', 'save'])
 const minimumLayout = {
   default: [
     '1 2 3 4 5 6 7 8 9 0 {bksp}',
@@ -21,13 +21,6 @@ const minimumLayout = {
     'a s d f g h j k l {enter}',
     'y x c v b n m - _',
   ],
-  // shift: [
-  //   '1 2 3 4 5 6 7 8 9 0 _ {bksp}',
-  //   'Q W E R T Y U I O P',
-  //   'A S D F G H J K L {enter}',
-  //   'Z X C V B N M ; :',
-  //   '{space}'
-  // ]
 }
 
 const keyboard = ref<Keyboard | null>(null)
@@ -37,21 +30,7 @@ const onChange = (input: string) => {
 }
 
 const onKeyPress = (button: string) => {
-  emit('onKeyPress', button)
-
-  if (button === '{shift}' || button === '{lock}') handleShift()
   if (button === '{enter}') save()
-}
-
-const handleShift = () => {
-  if (keyboard.value) {
-    const currentLayout = keyboard.value.options.layoutName
-    const shiftToggle = currentLayout === 'default' ? 'shift' : 'default'
-
-    keyboard.value.setOptions({
-      layoutName: shiftToggle,
-    })
-  }
 }
 
 function save() {

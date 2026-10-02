@@ -67,7 +67,6 @@ class g_cut():
             current_volume = struct.unpack('d', bytes(self.sound_values.buf[32:40]))[0]
             if current_volume > self.lastvalue:
                 self.lastvalue = current_volume
-                self.counter = 0
                 self.edge = choice(self.edge_list)
                 self.brightness = 0
 

@@ -1,5 +1,4 @@
 import numpy as np
-from scipy.signal import sawtooth
 from generators.g_genhsphere import gen_hsphere
 
 

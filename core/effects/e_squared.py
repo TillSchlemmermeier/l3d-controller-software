@@ -36,7 +36,6 @@ class e_squared():
             current_volume = np.clip(current_volume, 0, 1.24)
             new_exponent = 2.5 - current_volume * 2
 
-#            if self.old_exponent < self.exponent:
             self.old_exponent += 0.25
             self.old_exponent = np.clip(self.old_exponent, 0.2, 2.5)
 

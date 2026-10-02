@@ -92,7 +92,6 @@ class g_wave():
 
         if direction == 1: #x+
             for x in range(10):
-    #            a[x,:] = ((np.sin((i)/np.pi + x/np.pi)+1)/2)**4
                 a[x,:] = np.exp(-(((x+5-i)/self.sigma)**2)/10)
             world[0,position,:,:] = a
         elif direction == 2: #x-

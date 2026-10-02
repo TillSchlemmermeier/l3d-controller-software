@@ -7,13 +7,11 @@ class g_falling():
         # Animation state
         self.step = 0
         self.wait = 1
-        self.plane_rotation = 0
         self.rotating = False
         self.rotation_step = 0
         self.rotation_angle = 0
         self.bigworld = np.zeros([21, 21, 10])
         self.bigworld[10, 1:-1, :] = 1.0  
-        self.counter = 1
 
         self.particles = []
         self.reset_particles()

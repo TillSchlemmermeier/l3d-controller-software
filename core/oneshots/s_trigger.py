@@ -1,4 +1,3 @@
-import numpy as np
 from multiprocessing import shared_memory
 import struct
 
@@ -6,7 +5,6 @@ class s_trigger:
 
     def __init__(self):
         self.counter = 1
-        self.lastworld = np.zeros([3, 10, 10, 10])
         self.sound_values = shared_memory.SharedMemory(name = "global_s2l_memory")
 
     def __call__(self, world):

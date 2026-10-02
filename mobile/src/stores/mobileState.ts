@@ -1,11 +1,5 @@
 import { defineStore } from 'pinia'
 
-export interface ChannelState {
-  id: number
-  IO: boolean
-  brightness: number
-  fade: number
-}
 const API_BASE = '/api'
 
 // Every state-changing endpoint is POST
@@ -31,16 +25,6 @@ export const useMobileStore = defineStore('mobile', {
   }),
 
   getters: {
-    getChannelParameters: (state) => (channelIndex: number) => {
-      const channel = state.channels[channelIndex]
-      if (channel) {
-        return {
-          IO: channel.IO,
-          brightness: channel.brightness,
-          fade: channel.fade,
-        }
-      }
-    },
     getCurrentChannelObj: (state) => {
       return state.channels[state.selectedChannel - 1]
     },
@@ -178,20 +162,6 @@ export const useMobileStore = defineStore('mobile', {
       if (key === 'random') this.randomMode = value
     }
   },
-
-    updateSection(data: any) { // eslint-disable-line
-      Object.keys(data).forEach(key => {
-        const index = Number(key)
-        // If key is a number, it's a channel index
-        if (!isNaN(index) && this.channels[index]) {
-          const chData = data[key]
-          const ch = this.channels[index]
-          if (chData.IO !== undefined) ch.IO = chData.IO
-          if (chData.brightness !== undefined) ch.brightness = chData.brightness
-          if (chData.fade !== undefined) ch.fade = chData.fade
-        }
-      })
-    }
   }
 
 })

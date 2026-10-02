@@ -10,12 +10,10 @@ class g_snake():
     A snake!
 
     Parameters:
-    - number   : Number of snakes running around
     - turnprop : propability of doing a turn
     '''
 
     def __init__(self):
-        self.number = 1
         self.turnprop = 0.25
 
         # create an internal world with i snake point

@@ -7,7 +7,6 @@
           :src="`src/assets/previews/${displayName}_p_${presetInfo.name}.gif`"
           :key="`${displayName}-${presetInfo.name}`"
           class="w-full h-full object-cover"
-          @error="handleImageError"
           loading="lazy"
         />
       </div>
@@ -69,7 +68,6 @@
 </template>
 
 <script setup lang="ts">
-// Script remains unchanged
 import { ref, computed } from 'vue'
 import { useUiStateStore } from '../../stores/uiState'
 
@@ -88,7 +86,6 @@ const emit = defineEmits<{
   rename: [name: string]
 }>()
 
-const imageError = ref(false)
 const showRename = ref(false)
 const newName = ref('')
 
@@ -131,10 +128,6 @@ function formatValue(obj: any): string {
     }
   }
   return formatRecursive(obj)
-}
-
-function handleImageError() {
-  imageError.value = true
 }
 
 function handleRename() {

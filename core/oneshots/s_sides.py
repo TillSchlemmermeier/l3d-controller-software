@@ -1,5 +1,3 @@
-import numpy as np
-
 class s_sides:
 
     def __init__(self):

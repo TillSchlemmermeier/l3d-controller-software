@@ -9,7 +9,6 @@ class e_translation():
         self.xspeed = 0.5
         self.yspeed = 0.5
         self.zspeed = 0.5
-        self.step = 0
         self.edge = 'wrap'  # 'wrap', 'disappear' or 'projection'
         self.mode = 'loop'  # 'loop', 'fixed', 'trigger', 's2l'
         self.x_counter = 0
@@ -27,8 +26,6 @@ class e_translation():
         self.last_sound_value = 0
 
         self.sound_values = shared_memory.SharedMemory(name="global_s2l_memory")
-        # trigger: current_volume = struct.unpack('d', bytes(self.sound_values.buf[32:40]))
-        # s2l: current_volume = struct.unpack('d', bytes(self.sound_values.buf[0:8]))
 
         # Accumulators for 'projection' mode (only used when edge == 'projection')
         self.x_plus_accum = np.zeros((3, 10, 10))   # +X face (x=9)
@@ -72,7 +69,6 @@ class e_translation():
         if self.x_shift != 0 or self.y_shift != 0 or self.z_shift != 0:
             self.apply_shift(world)
 
-        self.step += 1
         np.clip(world, 0, 1, out=world)  # In-place clipping
         return world
 

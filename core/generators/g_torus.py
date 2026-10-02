@@ -38,7 +38,6 @@ class g_torus():
         self.channel = ['noS2L', 0, 1, 2, 3, 'Trigger'][int(args[2]*5)]
         # === PARAMETERS END ===
 
-        #def generate(self, step, dumpworld):
         world = np.zeros([3, 10, 10, 10])
         runtime_radius = self.radius
 
@@ -72,13 +71,4 @@ class g_torus():
         world[1, :, :, :] = world[0, :, :, :]
         world[2, :, :, :] = world[0, :, :, :]
 
-        '''
-        for i in range(n):
-            for x in range(10):
-                for y in range(10):
-                    for z in range(10):
-                        dist = np.sqrt((px[i]-x+4.5)**2 + (py[i]-y)**2 + (pz[i]-z+4.5)**2)
-                        if dist < self.thickness:
-                            world[:,x,y,z] = 1.0
-        '''
         return np.clip(world, 0, 1)

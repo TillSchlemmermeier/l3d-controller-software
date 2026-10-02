@@ -4,21 +4,16 @@ import struct
 from scipy.ndimage.interpolation import rotate
 from multiprocessing import shared_memory
 from random import randint, choice
-from itertools import cycle
 
 class g_oblique_plane():
     def __init__(self):
         self.speed = 0.1
         self.step = 0
-        self.axes = [0, 1]
-        self.n_rot = 1
-        self.combinations = [[0 , 1], [0 , 2],[1, 2], [1, 0], [2, 0], [2, 1]]
         self.real_speed = 0
         #s2l
         self.sound_values = shared_memory.SharedMemory(name = "global_s2l_memory")
         self.trigger = False
         self.lastvalue = 0
-        self.counter = 0
         self.side1 = 1
         self.side2 = choice([2,4])
         self.mode = 'chain'
@@ -31,12 +26,9 @@ class g_oblique_plane():
         self.connections[5] = [1,2,3,4]
         self.connections[6] = [1,2,3,4]
 
-        self.circle_iter = cycle([1,2,3,4])
-
         #create bigworld
         self.bigworld = np.zeros([21, 21, 10])
 
-        #self.bigworld[10, 1:-1, 1:-1] = 1.0
         self.bigworld[10, 1:-1, :] = 1.0
         self.counter = 1
 
@@ -69,8 +61,6 @@ class g_oblique_plane():
 
                     self.real_speed = self.step*self.speed
                     if self.mode == 'random':
-                        #self.axes = choice(self.combinations)
-                        #self.n_rot = randint(1,3)
                         self.side1 = randint(1,6)
                         self.side2 = choice(self.connections[self.side1])
                     elif self.mode == 'chain':
@@ -84,10 +74,8 @@ class g_oblique_plane():
                             if self.side2 != temp:
                                 break
                     elif self.mode == 'circle':
-                        # print(self.side1, self.side2)
                         self.side1 = self.counter%4+1
-                        self.side2 = (self.counter+1)%4+1 # next(self.circle_iter)
-                        #print(self.step, self.side1, self.side2)
+                        self.side2 = (self.counter+1)%4+1
                         self.counter += 1
 
                 else:
@@ -98,8 +86,6 @@ class g_oblique_plane():
 
                 self.real_speed = self.step*self.speed
                 if self.mode == 'random':
-                    #self.axes = choice(self.combinations)
-                    #self.n_rot = randint(1,3)
                     self.side1 = randint(1,6)
                     self.side2 = choice(self.connections[self.side1])
                 elif self.mode == 'chain':
@@ -113,10 +99,8 @@ class g_oblique_plane():
                         if self.side2 != temp:
                             break
                 elif self.mode == 'circle':
-                    print(self.side1, self.side2)
                     self.side1 = self.counter%4+1
-                    self.side2 = (self.counter+1)%4+1 # next(self.circle_iter)
-                    #print(self.step, self.side1, self.side2)
+                    self.side2 = (self.counter+1)%4+1
                     self.counter += 1
 
         self.step += 1
@@ -130,8 +114,6 @@ class g_oblique_plane():
         # insert array
         newworld = self.get_transition(newworld, self.side1, self.side2)
 
-        #print(np.shape(newworld ))
-
         world[:, :, :, :] = newworld
 
 
@@ -139,7 +121,6 @@ class g_oblique_plane():
 
 
     def get_transition(self, newworld, side1, side2):
-        #print('from', side1, 'to', side2)
         if side1 == 1 and side2 == 2:
             return newworld
         elif side1 == 1 and side2 == 4:

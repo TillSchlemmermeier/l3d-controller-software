@@ -1,7 +1,7 @@
 # modules
 import struct
 import numpy as np
-from random import randint, choice
+from random import randint
 from multiprocessing import shared_memory
 
 class g_circles():

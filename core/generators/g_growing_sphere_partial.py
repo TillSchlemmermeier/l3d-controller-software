@@ -1,6 +1,5 @@
 # modules
 import numpy as np
-from scipy.signal import sawtooth
 from generators.g_genhsphere import gen_hsphere
 
 # fortran routine is in g_growing_sphere_f.f90
@@ -49,8 +48,6 @@ class g_growing_sphere_partial():
 
         # creates hollow sphere with parameters
         world[0, :, :, :] = gen_hsphere(size, 4.5, 4.5, 4.5)
-        #world[1:, :, :, :] = world[0, :, :, :]
-        #world[2:, :, :, :] = world[0, :, :, :]
 
 
         # second half

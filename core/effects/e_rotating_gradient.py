@@ -1,7 +1,7 @@
 # modules
 import numpy as np
 from scipy.ndimage.interpolation import rotate
-from colorsys import rgb_to_hsv, hsv_to_rgb
+from colorsys import hsv_to_rgb
 
 
 class e_rotating_gradient():
@@ -24,10 +24,6 @@ class e_rotating_gradient():
             self.colorworld[0, i, :, :] = i/9.0
             self.colorworld[1, i, :, :] = 1.0 - i/9.0
             self.colorworld[2, i, :, :] = 0.5*(1.0 - i/9.0)
-
-#        self.colorworld[0, :, :, :] *= self.color['r']
-#        self.colorworld[0, :, :, :] *= self.color['g']
-#        self.colorworld[0, :, :, :] *= self.color['b']
 
     def return_state(self):
         return [

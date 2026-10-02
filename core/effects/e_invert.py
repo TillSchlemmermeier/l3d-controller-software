@@ -5,7 +5,6 @@ class e_invert():
 
     def __init__(self):
         self.on = True
-        self.oldworld = np.zeros([3, 10, 10, 10])
 
     def return_state(self):
         return [

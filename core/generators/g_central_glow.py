@@ -2,10 +2,6 @@
 import struct
 import numpy as np
 from generators.gen_central_glow_f import gen_central_glow
-#import pyaudio
-#from scipy.fftpack import fft, fftfreq
-#import scipy
-#import struct
 from multiprocessing import shared_memory
 
 
@@ -13,13 +9,10 @@ class g_central_glow():
     def __init__(self):
         self.channel = 1
         self.sound_values = shared_memory.SharedMemory(name = "global_s2l_memory")
-        self.size      = 1
         self.exponent  = 1
-        self.lastvalue = 0
         self.counter   = 0
         self.speed     = 0.1
         self.compress  = 1.0
-        self.counter   = 0
 
     def return_state(self):
         return [
@@ -48,21 +41,7 @@ class g_central_glow():
         #check for trigger
         else:
             current_volume = np.sin(self.counter * self.speed) * self.compress
-            '''
-            current_volume = int(float(str(self.sound_values.buf[32:40],'utf-8')))
-            if current_volume > self.lastvalue:
-                self.lastvalue = current_volume
-                self.counter = 0
 
-            if self.counter < 11:
-                current_volume = 1 - (self.counter / 10)
-                self.counter += 1
-
-            else:
-                current_volume = 0
-            '''
-
-        #current_volume = np.clip(current_volume, 0, self.compress)
 
         bla = gen_central_glow(6-self.exponent*current_volume, 5.5, 5.5, 5.5)
         world[0, :, :, :] = bla

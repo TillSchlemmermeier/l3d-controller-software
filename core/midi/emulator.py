@@ -91,10 +91,6 @@ class MidiControllerEmulator:
         self.main_frame = ttk.Frame(self.root, padding="10")
         self.main_frame.grid(row=0, column=0, sticky=(tk.W, tk.E, tk.N, tk.S))
         
-        # Create sliders frame
-        self.sliders_frame = ttk.LabelFrame(self.main_frame, text="Faders", padding="10")
-        self.sliders_frame.grid(row=0, column=0, padx=10, pady=5)
-        
         # Create knobs frame
         self.knobs_frame = ttk.LabelFrame(self.main_frame, text="Knobs", padding="10")
         self.knobs_frame.grid(row=0, column=1, padx=10, pady=5)
@@ -127,9 +123,6 @@ class MidiControllerEmulator:
         self.midi_buttons_frame = ttk.LabelFrame(self.main_frame, text="MIDI Buttons", padding="10")
         self.midi_buttons_frame.grid(row=0, column=2, padx=10, pady=5)
 
-        # Create midi buttons array (remove state array since we don't need it)
-        self.midi_buttons = []
-
         # Create 3x4 grid of buttons
         for i in range(12):
             row = i // 3        # 0-2 for three rows
@@ -142,10 +135,6 @@ class MidiControllerEmulator:
                 command=lambda index=i: self.handle_midi_click(index)
             )
             button.grid(row=row, column=col, padx=5, pady=5)
-            self.midi_buttons.append(button)
-
-        self.state_frame = ttk.LabelFrame(self.main_frame, text="State Transition", padding="10")
-        self.state_frame.grid(row=1, column=2, padx=10, pady=5)  # Grid below midi_buttons_frame
 
         # Create sliders frame with more rows for buttons and knobs
         self.sliders_frame = ttk.LabelFrame(self.main_frame, text="Channel Controls", padding="10")
@@ -206,10 +195,6 @@ class MidiControllerEmulator:
 
     def update_fixed_midi(self):
         for i in range(self.state['numberOfChannels']):
-            # self.slider_values[i] = self.state.get(i, {}).get('brightness', 0)
-            # self.upper_knobs[i] = self.state.get(i, {}).get('fade', 0)
-            # self.button_states[i] = self.state.get(i, {}).get('IO', 0)
-
             brightness = self.state.get(i, {}).get('brightness', 0)
             brightness = int(round(brightness * 127))
             self.slider_values[i] = brightness
@@ -305,37 +290,23 @@ class MidiControllerEmulator:
             text="ON" if self.button_states[index] else "OFF"
         )
         self.midi_translation.update_fixed(index, 'IO', self.button_states[index])
-        # print(f"Button {index} state: {self.button_states[index]}")
 
     def update_slider_value(self, value, index):
         self.slider_values[index] = int(round(float(value)))
-        # print(f"Slider {index} value: {self.slider_values[index]}")
         self.midi_translation.update_fixed(index, 'brightness', self.slider_values[index])
         self.sliders[index].value_label.config(text=str(self.slider_values[index]))
-        # print(f"Slider Values: {self.slider_values}")
 
     def update_upper_knob_value(self, value, index):
         rounded_value = int(round(float(value)))
-        # print(f"Upper Knob {index} value: {rounded_value}")
         self.upper_knobs[index].value_label.config(text=str(rounded_value))
         # Fix: Pass rounded_value instead of the RotaryKnob object
         self.midi_translation.update_fixed(index, 'fade', rounded_value)
 
     def update_knob_value(self, value, index):
         self.knob_values[index] = int(round(float(value)))
-        # print(f"Knob {index} value: {self.knob_values[index]}")
         self.midi_translation.update_context(0, index, self.knob_values[index])
         self.knobs[index].value_label.config(text=str(round(self.knob_values[index]/127,2)))
 
     def handle_midi_click(self, index):
         """Handle MIDI button click"""
-        # print(f"MIDI Button {index + 1} clicked")
         self.midi_translation.oneshot(index + 1)
-
-def main():
-    root = tk.Tk()
-    app = MidiControllerEmulator(root)
-    root.mainloop()
-
-if __name__ == "__main__":
-    main()

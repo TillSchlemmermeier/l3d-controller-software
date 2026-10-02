@@ -42,7 +42,6 @@ class g_sinus():
 
 
         # check if S2L is activated
-        # if 4 > self.channel >= 0:
         if isinstance(self.channel, int):
             current_volume = struct.unpack('d', bytes(self.sound_values.buf[self.channel*8:self.channel*8+8]))[0]
             self.step += current_volume

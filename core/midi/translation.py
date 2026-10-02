@@ -11,14 +11,9 @@ class MidiTranslation:
 
     def __init__(self, state):
         self.state = state
-        self.slider_values = [0, 0, 0, 0]
-        self.knob_values = [0, 0, 0, 0]
         # soft-takeover ("pickup") bookkeeping, keyed by physical control
         self.pickup_prev = {}   # -> last raw fader reading (0..1)
         self.pickup_owned = {}  # -> last value we wrote, while we own the control
-        self.state_a = {}
-        self.state_b = {}
-        self.state_diff = {}
 
         # UI notifications go out as UDP datagrams to the server's bridge.
         self.udp_sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
@@ -128,7 +123,7 @@ class MidiTranslation:
                     self.state[key] = int(midi_value * 180)
                 elif midi_index == 2:
                     key = 'random'
-                    self.state[key]=['global', 'all_channels', 'all_elements', 'random_channel', 'random_channel_elements', 'selected_channel', 'selected_channel_elements', 'random_element', 'selected_element'][min(int(midi_value * 9), 8)]
+                    self.state[key]=['global', 'all_channels', 'all_elements', 'random_channel', 'random_channel_elements', 'random_element', 'selected_channel', 'selected_channel_elements', 'selected_element'][min(int(midi_value * 9), 8)]
                 elif midi_index == 3:
                     key = 's2l_normalize'
                     self.state[key] = True
@@ -139,32 +134,6 @@ class MidiTranslation:
                     return
 
                 self.notify_key(key)
-
-    def get_context_midi_values(self):
-        with self.state.lock:
-            channel, index = self.state['context'][0]
-            if channel != 'panel':
-                params = self.state[channel][index]['params']
-                return params[3::4]
-            else:
-                if index == 's2l':
-                    current_values = list(self.state['s2l_values'])
-                    current_thresholds = list(self.state['s2l_thresholds'])
-                    s2l_values = current_values + current_thresholds
-                    return s2l_values
-                elif index == 'dashboard':
-                    return [
-                        1.0 if self.state['autopilot'] else 0.0,
-                        self.state['autopilot_time'] / 180.0,
-                        0.1 if self.state['random'] == 'global' else
-                        0.2 if self.state['random'] == 'all_channels' else
-                        0.4 if self.state['random'] == 'single_channel' else
-                        0.5 if self.state['random'] == 'all_elements' else
-                        0.7 if self.state['random'] == 'single_element' else
-                        0.9 if self.state['random'] == 'selected_element' else 0.0,
-                        0.0, #self.state['s2l_normalize']
-                        self.state['s2l_gain']
-                    ]
 
     def update_fixed(self, midi_index, key, midi_value):
         midi_index = int(midi_index)

@@ -1,16 +1,11 @@
 from fastapi import APIRouter, Request
-from fastapi.responses import HTMLResponse, FileResponse
+from fastapi.responses import FileResponse
 import os
 
 router = APIRouter()
 
-@router.get("/")
-async def root():
-  return {"message": "Hello World"}
-
-
 # serve the mobile application
-@router.get("/mobile", response_class=HTMLResponse)
+@router.get("/mobile")
 async def mobile_app():
     print("Serving mobile app")
     dist_path = os.path.join(os.path.dirname(__file__), "..", "..", "mobile","dist")

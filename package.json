@@ -14,7 +14,6 @@
   "dependencies": {
     "chart.js": "^4.4.8",
     "gifshot": "^0.4.5",
-    "launchpad-webmidi": "^1.2.0",
     "pinia": "^3.0.1",
     "qrcode.vue": "^3.6.0",
     "simple-keyboard": "^3.8.39",

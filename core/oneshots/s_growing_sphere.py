@@ -1,6 +1,5 @@
-import numpy as np
 from generators.g_genhsphere import gen_hsphere
-from colorsys import rgb_to_hsv, hsv_to_rgb
+from colorsys import hsv_to_rgb
 from random import uniform
 
 

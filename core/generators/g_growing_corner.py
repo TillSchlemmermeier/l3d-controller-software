@@ -1,7 +1,6 @@
 # modules
 import struct
 import numpy as np
-from scipy.signal import sawtooth
 from random import randint, choice
 from generators.g_genhsphere import gen_hsphere
 from multiprocessing import shared_memory
@@ -24,7 +23,6 @@ class g_growing_corner():
     def __init__(self):
         self.maxsize = 10
         self.growspeed = 1
-        self.steps = 0
         self.counter = 0
 
         self.xpos = 0
@@ -53,8 +51,6 @@ class g_growing_corner():
         self.mode = ['single', 'double'][int(args[2])]
         self.trigger = args[3] > 0.5
         # === PARAMETERS END ===
-
-        self.steps = int(self.maxsize/self.growspeed)
 
         world = np.zeros([3, 10, 10, 10])
 
@@ -91,9 +87,6 @@ class g_growing_corner():
         x = self.xpos
         y = self.ypos
         z = self.zpos
-
-        #size = self.maxsize*(-np.cos(self.counter*3.14/self.growspeed)+1)*0.5
-        #size = self.maxsize*(np.sin(np.pi*0.5*self.counter/self.growspeed - 0.5*np.pi)+1)
 
         # creates hollow sphere with parameters
 

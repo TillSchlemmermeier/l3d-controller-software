@@ -43,11 +43,9 @@ export const useUiStateStore = defineStore('uiState', {
     elementInfo: {} as ElementInfo,
     selectedPreset: '',
     presetInfo: {} as PresetInfo,
-    newChannel: false,
     admin: true,
     sortBy: 'alpha', // alpha, date, usage
     sortGradientsBy: 'subtype' as SortOption,
-    clickBehavior: 'select', // select, edit, IO
     isDragging: false,
     contextIndex: 0,
     deleteActive: false,

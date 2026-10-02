@@ -69,14 +69,6 @@ class g_random_lines():
 
                     number.remove(direction)
 
-                    '''
-                    if direction == 0:
-                        world[:,:,ypos,zpos] = 1
-                    elif direction == 1:
-                        world[:,xpos,:,zpos] = 1
-                    elif direction == 2:
-                        world[:,xpos,ypos,:] = 1
-                    '''
                     if direction == 0:
                         world[:,xmin:xmax+1,ypos,zpos] = 1
                     elif direction == 1:

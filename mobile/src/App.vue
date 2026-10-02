@@ -135,8 +135,6 @@ function handleServerMessage(msg: any) { // eslint-disable-line
   } else if (msg.type === 'state_key') {
     const { key, value, channel } = msg.data
     store.updateKey(key, value, channel)
-  } else if (msg.type === 'state_section') {
-    store.updateSection(msg.data)
   }
 }
 

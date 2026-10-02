@@ -3,14 +3,12 @@ interface GradientSet {
   to: string
   text: string
   border: string
-  bg?: string
 }
 
 interface ComponentColors {
   gradient: string
   text: string
   border: string
-  bg: string
 }
 
 export interface ContextColorSet {
@@ -18,7 +16,6 @@ export interface ContextColorSet {
   text: string
   bgInactive: string
   textInactive: string
-  border: string
   ring: string
 }
 
@@ -28,8 +25,7 @@ export const gradientSets: GradientSet[] = [
     from: 'from-amber-500',
     to: 'to-orange-300',
     text: 'text-amber-900',
-    border: 'border-amber-200',
-    bg: 'bg-amber-50'
+    border: 'border-amber-200'
   },
   // Effect colors
   // Blues & Cyans
@@ -92,8 +88,7 @@ export function getColorsByName(name: string): ComponentColors {
   if (!name) return {
     gradient: 'bg-gradient-to-br from-gray-500 to-gray-300',
     text: 'text-gray-900',
-    border: 'border-gray-300',
-    bg: 'bg-white'
+    border: 'border-gray-300'
   }
 
   // Generate hash from name
@@ -108,8 +103,7 @@ export function getColorsByName(name: string): ComponentColors {
   return {
     gradient: `bg-gradient-to-br ${gradient.from} ${gradient.to}`,
     text: gradient.text,
-    border: gradient.border,
-    bg: gradient.bg || 'bg-white'
+    border: gradient.border
   }
 }
 
@@ -117,17 +111,7 @@ export function getGeneratorColors(): ComponentColors {
   return {
     gradient: 'bg-gradient-to-br from-slate-500 to-zinc-200 grayscale',
     text: 'text-slate-900',
-    border: 'border-slate-200',
-    bg: 'bg-slate-50'
-  }
-}
-
-export function getEffectColors(): ComponentColors {
-  return {
-    gradient: 'bg-gradient-to-br from-slate-400 to-blue-200',
-    text: 'text-slate-900',
-    border: 'border-slate-300',
-    bg: 'bg-slate-50'
+    border: 'border-slate-200'
   }
 }
 
@@ -137,7 +121,6 @@ export const contextColors: Record<number, ContextColorSet> = {
     text: 'text-zinc-950 font-extrabold',
     bgInactive: 'bg-white/80',
     textInactive: 'text-zinc-900',
-    border: 'border-white',
     ring: 'ring-white'
   },
   1: { // Cyan context
@@ -145,7 +128,6 @@ export const contextColors: Record<number, ContextColorSet> = {
     text: 'text-zinc-950 font-extrabold',
     bgInactive: 'bg-cyan-600',
     textInactive: 'text-zinc-900',
-    border: 'border-zinc-300',
     ring: 'ring-cyan-400'
   },
   2: { // Yellow context
@@ -153,7 +135,6 @@ export const contextColors: Record<number, ContextColorSet> = {
     text: 'text-zinc-950 font-extrabold',
     bgInactive: 'bg-yellow-600',
     textInactive: 'text-white',
-    border: 'border-zinc-500',
     ring: 'ring-yellow-400'
   },
   3: { // Pink context
@@ -161,19 +142,8 @@ export const contextColors: Record<number, ContextColorSet> = {
     text: 'text-zinc-950 font-extrabold',
     bgInactive: 'bg-pink-600',
     textInactive: 'text-white',
-    border: 'border-zinc-900',
     ring: 'ring-pink-400'
   },
-}
-
-export function getContextColors(contextIndex: number): { bg: string, text: string } {
-  const context = contextColors[contextIndex]
-  if (!context) return { bg: '', text: '' }
-
-  return {
-    bg: context.bg,
-    text: context.text
-  }
 }
 
 export function getContextColorSet(contextIndex: number): ContextColorSet | null {

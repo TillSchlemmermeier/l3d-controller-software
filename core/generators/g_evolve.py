@@ -3,23 +3,18 @@ import struct
 import numpy as np
 from random import randint
 from multiprocessing import shared_memory
-from random import randint
 
 class g_evolve():
 
     def __init__(self):
         self.number_of_workers = 10
         self.lifetime = 1
-        self.reset = 1
         self.lastvalue = 0
-        self.randomcolor = 0
         self.width = 1
         self.workers = []
 
         self.sound_values = shared_memory.SharedMemory(name = "global_s2l_memory")
         self.trigger = False
-
-        self.safeworld = np.zeros([3, 10, 10, 10])
 
         for i in range(2):
             self.workers.append(worker(self.lifetime, self.width))
@@ -40,8 +35,6 @@ class g_evolve():
         self.width = args[2]+1
         self.trigger = args[3] > 0.5
         # === PARAMETERS END ===
-
-        # self.randomcolor = int(round(args[2]))
 
         if self.trigger:
 
@@ -76,24 +69,14 @@ class g_evolve():
 
 def gaussian_filter(pos, sigma=1, muu=0):
 
-    x, y, z = np.meshgrid(np.linspace(0, 9),
-                          np.linspace(0, 9),
-                          np.linspace(0, 9))
-
     arr = np.zeros([10, 10, 10])
     for x in range(10):
         for y in range(10):
             for z in range(10):
                 arr[x,y,z] = np.sqrt((x-pos[0])**2 + (y-pos[1])**2 + (z-pos[2])**2)
 
-    #dst = np.sqrt((x-pos[0])**2 + (y-pos[1])**2 + (z-pos[2])**2)
-    # dst = np.sqrt((x-pos[0])**2 + (y-pos[1])**2 + (z-pos[2])**2)
-
-    # normalization
-    # normal = 1/(2.0 * np.pi * sigma**2)
-
     # Calculating Gaussian filter
-    gauss = np.exp(-((arr)**2 / (2.0 * sigma**2))) # * normal
+    gauss = np.exp(-((arr)**2 / (2.0 * sigma**2)))
 
     return gauss
 
@@ -118,8 +101,7 @@ class worker:
                 # starting
                 brightness = round(2 * (self.starttime-self.lifetime)/self.starttime,4)
                 gauss      = gaussian_filter(self.position, (self.width+0.01)-self.width*self.lifetime/self.starttime)
-                # temp       = brightness*
-                temp = brightness**2 * gauss #* (1/np.max(gauss))
+                temp = brightness**2 * gauss
 
                 world[0, :, :, :] += temp
                 world[1, :, :, :] += temp
@@ -134,18 +116,6 @@ class worker:
                 world[1, :, :, :] += temp
                 world[2, :, :, :] += temp
 
-            '''
-            if self.lifetime > self.starttime/2.0:
-
-                world[:, self.position[0], self.position[1], self.position[2]] = np.clip(self.lifetime / (self.starttime/2), 0, 2)
-            else:
-
-                world[0, :, :, :] += self.lifetime*gaussian_filter(self.position, 1.1-self.lifetime/self.starttime)
-                world[1, :, :, :] += world[0, :, :, :]
-                world[2, :, :, :] += world[0, :, :, :]
-            # world[:, self.position[0], self.position[1], self.position[2]] = np.clip(self.lifetime / self.starttime, 0, 2)
-            '''
-            # mv = numpy.random.multivariate_normal(mean = self.position, )
 
         if self.wait > 0:
             self.wait -= 1
@@ -155,5 +125,4 @@ class worker:
         return world*np.cos(self.wait * 0.1), message
 
     def boost(self):
-        # self.lifetime = self.starttime
         self.wait = 10

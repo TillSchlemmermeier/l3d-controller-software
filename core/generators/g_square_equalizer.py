@@ -6,7 +6,6 @@ class g_square_equalizer():
 
     def __init__(self):
         self.sound_values = shared_memory.SharedMemory(name = "global_s2l_memory")
-        self.channel = 0
 
         self.amount = [0.5,0.5,0.5,0.5]
         self.pos = [5,5,5,5]

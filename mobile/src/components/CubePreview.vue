@@ -1,12 +1,6 @@
 <template>
   <div class="w-full h-full relative bg-black overflow-hidden rounded-2xl shadow-inner shadow-zinc-800">
     <div ref="container" class="w-full h-full" @click="handleCanvasClick"></div>
-    
-    <!-- Connection Status (Controlled by prop now, or removed if handled in App) -->
-    <!-- <div 
-      class="absolute top-3 right-14 w-2 h-2 rounded-full transition-colors duration-300 z-50"
-      :class="isConnected ? 'bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.6)]' : 'bg-red-500 animate-pulse'"
-    ></div> -->
   </div>
 </template>
 

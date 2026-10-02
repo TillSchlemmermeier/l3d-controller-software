@@ -1,8 +1,7 @@
 # modules
 import struct
 import numpy as np
-from scipy.signal import sawtooth
-from random import randint, choice
+from random import choice
 from generators.g_genhsphere import gen_hsphere
 from multiprocessing import shared_memory
 
@@ -25,7 +24,6 @@ class g_growing_face():
     def __init__(self):
         self.maxsize = 10
         self.growspeed = 1
-        self.steps = 0
         self.counter = 0
 
         self.xpos = 0
@@ -50,8 +48,6 @@ class g_growing_face():
         self.growspeed = 55 - (args[1]*45+9)
         self.trigger = args[2] > 0.5
         # === PARAMETERS END ===
-
-        self.steps = int(self.maxsize/self.growspeed)
 
 
         world = np.zeros([3, 10, 10, 10])

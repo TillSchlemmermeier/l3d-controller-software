@@ -52,7 +52,7 @@ class g_cube_edges():
                           [slice(0, 10), 9, 9], # 11
                           ]
 
-        self.corner = self.corner_list[0] # choice(self.corner_list)
+        self.corner = self.corner_list[0]
         self.direction = choice([-1, 1])
         seed()
         #s2l

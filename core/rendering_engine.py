@@ -33,7 +33,6 @@ class rendering_engine:
         Initialises the rendering engine
         """
         # initialise variables
-        self.logging = False
         self.connected = False     # Arduino connection status
         self.arduino_message_shown = False
 
@@ -141,7 +140,6 @@ class rendering_engine:
         """
 
         retry_count = 0
-        snapshot = None
         while retry_count < 3:
             try:
                 # Pickle every key under the lock. The bytes stay as a
@@ -172,10 +170,6 @@ class rendering_engine:
                     print(f"[CORE] Fatal error, skipping frame")
                     return
                 time.sleep(0.02 * retry_count)
-
-        if snapshot is None:
-            print("[CORE] No valid snapshot created, skipping frame")
-            return
 
         pending_update = {}
         clear_color_update = False

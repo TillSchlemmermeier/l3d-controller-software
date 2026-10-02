@@ -1,10 +1,7 @@
 # modules
 import numpy as np
 from random import uniform
-#from generators.g_sphere_f import gen_sphere
 from generators.gen_central_glow_f import gen_central_glow
-
-# fortran routine is in g_sphere_f.f90
 
 class g_pong():
 
@@ -18,8 +15,6 @@ class g_pong():
         # generate initial position and velocity
         self.pos = np.array([uniform(-3, 3)+4.5, uniform(-3, 3)+4.5, uniform(-3, 3)+4.5])
         self.vec = np.array([uniform(-1, 1), uniform(-1, 1), uniform(-1, 1)])
-        #self.vec = np.array([0,0,0.5])
-        #self.pos = np.array([4,4,4])
 
     def return_state(self):
         return [

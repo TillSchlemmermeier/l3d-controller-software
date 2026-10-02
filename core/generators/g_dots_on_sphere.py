@@ -1,8 +1,6 @@
 import numpy as np
 from scipy.ndimage.interpolation import rotate
 from random import choice, uniform
-from scipy.signal import sawtooth
-#from generators.g_shooting_star_f import gen_shooting_star
 
 class g_dots_on_sphere():
     '''
@@ -20,14 +18,11 @@ class g_dots_on_sphere():
     def __init__(self):
         self.number_of_dots = 3
         self.radius = 3
-        self.theta = 0.1
-        self.rho = 0.1
         self.step = 0
         self.dots = []
         self.dots.append(cdot(self.radius))
         self.number_of_frames = 10
         self.speed = 1
-        self.direction = 0
         self.current_dot = choice(self.dots)
         self.current_angle = [0, 0.5]
 

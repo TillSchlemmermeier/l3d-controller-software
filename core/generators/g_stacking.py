@@ -6,7 +6,6 @@ class g_stacking():
     def __init__(self):
         self.drops = []
         self.n = 10
-        self.channel = 0
         self.lifetime = 2
 
         for i in range(220):
@@ -25,29 +24,23 @@ class g_stacking():
         # === PARAMETERS END ===
 
         world = np.zeros([3, 10, 10, 10])
-        # append new leds at top
-        # for i in range(self.n):
-        #     self.drops.append(led(9))
 
         # check for dead leds
         for i in range(self.n):
             self.drops[i].stop_t = self.lifetime
             temp = self.drops[i].run(self.drops[:self.n])
-            # print(self.drops[i].state)
 
             if len(temp) == 3:
                 world[:, temp[0], temp[1], temp[2]] = 1.0
             else:
                 self.drops[i] = led(self.lifetime)
 
-        # print(' ')
         return np.clip(world, 0, 1)**2
 
 
 class led:
     def __init__(self, waittime):
         self.x, self.y, self.z = 0, randint(0,9), randint(0,9)
-#        self.x, self.y, self.z = 0, 0, 0
         self.stop_x = 9
         self.stop_t = waittime
         self.current_t = waittime
@@ -63,10 +56,8 @@ class led:
             run = True
             for led in leds:
                 if led.z == self.z and led.y == self.y:
-                    # print(led.x, self.x)
-                    if led.x == self.x+1: #  and led.state == 'wait':
+                    if led.x == self.x+1:
                         run = False
-                        # print('dont run')
 
             if run:
                 self.x += 1

@@ -1,7 +1,7 @@
 # modules
 import struct
 import numpy as np
-from colorsys import rgb_to_hsv, hsv_to_rgb
+from colorsys import hsv_to_rgb
 from multiprocessing import shared_memory
 
 class e_radial_gradient():
@@ -69,11 +69,9 @@ class e_radial_gradient():
             self.old_c2[0] = runtime_c2[0]
 
         elif self.mode == 'dual':
-#            print(self.counter, self.c1[0], self.c2[0], end = '')
             temp = runtime_c1[0]
             runtime_c1[0] = runtime_c1[0] + (runtime_c2[0]-runtime_c1[0])*(np.sin(self.counter/self.speed)+1)*0.5
             runtime_c2[0] = temp + (runtime_c2[0]-temp)*(np.sin(self.counter/self.speed + np.pi)+1)*0.5
-#            print('->', np.sin(self.counter/self.speed), self.c1[0], self.c2[0])
 
         for lamp in list(self.distances.keys()):
             dist = self.distances[lamp]

@@ -51,8 +51,6 @@ class led:
         # perform action
         if self.state == 'run':
             output = [self.x, self.y, self.z]
-            # check for collisions:
-            # ind = np.where(self.y == np.array([l.x for l in leds]))[0]
             self.x += 1
         elif self.state == 'wait':
             output = [self.x, self.y, self.z]

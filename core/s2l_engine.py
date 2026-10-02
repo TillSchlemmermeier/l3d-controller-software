@@ -6,7 +6,7 @@ import socket
 import json
 import multiprocessing as mp
 from scipy.fftpack import fft, fftfreq
-from scipy.ndimage.filters import uniform_filter1d
+from scipy.ndimage import uniform_filter1d
 from time import time
 from collections import deque
 import struct
@@ -29,7 +29,6 @@ class BeatDetector:
         self.previous = deque(maxlen=hops_per_window)
         self.history = deque(maxlen=round(self.HISTORY*hops_per_second))
         self.last_beat = 0.0
-        self.beats = 0
 
     def __call__(self, band, level, now):
         '''take the magnitudes of the low band and its normalised level,
@@ -55,7 +54,6 @@ class BeatDetector:
                  and now - self.last_beat > self.REFRACTORY)
         if fired:
             self.last_beat = now
-            self.beats += 1
 
         return fired
 
@@ -133,7 +131,6 @@ def sound_process(state):
     bass_share = 8.0
 
     # trigger
-    norm_value = 0.0
     last_value = 0.0
     detector = BeatDetector(hops_per_window, sample_rate/hop)
     samples = np.frombuffer(stream.read(buffer_size), dtype=np.int16)
@@ -147,17 +144,12 @@ def sound_process(state):
     # what the bass is weighed against to tell music from an ambient passage
     mid_band = (freqs >= 300) & (freqs <= 4000)
 
-    # create LFOs
-
-    lfo = [0.0, 0.0, 0.0, 0.0]
-
     # === SETUP UDP SOCKET ===
     udp_sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     udp_dest = ("127.0.0.1", 8001)
 
 
     def update():
-        nonlocal norm_value
         nonlocal last_value
         nonlocal samples
 

@@ -184,7 +184,6 @@ function stopRecording() {
 
 async function savePreset(startFrame: number, endFrame: number, gif: boolean = true) {
   try {
-    // event?.preventDefault()
     console.log('Creating GIF from frames:', startFrame, endFrame)
     let gifData: string = ''
 

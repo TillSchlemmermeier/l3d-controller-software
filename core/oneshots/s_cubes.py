@@ -1,7 +1,6 @@
 import numpy as np
-from colorsys import rgb_to_hsv, hsv_to_rgb
+from colorsys import hsv_to_rgb
 from random import uniform
-from scipy.signal import fftconvolve
 
 class s_cubes:
 
@@ -19,9 +18,6 @@ class s_cubes:
             tempworld[:, :, :] = -1.0
 
             size = 5-self.counter
-
-            #for i in range(3):
-            #    world[i, :, :, :] = self.counter*world[i, :, :, :] + (1-self.counter)*fftconvolve(world[i, :, :, :], self.mean, mode='same')
 
             # write cube
             # x slices

@@ -3,7 +3,7 @@ import struct
 import numpy as np
 from scipy.ndimage.interpolation import rotate
 from multiprocessing import shared_memory
-from random import random, randint, uniform, choice
+from random import choice
 
 class e_rotation():
 
@@ -14,10 +14,7 @@ class e_rotation():
         self.step = 0
         self.sound_values = shared_memory.SharedMemory(name = "global_s2l_memory")
         self.mode = 'normal'
-        self.old_volume = 0
-        self.oldspeed = [0.1, 0.1, 0.0]
         self.lastvalue = 0
-        self.counter = 0
         self.old_xspeed = self.xspeed
         self.old_yspeed = self.yspeed
         self.old_zspeed = self.zspeed
@@ -54,14 +51,9 @@ class e_rotation():
             if current_volume > self.lastvalue:
                 self.lastvalue = current_volume+1
                 self.step = 0
-#                self.xspeed = choice([-1,1])*((2-np.log(self.counter))/2) * self.xspeed + self.xspeed
-#                self.yspeed = choice([-1,1])*((2-np.log(self.counter))/2) * self.yspeed + self.yspeed
-#                self.xspeed = choice([-1,1])*((2-np.log(self.counter))/2) * self.zspeed + self.zspeed
-                self.old_xspeed = choice([-1,1])#*self.xspeed #*((2-np.log(self.counter))/2) * self.xspeed + self.xspeed
-                self.old_yspeed = choice([-1,1])#*self.yspeed#*((2-np.log(self.counter))/2) * self.yspeed + self.yspeed
-                self.old_zspeed = choice([-1,1])#*self.zspeed#*((2-np.log(self.counter))/2) * self.zspeed + self.zspeed
-
-#                self.counter += 1
+                self.old_xspeed = choice([-1,1])
+                self.old_yspeed = choice([-1,1])
+                self.old_zspeed = choice([-1,1])
 
             runtime_xspeed *= self.old_xspeed
             runtime_yspeed *= self.old_yspeed

@@ -157,7 +157,6 @@ async function handleElementClick(element: any) {
   activeElement.value = element.name
   selectedType.value = 'element'
   await uiState.fetchElementInfo()
-  // await uiState.fetchPresets()
   await uiState.fetchAllPresets()
   showPresets.value = true
 }

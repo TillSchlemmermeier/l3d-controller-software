@@ -16,7 +16,6 @@ class e_static_color():
         self.green = 1.0
         self.blue = 1.0
         self.hsv = 0
-        #self.hsv = [0.0,0.0,0.0]
 
     #strings for GUI
     def return_state(self):
@@ -38,9 +37,7 @@ class e_static_color():
         # === PARAMETERS END ===
 
         if self.hsv > 0:
-        #if self.hsv[0] > 0:
             color = hsv_to_rgb(self.hsv, 1, 1)
-            #color = hsv_to_rgb(self.hsv[0], 1, 1)
             self.red   = color[0]
             self.green = color[1]
             self.blue  = color[2]

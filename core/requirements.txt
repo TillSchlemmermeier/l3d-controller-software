@@ -13,7 +13,7 @@
 
 # --- Numeric / rendering stack (ABI-LOCKED — do not bump casually) ------------
 # numpy MUST stay < 2: the compiled f2py/Fortran .so extensions in this repo
-# (world2vox_fortran, g_sphere_f, g_torus_f, g_shooting_star_f, g_ellipsoid,
+# (world2vox_fortran, g_torus_f, g_shooting_star_f, g_ellipsoid,
 # gen_central_glow_f, gen_outer_shadow_f, ...) and matplotlib were built against
 # the numpy 1.x C-ABI and crash on numpy 2.x ("module compiled using NumPy 1.x
 # ... multiarray failed to import"). Moving to 2.x means recompiling every .so
@@ -39,4 +39,3 @@ python-rtmidi>=1.5               # hardware MIDI — provides `import rtmidi` (.
 
 # --- Assets / utilities -------------------------------------------------------
 Pillow>=10                       # text/letter generators (g_text, g_letters)
-requests>=2.31,<3                # loopback HTTP between the core's processes

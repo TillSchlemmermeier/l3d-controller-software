@@ -8,13 +8,7 @@ class g_rotating_circle():
     '''
 
     def __init__(self):
-        self.number = 1
-        self.soundsize = 1
-        self.lastvalue = 0
         self.counter = 0
-        self.channel = 0
-        self.counter_total = 0
-        self.mode = 'random'
 
         self.xspeed = 0
         self.yspeed = 1.0
@@ -41,41 +35,6 @@ class g_rotating_circle():
         world1 = np.zeros([3, 10, 10, 10])
         world2 = np.zeros([3, 10, 10, 10])
 
-        '''
-        # check if S2L is activated
-        if 4 > self.channel >= 0:
-            current_volume = float(str(self.sound_values.buf[self.channel*8:self.channel*8+8],'utf-8'))
-            self.number = int(10 * current_volume)
-            self.soundsize =int(np.clip(3 * current_volume, 0, 3))
-
-        # check for trigger
-        elif self.channel == 4:
-            current_volume = int(float(str(self.sound_values.buf[32:40],'utf-8')))
-            if current_volume > self.lastvalue:
-                self.lastvalue = current_volume
-                self.counter = 8
-
-            if self.counter > 0:
-                self.number = self.counter
-                self.counter -= 1
-        '''
-
-        '''
-        world[0, 4, 4, 4] = 1
-        world[0, 4, 5, 4] = 1
-        world[0, 5, 4, 5] = 1
-        world[0, 5, 5, 5] = 1
-        '''
-        '''
-        world2[:, 3, 4, 3] = 1
-        world2[:, 3, 5, 3] = 1
-        world2[:, 6, 4, 6] = 1
-        world2[:, 6, 5, 6] = 1
-        world2[:, 4, 3, 4] = 1
-        world2[:, 4, 6, 4] = 1
-        world2[:, 5, 3, 5] = 1
-        world2[:, 5, 6, 5] = 1
-        '''
         world2[:, 2, 4, 2] = self.brightness
         world2[:, 2, 5, 2] = self.brightness
         world2[:, 7, 4, 7] = self.brightness

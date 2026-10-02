@@ -2,10 +2,6 @@
   <div class="p-3 rounded-lg transition-all duration-200 flex relative overflow-hidden shadow-md shadow-zinc-900 bg-zinc-500"
        :class="[textColor]">
 
-    <!-- <div class="absolute inset-0 opacity-90"
-      :class="gradientBackground">
-    </div> -->
-
     <div
       class="absolute bottom-0 left-0 right-0 transition-all duration-200 ease-out"
       :class="gradientBackground"

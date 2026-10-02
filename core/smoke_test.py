@@ -219,7 +219,6 @@ try:
         quietly(midi.update_context, 0, 0, new)
         got = state[section][slot]['params'][3]
         check(f'fader drives {section}/{slot}', got == round(new / 127, 2), f'{got} != {round(new / 127, 2)}')
-        check(f'fader readback {section}/{slot}', quietly(midi.get_context_midi_values)[0] == got)
 
     for section, slot in ((0, GENERATOR), (0, 0), (GLOBAL, 0)):
         run(f'fader {section}/{slot}', lambda s=section, e=slot: fader(s, e))
@@ -231,7 +230,6 @@ try:
         sm.update_context(0, *DASHBOARD)
         quietly(midi.update_context, 0, 4, 64)
         check('fader drives the dashboard panel', state['s2l_gain'] == round(64 / 127, 2), state['s2l_gain'])
-        check('panel readback', len(quietly(midi.get_context_midi_values)) >= 4)
     run('panels', panels)
 
     def randomize_selected():

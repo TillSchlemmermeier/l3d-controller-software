@@ -9,7 +9,6 @@ class e_rotating_rainbow():
 
         # initial rotating parameters
         self.speed = 0
-        self.rotation = 0.1
         self.gradient_length = 1.0
         self.step = 1
         self.rotX = 1

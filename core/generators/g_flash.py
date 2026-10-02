@@ -17,7 +17,6 @@ class g_flash():
 
         # s2l
         self.sound_values = shared_memory.SharedMemory(name = "global_s2l_memory")
-        self.channel = 0
         self.lastvalue = 0
 
     def return_state(self):
@@ -38,19 +37,6 @@ class g_flash():
         world = np.zeros([3, 10, 10, 10])
 
         current_volume = struct.unpack('d', bytes(self.sound_values.buf[32:40]))[0]
-
-        # check if S2L is activated
-        '''
-        if 4 > self.channel >= 0:
-            current_volume = float(str(self.sound_values.buf[self.channel*8:self.channel*8+8],'utf-8'))
-            if current_volume > 0:
-                if self.brightness <=1.0:
-                    world[0, self.edge[0], self.edge[1], self.edge[2]] = self.brightness**2
-                    self.brightness += current_volume
-                else:
-                    self.edge = choice(self.edge_list)
-                    self.brightness = 0
-        '''
 
         if 0 < self.counter < self.reset:
             self.lastvalue = current_volume

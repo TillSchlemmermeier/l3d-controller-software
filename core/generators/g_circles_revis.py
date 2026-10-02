@@ -8,9 +8,6 @@ class g_circles_revis():
     '''
 
     def __init__(self):
-        self.number = 1
-        self.soundsize = 1
-        self.lastvalue = 0
         self.counter = 0
         self.counter_total = 0
         self.mode = 'out'
@@ -100,8 +97,6 @@ class g_circles_revis():
 
             # waiting time
             if 3 < self.counter < self.pause + 3:
-                # self.counter = -1
-                # self.z = choice([4,5])
                 world[0, :, :, np.clip(self.z,0,9)] = self.sizes[5]
 
             # get bigger
