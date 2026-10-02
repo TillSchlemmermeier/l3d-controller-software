@@ -201,6 +201,8 @@ class MidiControllerEmulator:
         # map initial values for brightness and fade
 
         self.update_fixed_midi()
+        # once: it reschedules itself every 100 ms
+        self.setup_midi_monitor()
 
     def update_fixed_midi(self):
         for i in range(self.state['numberOfChannels']):
@@ -244,8 +246,6 @@ class MidiControllerEmulator:
         self.buttons[8].configure(
             text="ON" if IO else "OFF"
         )
-
-        self.setup_midi_monitor()
 
 
     def setup_midi_monitor(self):

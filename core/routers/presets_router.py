@@ -87,17 +87,13 @@ async def rename_preset(
             status_code=400,
             content={"message": "Failed to rename preset"}
         )
+    # not every preset has a preview GIF
     if old_file_path.exists():
         old_file_path.rename(new_file_path)
-        return JSONResponse(
-            status_code=200,
-            content={"message": "Preset renamed successfully"}
-        )
-    else:
-        return JSONResponse(
-            status_code=400,
-            content={"message": "Failed to rename preset"}
-        )
+    return JSONResponse(
+        status_code=200,
+        content={"message": "Preset renamed successfully"}
+    )
 
 # delete preset
 @router.delete('/api/delete-preset/{type}/{element}/{preset}', dependencies=[Depends(require_admin)])

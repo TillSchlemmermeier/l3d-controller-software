@@ -28,7 +28,7 @@ class e_colormaps():
 
         # self.balance = 1.0
         # self.sound_values = shared_memory.SharedMemory(name = "global_s2l_memory")
-        gradients = ['viridis', 'plasma', 'inferno', 'spring', 'summer', 'autumn', 'winter', 'cool', 'Wistia', 'hot', 'PiYG', 'PRGn', 'BrBG', 'PuOr', 'RdBu', 'RdYlBu', 'Spectral', 'coolwarm', 'bwr', 'managua', 'twilight', 'hsv', 'gist_earth', 'terrain', 'gnuplot', 'gnuplot2', 'CMRmap', 'brg', 'gist_rainbow', 'rainbow', 'jet', 'turbo', 'nipy_spectral']
+        gradients = ['viridis', 'plasma', 'inferno', 'spring', 'summer', 'autumn', 'winter', 'cool', 'Wistia', 'hot', 'PiYG', 'PRGn', 'BrBG', 'PuOr', 'RdBu', 'RdYlBu', 'Spectral', 'coolwarm', 'bwr', 'seismic', 'twilight', 'hsv', 'gist_earth', 'terrain', 'gnuplot', 'gnuplot2', 'CMRmap', 'brg', 'gist_rainbow', 'rainbow', 'jet', 'turbo', 'nipy_spectral']
         self.gradient_lists = {}
         for gradient in gradients:
             self.gradient_lists[gradient] = colormaps.get(gradient)

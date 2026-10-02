@@ -40,14 +40,10 @@ class g_grow():
 
         # explore
         elif self.state == 'explore':
-            breakcounter = 0
-            while True:
-                # check for infinity loop
-                if breakcounter > 20:
-                    print('growing stuck!')
-                else:
-                    breakcounter += 1
-
+            # a bounded number of tries: with no free cell around the active
+            # point (age 0, everything lit) it tries again next frame instead
+            # of looping forever and freezing the renderer
+            for _ in range(20):
                 # create probe
                 self.probe = [self.active[0]+randint(-1,1), self.active[1]+randint(-1,1), self.active[2]+randint(-1,1)]
 

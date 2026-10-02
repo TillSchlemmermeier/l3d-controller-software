@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Request, Depends
+from fastapi import APIRouter, Request, Depends, HTTPException
 from fastapi.responses import JSONResponse
 import json
 
@@ -13,6 +13,8 @@ async def load_gradient(gradientId: int, channelIndex: ChannelKey, request: Requ
     db = request.app.state.db
 
     gradient_data = db.get_gradient_by_id(gradientId)
+    if gradient_data is None:
+        raise HTTPException(status_code=404, detail=f'no gradient with id {gradientId}')
     color_data = ({
         'gradient': json.loads(gradient_data),
         'gradientType': 'linear',

@@ -554,38 +554,33 @@ class DatabaseManager:
 
     def get_all_gradients(self):
         """Get all gradients from the database"""
-        try:
-            with self.get_db_connection() as conn:
-                cursor = conn.cursor()
+        with self.get_db_connection() as conn:
+            cursor = conn.cursor()
 
-                cursor.execute('''
-                    SELECT
-                        id,
-                        type,
-                        subtype,
-                        data,
-                        request_count,
-                        strftime('%Y-%m-%d %H:%M:%S', created_at) as created_at
-                    FROM gradients
-                    ORDER BY request_count DESC, id ASC
-                ''')
+            cursor.execute('''
+                SELECT
+                    id,
+                    type,
+                    subtype,
+                    data,
+                    request_count,
+                    strftime('%Y-%m-%d %H:%M:%S', created_at) as created_at
+                FROM gradients
+                ORDER BY request_count DESC, id ASC
+            ''')
 
-                gradients = []
-                for row in cursor.fetchall():
-                    gradients.append({
-                        'id': row[0],
-                        'type': row[1],
-                        'subtype': row[2],
-                        'data': row[3],
-                        'request_count': row[4],
-                        'created_at': row[5]
-                    })
+            gradients = []
+            for row in cursor.fetchall():
+                gradients.append({
+                    'id': row[0],
+                    'type': row[1],
+                    'subtype': row[2],
+                    'data': row[3],
+                    'request_count': row[4],
+                    'created_at': row[5]
+                })
 
-                return gradients
-
-        except Exception as e:
-            print(f"Error retrieving gradients: {e}")
-            return []
+            return gradients
 
 
     def delete_gradient(self, gradient_id: int) -> bool:
@@ -610,30 +605,25 @@ class DatabaseManager:
 
 
     def get_gradient_by_id(self, gradient_id: int):
-        """Get gradient data by its ID and increment request count"""
-        try:
-            with self.get_db_connection() as conn:
-                cursor = conn.cursor()
+        """Get gradient data by its ID and increment request count; None if there is no such gradient"""
+        with self.get_db_connection() as conn:
+            cursor = conn.cursor()
 
+            cursor.execute('''
+                SELECT data
+                FROM gradients
+                WHERE id = ?
+            ''', (gradient_id,))
+
+            row = cursor.fetchone()
+            if row:
+                # Increment request count
                 cursor.execute('''
-                    SELECT data
-                    FROM gradients
+                    UPDATE gradients
+                    SET request_count = request_count + 1
                     WHERE id = ?
                 ''', (gradient_id,))
 
-                row = cursor.fetchone()
-                if row:
-                    # Increment request count
-                    cursor.execute('''
-                        UPDATE gradients
-                        SET request_count = request_count + 1
-                        WHERE id = ?
-                    ''', (gradient_id,))
-
-                    conn.commit()
-                    return row[0]
-                return None
-
-        except Exception as e:
-            print(f"Error retrieving gradient data: {e}")
+                conn.commit()
+                return row[0]
             return None
