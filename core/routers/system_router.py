@@ -1,4 +1,3 @@
-from typing import Optional
 from fastapi import APIRouter, Request
 from fastapi.responses import HTMLResponse, FileResponse
 import os
@@ -18,36 +17,9 @@ async def mobile_app():
     return FileResponse(f"{dist_path}/index.html")
 
 
-# update the cube data in the frontend with JSON (legacy function)
-@router.get('/api/update_cube')
-async def update_cube(request: Request):
-    connection_manager = request.app.state.connection_manager
-
-    await connection_manager.update_cube()
-    return {"status": "ok"}
-
-
 # update the full state in the frontend
 @router.get("/api/get-state")
 async def get_present_state(request: Request):
     connection_manager = request.app.state.connection_manager
 
     await connection_manager.update_state()
-
-
-# update the value of a single element in the frontend
-@router.get('/api/update_element/{channel}/{element}')
-async def update_element(channel: int, element: int, request: Request):
-    connection_manager = request.app.state.connection_manager
-
-    await connection_manager.update_element(channel, element)
-    return {"status": "ok"}
-
-
-# update the value of a single key in the frontend
-@router.get("/api/update_key/{key}")
-async def update_key(key: str, request: Request, channel: Optional[int] = None):
-    connection_manager = request.app.state.connection_manager
-
-    await connection_manager.update_key(key, channel)
-    return {"status": "ok"}

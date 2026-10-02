@@ -107,18 +107,6 @@ class ConnectionManager:
             settings['sending'] = False
 
 
-    # send the cube data to the frontend as JSON (legacy function)
-    async def update_cube(self):
-        # Only send combined view (index 0) and active channels
-        with self.state.lock:
-            num_channels = self.state['numberOfChannels']
-        message = {
-            "type": "cube_data",
-            "data": self.array[0:num_channels + 1].copy().tolist()
-        }
-        return await self.stream_data(message)
-    
-
     # update the full state in the frontend
     async def update_state(self):
         with self.state.lock:
