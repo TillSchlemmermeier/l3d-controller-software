@@ -209,7 +209,7 @@ const vLongpress = {
     const cancel = () => clearTimeout(timer)
     el.addEventListener('pointerdown', (e: PointerEvent) => {
       x = e.clientX; y = e.clientY
-      timer = setTimeout(() => binding.value(e), 500)
+      timer = setTimeout(() => binding.value(e), 750)
     }, o)
     el.addEventListener('pointermove', (e: PointerEvent) => {
       if (Math.hypot(e.clientX - x, e.clientY - y) > 10) cancel()

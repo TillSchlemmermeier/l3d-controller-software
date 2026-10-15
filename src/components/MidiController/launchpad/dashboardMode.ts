@@ -31,6 +31,7 @@ export const dashboardMode: LaunchpadMode = {
       if (col === 2) ctx.coreState.rebootCore()
       if (col === 3) ctx.coreState.undoRandom()
       if (col === 4) ctx.coreState.toggleCube()
+      if (col === 8) window.location.reload()
       
       // Flash feedback for momentary buttons
       if (col <= 4) {
@@ -119,6 +120,7 @@ export const dashboardMode: LaunchpadMode = {
     ctx.gridState.value[7][1] = COLORS.RED    // REBOOT CORE
     ctx.gridState.value[7][2] = COLORS.ORANGE // UNDO RANDOM
     ctx.gridState.value[7][3] = ctx.coreState.IO ? COLORS.GREEN : COLORS.RED // I/O CUBE
+    ctx.gridState.value[7][7] = COLORS.RED    // REBOOT UI
 
     // Row 6: Random Triggers
     ctx.gridState.value[5][0] = COLORS.PURPLE // TRIGGER RANDOM

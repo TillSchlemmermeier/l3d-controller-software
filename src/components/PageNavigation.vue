@@ -40,6 +40,7 @@ import { useUiStateStore } from '../stores/uiState'
 import admin from '../assets/icons/admin.svg'
 import home from '../assets/icons/home.svg'
 import devices from '../assets/icons/devices.svg'
+import edit from '../assets/icons/edit.svg'
 
 const uiState = useUiStateStore()
 const router = useRouter()
@@ -59,7 +60,7 @@ const menuItems = computed(() => [
   ? [{ icon: devices, label: 'Remote', action: () => goTo(RouteNames.REMOTE_CONTROL) }]
   : []
 ),
-
+  { icon: edit, label: 'LFO', action: () => goTo(RouteNames.LFO_FREQS) },
 ])
 
 function goTo(routeName: string) {

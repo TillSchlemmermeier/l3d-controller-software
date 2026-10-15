@@ -7,7 +7,7 @@ import numpy as np
 
 class class_launchcontrol:
     def __init__(self, state):
-        """initializes the MIDI fighter"""
+        """initializes the Launch Control"""
 
         self.midiin, self.portname_in = open_midiinput('LCXL3 1 MIDI In')
         self.midiout, self.portname_out = open_midioutput(1)
@@ -92,21 +92,39 @@ class class_launchcontrol:
                 self.midi_translation.update_context(3, 3, message[2])
 
             # channel IO
-            elif message[1] == 37 and message[2] > 0:
+            # elif message[1] == 37 and message[2] > 0:
+            #     self.midi_translation.toggle_fixed(0, 'IO')
+            # elif message[1] == 38 and message[2] > 0:
+            #     self.midi_translation.toggle_fixed(1, 'IO')
+            # elif message[1] == 39 and message[2] > 0:
+            #     self.midi_translation.toggle_fixed(2, 'IO')
+            # elif message[1] == 40 and message[2] > 0:
+            #     self.midi_translation.toggle_fixed(3, 'IO')
+            # elif message[1] == 41 and message[2] > 0:
+            #     self.midi_translation.toggle_fixed(4, 'IO')
+            # elif message[1] == 42 and message[2] > 0:
+            #     self.midi_translation.toggle_fixed(5, 'IO')
+            # elif message[1] == 43 and message[2] > 0:
+            #     self.midi_translation.toggle_fixed(6, 'IO')
+            # elif message[1] == 44 and message[2] > 0:
+            #     self.midi_translation.toggle_fixed(7, 'IO')  
+
+            # channel IO
+            elif message[1] == 37:
                 self.midi_translation.toggle_fixed(0, 'IO')
-            elif message[1] == 38 and message[2] > 0:
+            elif message[1] == 38:
                 self.midi_translation.toggle_fixed(1, 'IO')
-            elif message[1] == 39 and message[2] > 0:
+            elif message[1] == 39:
                 self.midi_translation.toggle_fixed(2, 'IO')
-            elif message[1] == 40 and message[2] > 0:
+            elif message[1] == 40:
                 self.midi_translation.toggle_fixed(3, 'IO')
-            elif message[1] == 41 and message[2] > 0:
+            elif message[1] == 41:
                 self.midi_translation.toggle_fixed(4, 'IO')
-            elif message[1] == 42 and message[2] > 0:
+            elif message[1] == 42:
                 self.midi_translation.toggle_fixed(5, 'IO')
-            elif message[1] == 43 and message[2] > 0:
+            elif message[1] == 43:
                 self.midi_translation.toggle_fixed(6, 'IO')
-            elif message[1] == 44 and message[2] > 0:
+            elif message[1] == 44:
                 self.midi_translation.toggle_fixed(7, 'IO')
 
             # elif message[1] == 60:

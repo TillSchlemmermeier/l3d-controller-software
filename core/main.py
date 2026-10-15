@@ -13,11 +13,13 @@ from UltraDict import UltraDict
 
 from randomizer import Randomizer
 from s2l_engine import sound_process
+from lfo_engine import lfo_process
 from server import WebSocketAPIServer
 from state_manager import StateManager
 from rendering_engine import rendering_engine
 from midi_launchcontrol import class_launchcontrol
 from midi_emulator import MidiControllerEmulator
+from midi_fighter import class_fighter
 
 def autopilot(state, randomizer_queue):
     randomizer = Randomizer(state)
@@ -31,13 +33,13 @@ def midi_devices(state):
     print('...starting midi thread')
     launchcontrol = class_launchcontrol(state)
     # akai = class_akai(state)
-    # fighter = class_fighter(state)
-    # fighter.update()
+    fighter = class_fighter(state)
 
     while True:
         # Small sleep to prevent CPU overload
         if state['midi_update'] == True:
             launchcontrol.update()
+            fighter.update()
             with state.lock:
                 state['midi_update'] = False
 
@@ -124,6 +126,9 @@ if __name__ == '__main__':
         "s2l_normalize": False,
         "s2l_gain": 0.5,
         "s2l_update": True,
+        "lfo_update" : True,
+        "lfo_frequencies" : [0.5,1.0,2.0,4.0],
+        'lfo_shape' : ['sin', 'sin', 'sin', 'sin'],
         "context": [[0, 9], [0, 0], [0 ,0], [0 ,0]],
         "midi_update": 0,
         "oneshot": 0,
@@ -159,7 +164,7 @@ if __name__ == '__main__':
             "update": False,
             "numberOfEffects": 0,
       },
-    }, recurse=False, name=name, buffer_size=1024 * 1024);
+    }, recurse=False, name=name, buffer_size=1024 * 1024)
 
     if args.restore:
         restore_from_backup(state)
@@ -183,6 +188,8 @@ if __name__ == '__main__':
     processes = [
         mp.Process(target=server, name="WebSocket/API Server", args=[state, randomizer_queue]),
         mp.Process(target=sound_process, name="Sound Process", args=[state]),
+        # mp.Process(target=lfo_process, name="LFO Process", args=[state]),
+
         mp.Process(target=midi_devices, name="MIDI Devices", args=[state]),
         mp.Process(target=backup_state, name="State Backup", args=[state]),
         mp.Process(target=rendering, name="Renderer", args=[state]),

@@ -73,8 +73,6 @@ class class_midi_translation:
                         try:
                             params = this_channel[index]['params']
                             slot = midi_index * 4 + 3
-                            if not self.caught((context_index, midi_index), params[slot], midi_value):
-                                return
                             params[slot] = midi_value
                             this_channel[index]['update'] = 1
                             self.state[channel] = this_channel
@@ -133,6 +131,26 @@ class class_midi_translation:
 
                 self.trigger_update(f"{self.api_endpoint}/update_key/{key}")
 
+        # GUI activated midi control of LFO
+        elif channel == 11:
+            with self.state.lock:
+                current_freqs = list(self.state['lfo_frequencies'])
+                current_shape = list(self.state['lfo_shape'])
+                if midi_index < 4:
+                    # print('updating frequencies', midi_index, midi_value)
+                    current_freqs[midi_index] = midi_value
+                    self.state['lfo_frequencies'] = current_freqs
+                    self.trigger_update(f"{self.api_endpoint}/update_key/lfo_frequencies")
+
+                elif midi_index >= 4:
+                    # print('updating shapes', midi_index, midi_value)
+                    current_shape[midi_index-4] = ['sin', 'up', 'down', 'tri'][round(3*midi_value)]
+                    # print(current_shape)
+                    self.state['lfo_shape'] = current_shape
+                    self.trigger_update(f"{self.api_endpoint}/update_key/lfo_shape")
+                self.state['lfo_update'] = True
+
+
     def get_context_midi_values(self):
         with self.state.lock:
             channel = self.state['context'][0][0]
@@ -168,11 +186,13 @@ class class_midi_translation:
         midi_index = int(midi_index)
         key = str(key)
         midi_value = round((float(midi_value) / 127.0), 2)
+
         if midi_index < 8:
             try:
                 channel = self.state[midi_index]
-                if not self.caught((key, midi_index), channel[key], midi_value):
-                    return
+                if key == "brightness":
+                    if not self.caught((key, midi_index), channel[key], midi_value):
+                        return
                 channel[key] = midi_value
                 self.state[midi_index] = channel
                 self.trigger_update(f"{self.api_endpoint}/update_key/{key}?channel={midi_index}")
@@ -181,8 +201,6 @@ class class_midi_translation:
                 pass
 
         if midi_index == 8:
-            if not self.caught((key, 8), self.state[key], midi_value):
-                return
             self.state[key] = midi_value
             self.trigger_update(f"{self.api_endpoint}/update_key/{key}")
             
