@@ -3,7 +3,7 @@
 Drives the real code paths on a temporary copy of l3d.db, so the real database
 is never touched. Run from core/ with the app stopped:
 
-    python3.12 smoke_test.py
+    python3.14 smoke_test.py
 
 It checks that things work end to end, not how they look. Exit code is the
 number of failed checks.

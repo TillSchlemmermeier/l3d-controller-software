@@ -77,7 +77,7 @@ function syncPackagedCore() {
 function setupPythonProcess(restore = false) {
   syncPackagedCore()
   const pythonPath = coreDir()
-  pythonProcess = spawn('python3.12', ['-u', 'main.py', ...(restore ? ['--restore'] : [])], {
+  pythonProcess = spawn('python3.14', ['-u', 'main.py', ...(restore ? ['--restore'] : [])], {
     cwd: pythonPath,
     stdio: ['ignore', 'pipe', 'pipe'],
     env: {
@@ -176,7 +176,7 @@ function restartBackend() {
     pythonProcess.kill('SIGINT')
   } else {
     // Fallback if reference is lost
-    exec('killall python3.12', startNewProcess)
+    exec('killall python3.14', startNewProcess)
   }
 }
 
@@ -226,7 +226,7 @@ app.on('window-all-closed', () => {
 
   } else {
     // Fallback if process is already dead
-    exec('killall python3.12', () => {
+    exec('killall python3.14', () => {
       win = null
       app.quit()
     })

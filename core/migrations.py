@@ -8,9 +8,9 @@ the element's own presets, to the copies inside channel and global presets and
 to state_backup.pkl. It remembers them in the database's migrations table. The
 core calls it at startup, so new code never reads old presets.
 
-    python3.12 migrations.py                   what the pending entries would change
-    python3.12 migrations.py examples          the same for every example
-    python3.12 migrations.py new g_cube [rev]  write an entry for g_cube's changes
+    python3.14 migrations.py                   what the pending entries would change
+    python3.14 migrations.py examples          the same for every example
+    python3.14 migrations.py new g_cube [rev]  write an entry for g_cube's changes
                                                since the last commit (or rev)
 """
 import importlib
@@ -306,7 +306,7 @@ def new(element, rev='HEAD'):
         f.write(source.replace(MARKER, entry + MARKER))
     print(f'\nAdded to element_migrations.py:\n{entry}')
     if by_hand:
-        print('Replace the TODO, then run python3.12 migrations.py to see what it changes.')
+        print('Replace the TODO, then run python3.14 migrations.py to see what it changes.')
         return
     importlib.reload(element_migrations)
     db = sqlite3.connect('l3d.db')

@@ -13,7 +13,6 @@ from UltraDict import UltraDict
 
 from migrations import migrate
 from randomizer import Randomizer
-from s2l_engine import sound_process
 from server import WebSocketAPIServer
 from managers.state_manager import StateManager
 from rendering_engine import rendering_engine
@@ -26,6 +25,10 @@ PROFILE = os.environ.get('L3D_PROFILE', 'dev')
 def autopilot(state, randomizer_queue):
     randomizer = Randomizer(state)
     randomizer.run_autopilot_loop(state, randomizer_queue)
+
+def sound(state):
+    from s2l_engine import sound_process
+    sound_process(state)
 
 def server(state, randomizer_queue):
     server = WebSocketAPIServer(state, randomizer_queue)
@@ -106,6 +109,9 @@ def restore_from_backup(state):
     print("State restored from backup")
 
 if __name__ == '__main__':
+    # Python 3.14 starts processes with forkserver by default
+    mp.set_start_method('fork')
+
     parser = argparse.ArgumentParser()
     parser.add_argument('--restore', action='store_true')
     args = parser.parse_args()
@@ -187,7 +193,7 @@ if __name__ == '__main__':
 
     processes = [
         mp.Process(target=server, name="WebSocket/API Server", args=[state, randomizer_queue]),
-        mp.Process(target=sound_process, name="Sound Process", args=[state]),
+        mp.Process(target=sound, name="Sound Process", args=[state]),
         mp.Process(target=midi_devices, name="MIDI Devices", args=[state]),
         mp.Process(target=backup_state, name="State Backup", args=[state]),
         mp.Process(target=rendering, name="Renderer", args=[state]),

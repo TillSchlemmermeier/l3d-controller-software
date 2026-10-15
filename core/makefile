@@ -1,7 +1,7 @@
 # Each target builds one f2py module next to its source, under the name the
-# Python code imports. f2py builds with meson on Python 3.12, which can't take a
-# path in -m, hence the cd.
-F2PY = f2py3 --quiet -c
+# Python code imports, for the python3.14 the app runs. f2py builds with meson,
+# which can't take a path in -m, hence the cd.
+F2PY = python3.14 -m numpy.f2py --quiet -c
 
 MODULES = world2vox_fortran g_genhsphere g_genssphere gen_central_glow_f g_shooting_star_f \
           g_ellipsoid g_torus_f gen_outer_shadow_f

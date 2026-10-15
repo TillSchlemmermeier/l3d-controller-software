@@ -8,7 +8,7 @@ keys; generator and effect presets are left untouched.
 Safe to run more than once: a preset that is already migrated stays as it is.
 Before changing anything it copies the database next to itself.
 
-    python3.12 migrate_slot_keys.py [path/to/l3d.db]
+    python3.14 migrate_slot_keys.py [path/to/l3d.db]
 """
 import json
 import os

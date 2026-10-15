@@ -39,13 +39,13 @@ L3D Studio is three cooperating tiers:
 
 ```
                  Electron main (electron/main.ts)
-                 ├─ spawns python3.12 core/main.py
+                 ├─ spawns python3.14 core/main.py
                  └─ bridges ws://localhost:8000/ws ──IPC──► Vue renderer (src/)
 
 core/main.py forks 6 processes, all sharing one UltraDict "state":
 
   Renderer      25 FPS loop → world2vox → serial to Arduino, + cube_data shm
-  Sound         PyAudio FFT, 50 ms window every 16.7 ms → 6 doubles in global_s2l_memory shm
+  Sound         PortAudio FFT, 50 ms window every 16.7 ms → 6 doubles in global_s2l_memory shm
   MIDI          controller/emulator callbacks → param writes into state
   Server        FastAPI + uvicorn on :8000 — REST API + /ws + UDP bridge :8001
   Autopilot     timed preset randomization
@@ -135,20 +135,22 @@ Some heavy calculations are written in **Fortran** and compiled with f2py for sp
 
 ### Prerequisites
 
-- **Python 3.12** available as `python3.12` on `PATH` (the Electron app spawns it directly — not a virtualenv).
+- **Python 3.14** available as `python3.14` on `PATH` (the Electron app spawns it directly — not a virtualenv).
 - **Node.js** (for Vite / Electron).
-- **`gfortran`**, **`meson`** and **`ninja`** plus **`f2py3`** (from numpy) to build the native extensions. On Python 3.12, f2py builds with meson.
+- **`gfortran`**, **`meson`** and **`ninja`** plus `python3-dev`, to build the native extensions with numpy's f2py.
 - Linux (serial device paths and process management assume it).
 
 ### Build & run
 
 ```bash
-# 1. Build the Fortran / f2py extensions (once; re-run after editing any .f90)
+# 1. Install the Python dependencies for python3.14
 cd core
-make                      # builds world2vox_fortran and the other f2py modules
+sudo apt install python3-rtmidi     # no pip wheel for Python 3.14
+python3.14 -m pip install --user --break-system-packages -r requirements.txt
 
-# 2. Install the Python dependencies for python3.12
-pip install -r requirements.txt     # IMPORTANT: numpy stays <2 (see constraints)
+# 2. Build the Fortran / f2py extensions (once; re-run after editing any .f90,
+#    and after upgrading numpy or Python)
+make                      # builds world2vox_fortran and the other f2py modules
 
 # 3. Build the mobile app so the core can serve it to phones
 cd ../mobile
@@ -168,15 +170,15 @@ To run the Python core on its own (without Electron):
 
 ```bash
 cd core
-python3.12 -u main.py            # normal start
-python3.12 -u main.py --restore  # restore last state from state_backup.pkl
+python3.14 -u main.py            # normal start
+python3.14 -u main.py --restore  # restore last state from state_backup.pkl
 ```
 
 The API/WebSocket server listens on **`:8000`**; phones connect to `http://<host-ip>:8000` (the desktop app shows a QR code for this).
 
 ### Smoke test
 
-With the app stopped, `cd core && python3.12 smoke_test.py` drives state, renderer, MIDI, randomizer and the API end to end on a temporary copy of the database. The exit code is the number of failed checks. Run it after changes to the state shape, the API or the MIDI path.
+With the app stopped, `cd core && python3.14 smoke_test.py` drives state, renderer, MIDI, randomizer and the API end to end on a temporary copy of the database. The exit code is the number of failed checks. Run it after changes to the state shape, the API or the MIDI path.
 
 ---
 
@@ -224,8 +226,6 @@ Arduino/             LED cube firmware (FastLED)
 3. Register it in the database so it appears in the UI (via the admin tools / `managers/db_manager.py`).
 4. If it's performance-critical, consider a Fortran `.f90` + an f2py target in the `makefile`.
 
-Keep everything **numpy 1.x compatible** (see below).
-
 ---
 
 ## Changing an element's parameters
@@ -234,10 +234,10 @@ A preset stores each knob only as a 0–1 value, in order. When a line in an ele
 
 ```bash
 cd core
-python3.12 migrations.py new g_cube   # before committing: diff the parameter block against the last commit,
+python3.14 migrations.py new g_cube   # before committing: diff the parameter block against the last commit,
                                       # answer what each change should do, the entry is written for you
-python3.12 migrations.py              # dry run: how many presets the pending entries change
-python3.12 migrations.py examples     # the same for an example of every kind of change
+python3.14 migrations.py              # dry run: how many presets the pending entries change
+python3.14 migrations.py examples     # the same for an example of every kind of change
 ```
 
 Starting the core applies the entries this database hasn't had yet: to the element's own presets, to the copies inside channel and global presets, and to `state_backup.pkl`. The database is copied to `l3d.db.before-<date>` first, and every applied entry is recorded in its `migrations` table. So every database (the development one, the show machine's) gets each change exactly once, the first time it runs the new code.

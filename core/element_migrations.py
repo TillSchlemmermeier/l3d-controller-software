@@ -6,8 +6,8 @@ To correct one, add another entry. To undo one, restore the copy of the database
 taken before it ran (l3d.db.before-<date>).
 
 An entry is (name, element, steps). The name must be unique; the date keeps it
-so. `python3.12 migrations.py new <element>` writes the entry from the diff of the
-parameter block and asks what each change should do. `python3.12 migrations.py`
+so. `python3.14 migrations.py new <element>` writes the entry from the diff of the
+parameter block and asks what each change should do. `python3.14 migrations.py`
 shows how many presets the pending entries change.
 
 Steps, indices counting from 0, each seeing the knobs as the step before left them:
@@ -45,7 +45,7 @@ MIGRATIONS = [
 
 
 # Never applied. One per kind of change, on real elements, so
-# `python3.12 migrations.py examples` shows what each would do to the presets.
+# `python3.14 migrations.py examples` shows what each would do to the presets.
 EXAMPLES = [
     # --- a knob's range or curve ---
     ('range grows, presets look the same', 'g_cube', [

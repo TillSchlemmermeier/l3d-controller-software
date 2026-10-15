@@ -1,7 +1,4 @@
-import os
-import sys
 import numpy as np
-import pyaudio
 import socket
 import json
 import multiprocessing as mp
@@ -10,6 +7,7 @@ from scipy.ndimage import uniform_filter1d
 from time import time
 from collections import deque
 import struct
+import sounddevice as sd
 
 class BeatDetector:
     '''
@@ -60,7 +58,6 @@ class BeatDetector:
 
 def sound_process(state):
     
-    # initialize pyaudio
     sample_rate = 44100
     buffer_size = int(44100/20)
     # audio ─────────────────────────────────────────────────▶ time
@@ -73,41 +70,20 @@ def sound_process(state):
     hops_per_window = 3
     hop = buffer_size//hops_per_window
 
-    # Suppress stderr output from PyAudio initialization
-    devnull = os.open(os.devnull, os.O_WRONLY) # open /dev/null
-    original_stderr_fd = os.dup(sys.stderr.fileno()) # Save original stderr fd
-    os.dup2(devnull, sys.stderr.fileno()) # Redirect stderr to /dev/null
-    p = pyaudio.PyAudio() # Initialize PyAudio
-    os.dup2(original_stderr_fd, sys.stderr.fileno()) # Restore original stderr fd
-    os.close(original_stderr_fd) # Close the duplicated fd
-    os.close(devnull) # Close /dev/null fd
-
     sound_values = mp.shared_memory.SharedMemory(name = "global_s2l_memory")
 
     # find pipewire audio device (Nachfolger von pulseaudio)
-    pulse_device_index = -1
-    for x in range(0,p.get_device_count()):
-        info = p.get_device_info_by_index(x)
-        if info["name"] == "pipewire":
-            pulse_device_index = info["index"]
-            print("chosen audio device: ")
-            print(info)
+    device = sd.query_devices("pipewire", kind="input")
+    print("chosen audio device: ")
+    print(device)
 
-    if pulse_device_index == -1:
-        print("\nWarning: No pipewire device found, using default input device")
-        pulse_device_index = p.get_default_input_device_info()['index']
-        print("chosen audio device: ")
-        print(p.get_device_info_by_index(pulse_device_index))
-
-
-    stream = p.open(
-        format = pyaudio.paInt16,
+    stream = sd.InputStream(
+        samplerate = sample_rate,
         channels = 1,
-        rate = sample_rate,
-        input_device_index = pulse_device_index,
-        input = True,
-        output = False,
-        frames_per_buffer = hop)
+        dtype = "int16",
+        device = device["index"],
+        blocksize = hop)
+    stream.start()
 
     # initialize frequency axis for spectrum
     freq_axis = np.logspace(0, 5, 60)
@@ -133,7 +109,7 @@ def sound_process(state):
     # trigger
     last_value = 0.0
     detector = BeatDetector(hops_per_window, sample_rate/hop)
-    samples = np.frombuffer(stream.read(buffer_size), dtype=np.int16)
+    samples = stream.read(buffer_size)[0][:, 0]
 
     # the bins a kick lives in. the raw fft axis, not the log one used for the
     # display, and taken before the smoothing that would flatten the transient.
@@ -177,7 +153,7 @@ def sound_process(state):
             print('s2l engine : reseting normalization')
 
         # the newest hop pushes the oldest out of the window
-        samples = np.concatenate((samples[hop:], np.frombuffer(stream.read(hop), dtype=np.int16)))
+        samples = np.concatenate((samples[hop:], stream.read(hop)[0][:, 0]))
 
         # perform fourier transformation
         FFT   = fft(samples)
