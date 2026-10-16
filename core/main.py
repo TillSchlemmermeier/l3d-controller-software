@@ -44,6 +44,7 @@ def midi_devices(state):
             # Small sleep to prevent CPU overload
             if state['midi_update'] == True:
                 launchcontrol.update()
+                fighter.update()
                 with state.lock:
                     state['midi_update'] = False
 

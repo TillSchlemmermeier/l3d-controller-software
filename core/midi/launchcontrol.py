@@ -18,15 +18,16 @@ class LaunchControl:
         if message[0] == 176:
             cc, value = message[1], message[2]
 
+            # the knobs need pickup too until they are sent their values
             # global brightness
             if cc == 36:
-                self.midi_translation.update_fixed(8, 'brightness', value)
+                self.midi_translation.update_fixed(8, 'brightness', value, pickup=True)
 
-            # channel brightness on CC 5-12, channel fade on CC 29-35
+            # channel brightness on the faders, CC 5-12, channel fade on CC 29-35
             if 5 <= cc <= 12:
-                self.midi_translation.update_fixed(cc - 5, 'brightness', value)
+                self.midi_translation.update_fixed(cc - 5, 'brightness', value, pickup=True)
             elif 29 <= cc <= 35:
-                self.midi_translation.update_fixed(cc - 29, 'fade', value)
+                self.midi_translation.update_fixed(cc - 29, 'fade', value, pickup=True)
 
             # oneshots 1-8 on CC 45-52
             if 45 <= cc <= 52:
@@ -34,7 +35,7 @@ class LaunchControl:
 
             # parameters: four knobs per context, CC 13-28
             elif 13 <= cc <= 28:
-                self.midi_translation.update_context((cc - 13) // 4, (cc - 13) % 4, value)
+                self.midi_translation.update_context((cc - 13) // 4, (cc - 13) % 4, value, pickup=True)
 
             # channel IO on CC 37-44
             elif 37 <= cc <= 44: # and value > 0:

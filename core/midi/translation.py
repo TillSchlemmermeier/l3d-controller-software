@@ -47,7 +47,9 @@ class MidiTranslation:
         self.notify(f'update_element:{channel}:{index}')
 
     def caught(self, key, target, incoming):
-        """Soft-takeover ("pickup") for non-motorized faders/knobs.
+        """Soft-takeover ("pickup") for controls whose position we can't set.
+        Knobs we can send the current value to don't need it, so callers ask
+        for it with pickup=True.
 
         Returns True if `incoming` may drive `target` without a jump. We keep
         control while the stored value still matches what we last wrote (the
@@ -66,7 +68,7 @@ class MidiTranslation:
             return True
         return False                                # still hunting → ignore
 
-    def update_context(self, context_index, midi_index, midi_value):
+    def update_context(self, context_index, midi_index, midi_value, pickup=False):
         midi_index = int(midi_index)
         midi_value = round((float(midi_value) / 127.0), 2)
         try:
@@ -80,7 +82,7 @@ class MidiTranslation:
                     try:
                         params = this_channel[index]['params']
                         slot = midi_index * 4 + 3
-                        if not self.caught((context_index, midi_index), params[slot], midi_value):
+                        if pickup and not self.caught((context_index, midi_index), params[slot], midi_value):
                             return
                         params[slot] = midi_value
                         this_channel[index]['update'] = 1
@@ -135,7 +137,7 @@ class MidiTranslation:
 
                 self.notify_key(key)
 
-    def update_fixed(self, midi_index, key, midi_value):
+    def update_fixed(self, midi_index, key, midi_value, pickup=False):
         midi_index = int(midi_index)
         key = str(key)
         midi_value = round((float(midi_value) / 127.0), 2)
@@ -145,7 +147,7 @@ class MidiTranslation:
                     if midi_index >= self.state['numberOfChannels']:
                         return
                     channel = self.state[midi_index]
-                    if not self.caught((key, midi_index), channel[key], midi_value):
+                    if pickup and not self.caught((key, midi_index), channel[key], midi_value):
                         return
                     channel[key] = midi_value
                     self.state[midi_index] = channel
@@ -156,7 +158,7 @@ class MidiTranslation:
 
         if midi_index == 8:
             with self.state.lock:
-                if not self.caught((key, 8), self.state[key], midi_value):
+                if pickup and not self.caught((key, 8), self.state[key], midi_value):
                     return
                 self.state[key] = midi_value
             self.notify_key(key)
