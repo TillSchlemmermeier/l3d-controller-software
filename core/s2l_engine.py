@@ -89,7 +89,8 @@ def sound_process(state):
     # each bin is scaled by the 99th percentile of its own last 15 s: about the
     # loudest it got, ignoring the top 1% so one stray frame doesn't set the scale.
     history = deque(maxlen=round(15*sample_rate/hop))
-    reference = np.ones(60)
+    # nothing is scaled before the first frame is in: the very first frame reads 0
+    reference = np.full(60, np.inf)
     # the first second goes in regardless, so there is a scale to start from
     first_frames = round(sample_rate/hop)
 
@@ -97,6 +98,11 @@ def sound_process(state):
     # the last beat. A break keeps the scale of the groove before it
     groove_hold = 2.0
     beat_time = -groove_hold
+
+    # the selector values rise at once and fall by this much per hop (halving in
+    # about 40 ms), so the frame to frame jitter of a single bin doesn't flicker
+    release = 0.75
+    envelope = np.zeros(4)
 
     detector = BeatDetector(hops_per_window, sample_rate/hop)
     samples = stream.read(buffer_size)[0][:, 0]
@@ -186,6 +192,9 @@ def sound_process(state):
             current_volume *= (gain*2 + 1)
 
             current_volumes.append(current_volume)
+
+        envelope = np.maximum(current_volumes, envelope*release)
+        current_volumes = envelope.tolist()
 
         # read from shared memory to get eventual changes from oneshot
         last_value = struct.unpack('d', sound_values.buf[32:40])[0]
