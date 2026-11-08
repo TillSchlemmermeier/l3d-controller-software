@@ -45,7 +45,7 @@ L3D Studio is three cooperating tiers:
 core/main.py forks 6 processes, all sharing one UltraDict "state":
 
   Renderer      25 FPS loop → world2vox → serial to Arduino, + cube_data shm
-  Sound         PortAudio FFT, 50 ms window every 16.7 ms → 6 doubles in global_s2l_memory shm
+  Sound         PortAudio FFT, 50 ms window every 16.7 ms → 7 doubles in global_s2l_memory shm
   MIDI          controller/emulator callbacks → param writes into state
   Server        FastAPI + uvicorn on :8000 — REST API + /ws + UDP bridge :8001
   Autopilot     timed preset randomization
@@ -60,7 +60,7 @@ core/main.py forks 6 processes, all sharing one UltraDict "state":
 |---|---|
 | UltraDict `state` | The live show state — single source of truth, guarded by `state.lock` |
 | SharedMemory `cube_data` | 9×1000×3 `uint8` frame buffer (combined image + 8 per-channel previews) |
-| SharedMemory `global_s2l_memory` | 6 doubles of audio analysis, read directly by effects |
+| SharedMemory `global_s2l_memory` | 7 doubles of audio analysis, read directly by effects |
 | UDP `127.0.0.1:8001` | The other processes → server: "frame ready" from the renderer, "this changed, tell the UI" from MIDI and autopilot, spectrum JSON from sound |
 | WebSocket `:8000/ws` | State (JSON) + cube frames (binary) to the Electron UI and phones |
 | Serial `/dev/ttyACM*` | RGB frames to the Arduino |

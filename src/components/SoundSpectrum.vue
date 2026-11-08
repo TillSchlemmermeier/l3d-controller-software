@@ -6,15 +6,23 @@
       : 'background: black'"
   >
       <div
-        class="relative w-[492px] h-[425px] bg-black p-2 border-2"
+        class="w-[492px] h-[425px] bg-black p-2 border-2 flex flex-col"
+        @click="selectSpectrum"
       >
-        <canvas ref="chart" @click="selectSpectrum"></canvas>
-        <div
-          class="absolute top-7 left-16 w-2.5 h-2.5 rounded-full pointer-events-none"
-          :style="beatOn
-            ? 'background:#ff7171; transition:none'
-            : 'background:#3f1d1d; transition:background 70ms linear'"
-        ></div>
+        <!-- the sequencer and the selector legend, centred together above the chart. -->
+        <div class="shrink-0 flex justify-center items-center gap-5 pb-1 text-white" :style="{ font: `${FONT.size}px ${FONT.family}` }">
+          <!-- one step per beat, like a sequencer. Red in the groove, grey in a break -->
+          <div class="flex gap-1">
+            <div v-for="i in 4" :key="i" class="w-3 h-3 rounded-sm" :style="stepStyle(i - 1)"></div>
+          </div>
+          <!-- the selector legend -->
+          <div v-for="(color, i) in COLORS" :key="color" class="flex items-center gap-2">
+            <div class="w-10 h-[5px]" :style="{ background: color }"></div>{{ i }}
+          </div>
+        </div>
+        <div class="relative flex-1 min-h-0">
+          <canvas ref="chart"></canvas>
+        </div>
       </div>
     </div>
 </template>
@@ -31,7 +39,17 @@ let freqAxis: number[] = []
 let disposeSpectrum: (() => void) | null = null
   
 const beatOn = ref(false)
+const grooveOn = ref(false)
+const step = ref(0)
 let lastTrigger: number | null = null
+
+function stepStyle(i: number) {
+  const color = grooveOn.value ? '#ff7171' : '#8a8a8a'
+  if (i !== step.value) return `background:${color}; opacity:0.35`
+  return beatOn.value
+    ? `background:${color}; box-shadow:0 0 12px 2px ${color}; transition:none`
+    : `background:${color}; transition:box-shadow 70ms`
+}
 
 const COLORS = ['red', 'green', 'blue', 'orange'] as const
 const FONT = { size: 16, family: "'DejaVu Sans'" }
@@ -39,8 +57,8 @@ const FONT = { size: 16, family: "'DejaVu Sans'" }
 const scales = {
   x: {
     type: "logarithmic" as const,
-    min: 50,
-    max: 10000,
+    min: 30,
+    max: 16000,
     grid: {
       color: 'rgba(255, 255, 255, 0.1)'
     },
@@ -106,6 +124,22 @@ function createThresholdDatasets() {
   }))
 }
 
+// the level a beat needs in the kick band, drawn across 40-110 Hz.
+// BeatDetector.LEVEL_GATE in s2l_engine.py
+const BEAT_GATE = 0.5
+
+function createBeatGateDataset() {
+  return {
+    label: 'Beat gate',
+    data: [{ x: 40, y: BEAT_GATE }, { x: 110, y: BEAT_GATE }],
+    borderColor: '#ff7171',
+    borderWidth: 3,
+    borderDash: [6, 4],
+    pointRadius: 0,
+    order: 0,
+  }
+}
+
 const config: ChartConfiguration = {
     type: 'line',
     data: {
@@ -113,7 +147,8 @@ const config: ChartConfiguration = {
       datasets: [
       createSpectrumDataset(),
       ...createSelectorDatasets(),
-      ...createThresholdDatasets()
+      ...createThresholdDatasets(),
+      createBeatGateDataset()
     ]
     },
     options: {
@@ -122,21 +157,8 @@ const config: ChartConfiguration = {
       animation: { duration: 0 },
       scales,
       plugins: {
-        legend: {
-          position: 'top',
-          labels: {
-            color: 'white',
-            font: FONT,
-            filter: (legendItem) => {
-            // Only show selector lines (datasets 1-4) in legend
-            return (legendItem.datasetIndex ?? -1) > 0 && (legendItem.datasetIndex ?? -1) < 5;
-          },
-            usePointStyle: false,
-            padding: 20,
-            boxWidth: 40,
-            boxHeight: 0
-          }
-        },
+        // drawn in the template instead, next to the sequencer
+        legend: { display: false },
       }
     }
   }
@@ -199,9 +221,9 @@ onMounted(() => {
   const ctx = chart.value.getContext('2d')
   if (!ctx) return
 
-  // Create frequency axis
-  freqAxis = Array.from({ length: 60 }, (_, i) => 
-    Math.pow(10, i * (5 / 60))
+  // Create frequency axis: same as freq_axis in s2l_engine.py: 60 bins from 30 Hz to 16 kHz
+  freqAxis = Array.from({ length: 60 }, (_, i) =>
+    30 * Math.pow(16000 / 30, i / 59)
   )
   config.data.labels = freqAxis
 
@@ -211,9 +233,11 @@ onMounted(() => {
   updateSelectorsAndThresholds()
 
   disposeSpectrum = window.ipcRenderer.onSpectrumData((message: any) => {
-    updateSpectrum(message.spectrum)
     beatOn.value = lastTrigger !== null && message.trigger !== lastTrigger
     lastTrigger = message.trigger
+    grooveOn.value = message.groove
+    step.value = message.trigger % 4
+    updateSpectrum(message.spectrum)
   })
 })
 

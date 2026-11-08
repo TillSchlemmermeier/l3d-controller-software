@@ -111,7 +111,6 @@ class MidiTranslation:
                         current_thresholds[midi_index-4] = midi_value
                         self.state['s2l_thresholds'] = current_thresholds
                         self.notify_key('s2l_thresholds')
-                    self.state['s2l_update'] = True
 
             elif index == 'dashboard':
                 if midi_index == 0:

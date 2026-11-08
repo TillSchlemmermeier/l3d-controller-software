@@ -83,7 +83,7 @@ try:
     state = UltraDict({
         'IO': True, 'brightness': 1, 'fade': 0, 'autopilot': False, 'autopilot_time': 3,
         'random': 'all_elements', 's2l_values': [0.12, 0.2, 0.45, 0.7], 's2l_thresholds': [0, 0, 0, 0],
-        's2l_normalize': False, 's2l_auto_normalize': True, 's2l_gain': 0.5, 's2l_update': True,
+        's2l_normalize': False, 's2l_auto_normalize': True, 's2l_gain': 0.5,
         'context': [[0, GENERATOR]] * 4, 'midi_update': 0, 'oneshot': 0, 'numberOfChannels': 0,
         GLOBAL: {'update': False, 'numberOfEffects': 0},
     }, recurse=False, name='l3d_smoke_state', buffer_size=1024 * 1024)
