@@ -40,6 +40,17 @@ import numpy as np
 from migrations import keep, change, derive, insert, remove, move
 
 MIGRATIONS = [
+    ('2026-11-08 g_drop: Trigger added to the s2l channels', 'g_drop', [
+        keep(1, old=lambda m: ['noS2L', 0, 1, 2, 3][int(m*4)],
+                new=lambda m: ['noS2L', 0, 1, 2, 3, 'Trigger'][int(m*5)]),
+    ]),
+    ('2026-11-08 g_snake: grow mode and a fading body, old presets stay a single dot', 'g_snake', [
+        insert(0, 'mode', 0.0),
+        insert(2, 'length', 0.0),
+    ]),
+    ('2026-11-08 g_cube_edges: size knob, old presets keep the full cube', 'g_cube_edges', [
+        insert(4, 'size', 0.0),
+    ]),
     # new entries go above this line
 ]
 

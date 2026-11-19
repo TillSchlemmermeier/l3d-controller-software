@@ -19,6 +19,7 @@ class g_cube_edges():
         self.speed = 1
         self.number = 1
         self.wait_frames = 50
+        self.size = 10
         # corner_list contains the indices for edges
         # which belong to one corner
         self.corner_list = [[   0, 8, 4], # A
@@ -29,7 +30,7 @@ class g_cube_edges():
                             [11, -5, -1], # F
                             [ 3, -6,-10], # G
                             [-11,-3, -7]] # H
-        '''
+        r'''
         E - - F
         |\    |\
         | A - - B
@@ -37,20 +38,6 @@ class g_cube_edges():
          \|    \|
           C - - D
         '''
-
-        self.edge_list = [[0, 0, slice(0, 10)], #  0
-                          [0, 9, slice(0, 10)], #  1
-                          [9, 0, slice(0, 10)], #  2
-                          [9, 9, slice(0, 10)], #  3
-                          [0, slice(0, 10), 0], #  4
-                          [0, slice(0, 10), 9], #  5
-                          [9, slice(0, 10), 0], #  6
-                          [9, slice(0, 10), 9], #  7
-                          [slice(0, 10), 0, 0], #  8
-                          [slice(0, 10), 0, 9], #  9
-                          [slice(0, 10), 9, 0], # 10
-                          [slice(0, 10), 9, 9], # 11
-                          ]
 
         self.corner = self.corner_list[0]
         self.direction = choice([-1, 1])
@@ -66,6 +53,7 @@ class g_cube_edges():
             ['number', 'number', round(self.number,2) if self.wait_frames <= 5 else '-'],
             ['mode', 'wait_frames', 'Single' if self.wait_frames <= 5 else f'All/{self.wait_frames}'],
             ['Trigger', 'trigger', 'On' if self.trigger else 'Off'],
+            ['size', 'size', self.size],
         ]
 
     def __call__(self, args):
@@ -74,6 +62,7 @@ class g_cube_edges():
         self.number = int(3*args[1])
         self.wait_frames = int(args[2] * 99)
         self.trigger = args[3] > 0.5
+        self.size = [10, 8, 6, 4][min(int(args[4]*4), 3)]
         # === PARAMETERS END ===
 
         if self.number == 0:
@@ -105,50 +94,60 @@ class g_cube_edges():
         # create gaussian profile
         row = np.linspace(0, 19, 20)
         row = np.exp(-np.abs(row - self.counter))
+        # the part of it on an edge. Cut around the same centre on a smaller
+        # cube, so the pulses still meet halfway along the edges
+        profile = row[10 - self.size//2:10 + self.size//2]
+
+        # the 12 edges of the cube of this size, in the middle of the big one
+        lo, hi = (10 - self.size)//2, (10 + self.size)//2 - 1
+        span = slice(lo, hi + 1)
+        edge_list = [[lo, lo, span], [lo, hi, span], [hi, lo, span], [hi, hi, span],  #  0- 3
+                     [lo, span, lo], [lo, span, hi], [hi, span, lo], [hi, span, hi],  #  4- 7
+                     [span, lo, lo], [span, lo, hi], [span, hi, lo], [span, hi, hi]]  #  8-11
 
         if self.wait_frames > 5:
             for corner in self.corner_list:
                 # first edge
-                edge1 = self.edge_list[int(abs(corner[0]))]
+                edge1 = edge_list[int(abs(corner[0]))]
                 if corner[0] >= 0:
-                    world[0, edge1[0], edge1[1], edge1[2]] += row[5:15]
+                    world[0, edge1[0], edge1[1], edge1[2]] += profile
                 else:
-                    world[0, edge1[0], edge1[1], edge1[2]] += row[5:15][::-1]
+                    world[0, edge1[0], edge1[1], edge1[2]] += profile[::-1]
 
-                edge2 = self.edge_list[int(abs(corner[1]))]
+                edge2 = edge_list[int(abs(corner[1]))]
                 if corner[1] >= 0:
-                    world[0, edge2[0], edge2[1], edge2[2]] += row[5:15]
+                    world[0, edge2[0], edge2[1], edge2[2]] += profile
                 else:
-                    world[0, edge2[0], edge2[1], edge2[2]] += row[5:15][::-1]
+                    world[0, edge2[0], edge2[1], edge2[2]] += profile[::-1]
 
-                edge3 = self.edge_list[int(abs(corner[2]))]
+                edge3 = edge_list[int(abs(corner[2]))]
                 if corner[2] >= 0:
-                    world[0, edge3[0], edge3[1], edge3[2]] += row[5:15]
+                    world[0, edge3[0], edge3[1], edge3[2]] += profile
                 else:
-                    world[0, edge3[0], edge3[1], edge3[2]] += row[5:15][::-1]
+                    world[0, edge3[0], edge3[1], edge3[2]] += profile[::-1]
 
         else:
             # first edge
-            edge1 = self.edge_list[int(abs(self.corner[0]))]
+            edge1 = edge_list[int(abs(self.corner[0]))]
             if self.corner[0] >= 0:
-                world[0, edge1[0], edge1[1], edge1[2]] = row[5:15]
+                world[0, edge1[0], edge1[1], edge1[2]] = profile
             else:
-                world[0, edge1[0], edge1[1], edge1[2]] = row[5:15][::-1]
+                world[0, edge1[0], edge1[1], edge1[2]] = profile[::-1]
 
             # second edge
             if self.number > 1:
-                edge2 = self.edge_list[int(abs(self.corner[1]))]
+                edge2 = edge_list[int(abs(self.corner[1]))]
                 if self.corner[1] >= 0:
-                    world[0, edge2[0], edge2[1], edge2[2]] = row[5:15]
+                    world[0, edge2[0], edge2[1], edge2[2]] = profile
                 else:
-                    world[0, edge2[0], edge2[1], edge2[2]] = row[5:15][::-1]
+                    world[0, edge2[0], edge2[1], edge2[2]] = profile[::-1]
 
             if self.number > 2:
-                edge3 = self.edge_list[int(abs(self.corner[2]))]
+                edge3 = edge_list[int(abs(self.corner[2]))]
                 if self.corner[2] >= 0:
-                    world[0, edge3[0], edge3[1], edge3[2]] = row[5:15]
+                    world[0, edge3[0], edge3[1], edge3[2]] = profile
                 else:
-                    world[0, edge3[0], edge3[1], edge3[2]] = row[5:15][::-1]
+                    world[0, edge3[0], edge3[1], edge3[2]] = profile[::-1]
 
         # increase counter
         self.counter += self.speed

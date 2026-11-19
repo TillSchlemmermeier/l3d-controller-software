@@ -194,6 +194,7 @@ def sound_process(state):
             current_volumes.append(current_volume)
 
         envelope = np.maximum(current_volumes, envelope*release)
+        envelope[envelope < 0.01] = 0
         current_volumes = envelope.tolist()
 
         # read from shared memory to get eventual changes from oneshot

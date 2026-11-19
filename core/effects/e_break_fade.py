@@ -8,11 +8,9 @@ class e_break_fade():
     def __init__(self):
         self.fade = 0.0
         self.s2l = 0.0
-        self.timeout = 15  # frames without trigger before fading starts
         self.sound_values = shared_memory.SharedMemory(name="global_s2l_memory")
         self.lastworld = np.zeros([3, 10, 10, 10])
-        self.lastvalue = 0
-        self.frames_since_trigger = 0
+        self.amount = 0.0  # the trail as it eases towards fade or 0
 
     def return_state(self):
         return [
@@ -26,23 +24,15 @@ class e_break_fade():
         self.s2l = args[1]
         # === PARAMETERS END ===
 
-        current_volume = struct.unpack('d', bytes(self.sound_values.buf[32:40]))[0]
+        groove = struct.unpack('d', self.sound_values.buf[48:56])[0]
+        # the trail eases in and out over about half a second instead of switching
+        self.amount += ((0 if groove else self.fade) - self.amount)*0.1
+        world = world + self.lastworld*self.amount
 
-        if current_volume > self.lastvalue:
-            self.lastvalue = current_volume
-            self.frames_since_trigger = 0
-        else:
-            self.frames_since_trigger += 1
+        if groove and self.s2l:
+            kick = struct.unpack('d', self.sound_values.buf[0:8])[0]
+            # quiet dims towards black, a full kick leaves the frame as it is
+            world = world*(1 - self.s2l*(1 - min(kick, 1)))
 
-        # in break
-        if self.frames_since_trigger >= self.timeout:
-            world = world + self.lastworld * self.fade
-        # during beats
-        else:
-            if self.s2l:
-                current_volume = struct.unpack('d', bytes(self.sound_values.buf[0:8]))[0]
-                world *= 1 - (current_volume * self.s2l)
-
-        self.lastworld[:, :, :, :] = world[:, :, :, :]
-
+        self.lastworld[:] = world
         return np.clip(world, 0, 1)

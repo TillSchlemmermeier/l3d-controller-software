@@ -1,7 +1,6 @@
 import struct
 import numpy as np
-from scipy.ndimage import gaussian_filter
-from scipy.signal import fftconvolve
+from scipy.ndimage import gaussian_filter, uniform_filter
 from multiprocessing import shared_memory
 
 class e_mean():
@@ -12,7 +11,6 @@ class e_mean():
         self.direction = 'uniform'
         self.channel = 0.0
         self.sound_values = shared_memory.SharedMemory(name="global_s2l_memory")
-        self.kernel_uniform = np.ones([3, 3, 3]) / 26.0
 
     def return_state(self):
         return [
@@ -20,12 +18,6 @@ class e_mean():
             ['direction', 'direction', self.direction],
             ['channel', 'channel', self.channel],
         ]
-
-    def gaussian_2d(self, width):
-      x, y = np.meshgrid(np.linspace(-1, 1, 10), np.linspace(-1, 1, 10))
-      d = np.sqrt(x*x + y*y)
-      sigma = width + 0.0001
-      return np.exp(-(d**2 / (2.0 * sigma**2)))
 
     def __call__(self, world, args):
         # === PARAMETERS START ===
@@ -40,23 +32,15 @@ class e_mean():
         else:
             sigma = self.amount
 
+        # mode='nearest': a missing neighbour at the edge counts as the edge voxel itself
         if self.direction == 'uniform':
-            if isinstance(self.channel, int):
-                # Sound mode: 2D Gaussian per layer
-                gaussian = self.gaussian_2d(sigma)
-                for i in range(3):
-                    for j in range(10):
-                        blurred = fftconvolve(world[i, j, :, :], gaussian, mode='same')
-                        world[i, j, :, :] = (1 - self.amount) * world[i, j, :, :] + self.amount * blurred
-            else:
-                # Normal mode: 3D kernel
-                for i in range(3):
-                    blurred = fftconvolve(world[i, :, :, :], self.kernel_uniform, mode='same')
-                    world[i, :, :, :] = (1 - self.amount) * world[i, :, :, :] + self.amount * blurred
+            # the mean of each voxel and its 26 neighbours
+            blurred = uniform_filter(world, size=[1, 3, 3, 3], mode='nearest')
+            mix = min(sigma, 1)
+            world = (1 - mix)*world + mix*blurred
 
         elif self.direction == 'vertical':
-            for i in range(3):
-                world[i] = gaussian_filter(world[i], sigma=[sigma, 0, 0], mode='wrap')
+            world = gaussian_filter(world, sigma=[0, sigma, 0, 0], mode='nearest')
 
         elif self.direction == 'down':
             blend = min(0.5, sigma / 5)

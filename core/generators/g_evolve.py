@@ -67,18 +67,13 @@ class g_evolve():
         return np.clip(np.round(world,2), 0, 1)
 
 
-def gaussian_filter(pos, sigma=1, muu=0):
+# the x, y and z of every voxel
+GRID = np.indices((10, 10, 10))
 
-    arr = np.zeros([10, 10, 10])
-    for x in range(10):
-        for y in range(10):
-            for z in range(10):
-                arr[x,y,z] = np.sqrt((x-pos[0])**2 + (y-pos[1])**2 + (z-pos[2])**2)
-
-    # Calculating Gaussian filter
-    gauss = np.exp(-((arr)**2 / (2.0 * sigma**2)))
-
-    return gauss
+def gaussian_filter(pos, sigma=1):
+    # squared distance of every voxel to pos
+    distance2 = np.sum((GRID - np.reshape(pos, (3, 1, 1, 1)))**2, axis=0)
+    return np.exp(-distance2/(2.0*sigma**2))
 
 class worker:
     def __init__(self,  lifetime, width):
@@ -91,38 +86,21 @@ class worker:
         self.wait = 0
 
     def run(self, world):
+        alive = self.lifetime > 0
+        if alive:
+            # brightens to full at half its life and back to 0, while it keeps growing
+            brightness = 2*min(self.starttime - self.lifetime, self.lifetime)/self.starttime
+            sigma = (self.width + 0.01) - self.width*self.lifetime/self.starttime
+            # a boost doubles it on the beat, fading out over 10 frames
+            world += brightness**2*gaussian_filter(self.position, sigma)*(1 + self.wait/10)
 
-        if self.lifetime <= 0:
-            message = False
-        else:
-            message = True
-
-            if self.lifetime > 0.5*self.starttime:
-                # starting
-                brightness = round(2 * (self.starttime-self.lifetime)/self.starttime,4)
-                gauss      = gaussian_filter(self.position, (self.width+0.01)-self.width*self.lifetime/self.starttime)
-                temp = brightness**2 * gauss
-
-                world[0, :, :, :] += temp
-                world[1, :, :, :] += temp
-                world[2, :, :, :] += temp
-
-            else:
-                # ending
-                brightness = 2*(self.lifetime/self.starttime)
-                temp = brightness**2*gaussian_filter(self.position, (self.width+0.01)-self.width*self.lifetime/self.starttime)
-
-                world[0, :, :, :] += temp
-                world[1, :, :, :] += temp
-                world[2, :, :, :] += temp
-
-
+        # a boosted worker pauses its life while the boost lasts
         if self.wait > 0:
             self.wait -= 1
         else:
             self.lifetime -= 1
 
-        return world*np.cos(self.wait * 0.1), message
+        return world, alive
 
     def boost(self):
         self.wait = 10

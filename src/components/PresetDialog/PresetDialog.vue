@@ -287,8 +287,8 @@ function getElementName() {
       ? coreState.globalEffects
       : coreState.channels[uiState.channelIndex].effects
     return effects[uiState.effectIndex].name
-  } else if (uiState.elementType === 'generator') {
-    // only a numbered channel has a generator
+  } else if (uiState.elementType === 'generator' && !newChannel.value) {
+    // only a numbered channel has a generator, and a new channel doesn't exist yet
     return coreState.channels[uiState.channelIndex as number].generator.name
   }
   return null
